@@ -1,0 +1,6 @@
+# .github/dependabot.yml at 3586a0d against SchemaStore's Dependabot schema (check-jsonschema's built-in copy), 2026-11-15T16:05:52Z
+$ check-jsonschema --version
+check-jsonschema, version 0.39.0
+$ check-jsonschema --builtin-schema vendor.dependabot .github/dependabot.yml
+ok -- validation done
+exit 0

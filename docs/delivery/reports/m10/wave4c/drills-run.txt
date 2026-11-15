@@ -1,0 +1,11 @@
+
+=== summary
+PASS M10-01-comtypes-on-every-platform
+PASS M10-01-comtypes-left-out-of-the-dev-lock
+PASS M10-02-english-carries-qts-english
+PASS M10-02-pyinstaller-keeps-every-language
+PASS M10-02-nuitka-left-without-them
+PASS M10-02-frozen-app-folder-never-looked-in
+PASS M10-02-app-folder-before-qts
+PASS M10-02-translator-only-asks-qt
+PASS M10-03-alias-not-pyqts-signal

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "M3-14-menu-keys",
+    "requirement": "M3-14",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        drawn_here = bool(getattr(self.surface, \"draws_menus\", False))  # whatever the hosting: this menu is the overlay's",
+      "replace": "        drawn_here = self.draws_menus()  # drill: as before, only while hosting"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open"
+    ],
+    "expected": [
+      "test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d",
+    "baseline_exit": 0,
+    "mutated_sha256": "21615d2490b132d2af3211cf07d0c8d7eed0751a97940244765cab52841b209e",
+    "mutated_exit": 1,
+    "observed": "_ test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open _",
+    "after_sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-14-bubble-clear",
+    "requirement": "M3-14",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith(\"wayland\")",
+      "replace": "        return True  # drill: as before, the box's geometry trusted everywhere"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is"
+    ],
+    "expected": [
+      "test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d",
+    "baseline_exit": 0,
+    "mutated_sha256": "8b1713b20e17d968b46321055815d32965b9490047d8e2095a89435dc5f5b219",
+    "mutated_exit": 1,
+    "observed": "__ test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is __",
+    "after_sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-04-extent",
+    "requirement": "M3-04",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            parts.append(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3))",
+      "replace": "            pass  # drill: the bubble left out of what's drawn"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_the_overlay_is_told_where_everything_drawn_is"
+    ],
+    "expected": [
+      "test_the_overlay_is_told_where_everything_drawn_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d",
+    "baseline_exit": 0,
+    "mutated_sha256": "e484bb6434cd102e4548e6550c199c719ec7d222adf92bbb4f1bb339c2766df0",
+    "mutated_exit": 1,
+    "observed": "_____________ test_the_overlay_is_told_where_everything_drawn_is ______________",
+    "after_sha256": "87b388a9dbb45fe57431f277eeb683a6750193a19115bbb534a19140dd345a1d",
+    "restored_exit": 0
+  }
+]

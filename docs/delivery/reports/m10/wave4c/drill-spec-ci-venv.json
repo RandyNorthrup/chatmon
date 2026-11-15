@@ -1,0 +1,17 @@
+{
+  "drills": [
+    {
+      "id": "M10-01-announcement-not-important",
+      "requirement": "M10-01.A2",
+      "file": "chatmon/winuia.py",
+      "find": "IMPORTANT_ALL if important else ALL, words, activity)",
+      "replace": "ALL if important else ALL, words, activity)",
+      "test": [
+        "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+      ],
+      "expect": [
+        "'processing': 2"
+      ]
+    }
+  ]
+}

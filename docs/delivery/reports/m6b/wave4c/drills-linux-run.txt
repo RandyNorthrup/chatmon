@@ -1,0 +1,7 @@
+
+=== summary
+PASS M6B-01-overlay-key-press-taken-as-release
+PASS M6B-02-winpipe-loads-windows-on-import
+PASS M6B-03-log-left-at-the-umask
+PASS M6B-03-log-followed-through-a-link
+PASS M6B-03-typed-text-in-the-debug-log

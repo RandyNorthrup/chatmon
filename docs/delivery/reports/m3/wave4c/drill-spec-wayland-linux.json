@@ -1,0 +1,134 @@
+{
+  "drills": [
+    {
+      "id": "M3-04-content",
+      "requirement": "M3-04",
+      "file": "chatmon/layer.py",
+      "find": "        return \"wl_subcompositor\" in self.globals and \"wp_viewporter\" in self.globals",
+      "replace": "        return False  # drill: full-output buffers again",
+      "test": [
+        "tests/test_wayland.py::test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown",
+        "tests/test_sway.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales"
+      ],
+      "expect": [
+        "test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown",
+        "test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[3840x2160-2]",
+        "test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[2560x1440-1.5]"
+      ]
+    },
+    {
+      "id": "M3-04-move-waits",
+      "requirement": "M3-04",
+      "file": "chatmon/layer.py",
+      "find": "            return False  # one comes back with wl_buffer.release: a move waits for it, never shown without its pixels",
+      "replace": "            if box != self._box:  # drill: moved now, with the old pixels\n                c.request(subsurface, SUBSURFACE_SET_POSITION, \"ii\", box.x(), box.y())\n            return False",
+      "test": [
+        "tests/test_wayland.py::test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place"
+      ],
+      "expect": [
+        "test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place"
+      ]
+    },
+    {
+      "id": "M3-04-placed",
+      "requirement": "M3-04",
+      "file": "chatmon/layer.py",
+      "find": "        p.translate(-QPointF(covered.topLeft()))  # the stage draws in its own coordinates",
+      "replace": "        pass  # drill: drawn as if the subsurface were at the output's corner",
+      "test": [
+        "tests/test_sway.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else"
+      ],
+      "expect": [
+        "test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else"
+      ]
+    },
+    {
+      "id": "M3-RC-input",
+      "requirement": "M3-RC",
+      "file": "chatmon/layer.py",
+      "find": "        c.requests(region, REGION_ADD, \"iiii\", rows)  # a sprite's outline is some fifty of them, as it walks",
+      "replace": "        c.requests(region, REGION_ADD, \"iiii\", [(0, 0, 1 << 15, 1 << 15)])  # drill: every click taken",
+      "test": [
+        "tests/test_wayland.py::test_layer_surface_draws_and_takes_clicks_only_on_the_penguin",
+        "tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else"
+      ],
+      "expect": [
+        "test_layer_surface_draws_and_takes_clicks_only_on_the_penguin",
+        "test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else"
+      ]
+    },
+    {
+      "id": "M3-RC-keyboard",
+      "requirement": "M3-RC",
+      "file": "chatmon/layer.py",
+      "find": "                if not self._dropped_on_handover():  # taken back at once: the stage never knew it had gone",
+      "replace": "                if True:  # drill: the keyboard lost on the handover left lost",
+      "test": [
+        "tests/test_wayland.py::test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive",
+        "tests/test_sway.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open"
+      ],
+      "expect": [
+        "test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive",
+        "test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open"
+      ]
+    },
+    {
+      "id": "M3-RC-clipboard",
+      "requirement": "M3-RC",
+      "file": "chatmon/layer.py",
+      "find": "            board.setText(text)",
+      "replace": "            pass  # drill: the overlay's clipboard only",
+      "test": [
+        "tests/test_wayland.py::test_the_clipboard_is_the_overlays_own",
+        "tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+      ],
+      "expect": [
+        "test_the_clipboard_is_the_overlays_own",
+        "test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+      ]
+    },
+    {
+      "id": "M3-14-sway-menu",
+      "requirement": "M3-14",
+      "file": "chatmon/penguin.py",
+      "find": "        drawn_here = bool(getattr(self.surface, \"draws_menus\", False))  # whatever the hosting: this menu is the overlay's",
+      "replace": "        drawn_here = self.draws_menus()  # drill: as before, only while hosting",
+      "test": [
+        "tests/test_sway.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back"
+      ],
+      "expect": [
+        "test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back"
+      ]
+    },
+    {
+      "id": "M3-14-sway-bubble",
+      "requirement": "M3-14",
+      "file": "chatmon/penguin.py",
+      "find": "        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith(\"wayland\")",
+      "replace": "        return True  # drill: as before, the box's geometry trusted everywhere",
+      "test": [
+        "tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses"
+      ],
+      "expect": [
+        "test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses"
+      ]
+    },
+    {
+      "id": "M3-14-hosting",
+      "requirement": "M3-14",
+      "file": "chatmon/app.py",
+      "find": "            self.stage.set_hosting(not self._ask_box_as_window())",
+      "replace": "            pass  # drill: the box always drawn on the overlay",
+      "test": [
+        "tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses",
+        "tests/test_sway.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader",
+        "tests/test_sway.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said"
+      ],
+      "expect": [
+        "test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses",
+        "test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[auto-True]",
+        "test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said"
+      ]
+    }
+  ]
+}

@@ -258,6 +258,31 @@ Nothing in M1B's obligations changed. Its files changed only for PyQt6 6.12.1's 
 **Receipts.** Round one's W4- receipts are now stale history, with their hashes untouched. The W4B- receipts replace
 them. M1B is closed on bf9d8ac.
 
+## Reconciliation, wave 4, round three (2026-11-15)
+
+Round three re-bound this plan at **3586a0d**: `improve/assessment-fixes` with wave4/crash and round two merged.
+wave4/crash frees quit test Companions between tests (CI's fedora:44 crash) and makes sure nothing a quit Chatmon
+had waiting runs: its one-off waits, its timers, its threads' answers. It changed `chatmon/app.py`, `chatmon/brains.py`, `tests/app_harness.py` and `tests/test_app_smoke.py`.
+
+**Why every receipt was renewed.** Round two's checkpoint named 17 of its 22 receipts as binding those
+files. ROADMAP.md is a rule of every plan, and round three amends it (the Outcome at 3586a0d), so the others
+went stale with it. Every check was run again on 3586a0d or read from its CI run, not only those.
+
+**What was re-run.** The whole suite on Windows ([wave4c/suite-windows.log](reports/wave4c/suite-windows.log):
+1259 passed, 178 skipped), then 30 Windows drills and 6 Linux ones (in WSL). Every one went green, red and green again. CI run 43729628408 (PR #18 at 3586a0d, all 19 jobs green, its test merge `5545f5a` with 3586a0d's own tree:
+[reports/wave4c/ci/merge-tree.txt](reports/wave4c/ci/merge-tree.txt)) was read for its Linux, macOS and Windows legs
+([reports/m1b/ci/observed-3586a0d.txt](reports/m1b/ci/observed-3586a0d.txt)). The requirements were reviewed
+again ([wave4c/readiness.md](reports/m1b/wave4c/readiness.md)).
+
+**The crash fix's own drills.** CRASH-01 to CRASH-07 (the harness freeing a quit Companion; no look at the
+agents once quit; `_later`, Background, the Finder, the timers and the event filter each doing nothing once
+quit) went green, red and green again on 3586a0d here too
+([reports/wave4c/crash/drills.log](reports/wave4c/crash/drills.log)). They prove wave4/crash's own
+requirements, which are none of this plan's criteria, so they are cited as context, not bound as receipts.
+
+**Receipts.** Round two's W4B- receipts are now stale history, with their hashes untouched. The W4C- receipts replace
+them. M1B is closed on 3586a0d.
+
 ```quality-ledger
 {
   "schema_version": 1,
@@ -270,11 +295,11 @@ them. M1B is closed on bf9d8ac.
     "rules": [
       {
         "path": "docs/delivery/ROADMAP.md",
-        "revision": "bf9d8ac+wave4b"
+        "revision": "3586a0d+wave4c"
       },
       {
         "path": "pyproject.toml",
-        "revision": "bf9d8ac"
+        "revision": "3586a0d"
       }
     ],
     "inputs": [
@@ -691,7 +716,12 @@ them. M1B is closed on bf9d8ac.
         "W4B-BEH-WINDOWS",
         "W4B-RED-M1B-01-allowlist",
         "W4B-RED-M1B-02-strict-mcp",
-        "W4B-RED-M1B-05-stale-folders"
+        "W4B-RED-M1B-05-stale-folders",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-M1B-01-allowlist",
+        "W4C-RED-M1B-02-strict-mcp",
+        "W4C-RED-M1B-05-stale-folders"
       ],
       "blocker": null,
       "superseded_by": null
@@ -731,7 +761,12 @@ them. M1B is closed on bf9d8ac.
         "W4B-BEH-WINDOWS",
         "W4B-BEH-CI-LINUX",
         "W4B-BEH-CI-MACOS",
-        "W4B-RED-M1B-03-owner-check"
+        "W4B-RED-M1B-03-owner-check",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-BEH-CI-LINUX",
+        "W4C-BEH-CI-MACOS",
+        "W4C-RED-M1B-03-owner-check"
       ],
       "blocker": null,
       "superseded_by": null
@@ -785,7 +820,14 @@ them. M1B is closed on bf9d8ac.
         "W4B-BEH-CI-MACOS",
         "W4B-RED-M1B-06-range",
         "W4B-RED-M1B-07-kept-aside",
-        "W4B-RED-M1B-08-file-mode"
+        "W4B-RED-M1B-08-file-mode",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-BEH-CI-LINUX",
+        "W4C-BEH-CI-MACOS",
+        "W4C-RED-M1B-06-range",
+        "W4C-RED-M1B-07-kept-aside",
+        "W4C-RED-M1B-08-file-mode"
       ],
       "blocker": null,
       "superseded_by": null
@@ -832,7 +874,12 @@ them. M1B is closed on bf9d8ac.
         "W4B-BEH-WINDOWS",
         "W4B-RED-M1B-04-placeholder",
         "W4B-RED-M1B-15-chat-brain",
-        "W4B-RED-M1B-17-only-its-brain"
+        "W4B-RED-M1B-17-only-its-brain",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-M1B-04-placeholder",
+        "W4C-RED-M1B-15-chat-brain",
+        "W4C-RED-M1B-17-only-its-brain"
       ],
       "blocker": null,
       "superseded_by": null
@@ -863,7 +910,10 @@ them. M1B is closed on bf9d8ac.
         "W4-RED-M1B-09-status",
         "W4B-READY",
         "W4B-BEH-WINDOWS",
-        "W4B-RED-M1B-09-status"
+        "W4B-RED-M1B-09-status",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-M1B-09-status"
       ],
       "blocker": null,
       "superseded_by": null
@@ -901,7 +951,11 @@ them. M1B is closed on bf9d8ac.
         "W4B-READY",
         "W4B-BEH-WINDOWS",
         "W4B-RED-M1B-10-no-wait",
-        "W4B-RED-M1B-11-finder"
+        "W4B-RED-M1B-11-finder",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-M1B-10-no-wait",
+        "W4C-RED-M1B-11-finder"
       ],
       "blocker": null,
       "superseded_by": null
@@ -936,7 +990,10 @@ them. M1B is closed on bf9d8ac.
         "W4-RED-M1B-12-partial",
         "W4B-READY",
         "W4B-BEH-WINDOWS",
-        "W4B-RED-M1B-12-partial"
+        "W4B-RED-M1B-12-partial",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-M1B-12-partial"
       ],
       "blocker": null,
       "superseded_by": null
@@ -982,7 +1039,13 @@ them. M1B is closed on bf9d8ac.
         "W4B-BEH-CI-LINUX",
         "W4B-BEH-CI-MACOS",
         "W4B-BEH-CI-WINDOWS",
-        "W4B-RED-M1B-13-saved-key"
+        "W4B-RED-M1B-13-saved-key",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-BEH-CI-LINUX",
+        "W4C-BEH-CI-MACOS",
+        "W4C-BEH-CI-WINDOWS",
+        "W4C-RED-M1B-13-saved-key"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1015,7 +1078,10 @@ them. M1B is closed on bf9d8ac.
         "W4-RED-M1B-14-seconds",
         "W4B-READY",
         "W4B-BEH-WINDOWS",
-        "W4B-RED-M1B-14-seconds"
+        "W4B-RED-M1B-14-seconds",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-RED-M1B-14-seconds"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1053,7 +1119,12 @@ them. M1B is closed on bf9d8ac.
         "W4B-BEH-WINDOWS",
         "W4B-BEH-CI-LINUX",
         "W4B-BEH-CI-MACOS",
-        "W4B-RED-M1B-16-no-secrets"
+        "W4B-RED-M1B-16-no-secrets",
+        "W4C-READY",
+        "W4C-BEH-WINDOWS",
+        "W4C-BEH-CI-LINUX",
+        "W4C-BEH-CI-MACOS",
+        "W4C-RED-M1B-16-no-secrets"
       ],
       "blocker": null,
       "superseded_by": null
@@ -6880,7 +6951,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-17"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Requirements review, round two, at bf9d8ac (readiness.md): M1B-01 to M1B-17 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now and the code that carries them; no conflict or gap; M7's wiring of the APIs (the M7-WIRING operation) checked against M7's verified criteria.",
       "environment": {
@@ -6929,7 +7000,7 @@ them. M1B is closed on bf9d8ac.
       ],
       "scope_sha256": "b3ee46b5e13ec88e41fa660a9deec4f3fadc48872ce2b595887ba7360c756ef5",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-BEH-WINDOWS",
@@ -6953,7 +7024,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-17"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7069,7 +7140,7 @@ them. M1B is closed on bf9d8ac.
       ],
       "scope_sha256": "b3ee46b5e13ec88e41fa660a9deec4f3fadc48872ce2b595887ba7360c756ef5",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-BEH-CI-LINUX",
@@ -7080,7 +7151,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-16"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -7187,7 +7258,7 @@ them. M1B is closed on bf9d8ac.
       ],
       "scope_sha256": "86b5fb57d9de3db8c92bae1c0dc008e8841afddc36059b77be27985a9eb3eef4",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-BEH-CI-MACOS",
@@ -7198,7 +7269,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-16"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -7305,7 +7376,7 @@ them. M1B is closed on bf9d8ac.
       ],
       "scope_sha256": "86b5fb57d9de3db8c92bae1c0dc008e8841afddc36059b77be27985a9eb3eef4",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-BEH-CI-WINDOWS",
@@ -7313,7 +7384,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-13"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -7388,7 +7459,7 @@ them. M1B is closed on bf9d8ac.
       ],
       "scope_sha256": "a685940b7ca038955c5f298ea04ab684b5f2f465a679abef99a7bd308378b917",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-01-allowlist",
@@ -7396,7 +7467,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-01"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7487,7 +7558,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-02-strict-mcp",
@@ -7495,7 +7566,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-02"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7586,7 +7657,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-03-owner-check",
@@ -7594,7 +7665,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-03"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7688,7 +7759,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-04-placeholder",
@@ -7696,7 +7767,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-04"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7802,7 +7873,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-06-range",
@@ -7810,7 +7881,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-06"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -7909,7 +7980,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-07-kept-aside",
@@ -7917,7 +7988,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-07"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8016,7 +8087,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-08-file-mode",
@@ -8024,7 +8095,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-08"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "/var/tmp/plans-venv/bin/python",
         "-m",
@@ -8122,7 +8193,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-09-status",
@@ -8130,7 +8201,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-09"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8220,7 +8291,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-10-no-wait",
@@ -8228,7 +8299,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-10"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8326,7 +8397,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-11-finder",
@@ -8334,7 +8405,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-11"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8432,7 +8503,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-13-saved-key",
@@ -8440,7 +8511,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-13"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8538,7 +8609,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-14-seconds",
@@ -8546,7 +8617,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-14"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8640,7 +8711,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-15-chat-brain",
@@ -8648,7 +8719,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-15"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8754,7 +8825,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-16-no-secrets",
@@ -8762,7 +8833,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-16"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8869,7 +8940,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-17-only-its-brain",
@@ -8877,7 +8948,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-17"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -8984,7 +9055,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-05-stale-folders",
@@ -8992,7 +9063,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-05"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -9082,7 +9153,7 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4B-RED-M1B-12-partial",
@@ -9090,7 +9161,7 @@ them. M1B is closed on bf9d8ac.
         "AC-M1B-12"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -9193,11 +9264,2348 @@ them. M1B is closed on bf9d8ac.
           }
         ]
       },
+      "reason": "Stale at wave 4's third round (2026-11-15): ROADMAP.md, a rule of every plan, was amended for round three, and wave4/crash's merge changed chatmon/app.py, chatmon/brains.py, tests/app_harness.py and tests/test_app_smoke.py; the W4C- receipts re-ran its check on 3586a0d or read it from CI run 43729628408 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W4C-READY",
+      "acceptance": [
+        "AC-M1B-01",
+        "AC-M1B-02",
+        "AC-M1B-03",
+        "AC-M1B-04",
+        "AC-M1B-05",
+        "AC-M1B-06",
+        "AC-M1B-07",
+        "AC-M1B-08",
+        "AC-M1B-09",
+        "AC-M1B-10",
+        "AC-M1B-11",
+        "AC-M1B-12",
+        "AC-M1B-13",
+        "AC-M1B-14",
+        "AC-M1B-15",
+        "AC-M1B-16",
+        "AC-M1B-17"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Requirements review, round three, at 3586a0d (readiness.md): M1B-01 to M1B-17 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now and the code that carries them; no conflict or gap; M7's wiring of the APIs (the M7-WIRING operation) checked against M7's verified criteria.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/readiness.md",
+        "sha256": "37d69062b6c9a6994c45c53eef5fbdf74d621d56f06af1b7bcb9e919c4f8abeb"
+      },
+      "inputs": [
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        }
+      ],
+      "scope_sha256": "112ad74b375d7b19e2ee1b1c7e27ac5bee8867e13367abd9651b57cfc95a7341",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-BEH-WINDOWS",
+      "acceptance": [
+        "AC-M1B-01",
+        "AC-M1B-02",
+        "AC-M1B-03",
+        "AC-M1B-04",
+        "AC-M1B-05",
+        "AC-M1B-06",
+        "AC-M1B-07",
+        "AC-M1B-08",
+        "AC-M1B-09",
+        "AC-M1B-10",
+        "AC-M1B-11",
+        "AC-M1B-12",
+        "AC-M1B-13",
+        "AC-M1B-14",
+        "AC-M1B-15",
+        "AC-M1B-16",
+        "AC-M1B-17"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on 3586a0d's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1259 passed, 178 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave4c/suite-windows.log",
+        "sha256": "37568d9115c892c43fd1955e9f69aae15e4e69688416bb6986ea6f1ac0a9feae"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_keychain.py",
+          "sha256": "0a3fdb9afe3a9dabc4783884c81efcc00fbd240530b2a10c2e8d8fd770322609"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        },
+        {
+          "path": "tests/test_streaming.py",
+          "sha256": "de7c8d05cf58c33dc5a7cb878f4af3c461c2bda8ddb767ffb1c3ac71e9852ddb"
+        }
+      ],
+      "scope_sha256": "112ad74b375d7b19e2ee1b1c7e27ac5bee8867e13367abd9651b57cfc95a7341",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-BEH-CI-LINUX",
+      "acceptance": [
+        "AC-M1B-03",
+        "AC-M1B-08",
+        "AC-M1B-13",
+        "AC-M1B-16"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43729628408",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132858987756",
+        "--log"
+      ],
+      "method": "CI run 43729628408 on 3586a0d, job test (ubuntu-24.04, 3.15). The Secret Service tests passed there, not skipped: tests/test_keychain.py::test_the_secret_service_keeps_replaces_and_forgets_a_key_in_its_own_types, test_a_locked_keyring_is_never_prompted_to_fill_in_the_menu_only_to_save and test_no_keyring_at_all_is_said_and_never_waited_for, on a private session bus from Ubuntu's dbus package, which ci.yml installs. Also passed: the Linux port-owner tests (tests/test_portowner.py::test_on_linux_your_socket_and_someone_elses_on_one_port_isnt_yours and test_on_linux_a_port_another_account_listens_on_isnt_yours), tests/test_settings.py's file and folder modes, and tests/test_backup.py's private zip. The same passed on ubuntu 3.11 and ubuntu-24.04-arm 3.14, and all but the other-account port test passed in the three distro containers. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/ci/ci-132858987756-test-ubuntu-24.04-3.15.log",
+        "sha256": "da18de8398488879b4578db6fc7c0de2d8018e58498bfeb61f445a0d3e8abc69"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_keychain.py",
+          "sha256": "0a3fdb9afe3a9dabc4783884c81efcc00fbd240530b2a10c2e8d8fd770322609"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "8c2318cc6a1f2cf33580e4377e758abb3d66fec292abfc950224c498fb434f49",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-BEH-CI-MACOS",
+      "acceptance": [
+        "AC-M1B-03",
+        "AC-M1B-08",
+        "AC-M1B-13",
+        "AC-M1B-16"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43729628408",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132858987797",
+        "--log"
+      ],
+      "method": "CI run 43729628408 on 3586a0d, job test (macos-latest, 3.14). Passed: tests/test_keychain.py::test_macos_keychain_keeps_replaces_and_forgets_a_key (the Keychain through Security.framework), tests/test_portowner.py::test_a_socket_of_yours_is_yours_and_a_closed_port_nobodys (the lsof port-owner check), tests/test_settings.py's file and folder modes, and tests/test_backup.py's private zip. The same passed on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/ci/ci-132858987797-test-macos-latest-3.14.log",
+        "sha256": "855fda01d72e8e1a1b33d7a8ef9ad84e82ccf64fb8d3db2249f9961123078526"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_keychain.py",
+          "sha256": "0a3fdb9afe3a9dabc4783884c81efcc00fbd240530b2a10c2e8d8fd770322609"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "8c2318cc6a1f2cf33580e4377e758abb3d66fec292abfc950224c498fb434f49",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-BEH-CI-WINDOWS",
+      "acceptance": [
+        "AC-M1B-13"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43729628408",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132858987936",
+        "--log"
+      ],
+      "method": "CI run 43729628408 on 3586a0d, job test (windows-latest, 3.14). The real Credential Manager tests passed there and did not skip with error 1312: tests/test_keychain.py::test_windows_credential_manager_keeps_replaces_and_forgets_a_key and test_windows_keeps_a_key_on_this_computer_and_files_it_under_chatmon. They also passed on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 3586a0d's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-3586a0d.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/ci/ci-132858987936-test-windows-latest-3.14.log",
+        "sha256": "fe97700cd722376e1a60a5f472a0f321b450d9ce4b9c58a7682fbac33ead9273"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/test_keychain.py",
+          "sha256": "0a3fdb9afe3a9dabc4783884c81efcc00fbd240530b2a10c2e8d8fd770322609"
+        }
+      ],
+      "scope_sha256": "5e21c5e1d1c0f8b4ce3c226f68fe39892081a6cc12ed4db8e9a1ba3068c3c5dc",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-01-allowlist",
+      "acceptance": [
+        "AC-M1B-01"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star",
+        "tests/test_brains.py::test_a_command_brain_gets_only_what_it_needs_of_the_environment"
+      ],
+      "method": "Red drill M1B-01-allowlist through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        }
+      ],
+      "scope_sha256": "ec0146bc0ce3d7655320437fa748eb6d17eea39277576599b79e246245385e87",
+      "red": {
+        "mutation": "M1B-01-allowlist: in chatmon/brains.py, '    out = {k: v for k, v in environ.items() if k.upper() in exact or (starts and k.upper().startswith(starts))}' became '    out = dict(environ)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star",
+        "observed_diagnostic": "_____ test_the_allowlist_takes_names_in_any_case_and_endings_after_a_star _____",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "25a25d8891f33cd0c8d9f916e40b061f0c67a5724b357193f4602b05f13a17ba"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-02-strict-mcp",
+      "acceptance": [
+        "AC-M1B-02"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked",
+        "tests/test_streaming.py::test_claude_code_streams_its_answer"
+      ],
+      "method": "Red drill M1B-02-strict-mcp through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        }
+      ],
+      "scope_sha256": "ec0146bc0ce3d7655320437fa748eb6d17eea39277576599b79e246245385e87",
+      "red": {
+        "mutation": "M1B-02-strict-mcp: in chatmon/brains.py, '\"--tools\", \"\", \"--strict-mcp-config\", \"--permission-mode\", \"dontAsk\",' became '\"--tools\", \"\", \"--permission-mode\", \"dontAsk\",'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked",
+        "observed_diagnostic": "____ test_claude_code_is_started_without_tools_mcp_servers_or_anyone_asked ____",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "4ee69cfb0d38c4b9a988ac6c6fd540d00a6708d85cff4d74fa4c704828c634c9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-03-owner-check",
+      "acceptance": [
+        "AC-M1B-03"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed"
+      ],
+      "method": "Red drill M1B-03-owner-check through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        }
+      ],
+      "scope_sha256": "5d11a813f91659cabfddf67b3ec934f61063466dd29c5e648e2233db2a93114d",
+      "red": {
+        "mutation": "M1B-03-owner-check: in chatmon/brains.py, '        if b.automatic() and b.available(wait) and (not b.local or trusted(expand(b.url), wait)):' became '        if b.automatic() and b.available(wait):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed",
+        "observed_diagnostic": "____ test_automatic_uses_only_a_model_server_of_yours_or_one_you_confirmed ____",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "939f695ec9690e55802b2bb52a5f71d6cc86a642c3f11266ab0f573773853aaa"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-04-placeholder",
+      "acceptance": [
+        "AC-M1B-04"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_chats.py::test_a_brain_that_reads_files_never_gets_another_brains_answers"
+      ],
+      "method": "Red drill M1B-04-placeholder through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "f71d12e1786c0fb401b5a5417e3c99fa9556e887b0a661c7820d958c29de57e4",
+      "red": {
+        "mutation": "M1B-04-placeholder: in chatmon/chats.py, '                out.append((question, m.text if not own_only or _same(m, brain, name) else OTHER_ANSWER))' became '                out.append((question, m.text))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_brain_that_reads_files_never_gets_another_brains_answers",
+        "observed_diagnostic": "_______ test_a_brain_that_reads_files_never_gets_another_brains_answers _______",
+        "before": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "05c955a792786bf12e533e5e2b655ee75230bfcd285a34c79a42889c8d6198d8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-06-range",
+      "acceptance": [
+        "AC-M1B-06"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_settings.py::test_a_bad_value_costs_only_its_own_setting",
+        "tests/test_settings.py::test_every_setting_the_app_reads_as_a_number_is_one_after_loading"
+      ],
+      "method": "Red drill M1B-06-range through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "5825ca4f9901cdf23068bc6752076c0678279c176272b4a72aefb10f0a047a96",
+      "red": {
+        "mutation": "M1B-06-range: in chatmon/settings.py, '        if not low <= number <= high:' became '        if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_bad_value_costs_only_its_own_setting",
+        "observed_diagnostic": "_________________ test_a_bad_value_costs_only_its_own_setting _________________",
+        "before": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "1a38cca6682daf977cbb68375b4a322f992f27ccdae6115749f1af001679019a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-07-kept-aside",
+      "acceptance": [
+        "AC-M1B-07"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_settings.py::test_a_damaged_state_file_is_kept_aside_and_the_last_good_copy_used",
+        "tests/test_settings.py::test_a_damaged_memory_file_is_never_written_over"
+      ],
+      "method": "Red drill M1B-07-kept-aside through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "5825ca4f9901cdf23068bc6752076c0678279c176272b4a72aefb10f0a047a96",
+      "red": {
+        "mutation": "M1B-07-kept-aside: in chatmon/settings.py, '    kept = _set_aside(path)' became '    kept = None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_damaged_state_file_is_kept_aside_and_the_last_good_copy_used",
+        "observed_diagnostic": "_____ test_a_damaged_state_file_is_kept_aside_and_the_last_good_copy_used _____",
+        "before": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "56dbed61269412e388143b9bf970304cc89309922a9d652fed8e216041f90773"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-08-file-mode",
+      "acceptance": [
+        "AC-M1B-08"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_settings.py::test_files_are_made_private_from_the_start_and_folders_too"
+      ],
+      "method": "Red drill M1B-08-file-mode in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills-linux.log",
+        "sha256": "f32daade9118787cd4857d5217ec920760ad0a59f05bde5ab8ee2a330d3818f1"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "5825ca4f9901cdf23068bc6752076c0678279c176272b4a72aefb10f0a047a96",
+      "red": {
+        "mutation": "M1B-08-file-mode: in chatmon/settings.py, 'os.fchmod(fd, 0o600)' became 'os.fchmod(fd, 0o644)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_files_are_made_private_from_the_start_and_folders_too",
+        "observed_diagnostic": "__________ test_files_are_made_private_from_the_start_and_folders_too __________",
+        "before": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "37a48e16e31b7342b3351aed28c491ad8cc8bc6a8dd0e7c2bdef98613a63095d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/settings.py",
+            "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-09-status",
+      "acceptance": [
+        "AC-M1B-09"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_streaming.py::test_an_http_error_says_what_the_provider_said_the_status_and_what_to_do"
+      ],
+      "method": "Red drill M1B-09-status through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        }
+      ],
+      "scope_sha256": "2a7d785f39ec51a97a8be4f57167adc3a885011240e15ebde50aeff1d4cd2fba",
+      "red": {
+        "mutation": "M1B-09-status: in chatmon/brains.py, 'if isinstance(status, int) and status >= 400:' became 'if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_an_http_error_says_what_the_provider_said_the_status_and_what_to_do",
+        "observed_diagnostic": "_ test_an_http_error_says_what_the_provider_said_the_status_and_what_to_do[401-body0-invalid x-api-key-Check its key in ANTHROPIC_API_KEY] _",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "c36fe8e971022ac3200175bf29560bc0c7c8a1d6107ff740e5b935d4036b892f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-10-no-wait",
+      "acceptance": [
+        "AC-M1B-10"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting"
+      ],
+      "method": "Red drill M1B-10-no-wait through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        }
+      ],
+      "scope_sha256": "247785f8a9b032c613b5095a88113af2acfe7cd2561cc44787098091ad6b0483",
+      "red": {
+        "mutation": "M1B-10-no-wait: in chatmon/brains.py, '    threading.Thread(target=end, daemon=True).start()' became '    end()'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting",
+        "observed_diagnostic": "_ test_cancelling_on_windows_stops_the_tool_behind_a_cmd_file_without_waiting _",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "2f427286da6b0ed912fd90e308c371f4eb008e70089f20b90c210aba97b20056"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-11-finder",
+      "acceptance": [
+        "AC-M1B-11"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers"
+      ],
+      "method": "Red drill M1B-11-finder through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        }
+      ],
+      "scope_sha256": "247785f8a9b032c613b5095a88113af2acfe7cd2561cc44787098091ad6b0483",
+      "red": {
+        "mutation": "M1B-11-finder: in chatmon/brains.py, '        quick = choose(brains, configured, picked, wait=False, prefer=prefer)' became '        quick = choose(brains, configured, picked, wait=True, prefer=prefer)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers",
+        "observed_diagnostic": "___ test_finding_the_brain_never_probes_on_the_screens_thread_and_remembers ___",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "6538c7f86092a0218bfee21e162039d2b403d47628bb2f0b9c6be64f657a922c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-13-saved-key",
+      "acceptance": [
+        "AC-M1B-13"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_keychain.py::test_a_brain_uses_its_saved_key_when_its_variable_isnt_set"
+      ],
+      "method": "Red drill M1B-13-saved-key through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_secrets.py",
+          "sha256": "34cb09f237c59ca943aea71db0d14daf10de1e07eefa1f255cd9f79ea1da5da4"
+        },
+        {
+          "path": "tests/test_keychain.py",
+          "sha256": "0a3fdb9afe3a9dabc4783884c81efcc00fbd240530b2a10c2e8d8fd770322609"
+        }
+      ],
+      "scope_sha256": "5e21c5e1d1c0f8b4ce3c226f68fe39892081a6cc12ed4db8e9a1ba3068c3c5dc",
+      "red": {
+        "mutation": "M1B-13-saved-key: in chatmon/brains.py, '        return keychain.get(self.name) or \"\"' became '        return \"\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_brain_uses_its_saved_key_when_its_variable_isnt_set",
+        "observed_diagnostic": "_________ test_a_brain_uses_its_saved_key_when_its_variable_isnt_set __________",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "abdc203780ff1cd595d8cc840898d715c82da229eb86c2e5ab559351b3c0e53c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-14-seconds",
+      "acceptance": [
+        "AC-M1B-14"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_streaming.py::test_a_brain_test_says_how_long_the_answer_took_or_whats_wrong"
+      ],
+      "method": "Red drill M1B-14-seconds through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_streaming.py",
+          "sha256": "de7c8d05cf58c33dc5a7cb878f4af3c461c2bda8ddb767ffb1c3ac71e9852ddb"
+        }
+      ],
+      "scope_sha256": "438795072886b12067be5ebec0ac873415660b8389bb293fd653f6656f09ef98",
+      "red": {
+        "mutation": "M1B-14-seconds: in chatmon/brains.py, '        self.finished.emit(ok, text, round(time.monotonic() - self._started, 2))' became '        self.finished.emit(ok, text, 0.0)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_brain_test_says_how_long_the_answer_took_or_whats_wrong",
+        "observed_diagnostic": "_______ test_a_brain_test_says_how_long_the_answer_took_or_whats_wrong ________",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "d5bbc40aa0e861df6213c29009fc3fe3629ccb31b5cb16cb50bfe15d77bcf25f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-15-chat-brain",
+      "acceptance": [
+        "AC-M1B-15"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_chats.py::test_a_chat_remembers_its_brain_and_the_question_to_ask_another"
+      ],
+      "method": "Red drill M1B-15-chat-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "f71d12e1786c0fb401b5a5417e3c99fa9556e887b0a661c7820d958c29de57e4",
+      "red": {
+        "mutation": "M1B-15-chat-brain: in chatmon/chats.py, '            self.brain = message.by' became '            pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_chat_remembers_its_brain_and_the_question_to_ask_another",
+        "observed_diagnostic": "_______ test_a_chat_remembers_its_brain_and_the_question_to_ask_another _______",
+        "before": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "895fedf9386d0cd7c54900f9a1534b4bf78f75ddbfc20c714cb9c71b9c7ed0c2"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-16-no-secrets",
+      "acceptance": [
+        "AC-M1B-16"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_backup.py::test_no_key_ever_goes_into_a_backup",
+        "tests/test_backup.py::test_a_key_slipped_into_a_backup_by_hand_is_never_brought_back"
+      ],
+      "method": "Red drill M1B-16-no-secrets through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/backup.py",
+          "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_backup.py",
+          "sha256": "c4d630d291cbc80f16712e2d37ae88f850dc690270bfad375bdd42cf55cda379"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "a6d855fef5cd8bcfc11e6e98a93527e376403f0a66a22bc10de119d345afae3d",
+      "red": {
+        "mutation": "M1B-16-no-secrets: in chatmon/backup.py, '        return {k: _no_secrets(v) for k, v in value.items() if not (isinstance(k, str) and _SECRET.search(k))}' became '        return {k: _no_secrets(v) for k, v in value.items()}'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_no_key_ever_goes_into_a_backup",
+        "observed_diagnostic": "_____________________ test_no_key_ever_goes_into_a_backup _____________________",
+        "before": [
+          {
+            "path": "chatmon/backup.py",
+            "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/backup.py",
+            "sha256": "4353fd2f014e818bf19f09689ceed3cb6aec0d2182155f6b92a4e3ef9c4ca425"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/backup.py",
+            "sha256": "d3bd1cd5888a3154ece55bbe2576c92f009dbd129119f8229d2401f343b0e3ac"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-17-only-its-brain",
+      "acceptance": [
+        "AC-M1B-17"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_chats.py::test_attached_text_goes_again_only_to_the_brain_of_that_name",
+        "tests/test_chats.py::test_attached_text_goes_again_only_to_the_brain_it_went_to"
+      ],
+      "method": "Red drill M1B-17-only-its-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills.log",
+        "sha256": "539a9aeb99dd8d3f5a598dea81f12ed42132b302766fffddcec529a423760d08"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/chats.py",
+          "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+        },
+        {
+          "path": "chatmon/memory.py",
+          "sha256": "b181faa58af667a9a37405c7db6b6073f65e793198dc5fafd255f20b852f5f5c"
+        },
+        {
+          "path": "chatmon/settings.py",
+          "sha256": "b1acf8c868d28a5af93e40c580c1b948866f0a93c3f4f59f684d889c555a8c57"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_chats.py",
+          "sha256": "46a0a4a5bda6fa6ba7cda972e97ef3167ae57b712ea3333f93822388f5be6dee"
+        },
+        {
+          "path": "tests/test_settings.py",
+          "sha256": "affe95b6d0bab7956280a75aaf0528e05caedf030fefeefef9fd6ae0b7cdd112"
+        }
+      ],
+      "scope_sha256": "f71d12e1786c0fb401b5a5417e3c99fa9556e887b0a661c7820d958c29de57e4",
+      "red": {
+        "mutation": "M1B-17-only-its-brain: in chatmon/chats.py, '                if m.sent and _same(m, brain, name):' became '                if m.sent:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_attached_text_goes_again_only_to_the_brain_of_that_name",
+        "observed_diagnostic": "________ test_attached_text_goes_again_only_to_the_brain_of_that_name _________",
+        "before": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "00e4d1cfc642b9da417f65282ed49c976cf2e34b35bc1a29d3144f65da9afd63"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/chats.py",
+            "sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-05-stale-folders",
+      "acceptance": [
+        "AC-M1B-05"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_brains.py::test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept"
+      ],
+      "method": "Red drill W4-M1B-05-stale-folders through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills-new.log",
+        "sha256": "0f40e449fe46b2f3c58cd3015ce5f3e9ddba91f93c10402313db95485e28e939"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        }
+      ],
+      "scope_sha256": "ec0146bc0ce3d7655320437fa748eb6d17eea39277576599b79e246245385e87",
+      "red": {
+        "mutation": "W4-M1B-05-stale-folders: in chatmon/brains.py, '_tidying = threading.Thread(target=remove_stale_folders, name=\"chatmon-tidy\", daemon=True)' became '_tidying = threading.Thread(target=lambda: 0, name=\"chatmon-tidy\", daemon=True)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept",
+        "observed_diagnostic": "____ test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept ____",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "532d90b5dc36d2e3a3b5d5683af207bd2cf98c937e2e1a922f040c691dd442c5"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4C-RED-M1B-12-partial",
+      "acceptance": [
+        "AC-M1B-12"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_streaming.py::test_the_anthropic_api_streams_each_piece_as_its_written",
+        "tests/test_streaming.py::test_the_openai_responses_api_streams"
+      ],
+      "method": "Red drill W4-M1B-12-partial through tests/drills/run.py on this Windows workstation, in a temporary copy of 3586a0d's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 3586a0d, wave4/crash merged.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4",
+          "pyqt6": "6.11.0"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m1b/wave4c/drills-new.log",
+        "sha256": "0f40e449fe46b2f3c58cd3015ce5f3e9ddba91f93c10402313db95485e28e939"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/portowner.py",
+          "sha256": "8088e2ee077fdae2399de93dccfc21919ba4269dab1f9eec963b06e9b2a74425"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_brains.py",
+          "sha256": "fff50c7d100160385ef3fda84de0bfb05d0aed0eaa01f2fd82df66782c14858e"
+        },
+        {
+          "path": "tests/test_portowner.py",
+          "sha256": "0dac6b0ce7b977c5facb5f7b4cee185c73442799a90be4208628e5a5c9b65f70"
+        },
+        {
+          "path": "tests/test_streaming.py",
+          "sha256": "de7c8d05cf58c33dc5a7cb878f4af3c461c2bda8ddb767ffb1c3ac71e9852ddb"
+        }
+      ],
+      "scope_sha256": "33fee56880f25d6a062b303b18be9e3ae16f4ce14c3a5ed05214512b972e9d53",
+      "red": {
+        "mutation": "W4-M1B-12-partial: in chatmon/brains.py, '            for piece in stream.feed(chunk):\\n                self.partial.emit(piece)\\n            return' became '            stream.feed(chunk)\\n            return'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_anthropic_api_streams_each_piece_as_its_written",
+        "observed_diagnostic": "__________ test_the_anthropic_api_streams_each_piece_as_its_written ___________",
+        "before": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "439f7ab7c25903d95881b5db6db5e0f9d2ae0e72ce7702c986661ae86e4bb929"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/brains.py",
+            "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "scope_sha256": "b3ee46b5e13ec88e41fa660a9deec4f3fadc48872ce2b595887ba7360c756ef5",
+    "scope_sha256": "112ad74b375d7b19e2ee1b1c7e27ac5bee8867e13367abd9651b57cfc95a7341",
     "inputs": [
       {
         "path": "chatmon/backup.py",
@@ -9205,7 +11613,7 @@ them. M1B is closed on bf9d8ac.
       },
       {
         "path": "chatmon/brains.py",
-        "sha256": "be236bb1a7ebae41ad595623a4a0adf125fa79404dff5f0867d11dd56b0676df"
+        "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
       },
       {
         "path": "chatmon/chats.py",
@@ -9233,7 +11641,7 @@ them. M1B is closed on bf9d8ac.
       },
       {
         "path": "docs/delivery/ROADMAP.md",
-        "sha256": "aeddfd8c784b6b58d2a61c65d8f0b590ad1a17f30aa8c90884d9eca915e73732"
+        "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
       },
       {
         "path": "docs/delivery/reports/wave4/cilog.py",
@@ -9310,8 +11718,8 @@ them. M1B is closed on bf9d8ac.
       "T-M1B-J"
     ],
     "pending_operations": [],
-    "next_action": "None in M1B on bf9d8ac. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree. wave4/crash (not merged at bf9d8ac) changes chatmon/brains.py: once it merges, these receipts bind what it changed and need a refresh, W4B-BEH-WINDOWS, W4B-BEH-CI-LINUX, W4B-BEH-CI-MACOS, W4B-BEH-CI-WINDOWS, W4B-RED-M1B-01-allowlist, W4B-RED-M1B-02-strict-mcp, W4B-RED-M1B-03-owner-check, W4B-RED-M1B-04-placeholder, W4B-RED-M1B-09-status, W4B-RED-M1B-10-no-wait, W4B-RED-M1B-11-finder, W4B-RED-M1B-13-saved-key, W4B-RED-M1B-14-seconds, W4B-RED-M1B-15-chat-brain, W4B-RED-M1B-17-only-its-brain, W4B-RED-M1B-05-stale-folders, W4B-RED-M1B-12-partial (17 of 22); the others stay fresh.",
-    "source_revision": "bf9d8ac2cbb3a97cf8b38d02643f2bca9847d545"
+    "next_action": "None in M1B on 3586a0d.",
+    "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
   }
 }
 ```
