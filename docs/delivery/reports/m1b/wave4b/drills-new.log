@@ -1,0 +1,106 @@
+red drills from docs\delivery\reports\m1b\wave4b\drill-spec-new.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-9wlyywye
+copied 310 files
+
+=== drill W4-M1B-05-stale-folders (AC-M1B-05) on chatmon/brains.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_brains.py::test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001B884FD9090>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-5074/test_folders_a_stopped_chatmon0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B8850F9F30>
+
+    def test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept(qapp, tmp_path, monkeypatch):
+        import subprocess
+        import time
+        import sys
+        import tempfile
+    
+        ended = subprocess.Popen([sys.executable, "-c", "pass"])
+        ended.wait()
+        running = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+        try:
+            made = {}
+            for name in (f"chatmon-ask-{ended.pid}-a1", f"chatmon-ask-{running.pid}-b2", f"chatmon-ask-{os.getpid()}-c3", "chatmon-ask-old_d4", "chatmon-ask-new_e5"):
+                made[name] = tmp_path / name
+                made[name].mkdir()
+                (made[name] / "question-1.txt").write_text("attached text", encoding="utf-8")
+            old = time.time() - 2 * 3600
+            os.utime(made["chatmon-ask-old_d4"], (old, old))  # from before 0.10, and hours old
+            (tmp_path / "chatmon-ask-not-a-folder").write_text("x")
+            monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+            monkeypatch.setattr(brains, "_tidied", False)
+            brains.Asker()  # as Chatmon starts
+            brains._tidying.join(10)  # off the screen's thread
+            left = sorted(p.name for p in tmp_path.iterdir())
+>           assert left == sorted([f"chatmon-ask-{running.pid}-b2", f"chatmon-ask-{os.getpid()}-c3", "chatmon-ask-new_e5", "chatmon-ask-not-a-folder"])
+E           AssertionError: assert ['chatmon-ask...n-ask-old_d4'] == ['chatmon-ask...not-a-folder']
+E             
+E             At index 1 diff: 'chatmon-ask-43132-a1' != 'chatmon-ask-51196-c3'
+E             Left contains 2 more items, first extra item: 'chatmon-ask-not-a-folder'
+E             Use -v to get more diff
+
+tests\test_brains.py:513: AssertionError
+1 failed in 0.43s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.37s
+
+=== drill W4-M1B-12-partial (AC-M1B-12) on chatmon/brains.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_streaming.py::test_the_anthropic_api_streams_each_piece_as_its_written tests/test_streaming.py::test_the_openai_responses_api_streams
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.34s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_the_anthropic_api_streams_each_piece_as_its_written ___________
+
+provider = <replay_server.Provider object at 0x000001A50273DE80>
+
+    def test_the_anthropic_api_streams_each_piece_as_its_written(provider):
+        provider.replies.append(Reply(pieces=ANTHROPIC_EVENTS))
+        got = ask(brains.Asker(), anthropic(provider))
+>       assert got["partial"] == ["Hel", "lo, ", "Randy!"] and got["answered"] == "Hello, Randy!" and got["failed"] is None
+E       AssertionError: assert ([] == ['Hel', 'lo, ', 'Randy!']
+E         
+E         Right contains 3 more items, first extra item: 'Hel'
+E         Use -v to get more diff)
+
+tests\test_streaming.py:60: AssertionError
+____________________ test_the_openai_responses_api_streams ____________________
+
+provider = <replay_server.Provider object at 0x000001A503720F50>
+
+    def test_the_openai_responses_api_streams(provider):
+        provider.replies.append(Reply(pieces=sse(
+            {"type": "response.created", "response": {"id": "r"}},
+            {"type": "response.output_text.delta", "delta": "Two "},
+            {"type": "response.output_text.delta", "delta": "words."},
+            {"type": "response.completed", "response": {"id": "r", "output_text": "Two words."}},
+            named=True,
+        )))
+        brain = Brain("openai-api", "responses", label="OpenAI API", url=f"{provider.url}/v1", model="gpt-6.1-sol", api_key="sk-test-123456789")
+        got = ask(brains.Asker(), brain)
+>       assert got["partial"] == ["Two ", "words."] and got["answered"] == "Two words."
+E       AssertionError: assert ([] == ['Two ', 'words.']
+E         
+E         Right contains 2 more items, first extra item: 'Two '
+E         Use -v to get more diff)
+
+tests\test_streaming.py:75: AssertionError
+2 failed in 1.33s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.33s
+
+=== summary
+PASS W4-M1B-05-stale-folders
+PASS W4-M1B-12-partial
