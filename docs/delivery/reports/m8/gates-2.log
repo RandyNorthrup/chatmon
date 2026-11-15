@@ -1,0 +1,14 @@
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m ruff check .
+All checks passed!
+exit 0
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m mypy --platform win32
+Success: no issues found in 68 source files
+exit 0
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m mypy --platform linux
+Success: no issues found in 68 source files
+exit 0
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m mypy --platform darwin
+Success: no issues found in 68 source files
+exit 0
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe packaging/extract_strings.py --check
+exit 0

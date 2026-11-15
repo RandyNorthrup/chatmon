@@ -1,0 +1,106 @@
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider -rs tests/test_i18n_app.py tests/test_rich_text.py tests/test_winfiles.py tests/test_updates.py tests/test_asking.py tests/test_app_m7.py tests/test_app_reminders.py tests/test_commands.py tests/test_cli.py tests/test_settingswin.py
+....................................................................ss.. [ 47%]
+........................................................................ [ 95%]
+.......                                                                  [100%]
+============================== warnings summary ===============================
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[installed]
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=1116, family=2, type=1, proto=0, laddr=('127.0.0.1', 59308)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_install_runs_root_side_then_relaunches_or_says_why[refused]
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=1168, family=2, type=1, proto=0, laddr=('127.0.0.1', 59313)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_newer_release_is_downloaded_checked_and_offered
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=1972, family=2, type=1, proto=0, laddr=('127.0.0.1', 59320)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_tampered_download_is_thrown_away_never_offered
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=1816, family=2, type=1, proto=0, laddr=('127.0.0.1', 59325)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_past_the_limit_is_stopped
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2040, family=2, type=1, proto=0, laddr=('127.0.0.1', 59331)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_nothing_newer_says_so
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2052, family=2, type=1, proto=0, laddr=('127.0.0.1', 59337)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_chatmon_that_cant_install_it_is_only_told
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2056, family=2, type=1, proto=0, laddr=('127.0.0.1', 59343)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_metered_connection_is_said_by_a_flag_not_by_its_words
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2052, family=2, type=1, proto=0, laddr=('127.0.0.1', 59346)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_each_failure_says_what_it_was_about
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2100, family=2, type=1, proto=0, laddr=('127.0.0.1', 59348)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_is_checked_again_just_before_its_installed
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2140, family=2, type=1, proto=0, laddr=('127.0.0.1', 59357)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_installer_that_wont_start_says_so_and_frees_the_updater
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2020, family=2, type=1, proto=0, laddr=('127.0.0.1', 59362)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_checksums_not_signed_with_the_release_key_are_never_trusted
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=1924, family=2, type=1, proto=0, laddr=('127.0.0.1', 59372)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_on_windows_chatmon_stays_until_the_installer_asks_it_to_quit
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2028, family=2, type=1, proto=0, laddr=('127.0.0.1', 59376)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_a_download_that_cant_be_checked_yet_is_looked_at_again_within_the_hour
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2300, family=2, type=1, proto=0, laddr=('127.0.0.1', 59381)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_an_update_that_cant_be_checked_at_install_time_is_kept_for_later
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=1780, family=2, type=1, proto=0, laddr=('127.0.0.1', 59386)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change
+  C:\Users\Randy\Coding\chatmon\.venv\Lib\site-packages\_pytest\fixtures.py:1083: ResourceWarning: unclosed <socket.socket fd=2012, family=2, type=1, proto=0, laddr=('127.0.0.1', 59391)>
+    next(it)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [2] tests\test_updates.py:557: pkexec: Linux
+149 passed, 2 skipped, 16 warnings in 60.99s (0:01:00)
+exit 0
