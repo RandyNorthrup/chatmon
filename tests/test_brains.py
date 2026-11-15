@@ -506,6 +506,7 @@ def test_folders_a_stopped_chatmon_left_are_removed_and_running_ones_kept(qapp, 
         monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
         monkeypatch.setattr(brains, "_tidied", False)
         brains.Asker()  # as Chatmon starts
+        brains._tidying.join(10)  # off the screen's thread
         left = sorted(p.name for p in tmp_path.iterdir())
         assert left == sorted([f"chatmon-ask-{running.pid}-b2", f"chatmon-ask-{os.getpid()}-c3", "chatmon-ask-new_e5", "chatmon-ask-not-a-folder"])
         brains.Asker()

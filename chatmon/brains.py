@@ -1316,6 +1316,7 @@ def command_environment(brain: Brain, environ: dict[str, str]) -> dict[str, str]
 ASK_PREFIX = "chatmon-ask-"  # each question's own empty folder: chatmon-ask-<Chatmon's process id>-<random>
 STALE_AFTER_S = 2 * 24 * 3600  # a folder this old is left over whoever's it was (process ids come round again)
 _tidied = False
+_tidying: threading.Thread | None = None  # the start-up tidy (remove_stale_folders), while it runs
 
 
 def remove_stale_folders(root: Path | None = None) -> int:
@@ -1498,10 +1499,13 @@ class Asker(QObject):
 
     def __init__(self, parent: QObject | None = None):
         super().__init__(parent)
-        global _tidied
+        global _tidied, _tidying
         if not _tidied:  # once, as Chatmon starts: what a Chatmon that was stopped mid-question left behind
             _tidied = True
-            remove_stale_folders()
+            # On a thread of its own: the temp folder can hold tens of thousands of entries, and listing them on the
+            # screen's thread would hold up the chatmon's first moments.
+            _tidying = threading.Thread(target=remove_stale_folders, name="chatmon-tidy", daemon=True)
+            _tidying.start()
         self._nam = QNetworkAccessManager(self)
         self._proc: QProcess | None = None
         self._reply: QNetworkReply | None = None
