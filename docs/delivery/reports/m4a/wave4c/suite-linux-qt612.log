@@ -1,0 +1,114 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 ; /var/tmp/m4a-venv/bin/python: 3.14.9 PyQt6 6.12.1 Qt 6.12.0; 3586a0d's files
+$ /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/test_screen_readers.py tests/test_a11y.py tests/test_presence.py tests/test_linuxsession.py tests/test_heads_up.py tests/test_platform_events.py tests/test_portal_bus.py tests/test_winlock.py tests/test_macnative.py
+................ssssss....s...s.................s............s.........s [ 69%]
+sss.................sssssssssss                                          [100%]
+==================================== PASSES ====================================
+_____ test_an_x_library_that_wont_load_goes_to_the_log_and_x_says_nothing ______
+------------------------------ Captured log call -------------------------------
+DEBUG    chatmon.presence:presence.py:284 couldn't reach the X server's libraries: /tmp/pytest-of-randy/pytest-610/test_an_x_library_that_wont_lo0/libX11.so.6: file too short
+=========================== short test summary info ============================
+PASSED tests/test_screen_readers.py::test_a_screen_readers_process_is_found_by_its_name
+PASSED tests/test_screen_readers.py::test_orcas_remote_controller_is_the_reader_to_speak_through
+PASSED tests/test_screen_readers.py::test_before_at_spi2_core_262_screen_reader_enabled_says_one_runs
+PASSED tests/test_screen_readers.py::test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is
+PASSED tests/test_screen_readers.py::test_at_spis_bus_going_forgets_what_it_said
+PASSED tests/test_screen_readers.py::test_gnomes_screen_reader_setting_says_one_runs
+PASSED tests/test_screen_readers.py::test_a11y_reads_what_was_last_heard
+PASSED tests/test_screen_readers.py::test_desk_passes_a_screen_reader_starting_on
+PASSED tests/test_screen_readers.py::test_with_at_spi2_cores_own_launcher_a_reader_registering_is_heard
+PASSED tests/test_screen_readers.py::test_a_launcher_before_262_says_so_and_262s_is_enabled_alone_doesnt[on-a screen reader]
+PASSED tests/test_screen_readers.py::test_a_launcher_before_262_says_so_and_262s_is_enabled_alone_doesnt[gone-None]
+PASSED tests/test_screen_readers.py::test_gnomes_setting_turns_the_screen_reader_on_and_off
+PASSED tests/test_screen_readers.py::test_orca_starting_and_stopping_while_chatmon_runs_is_heard
+PASSED tests/test_a11y.py::test_a_bubble_is_read_as_plain_words_with_its_buttons
+PASSED tests/test_a11y.py::test_a_typed_button_is_its_label_or_the_start_only_it_has
+PASSED tests/test_a11y.py::test_orca_is_found_and_asked_to_present_the_message
+PASSED tests/test_presence.py::test_a_full_screen_app_fills_the_chatmons_screen_from_its_top_edge
+PASSED tests/test_presence.py::test_bubbles_wait_on_macos_while_a_full_screen_app_is_over_the_chatmon
+PASSED tests/test_presence.py::test_every_reading_answers_or_says_it_cant
+PASSED tests/test_presence.py::test_the_overlay_tells_when_youre_away
+PASSED tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
+PASSED tests/test_presence.py::test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high
+PASSED tests/test_presence.py::test_macos_high_contrast_is_appkits_increase_contrast
+PASSED tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms
+PASSED tests/test_presence.py::test_qts_contrast_change_is_passed_on
+PASSED tests/test_presence.py::test_windows_setting_changes_are_passed_on
+PASSED tests/test_presence.py::test_an_x_library_that_wont_load_goes_to_the_log_and_x_says_nothing
+PASSED tests/test_presence.py::test_a_full_screen_window_counts_only_on_the_stages_screen
+PASSED tests/test_presence.py::test_covered_on_x11_asks_where_the_full_screen_window_is
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[dunst-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[Plasma-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[SwayNotificationCenter-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[Xfce Notify Daemon-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4]
+PASSED tests/test_presence.py::test_the_linux_listeners_go_with_their_desk
+PASSED tests/test_presence.py::test_x11_says_where_a_window_is
+PASSED tests/test_linuxsession.py::test_the_power_saver_profile_is_heard_as_it_changes
+PASSED tests/test_linuxsession.py::test_running_on_battery_saves_power_too
+PASSED tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing
+PASSED tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown
+PASSED tests/test_linuxsession.py::test_power_saving_follows_upower_on_a_bus
+PASSED tests/test_heads_up.py::test_battery_warns_once_per_level
+PASSED tests/test_heads_up.py::test_battery_resets_when_plugged_in
+PASSED tests/test_heads_up.py::test_battery_off_or_missing
+PASSED tests/test_heads_up.py::test_disk_once_a_day
+PASSED tests/test_heads_up.py::test_updates_once_a_day
+PASSED tests/test_heads_up.py::test_counts
+PASSED tests/test_heads_up.py::test_read_disks_skips_duplicates_and_missing
+PASSED tests/test_heads_up.py::test_dnf_pacman_zypper_and_windows_update_counts
+PASSED tests/test_heads_up.py::test_a_restart_to_finish_updating_is_its_own_heads_up
+PASSED tests/test_heads_up.py::test_each_platform_has_its_own_checks
+PASSED tests/test_heads_up.py::test_macos_software_update_count
+PASSED tests/test_heads_up.py::test_two_batteries_count_as_one_weighted_by_what_each_holds
+PASSED tests/test_heads_up.py::test_batteries_in_different_units_are_averaged_and_a_mouses_is_left_out
+PASSED tests/test_heads_up.py::test_packagekit_counts_where_chatmon_knows_no_package_manager
+PASSED tests/test_heads_up.py::test_upowers_display_device_in_one_answer
+PASSED tests/test_heads_up.py::test_the_readings_can_be_taken_on_a_worker_thread
+PASSED tests/test_heads_up.py::test_upower_is_asked_once_from_a_worker_thread
+PASSED tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent
+PASSED tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone
+PASSED tests/test_platform_events.py::test_announcements_fall_back_to_the_notification
+PASSED tests/test_platform_events.py::test_voiceover_holds_announcements_until_chatmon_is_in_front
+PASSED tests/test_platform_events.py::test_the_speech_fallback_says_it_at_once_instead
+PASSED tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
+PASSED tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[dunst-on-Do Not Disturb]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[dunst-off-None]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[mako-on-Do Not Disturb]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[mako-off-None]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[SwayNotificationCenter-on-Do Not Disturb]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[Xfce Notify Daemon-on-Do Not Disturb]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[Xfce Notify Daemon-unset-None]
+PASSED tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server[Plasma-on-Do Not Disturb]
+PASSED tests/test_platform_events.py::test_asking_about_do_not_disturb_never_starts_a_service
+PASSED tests/test_portal_bus.py::test_the_portal_is_asked_in_its_own_types_and_its_answer_read
+PASSED tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed[2-ReadOne]
+PASSED tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed[1-Read]
+PASSED tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing
+SKIPPED [1] tests/test_a11y.py:65: Windows
+SKIPPED [1] tests/test_a11y.py:73: macOS
+SKIPPED [1] tests/test_presence.py:18: Windows only
+SKIPPED [1] tests/test_presence.py:33: Windows only
+SKIPPED [1] tests/test_presence.py:55: Windows only
+SKIPPED [1] tests/test_presence.py:74: macOS only
+SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+SKIPPED [1] tests/test_presence.py:220: macOS only
+SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+SKIPPED [1] tests/test_heads_up.py:135: macOS only
+SKIPPED [1] tests/test_platform_events.py:104: Windows only
+SKIPPED [1] tests/test_platform_events.py:119: Windows only
+SKIPPED [1] tests/test_platform_events.py:127: Windows only
+SKIPPED [1] tests/test_platform_events.py:181: Windows only
+SKIPPED [1] tests/test_winlock.py:17: Windows only
+SKIPPED [1] tests/test_winlock.py:41: Windows only
+SKIPPED [1] tests/test_winlock.py:78: Windows only
+SKIPPED [1] tests/test_macnative.py:20: macOS only
+SKIPPED [1] tests/test_macnative.py:29: macOS only
+SKIPPED [1] tests/test_macnative.py:63: macOS only
+SKIPPED [1] tests/test_macnative.py:97: macOS only
+SKIPPED [1] tests/test_macnative.py:125: macOS only
+SKIPPED [1] tests/test_macnative.py:143: macOS only
+SKIPPED [1] tests/test_macnative.py:171: macOS only
+SKIPPED [1] tests/test_macnative.py:179: macOS only
+78 passed, 25 skipped in 92.53s (0:01:32)
+# exit 0
