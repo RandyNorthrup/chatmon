@@ -969,17 +969,20 @@ def _compositor_offering(globals_, monkeypatch):
     def answer():
         registry = None
         deadline = time.monotonic() + 5
-        while time.monotonic() < deadline:
-            for oid, op, payload in server.requests():
-                if oid == wayland.DISPLAY_ID and op == 1:
-                    (registry,) = wayland.decode("n", payload)
-                    for name, (interface, version) in enumerate(globals_, start=1):
-                        server.send(registry, layer.EV_REGISTRY_GLOBAL, "usu", name, interface, version)
-                elif oid == wayland.DISPLAY_ID and op == 0:
-                    (callback,) = wayland.decode("n", payload)
-                    server.send(callback, 0, "u", 1)  # wl_callback.done
-                    return
-            time.sleep(0.01)
+        try:
+            while time.monotonic() < deadline:
+                for oid, op, payload in server.requests():
+                    if oid == wayland.DISPLAY_ID and op == 1:
+                        (registry,) = wayland.decode("n", payload)
+                        for name, (interface, version) in enumerate(globals_, start=1):
+                            server.send(registry, layer.EV_REGISTRY_GLOBAL, "usu", name, interface, version)
+                    elif oid == wayland.DISPLAY_ID and op == 0:
+                        (callback,) = wayland.decode("n", payload)
+                        server.send(callback, 0, "u", 1)  # wl_callback.done
+                        return
+                time.sleep(0.01)
+        finally:
+            server_sock.close()  # its end of the pair: layer.offered() closes the other
 
     threading.Thread(target=answer, daemon=True).start()
     monkeypatch.setattr(layer.Connection, "open", classmethod(lambda cls, env=None: wayland.Connection(client)))
