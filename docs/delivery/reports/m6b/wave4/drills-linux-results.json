@@ -1,0 +1,152 @@
+[
+  {
+    "id": "M6B-01-overlay-key-press-taken-as-release",
+    "requirement": "M6B-01.A2",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "        if state == 1:\n            key = keyboard.press(code)\n",
+      "replace": "        if state == 0:\n            key = keyboard.press(code)\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_typing_reaches_the_stage_through_the_keymap"
+    ],
+    "expected": [
+      "test_typing_reaches_the_stage_through_the_keymap"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "963779ae04d3f21b3a2f8c8b8365a2aad37e3152ecfbd80dcc169347511a8460",
+    "baseline_exit": 0,
+    "mutated_sha256": "08dcaa4e8981293f7236ea0be872000d0667d9a310e6dd56ce45127c96cf1d03",
+    "mutated_exit": 1,
+    "observed": "_______________ test_typing_reaches_the_stage_through_the_keymap _______________",
+    "after_sha256": "963779ae04d3f21b3a2f8c8b8365a2aad37e3152ecfbd80dcc169347511a8460",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-02-winpipe-loads-windows-on-import",
+    "requirement": "M6B-02.A2",
+    "file": "chatmon/winpipe.py",
+    "mutation": {
+      "find": "_dlls: dict[str, Any] = {}\n",
+      "replace": "_dlls: dict[str, Any] = {\"kernel32\": ctypes.WinDLL(\"kernel32\", use_last_error=True)}\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_imports.py"
+    ],
+    "expected": [
+      "chatmon.winpipe doesn't import on linux"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634",
+    "baseline_exit": 0,
+    "mutated_sha256": "e6841080801fd9f447cc22d27d38a10cc91e23bde566d48e89d60f33fa2ef628",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: chatmon.winpipe doesn't import on linux:",
+    "after_sha256": "15d528e2fd2838b153d1dbbbe98b6fdb40c532ca0499f6df8753258766efc634",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-log-left-at-the-umask",
+    "requirement": "M6B-03.A2",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "            os.fchmod(fd, 0o600)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "expected": [
+      "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "f1baee7428fa0ac5763e2ca920ac80ae12bc22d902badd68df6c914b31023e2a",
+    "mutated_exit": 1,
+    "observed": "____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-log-followed-through-a-link",
+    "requirement": "M6B-03.A2",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "getattr(os, \"O_NOFOLLOW\", 0)",
+      "replace": "0"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "expected": [
+      "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "ad4e67abd85473a830c4c7bd22d07422411e6f544c5886ba2239508875105a91",
+    "mutated_exit": 1,
+    "observed": "____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-typed-text-in-the-debug-log",
+    "requirement": "M6B-03.A3",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "        logger.debug(\"text input event %s, %s bytes\", opcode, len(args))",
+      "replace": "        logger.debug(\"text input event %s %r\", opcode, args[:40])"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log"
+    ],
+    "expected": [
+      "test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "963779ae04d3f21b3a2f8c8b8365a2aad37e3152ecfbd80dcc169347511a8460",
+    "baseline_exit": 0,
+    "mutated_sha256": "c370a774ff5ae5708d07430a5d10911372a3091a847d7a981db06e398486588f",
+    "mutated_exit": 1,
+    "observed": "________ test_what_is_typed_in_the_ask_box_never_reaches_the_debug_log _________",
+    "after_sha256": "963779ae04d3f21b3a2f8c8b8365a2aad37e3152ecfbd80dcc169347511a8460",
+    "restored_exit": 0
+  }
+]

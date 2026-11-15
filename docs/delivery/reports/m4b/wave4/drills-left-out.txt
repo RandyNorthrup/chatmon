@@ -1,0 +1,4 @@
+docs/delivery/reports/m4b/drill-spec.json: 36 drills kept in docs/delivery/reports/m4b/wave4/drill-spec.json, 0 left out
+docs/delivery/reports/m4b/wsl-drill-spec.json: 6 drills kept in docs/delivery/reports/m4b/wave4/wsl-drill-spec.json, 2 left out
+  L-01F-no-portal: its find text occurs 0 times in chatmon/shortcutportal.py (expected 1)
+  L-02D-linux-player: its find text occurs 0 times in chatmon/sound.py (expected 1)

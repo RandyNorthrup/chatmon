@@ -1,0 +1,10 @@
+tests/test_macnative.py::test_app_nap_is_held_off_so_timers_keep_their_time
+tests/test_macnative.py::test_the_stage_floats_on_every_space_but_not_in_full_screen_apps
+tests/test_macnative.py::test_a_full_screen_app_over_the_chatmon_is_seen
+tests/test_macnative.py::test_the_login_item_says_how_it_stands
+tests/test_macnative.py::test_cmd_v_comes_through_an_edit_menu_of_chatmons_own
+tests/test_macnative.py::test_a_menu_shown_natively_has_the_qmenus_items_and_triggers_its_actions
+tests/test_macnative.py::test_menu_text_is_as_macos_shows_it
+tests/test_macnative.py::test_sleep_wake_displays_accessibility_and_low_power_are_heard
+
+8 tests collected in 0.21s

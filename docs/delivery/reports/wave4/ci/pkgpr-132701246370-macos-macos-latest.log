@@ -1,0 +1,594 @@
+macos (macos-latest)	UNKNOWN STEP	﻿2026-11-15T04:38:46.7894110Z Current runner version: '2.338.2'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7953940Z ##[group]Runner Image Provisioner
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7954820Z Hosted Compute Agent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7955410Z Version: 20261028.624
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7955870Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7957570Z Build Date: 2026-10-28T21:51:42Z
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7958820Z Worker ID: {57834e1e-4028-4a63-ab97-8e17a2878218}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7959340Z Region: westus
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7959730Z Cloud: MacCloud
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7960140Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7962060Z ##[group]Operating System
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7962550Z macOS
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7962950Z 26.7.2
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7963350Z 25G332
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7963700Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7964080Z ##[group]Runner Image
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7964610Z Image: macos-26-arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7965430Z Version: 20261102.0473.1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7966470Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20261102.0473/images/macos/macos-26-arm64-Readme.md
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7967630Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20261102.0473
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7968320Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7969590Z ##[group]GITHUB_TOKEN Permissions
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7972410Z Contents: read
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7972980Z Metadata: read
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7973490Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7975880Z Secret source: Actions
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7976590Z Cache mode: write
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.7977190Z Prepare workflow directory
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.8868100Z Prepare all required actions
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:46.8919910Z Getting action download info
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:47.3231430Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:47.6039610Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.0913190Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.2976920Z Complete job name: macos (macos-latest)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3923530Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3924560Z with:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3924910Z   persist-credentials: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3926450Z   repository: RandyNorthrup/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3930430Z   token: ***
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3930840Z   ssh-strict: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3931240Z   ssh-user: git
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3931600Z   clean: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3931990Z   sparse-checkout-cone-mode: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3932440Z   fetch-depth: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3932770Z   fetch-tags: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3933120Z   show-progress: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3933460Z   lfs: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3933860Z   submodules: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3934400Z   set-safe-directory: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3934850Z   allow-unsafe-pr-checkout: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3935850Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3936180Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.3936560Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.9382650Z Syncing repository: RandyNorthrup/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.9384660Z ##[group]Getting Git version info
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.9385260Z Working directory is '/Users/runner/work/chatmon/chatmon'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:48.9386450Z [command]/opt/homebrew/bin/git version
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0021030Z git version 2.56.0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0060260Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0065670Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/211ef8ba-69b2-4c43-aa27-494ffb637188/.gitconfig'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0067260Z Temporarily overriding HOME='/Users/runner/work/_temp/211ef8ba-69b2-4c43-aa27-494ffb637188' before making global git config changes
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0068560Z Adding repository directory to the temporary git global config as a safe directory
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0070130Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0230260Z Deleting the contents of '/Users/runner/work/chatmon/chatmon'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0236280Z ##[group]Determining repository object format
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0237380Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0238400Z ##[group]Initializing the repository
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0243460Z [command]/opt/homebrew/bin/git init /Users/runner/work/chatmon/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0590950Z hint: Using 'master' as the name for the initial branch. This default branch name
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0593730Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0595850Z hint: to use in all of your new repositories, which will suppress this warning,
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0598240Z hint: call:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0599890Z hint:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0601840Z hint: 	git config --global init.defaultBranch <name>
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0602590Z hint:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0603430Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0606490Z hint: 'development'. The just-created branch can be renamed via this command:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0610670Z hint:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0612400Z hint: 	git branch -m <name>
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0613900Z hint:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0614840Z hint: Disable this message with "git config set advice.defaultBranchName false"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0615910Z Initialized empty Git repository in /Users/runner/work/chatmon/chatmon/.git/
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0618790Z [command]/opt/homebrew/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0948240Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0950600Z ##[group]Disabling automatic garbage collection
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0951450Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0953400Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0955580Z ##[group]Setting up auth
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0956110Z Removing SSH command configuration
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0956850Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.0959710Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.2481790Z Removing HTTP extra header
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.2491280Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.2519560Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.3740270Z Removing includeIf entries pointing to credentials config files
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.3742790Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.3856830Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5393080Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5699740Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git.path /Users/runner/work/_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5739390Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5741820Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5750620Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5753890Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5757540Z ##[group]Fetching the repository
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:49.5766770Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +df725342a3405655e30940839a5d168404170cea:refs/remotes/pull/18/merge
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8195740Z From https://github.com/RandyNorthrup/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8200270Z  * [new ref]         df725342a3405655e30940839a5d168404170cea -> pull/18/merge
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8243040Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8244040Z ##[group]Determining the checkout info
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8244930Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8245840Z [command]/opt/homebrew/bin/git sparse-checkout disable
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8383130Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8536520Z ##[group]Checking out the ref
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:52.8550640Z [command]/opt/homebrew/bin/git checkout --progress --force refs/remotes/pull/18/merge
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6010030Z HEAD is now at df72534 Merge fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 into 5d20c55de144b99b3e4204f2ac08017f36396fe8
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6033900Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6170910Z [command]/opt/homebrew/bin/git log -1 --format=%H
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6271960Z df725342a3405655e30940839a5d168404170cea
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6280430Z ##[group]Removing auth
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6280840Z Removing SSH command configuration
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6284320Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.6391240Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.8126590Z Removing HTTP extra header
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.8129010Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:53.8199840Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.0469240Z Removing includeIf entries pointing to credentials config files
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.0470160Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.0723820Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.0826470Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.0925770Z includeif.gitdir:/github/workspace/.git.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.1029170Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.1259140Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.1362190Z /Users/runner/work/_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.1608240Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-a6ecc4f2\-bc8a\-4354\-9a7a\-789aafb1cbc0\.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.1611730Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.1713400Z /Users/runner/work/_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2008650Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-a6ecc4f2\-bc8a\-4354\-9a7a\-789aafb1cbc0\.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2374760Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2375520Z /github/runner_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2377080Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-a6ecc4f2\-bc8a\-4354\-9a7a\-789aafb1cbc0\.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2378770Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2379570Z /github/runner_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2380920Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-a6ecc4f2\-bc8a\-4354\-9a7a\-789aafb1cbc0\.config
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.2382500Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.4501890Z Removing credentials config '/Users/runner/work/_temp/git-credentials-a6ecc4f2-bc8a-4354-9a7a-789aafb1cbc0.config'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.4523100Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6800860Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6801330Z with:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6801560Z   python-version: 3.14
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6801790Z   check-latest: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6803920Z   token: ***
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6804390Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6805400Z   update-environment: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6805730Z   allow-prereleases: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6805980Z   freethreaded: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6806220Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6806430Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:54.6806740Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2118990Z ##[group]Installed versions
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2426980Z Successfully set up CPython (3.14.10)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2428950Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2571960Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2572910Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2774520Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2775260Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2776100Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2776470Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2776980Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2777430Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2777880Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2778260Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.2778550Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4093710Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4094560Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4095150Z [36;1mpython -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4160160Z shell: /bin/bash -e {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4160410Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4160620Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4160950Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4161380Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4161800Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4162170Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4162560Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4163480Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:55.4163720Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5364760Z Ignoring cffi: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5366750Z Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5367510Z Ignoring cryptography: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5372090Z Ignoring jeepney: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5373410Z Ignoring pycparser: markers 'implementation_name != "PyPy" and platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5374950Z Ignoring pywin32-ctypes: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "win32"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.5375900Z Ignoring secretstorage: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.6393560Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.7617940Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:57.8054290Z Requirement already satisfied: certifi==2026.10.23 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements-build.txt (line 7)) (2026.10.23)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.0454760Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.1193190Z   Downloading charset_normalizer-3.5.2-cp314-cp314-macosx_10_15_universal2.whl (367 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.1913700Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.2155550Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.2503620Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 15.3 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.2807060Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.3004290Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.3254380Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.3476320Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.3675870Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.3910140Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.4110740Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.4319980Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.4537050Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.4764620Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.5097280Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.5311600Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.5637220Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.5848480Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.6129130Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.6359700Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.6666130Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.6888560Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.7244180Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.7473470Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.7893890Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.8137360Z   Downloading nh3-0.3.7-cp38-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl (1.5 MB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.8451890Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 43.0 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.8726330Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.8948330Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.9172330Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.9386310Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:58.9869700Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.0106550Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.0300670Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 72.5 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.0683190Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.0919660Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.1293710Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.1520220Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.1729040Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.1937770Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.2128420Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.2343860Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.2635930Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.2847610Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.3099540Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.3315140Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.3525070Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.3759310Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.4047770Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.4256050Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.4985810Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.5228140Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.5352370Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 876.3/876.3 kB 61.8 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.5605760Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.5824710Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.6174520Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.6386360Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.6667030Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.6892600Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:38:59.9160530Z Installing collected packages: urllib3, setuptools, rfc3986, pyproject-hooks, pygments, pluggy, packaging, nh3, more-itertools, mdurl, jaraco-context, iniconfig, idna, docutils, charset-normalizer, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, build, rich, requests-toolbelt, pytest-timeout, keyring, twine
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:04.9450200Z 
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:04.9484060Z Successfully installed build-1.6.1 charset-normalizer-3.5.2 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.1825190Z Ignoring nuitka: markers 'sys_platform == "win32"' don't match your environment
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.3148450Z Collecting altgraph==0.17.5 (from -r packaging/requirements.txt (line 3))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.4188110Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.4840130Z Collecting macholib==1.16.4 (from -r packaging/requirements.txt (line 9))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.5115930Z   Downloading macholib-1.16.4-py2.py3-none-any.whl (38 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.5346050Z Requirement already satisfied: packaging==26.3 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements.txt (line 16)) (26.3)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.6517560Z Collecting psutil==7.2.2 (from -r packaging/requirements.txt (line 22))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.6754340Z   Downloading psutil-7.2.2-cp36-abi3-macosx_11_0_arm64.whl (129 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.7702390Z Collecting pyinstaller==6.22.3 (from -r packaging/requirements.txt (line 45))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.8080810Z   Downloading pyinstaller-6.22.3-py3-none-macosx_10_13_universal2.whl (1.1 MB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.8811580Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 16.6 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:06.9660370Z Collecting pyinstaller-hooks-contrib==2026.9 (from -r packaging/requirements.txt (line 59))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:07.0085620Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:07.1247430Z Collecting pyqt6==6.11.0 (from -r packaging/requirements.txt (line 65))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:07.1518980Z   Downloading pyqt6-6.11.0-cp310-abi3-macosx_10_14_universal2.whl (12.4 MB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:07.3677440Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 58.2 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:07.4379000Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements.txt (line 73))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:07.4661540Z   Downloading pyqt6_qt6-6.11.2-py3-none-macosx_11_0_arm64.whl (64.3 MB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:08.1897300Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.3/64.3 MB 89.6 MB/s  0:00:00
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:08.3580080Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements.txt (line 83))
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:08.3849600Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-macosx_10_15_universal2.whl (113 kB)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:08.4412840Z Requirement already satisfied: setuptools==84.2.1 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements.txt (line 115)) (84.2.1)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:08.7871390Z Installing collected packages: pyqt6-qt6, altgraph, pyqt6-sip, pyinstaller-hooks-contrib, psutil, macholib, pyqt6, pyinstaller
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.4135230Z 
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.4170540Z Successfully installed altgraph-0.17.5 macholib-1.16.4 psutil-7.2.2 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.9 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6856280Z ##[group]Run python packaging/build.py macos
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6857050Z [36;1mpython packaging/build.py macos[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6970710Z shell: /bin/bash -e {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6972180Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6974690Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6979060Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6981590Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.6982910Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.7077180Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.7077770Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.7081390Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:15.7081690Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.0498970Z + /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m PyInstaller --noconfirm --clean --distpath /Users/runner/work/chatmon/chatmon/build/pyinstaller --workpath /Users/runner/work/chatmon/chatmon/build/pyinstaller-work /Users/runner/work/chatmon/chatmon/packaging/chatmon.spec
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.3702820Z 161 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.9
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.3704070Z 161 INFO: Python: 3.14.10
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4191140Z 210 INFO: Platform: macOS-26.7.2-arm64-arm-64bit-Mach-O
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4192070Z 211 INFO: Python environment: /Library/Frameworks/Python.framework/Versions/3.14
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4254850Z 217 INFO: Removing temporary files and cleaning cache in /Users/runner/Library/Application Support/pyinstaller
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4529480Z 244 INFO: Module search paths (PYTHONPATH):
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4530810Z ['/Users/runner/work/chatmon/chatmon',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4531640Z  '/Users/runner/work/chatmon/chatmon',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4534390Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python314.zip',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4535100Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4537630Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/lib-dynload',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4539620Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4541120Z  '/Users/runner/work/chatmon/chatmon/packaging/macos',
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.4542750Z  '/Users/runner/work/chatmon/chatmon']
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7406190Z 532 INFO: Appending 'datas' from .spec
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7419400Z 533 INFO: checking Analysis
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7421010Z 534 INFO: Building Analysis because Analysis-00.toc is non existent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7421990Z 534 INFO: Looking for Python shared library...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7517160Z 543 INFO: Using Python shared library: /Library/Frameworks/Python.framework/Versions/3.14/Python
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7519140Z 543 INFO: Running Analysis Analysis-00.toc
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7524130Z 543 INFO: Target bytecode optimization level: 0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7525320Z 543 INFO: Initializing module dependency graph...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7541590Z 546 INFO: Initializing module graph hook caches...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:16.7659290Z 557 INFO: Analyzing modules for base_library.zip ...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:18.8799650Z 2668 INFO: Processing standard module hook 'hook-encodings.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:19.7060390Z 3497 INFO: Processing standard module hook 'hook-math.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:20.6479760Z 4439 INFO: Processing standard module hook 'hook-difflib.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:20.6658960Z 4457 INFO: Processing standard module hook 'hook-heapq.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:21.3814540Z 5172 INFO: Processing standard module hook 'hook-pickle.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:23.6851310Z 7476 INFO: Caching module dependency graph...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:23.7777980Z 7569 INFO: Analyzing /Users/runner/work/chatmon/chatmon/packaging/macos/entry.py
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:23.9992610Z 7791 INFO: Processing standard module hook 'hook-sysconfig.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:24.0390810Z 7829 INFO: Processing standard module hook 'hook-_osx_support.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:24.0468120Z 7838 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:24.4076140Z 8199 INFO: Processing standard module hook 'hook-PyQt6.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:26.3677590Z 10159 INFO: Processing standard module hook 'hook-PyQt6.QtCore.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:27.7940710Z 11585 INFO: Processing standard module hook 'hook-PyQt6.QtGui.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:28.3739940Z 12165 INFO: Processing standard module hook 'hook-PyQt6.QtNetwork.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:30.1780110Z 13969 INFO: Processing standard module hook 'hook-PyQt6.QtWidgets.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:30.4343800Z 14226 INFO: Processing standard module hook 'hook-platform.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:30.4875170Z 14279 INFO: Processing standard module hook 'hook-xml.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:30.5429870Z 14334 INFO: Processing standard module hook 'hook-PyQt6.QtDBus.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:31.5073070Z 15299 INFO: Processing standard module hook 'hook-psutil.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:32.6020760Z 16393 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:32.7441340Z 16536 INFO: Processing standard module hook 'hook-PyQt6.QtMultimedia.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:32.9863780Z 16778 INFO: Processing module hooks (post-graph stage)...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.1054360Z 16897 INFO: Performing binary vs. data reclassification (243 entries)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2478500Z 17039 INFO: Looking for ctypes DLLs
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2581710Z 17050 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/a11y.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2608140Z 17052 WARNING: Library oleaut32 required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2618880Z 17053 WARNING: Library uiautomationcore required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2792240Z 17070 WARNING: Ignoring /System/Library/Frameworks/ServiceManagement.framework/ServiceManagement imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2800840Z 17070 WARNING: Ignoring /System/Library/Frameworks/CoreFoundation.framework/CoreFoundation imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2804440Z 17070 WARNING: Ignoring /System/Library/Frameworks/Foundation.framework/Foundation imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2807930Z 17070 WARNING: Ignoring /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.2812420Z 17070 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3486250Z 17140 WARNING: Ignoring /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics imported from /Users/runner/work/chatmon/chatmon/chatmon/presence.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3487540Z 17140 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/presence.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3506060Z 17142 WARNING: Library ole32 required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3536620Z 17145 WARNING: Library combase required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3538300Z 17145 WARNING: Library ole32 required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3887690Z 17180 WARNING: Library shell32 required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3889630Z 17181 WARNING: Library ole32 required via ctypes not found
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.3928070Z 17184 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/sound.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4694430Z 17261 INFO: Analyzing run-time hooks ...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4706400Z 17262 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4735000Z 17265 INFO: Including run-time hook 'pyi_rth_pyqt6.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4757010Z 17267 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/pre_find_module_path'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4777370Z 17269 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4805920Z 17272 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.4899440Z 17281 INFO: Creating base_library.zip...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:33.5089080Z 17300 INFO: Looking for dynamic libraries
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.0368660Z 17828 INFO: Warnings written to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/warn-chatmon.txt
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.0541630Z 17844 INFO: Graph cross-reference written to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/xref-chatmon.html
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.2293740Z 18021 INFO: checking PYZ
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.2294500Z 18021 INFO: Building PYZ because PYZ-00.toc is non existent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.2295070Z 18021 INFO: Building PYZ (ZlibArchive) /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/PYZ-00.pyz
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5509230Z 18342 INFO: Building PYZ (ZlibArchive) /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/PYZ-00.pyz completed successfully.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5544030Z 18345 INFO: EXE target arch: arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5545580Z 18345 INFO: Code signing identity: None
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5572190Z 18349 INFO: checking PKG
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5573850Z 18349 INFO: Building PKG because PKG-00.toc is non existent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5574290Z 18349 INFO: Building PKG (CArchive) Chatmon.pkg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5696950Z 18361 INFO: Building PKG (CArchive) Chatmon.pkg completed successfully.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5705500Z 18362 INFO: Bootloader /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/bootloader/Darwin-64bit/runw
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5709340Z 18362 INFO: checking EXE
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5709730Z 18362 INFO: Building EXE because EXE-00.toc is non existent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5710090Z 18362 INFO: Building EXE from EXE-00.toc
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5710730Z 18362 INFO: Copying bootloader EXE to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/Chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:34.5724890Z 18364 INFO: Converting EXE to target arch (arm64)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.8363810Z 19627 INFO: Removing signature(s) from EXE
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.8660110Z 19657 INFO: Modifying Mach-O image UUID(s) in EXE
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.8711420Z 19663 INFO: Appending PKG archive to EXE
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.8735220Z 19665 INFO: Fixing EXE headers for code signing
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.8843610Z 19676 INFO: Re-signing the EXE
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.9198370Z 19711 INFO: Building EXE from EXE-00.toc completed successfully.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.9238920Z 19715 INFO: checking COLLECT
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.9239990Z 19716 INFO: Building COLLECT because COLLECT-00.toc is non existent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:35.9243940Z 19716 INFO: Building COLLECT COLLECT-00.toc
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:43.1408270Z 26932 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:43.1492730Z 26941 INFO: checking BUNDLE
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:43.1493410Z 26941 INFO: Building BUNDLE because BUNDLE-00.toc is non existent
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:43.1494160Z 26941 INFO: Building BUNDLE BUNDLE-00.toc
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:46.3855180Z 30177 INFO: Signing the BUNDLE...
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:46.6764070Z 30466 INFO: Building BUNDLE BUNDLE-00.toc completed successfully.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:46.6796940Z 30471 INFO: Build complete! The results are available in: /Users/runner/work/chatmon/chatmon/build/pyinstaller
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:46.8214400Z + codesign --force --deep --sign - /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:46.8402570Z /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app: replacing existing signature
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.1302610Z + ditto /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app /Users/runner/work/chatmon/chatmon/build/macos/root/Applications/Chatmon.app
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.3345730Z + pkgbuild --analyze --root /Users/runner/work/chatmon/chatmon/build/macos/root /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.5139880Z pkgbuild: Inferring bundle components from contents of /Users/runner/work/chatmon/chatmon/build/macos/root
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.5141250Z pkgbuild: Writing new component property list to /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.5147310Z + plutil -replace 0.BundleIsRelocatable -bool NO /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.5284150Z + plutil -replace 0.BundleOverwriteAction -string upgrade /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:47.5364880Z + pkgbuild --root /Users/runner/work/chatmon/chatmon/build/macos/root --component-plist /Users/runner/work/chatmon/chatmon/build/macos/component.plist --identifier io.github.randynorthrup.chatmon --version 0.10.0 --ownership recommended --install-location / --scripts /Users/runner/work/chatmon/chatmon/build/macos/scripts /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5690560Z pkgbuild: Reading components from /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5813230Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtGui.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5814900Z pkgbuild: Adding component at Applications/Chatmon.app
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5815520Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtMultimedia.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5816200Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtSvg.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5816900Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtPdf.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.5817570Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtCore.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6018150Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtConcurrent.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6020390Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtDBus.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6023150Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtWidgets.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6025530Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtNetwork.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6027820Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/Python.framework
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6029480Z pkgbuild: Adding top-level postinstall script
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6032330Z pkgbuild: Wrote package to /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.6034550Z + productbuild --synthesize --package /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.7711710Z productbuild: Wrote synthesized distribution to /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.7732620Z + productbuild --distribution /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml --package-path /Users/runner/work/chatmon/chatmon/build/macos /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.pkg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.9337770Z productbuild: Wrote product to /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.pkg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:52.9345670Z + ditto /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app /Users/runner/work/chatmon/chatmon/build/macos/dmg/Chatmon.app
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:39:53.2285570Z + hdiutil create -volname Chatmon -srcfolder /Users/runner/work/chatmon/chatmon/build/macos/dmg -ov -format UDZO /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.dmg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9329760Z created: /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.dmg
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9386660Z /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.pkg  64 MB
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9388430Z /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.dmg  70 MB
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9789850Z ##[group]Run arch=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9790350Z [36;1march=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9791180Z [36;1mtag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq "[.[] | select((.draft | not) and any(.assets[]; .name | endswith(\"-macos-$arch.pkg\")))][0].tag_name")[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9791960Z [36;1mgh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-macos-$arch.pkg" --dir "$RUNNER_TEMP/last"[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9792520Z [36;1msudo installer -pkg "$RUNNER_TEMP"/last/*.pkg -target /[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9964410Z shell: /bin/bash -e {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9964840Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9965130Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9965600Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9966120Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9966760Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9967170Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9967610Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9967940Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9970820Z   GH_TOKEN: ***
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:10.9971060Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9443570Z installer: Package name is Chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9446000Z installer: Installing at base path /
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9447200Z installer: The install was successful.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9725450Z ##[group]Run sudo installer -pkg dist/Chatmon-*.pkg -target /
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9732420Z [36;1msudo installer -pkg dist/Chatmon-*.pkg -target /[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9732800Z [36;1mtest -x /usr/local/bin/chatmon[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9733630Z [36;1mpython packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/Chatmon --version "$(python packaging/build.py version)"[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9805260Z shell: /bin/bash -e {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9806610Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9807120Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9807560Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9808270Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9808930Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9809390Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9810170Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9810750Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:16.9811090Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:19.6716200Z installer: Package name is Chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:19.6721140Z installer: Upgrading at base path /
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:19.6721650Z installer: The upgrade was successful.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1036330Z /usr/local/bin/chatmon --version: 0.10.0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1042590Z it answered
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1077690Z it quit when asked: all good
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1397720Z ##[group]Run app=/Applications/Chatmon.app
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1398190Z [36;1mapp=/Applications/Chatmon.app[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1398550Z [36;1mtest -x "$app/Contents/Resources/install-update"[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1399170Z [36;1m[ "$(stat -f %u "$app")" = 0 ] || { echo "Chatmon.app belongs to uid $(stat -f %u "$app"), not root"; exit 1; }[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1399690Z [36;1mstatus=0[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1400160Z [36;1m"$app/Contents/MacOS/Chatmon" verify-update macos missing.pkg missing.txt missing.sig || status=$?[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1401150Z [36;1m[ "$status" = 3 ] || { echo "verify-update exited $status on files that aren't there, not 3 (refused)"; exit 1; }[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1465670Z shell: /bin/bash -e {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1466080Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1466320Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1466750Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1467390Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1468100Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1468550Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1469050Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1469400Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.1469760Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4441200Z The update wasn't installed: couldn't read missing.txt (No such file or directory).
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4844820Z ##[group]Run mount=$(mktemp -d)
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4845310Z [36;1mmount=$(mktemp -d)[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4845710Z [36;1mhdiutil attach -nobrowse -readonly -mountpoint "$mount" dist/Chatmon-*.dmg[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4846380Z [36;1mtest -x "$mount/Chatmon.app/Contents/MacOS/Chatmon" && test -L "$mount/Applications"[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4846910Z [36;1mhdiutil detach "$mount"[0m
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4912660Z shell: /bin/bash -e {0}
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4913010Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4913310Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4913860Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4914500Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4914970Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4918130Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4919900Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4920390Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.4920710Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:26.6678790Z Checksumming Protective Master Boot Record (MBR : 0)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:27.0565680Z Protective Master Boot Record (MBR :: verified   CRC32 $8A53AA56
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:27.0669110Z Checksumming GPT Header (Primary GPT Header : 1)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:28.0525340Z  GPT Header (Primary GPT Header : 1): verified   CRC32 $2CEED5EA
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:28.0526640Z Checksumming GPT Partition Data (Primary GPT Table : 2)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:28.0548240Z GPT Partition Data (Primary GPT Tabl: verified   CRC32 $DA6BA093
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:28.0548850Z Checksumming  (Apple_Free : 3)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:29.0163660Z                     (Apple_Free : 3): verified   CRC32 $00000000
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:29.0164850Z Checksumming disk image (Apple_APFS : 4)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:29.3487370Z          disk image (Apple_APFS : 4): verified   CRC32 $C70D5ECB
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:29.3489310Z Checksumming  (Apple_Free : 5)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.0831700Z                     (Apple_Free : 5): verified   CRC32 $00000000
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.0932220Z Checksumming GPT Partition Data (Backup GPT Table : 6)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.1035030Z GPT Partition Data (Backup GPT Table: verified   CRC32 $DA6BA093
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.1179480Z Checksumming GPT Header (Backup GPT Header : 7)…
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.1323060Z   GPT Header (Backup GPT Header : 7): verified   CRC32 $BDCE1491
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.1424670Z verified   CRC32 $81A9E65F
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.2495860Z /dev/disk7          	GUID_partition_scheme          	
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.2634450Z /dev/disk7s1        	Apple_APFS                     	
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.2743130Z /dev/disk8          	EF57347C-0000-11AA-AA11-0030654	
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.2845640Z /dev/disk8s1        	41504653-0000-11AA-AA11-0030654	/private/var/folders/h5/t85nd63d71x27_8gl5gw3l_w0000gn/T/tmp.ADOFDvV7FH
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4331210Z "disk7" ejected.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4559380Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4560810Z with:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4561380Z   name: package-macos-macos-latest
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4562280Z   path: dist/*.pkg
+macos (macos-latest)	UNKNOWN STEP	dist/*.dmg
+macos (macos-latest)	UNKNOWN STEP	
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4563010Z   if-no-files-found: error
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4563980Z   compression-level: 6
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4564340Z   overwrite: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4564600Z   include-hidden-files: false
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4564960Z   archive: true
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4565190Z env:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4565470Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4565860Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4566480Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4566970Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4567700Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4568320Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4568760Z   SOURCE_DATE_EPOCH: 1794717520
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:30.4569150Z ##[endgroup]
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:31.0120550Z With the provided path, there will be 2 files uploaded
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:31.0135320Z Artifact name is valid!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:31.0135690Z Root directory input is valid!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:31.7486240Z Uploading artifact: package-macos-macos-latest.zip
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:31.7511360Z Beginning upload of artifact content to blob storage
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:33.1778100Z Uploaded bytes 8388608
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:33.3746520Z Uploaded bytes 16777216
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:33.6228230Z Uploaded bytes 25165824
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:33.7385870Z Uploaded bytes 33554432
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:33.8818370Z Uploaded bytes 41943040
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:33.9323660Z Uploaded bytes 50331648
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:34.3543300Z Uploaded bytes 58720256
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:34.7344740Z Uploaded bytes 67108864
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:34.9584580Z Uploaded bytes 75497472
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:35.2470180Z Uploaded bytes 83886080
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:35.5745350Z Uploaded bytes 92274688
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:35.8732910Z Uploaded bytes 100663296
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:36.1606510Z Uploaded bytes 109051904
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:36.4520380Z Uploaded bytes 117440512
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:36.8214190Z Uploaded bytes 125829120
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:37.6832030Z Uploaded bytes 134217728
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:37.9099410Z Uploaded bytes 139254289
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:37.9802810Z Finished uploading artifact content to blob storage!
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:37.9804870Z SHA256 digest of uploaded artifact is 3c78e8af80d24cda2941dc7ba9a50866354cf84bc9e879f572d4e33cc3d3b271
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:37.9805850Z Finalizing artifact upload
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.5182500Z Artifact package-macos-macos-latest successfully finalized. Artifact ID 14147755046
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.5183360Z Artifact package-macos-macos-latest has been successfully uploaded! Final size is 139254289 bytes. Artifact ID is 14147755046
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.5205340Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43677664360/artifacts/14147755046
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.5526340Z Post job cleanup.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.7862490Z Post job cleanup.
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9192330Z [command]/opt/homebrew/bin/git version
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9467210Z git version 2.56.0
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9485520Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/8736d993-3cbd-43ab-b7bb-180725fe965d/.gitconfig'
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9493910Z Temporarily overriding HOME='/Users/runner/work/_temp/8736d993-3cbd-43ab-b7bb-180725fe965d' before making global git config changes
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9494640Z Adding repository directory to the temporary git global config as a safe directory
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9496610Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9605160Z Removing SSH command configuration
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9610640Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:38.9680300Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.0652870Z Removing HTTP extra header
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.0657320Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.0720120Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.2087080Z Removing includeIf entries pointing to credentials config files
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.2092330Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.2166410Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-latest)	UNKNOWN STEP	2026-11-15T04:40:39.3199790Z Cleaning up orphan processes

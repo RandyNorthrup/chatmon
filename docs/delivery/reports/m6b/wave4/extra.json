@@ -1,0 +1,109 @@
+{
+ "readiness_method": "Requirements review again at fb19cb9 (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, the amended ROADMAP.md, pyproject.toml as M6B left it, and the M6A and M8 plans it takes as inputs (both re-bound in this wave first); no conflict or gap; integration note 1's CI run has happened.",
+ "windows_note": "Every criterion's tests ran here; the Linux-only overlay and log-mode tests skip on Windows, and CI's and WSL's receipts add them.",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {},
+ "results_where": {
+  "gate-drills-results.json": "through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave4/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again"
+ },
+ "observe_add": [
+  "tests/test_log.py",
+  "tests/test_imports.py",
+  "tests/test_wayland.py"
+ ],
+ "ci": [
+  {
+   "id": "W4-BEH-CI-LINT",
+   "leg": "ubu3.15",
+   "log": "ci-132699632169-lint.log",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43677128712 on fb19cb9, job lint. It ran ruff check . with pyproject.toml's settings: the eleven families, max-complexity 15, RUF001-003 ignored, S101 allowed only in tests, and no per-file exemption left for the eight hub files. The result was 'All checks passed!', and the job succeeded. ruff is pinned in packaging/requirements-dev.txt, which the job installed with --require-hashes."
+  },
+  {
+   "id": "W4-BEH-CI-TYPES-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132699632396-types-linux.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43677128712 on fb19cb9, job types (linux): mypy --platform linux on [tool.mypy], which has no overrides and no exemption list. It passed with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt), and the job succeeded. The 6.12 stubs' known errors are as the plan's Design records them, for whoever moves the lock."
+  },
+  {
+   "id": "W4-BEH-CI-TYPES-WIN32",
+   "leg": "ubu3.15",
+   "log": "ci-132699632397-types-win32.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43677128712 on fb19cb9, job types (win32): mypy --platform win32 passed with no module exempt."
+  },
+  {
+   "id": "W4-BEH-CI-TYPES-DARWIN",
+   "leg": "ubu3.15",
+   "log": "ci-132699632730-types-darwin.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "CI run 43677128712 on fb19cb9, job types (darwin): mypy --platform darwin passed with no module exempt."
+  },
+  {
+   "id": "W4-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132699632422-test-ubuntu-24.04-3.15.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too."
+  },
+  {
+   "id": "W4-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132699632411-test-macos-latest-3.14.log",
+   "method": "CI run 43677128712 on fb19cb9, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's own change keeps the log tests to themselves on macOS. That is integration note 1's macOS run."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave4/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check at fb19cb9 on this workstation, exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes, so the split-out helpers changed no marked string. Evidence for fb19cb9; two other workers are changing code at the same time, so their merges will need this re-checked."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M6B on fb19cb9; integration note 1's CI run has happened (run 43677128712, every job green). The followups worker is changing the mypy settings in pyproject.toml: re-run the types jobs, the gate drills and this plan's drill specs in wave4/ on the merged tree.",
+ "windows_acceptance": [
+  "M6B-01.A2",
+  "M6B-02.A2",
+  "M6B-03.A1",
+  "M6B-03.A2",
+  "M6B-03.A3",
+  "M6B-03.A4",
+  "M6B-03.A5",
+  "M6B-03.A6",
+  "M6B-LEFT.A1",
+  "M6B-LEFT.A2",
+  "M6B-LEFT.A3",
+  "M6B-LEFT.A4",
+  "M6B-RW.A1"
+ ]
+}

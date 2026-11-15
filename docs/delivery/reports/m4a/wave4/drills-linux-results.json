@@ -1,0 +1,302 @@
+[
+  {
+    "id": "L-AC-01a-read-fallback",
+    "requirement": "M4A-01",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "elif method == \"ReadOne\" and reply.errorName() == \"org.freedesktop.DBus.Error.UnknownMethod\":",
+      "replace": "elif False:"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed"
+    ],
+    "expected": [
+      "test_the_portals_appearance_settings_are_read_once_then_followed[1-Read]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "21d9890fe9efe46491702774ebec08397abe4c7846209f9d4b11a9c6161e3deb",
+    "mutated_exit": 1,
+    "observed": "___ test_the_portals_appearance_settings_are_read_once_then_followed[1-Read] ___",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-04a-asked-each-time",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "            setattr(self, attr, made)\n",
+      "replace": ""
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed"
+    ],
+    "expected": [
+      "test_the_portals_appearance_settings_are_read_once_then_followed[2-ReadOne]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "07bd090f0203da5e3d6b14ce0479cb59eaa4045734e002101462b9f6e9ffa1ea",
+    "mutated_exit": 1,
+    "observed": "_ test_the_portals_appearance_settings_are_read_once_then_followed[2-ReadOne] __",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-05-starts-services",
+    "requirement": "M4A-05",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "    message.setAutoStartService(False)\n",
+      "replace": "    message.setAutoStartService(True)\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_asking_about_do_not_disturb_never_starts_a_service"
+    ],
+    "expected": [
+      "test_asking_about_do_not_disturb_never_starts_a_service"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "30de1342bfaf7131a37c4fea2d4671d95d633207d25e25b01f0d08627c72b2c5",
+    "mutated_exit": 1,
+    "observed": "___________ test_asking_about_do_not_disturb_never_starts_a_service ____________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-05-dunst-question",
+    "requirement": "M4A-05",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "\"org.dunstproject.cmd0\", \"paused\"",
+      "replace": "\"org.dunstproject.cmd1\", \"paused\""
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server"
+    ],
+    "expected": [
+      "test_each_servers_do_not_disturb_is_read_from_the_server[dunst-on-Do Not Disturb]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "a1bfd6b6cd6657e115478354dd003c9b861a45a3ceabdb9c6eafe78bc62b3242",
+    "mutated_exit": 1,
+    "observed": "_ test_each_servers_do_not_disturb_is_read_from_the_server[dunst-on-Do Not Disturb] _",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-06a-upower-not-followed",
+    "requirement": "M4A-06",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "        service, path = UPOWER\n        if self._bus.connect(service, path, PROPERTIES, \"PropertiesChanged\", self._changed):",
+      "replace": "        service, path = UPOWER\n        if False:"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_linuxsession.py::test_power_saving_follows_upower_on_a_bus"
+    ],
+    "expected": [
+      "test_power_saving_follows_upower_on_a_bus"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "fe1ce5e20ce51a48885acb5916750812223502418327f8f2293c60517ddc9068",
+    "mutated_exit": 1,
+    "observed": "__________________ test_power_saving_follows_upower_on_a_bus ___________________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-07a-not-replaced",
+    "requirement": "M4A-07",
+    "file": "chatmon/sysnotify.py",
+    "mutation": {
+      "find": "message(title, body, replaces=self.read_aloud_id,",
+      "replace": "message(title, body, replaces=0,"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+    ],
+    "expected": [
+      "test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "baseline_exit": 0,
+    "mutated_sha256": "bb556bd47ddaf58ffdab2c7b763f40da684cb1feb716c0be63a98d3085aa1268",
+    "mutated_exit": 1,
+    "observed": "_ test_the_notification_server_gets_transient_replacing_and_urgent_notifications _",
+    "after_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-07b-action-unheard",
+    "requirement": "M4A-07",
+    "file": "chatmon/sysnotify.py",
+    "mutation": {
+      "find": "bus.connect(SERVICE, PATH, SERVICE, \"ActionInvoked\", self._action_invoked)",
+      "replace": "bus.connect(SERVICE, PATH, SERVICE, \"ActionInvokedX\", self._action_invoked)"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+    ],
+    "expected": [
+      "test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "baseline_exit": 0,
+    "mutated_sha256": "ea03a71721f3e71bc6a80ffa4ca20d594a224ea8cb079284b2397db1d155c94c",
+    "mutated_exit": 1,
+    "observed": "_ test_the_notification_server_gets_transient_replacing_and_urgent_notifications _",
+    "after_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-10-not-one-call",
+    "requirement": "M4A-10",
+    "file": "chatmon/heads_up.py",
+    "mutation": {
+      "find": "\"GetAll\", \"org.freedesktop.UPower.Device\"",
+      "replace": "\"Get\", \"org.freedesktop.UPower.Device\""
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_heads_up.py::test_upower_is_asked_once_from_a_worker_thread"
+    ],
+    "expected": [
+      "test_upower_is_asked_once_from_a_worker_thread"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328",
+    "baseline_exit": 0,
+    "mutated_sha256": "4300541d459324d910200813638690dc0aac37cc4538312567f3de3c610eb0a3",
+    "mutated_exit": 1,
+    "observed": "________________ test_upower_is_asked_once_from_a_worker_thread ________________",
+    "after_sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-04a-listener-outlives-desk",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "made = linuxsession.PortalSettings(self)\n                    made.changed.connect(self.settings_changed)\n",
+      "replace": "made = linuxsession.PortalSettings()\n                    made.changed.connect(self.settings_changed.emit)\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing"
+    ],
+    "expected": [
+      "test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "5c5e0cd4fe05dfdc3df43e49054ddbadc0a4ced3edc31353241e619ec3656e15",
+    "mutated_exit": 1,
+    "observed": "______ test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing _______",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "L-AC-02-x11-place",
+    "requirement": "M4A-02",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "return x.value, y.value, width.value, height.value",
+      "replace": "return 0, 0, width.value, height.value"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_x11_says_where_a_window_is"
+    ],
+    "expected": [
+      "test_x11_says_where_a_window_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "4ddf0c3adf48b1b9302de1351f3b7849761bf63a76b9cd04c9248037b7922fd8",
+    "mutated_exit": 1,
+    "observed": "_______________________ test_x11_says_where_a_window_is ________________________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  }
+]

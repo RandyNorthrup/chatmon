@@ -1,0 +1,910 @@
+[
+  {
+    "id": "AC-01a-portal-key",
+    "requirement": "M4A-01",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "portal = self._portal_flag(\"contrast\")",
+      "replace": "portal = self._portal_flag(\"reduced-motion\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "expected": [
+      "test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "76a5fcab1844f6c3c01684088f600be1550553545b83f833cae485bba6f12e9c",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_portals_contrast_decides_and_says_when_it_changes __________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01a-portal-flag",
+    "requirement": "M4A-01",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "    return value == 1\n",
+      "replace": "    return value == 0\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown",
+      "tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "expected": [
+      "test_portal_settings_are_yes_no_or_unknown",
+      "test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "8ab327e8afca38862ec0ed1c57433429c459c8ca5d00ccb6e9ed760e1724a381",
+    "mutated_exit": 1,
+    "observed": "_________________ test_portal_settings_are_yes_no_or_unknown __________________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01b-gnome-skipped",
+    "requirement": "M4A-01",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "        if gnome is not None:\n            return gnome == \"true\"",
+      "replace": "        if gnome is None:\n            return gnome == \"true\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high"
+    ],
+    "expected": [
+      "test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "4faa944105a2fa175a11e9c96ad6c526574a01bded64625bffc3c01610fbb6b2",
+    "mutated_exit": 1,
+    "observed": "_____ test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high ______",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01c-mac-contrast",
+    "requirement": "M4A-01",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "return bool(_mac_increase_contrast())",
+      "replace": "return bool(_mac_reduce_motion())"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_macos_high_contrast_is_appkits_increase_contrast"
+    ],
+    "expected": [
+      "test_macos_high_contrast_is_appkits_increase_contrast"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "480e0eaa66d123b1c6cc67c11e069eb3a1ca2dbd0c5d859fa0c185b1fda1fb4d",
+    "mutated_exit": 1,
+    "observed": "____________ test_macos_high_contrast_is_appkits_increase_contrast ____________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-02-any-monitor",
+    "requirement": "M4A-02",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "return fx <= mx < fx + fw and fy <= my < fy + fh",
+      "replace": "return fy <= my < fy + fh"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_a_full_screen_window_counts_only_on_the_stages_screen",
+      "tests/test_presence.py::test_covered_on_x11_asks_where_the_full_screen_window_is"
+    ],
+    "expected": [
+      "test_a_full_screen_window_counts_only_on_the_stages_screen",
+      "test_covered_on_x11_asks_where_the_full_screen_window_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "4b0dd7539aa22fa8406f453de9be82e2e8e6d1099793f27dac476ec67886e187",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_full_screen_window_counts_only_on_the_stages_screen __________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-03-sleep-wake",
+    "requirement": "M4A-03",
+    "file": "chatmon/macnative.py",
+    "mutation": {
+      "find": "self.slept.emit(selector == \"willSleep:\")",
+      "replace": "self.slept.emit(selector == \"didWake:\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+    ],
+    "expected": [
+      "test_each_workspace_notification_is_its_own_signal"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138",
+    "baseline_exit": 0,
+    "mutated_sha256": "0b5e329afc6569e5ff0574d3e2fb1e7e2eaa35a3600a015652e1c788e7b7dccd",
+    "mutated_exit": 1,
+    "observed": "_____________ test_each_workspace_notification_is_its_own_signal ______________",
+    "after_sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04a-setting-changed-ignored",
+    "requirement": "M4A-04",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "args[0] == APPEARANCE and args[1] in APPEARANCE_KEYS",
+      "replace": "args[0] == APPEARANCE and args[1] not in APPEARANCE_KEYS"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "expected": [
+      "test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "423214e30bc858e8bc09cb40690231505a7df3005ece137b4ebf4e3ecb2265f8",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_portals_contrast_decides_and_says_when_it_changes __________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04a-no-dedupe",
+    "requirement": "M4A-04",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "        if key in self.values and self.values[key] == flag:\n            return\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_linuxsession.py::test_portal_settings_are_yes_no_or_unknown",
+      "tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "expected": [
+      "test_portal_settings_are_yes_no_or_unknown",
+      "test_the_portals_contrast_decides_and_says_when_it_changes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "189462b3485e990f6b6c2aeade443557721a4d104bd68f8930bf2190085716cf",
+    "mutated_exit": 1,
+    "observed": "_________________ test_portal_settings_are_yes_no_or_unknown __________________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04c-other-windows-copy",
+    "requirement": "M4A-04",
+    "file": "chatmon/winlock.py",
+    "mutation": {
+      "find": "elif msg.hWnd == self.hwnd and msg.message == WM_SETTINGCHANGE",
+      "replace": "elif msg.message == WM_SETTINGCHANGE"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_winlock.py::test_a_setting_change_is_passed_on_once_from_its_own_window"
+    ],
+    "expected": [
+      "test_a_setting_change_is_passed_on_once_from_its_own_window"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb",
+    "baseline_exit": 0,
+    "mutated_sha256": "936df56eaa7f1db1cac7ae68576f93f638791c82cfe250d82c01dc34dd4c3dfc",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_setting_change_is_passed_on_once_from_its_own_window _________",
+    "after_sha256": "8604d2fec2ec31e522994471c06d327f46d0724af7d923eae1518a7c4785a4cb",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04c-screen-reader",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "        if action == SPI_SETSCREENREADER:",
+      "replace": "        if action == SPI_SETHIGHCONTRAST:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_windows_setting_changes_are_passed_on",
+      "tests/test_winlock.py::test_a_sent_wm_settingchange_reaches_desk_through_qts_window_procedure"
+    ],
+    "expected": [
+      "test_windows_setting_changes_are_passed_on",
+      "test_a_sent_wm_settingchange_reaches_desk_through_qts_window_procedure"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "3fad6256bd2ba38e8a0eeeed827a70147dae85ae2211106b0d24292abd6fecac",
+    "mutated_exit": 1,
+    "observed": "_________________ test_windows_setting_changes_are_passed_on __________________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-05-mako-modes",
+    "requirement": "M4A-05",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "return MAKO_DND_MODE in answer if isinstance(answer, list) else None",
+      "replace": "return bool(answer) if isinstance(answer, list) else None"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles"
+    ],
+    "expected": [
+      "test_each_notification_servers_do_not_disturb_holds_bubbles[mako"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "afb2b3dc2254061151f18cde1f5710d536d71ecbbcfb12d88e6975ac1371271d",
+    "mutated_exit": 1,
+    "observed": "_ test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4] __",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-05-dnd-ignored",
+    "requirement": "M4A-05",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "            if dnd.state:\n",
+      "replace": "            if dnd.state is None:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles"
+    ],
+    "expected": [
+      "test_each_notification_servers_do_not_disturb_holds_bubbles[dunst"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "12fe8115ebd0779005537232946a836c9f64a2628be16d698bda814750ddd7e7",
+    "mutated_exit": 1,
+    "observed": "_ test_each_notification_servers_do_not_disturb_holds_bubbles[dunst-True-False] _",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-06a-battery-ignored",
+    "requirement": "M4A-06",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "saving = self.profile_saver or self.on_battery",
+      "replace": "saving = self.profile_saver"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_linuxsession.py::test_running_on_battery_saves_power_too"
+    ],
+    "expected": [
+      "test_running_on_battery_saves_power_too"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "29c219b09d8f8e3c9a57abcb0d5fd8cdc196d7e1c36ffdaf57853921780db14f",
+    "mutated_exit": 1,
+    "observed": "___________________ test_running_on_battery_saves_power_too ___________________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-06b-low-power",
+    "requirement": "M4A-06",
+    "file": "chatmon/macnative.py",
+    "mutation": {
+      "find": "self.low_power_changed.emit(bool(low_power_mode()))",
+      "replace": "self.low_power_changed.emit(False)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+    ],
+    "expected": [
+      "test_each_workspace_notification_is_its_own_signal"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138",
+    "baseline_exit": 0,
+    "mutated_sha256": "b09c6dcccb5b4c498b37eeb77b1d6028968ecb4f0e2573b12a38a9504dcfd5b7",
+    "mutated_exit": 1,
+    "observed": "_____________ test_each_workspace_notification_is_its_own_signal ______________",
+    "after_sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-07a-transient",
+    "requirement": "M4A-07",
+    "file": "chatmon/sysnotify.py",
+    "mutation": {
+      "find": "        out[\"transient\"] = True\n",
+      "replace": "        pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent"
+    ],
+    "expected": [
+      "test_read_aloud_notifications_are_transient_and_alerts_urgent"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "baseline_exit": 0,
+    "mutated_sha256": "89937e95b0a8687fc544f1fc1ce223b085486e9676daddccb62814e54c8c84b3",
+    "mutated_exit": 1,
+    "observed": "________ test_read_aloud_notifications_are_transient_and_alerts_urgent ________",
+    "after_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-07a-urgency-byte",
+    "requirement": "M4A-07",
+    "file": "chatmon/sysnotify.py",
+    "mutation": {
+      "find": "out[\"urgency\"] = _typed(urgency, \"UChar\")",
+      "replace": "out[\"urgency\"] = _typed(urgency, \"Int\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_read_aloud_notifications_are_transient_and_alerts_urgent"
+    ],
+    "expected": [
+      "test_read_aloud_notifications_are_transient_and_alerts_urgent"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "baseline_exit": 0,
+    "mutated_sha256": "60b12855fdae6ee45d494427d992d4f429c4178dab436794420f9e154bb8f872",
+    "mutated_exit": 1,
+    "observed": "________ test_read_aloud_notifications_are_transient_and_alerts_urgent ________",
+    "after_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-07b-replaced-buttons",
+    "requirement": "M4A-07",
+    "file": "chatmon/sysnotify.py",
+    "mutation": {
+      "find": "                self._pressed.pop(self.read_aloud_id, None)",
+      "replace": "                pass"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone"
+    ],
+    "expected": [
+      "test_a_notifications_buttons_are_answered_for_ours_alone"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "baseline_exit": 0,
+    "mutated_sha256": "638b3bd83a198de9eb4b42825ea997fea6b830c621497a77dca2dcda3c22d842",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_notifications_buttons_are_answered_for_ours_alone ___________",
+    "after_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-07b-other-apps",
+    "requirement": "M4A-07",
+    "file": "chatmon/sysnotify.py",
+    "mutation": {
+      "find": "pressed = self._pressed.get(int(args[0]))",
+      "replace": "pressed = next(iter(self._pressed.values()), None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_a_notifications_buttons_are_answered_for_ours_alone"
+    ],
+    "expected": [
+      "test_a_notifications_buttons_are_answered_for_ours_alone"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "baseline_exit": 0,
+    "mutated_sha256": "109513ce5440b08674aa049d5338269b4e64915c3591aa5cb92bdd50df465bf5",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_notifications_buttons_are_answered_for_ours_alone ___________",
+    "after_sha256": "ca4d1082ae02bf2ce0d39f8e50c2ef8bf1392d0183050b8c5cfd510accc18f1e",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-08-no-fallback",
+    "requirement": "M4A-08",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "        elif _speech_fallback:",
+      "replace": "        elif False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_the_speech_fallback_says_it_at_once_instead"
+    ],
+    "expected": [
+      "test_the_speech_fallback_says_it_at_once_instead"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3",
+    "baseline_exit": 0,
+    "mutated_sha256": "ee1060339f0163f1364cf68be5224f672e990020f1919cfe0cb96bf1b9af3bc4",
+    "mutated_exit": 1,
+    "observed": "______________ test_the_speech_fallback_says_it_at_once_instead _______________",
+    "after_sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09a-client-side",
+    "requirement": "M4A-09",
+    "file": "chatmon/winuia.py",
+    "mutation": {
+      "find": "        out[0] = SERVER_SIDE_PROVIDER\n",
+      "replace": "        out[0] = 0x1  # ProviderOptions_ClientSideProvider\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "expected": [
+      "test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "baseline_exit": 0,
+    "mutated_sha256": "84ea8142852f6358de87f301ea801322f52d353bbac38c06dd37f263c0d7e70a",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_ui_automation_client_hears_the_announcement ______________",
+    "after_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09a-not-handed-out",
+    "requirement": "M4A-09",
+    "file": "chatmon/winuia.py",
+    "mutation": {
+      "find": "msg.hWnd == self.hwnd and msg.message == WM_GETOBJECT",
+      "replace": "msg.hWnd == self.hwnd and msg.message == 0"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "expected": [
+      "test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "baseline_exit": 0,
+    "mutated_sha256": "7e2f09ec70a4892b91260c6e1003a9590163a1def3e541ccd65a481e6337ac0f",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_ui_automation_client_hears_the_announcement ______________",
+    "after_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09a-host-provider",
+    "requirement": "M4A-09",
+    "file": "chatmon/winuia.py",
+    "mutation": {
+      "find": "result = self._uia.UiaRaiseNotificationEvent(self.provider.pointer,",
+      "replace": "host = ctypes.c_void_p(); self._uia.UiaHostProviderFromHwnd(self.hwnd, ctypes.byref(host)); result = self._uia.UiaRaiseNotificationEvent(host.value,"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "expected": [
+      "test_a_ui_automation_client_hears_the_announcement"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "baseline_exit": 0,
+    "mutated_sha256": "01b79d757b63636ba589dee08bd0bb1e1e89c3da60c775002f3b260c2f6e0e73",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_ui_automation_client_hears_the_announcement ______________",
+    "after_sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09b-behind",
+    "requirement": "M4A-09",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "return winuia.in_front() and winuia.say(words, important)",
+      "replace": "return winuia.say(words, important)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_on_windows_announcements_need_chatmon_in_front"
+    ],
+    "expected": [
+      "test_on_windows_announcements_need_chatmon_in_front"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3",
+    "baseline_exit": 0,
+    "mutated_sha256": "78a262eafc9bbfd269366b445a2c7290122e56c69a878784433649dcf01dd1dc",
+    "mutated_exit": 1,
+    "observed": "_____________ test_on_windows_announcements_need_chatmon_in_front _____________",
+    "after_sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-09b-no-notification",
+    "requirement": "M4A-09",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "        notify()\n        return \"notification\"",
+      "replace": "        return \"notification\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_announcements_fall_back_to_the_notification"
+    ],
+    "expected": [
+      "test_announcements_fall_back_to_the_notification"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3",
+    "baseline_exit": 0,
+    "mutated_sha256": "355a8385f1fc392f2ec4c2993140fd8fdec9decc2e81caed9ff027daf6422862",
+    "mutated_exit": 1,
+    "observed": "______________ test_announcements_fall_back_to_the_notification _______________",
+    "after_sha256": "7ea51b7782cca5e65fe86029fe31001f7d12fa9490af095e373bc200fd3290f3",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-10-plugged",
+    "requirement": "M4A-10",
+    "file": "chatmon/heads_up.py",
+    "mutation": {
+      "find": "return float(percent), state not in DISCHARGING_STATES",
+      "replace": "return float(percent), state != 2"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_heads_up.py::test_upowers_display_device_in_one_answer"
+    ],
+    "expected": [
+      "test_upowers_display_device_in_one_answer"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328",
+    "baseline_exit": 0,
+    "mutated_sha256": "5cbac22ff71b3b99c09ab926db64ff6b26e04dc949830183ec165d0673a00df2",
+    "mutated_exit": 1,
+    "observed": "__________________ test_upowers_display_device_in_one_answer __________________",
+    "after_sha256": "ea9b8ea7e8bdfab8500a893cd89ca232f194e03ffd073f7c5bd9f7ef8c5ac328",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-11-told-twice",
+    "requirement": "M4A-11",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "        if on == self.locked:\n            return\n        self.locked = on",
+      "replace": "        self.locked = on"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing"
+    ],
+    "expected": [
+      "test_the_lock_is_told_once_and_stops_drawing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "c33cf7395f8dd5a37e41c45789a6d6494679f5d354e740abc9ea2f91dbf26e1b",
+    "mutated_exit": 1,
+    "observed": "________________ test_the_lock_is_told_once_and_stops_drawing _________________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-11-seen-inverted",
+    "requirement": "M4A-11",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "            self._seen(not on)",
+      "replace": "            self._seen(on)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_linuxsession.py::test_the_lock_is_told_once_and_stops_drawing"
+    ],
+    "expected": [
+      "test_the_lock_is_told_once_and_stops_drawing"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "baseline_exit": 0,
+    "mutated_sha256": "e15086d5fb74d2a5bd46f73465bc8d84c2f45b4907ff8884e0901fc96de2fabf",
+    "mutated_exit": 1,
+    "observed": "________________ test_the_lock_is_told_once_and_stops_drawing _________________",
+    "after_sha256": "0f743bf813365e3b89e8e975cb04e4057c94653665c82998f3ff5cf006ba8928",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04a-listener-outlives-desk",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "made = linuxsession.PortalSettings(self)",
+      "replace": "made = linuxsession.PortalSettings()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_the_linux_listeners_go_with_their_desk"
+    ],
+    "expected": [
+      "test_the_linux_listeners_go_with_their_desk"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "9761e970943bb3ed5ae456a9e4985033773d97df44e8a492e61a3f2471b2a831",
+    "mutated_exit": 1,
+    "observed": "_________________ test_the_linux_listeners_go_with_their_desk _________________",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-04b-old-qt-hints",
+    "requirement": "M4A-04",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "except (AttributeError, ImportError, RuntimeError, TypeError):",
+      "replace": "except (ImportError, RuntimeError, TypeError):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "expected": [
+      "test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "d88bfdea41c45d836a42fef210f33117e6aeacb63f2992676988b76442b489da",
+    "mutated_exit": 1,
+    "observed": "_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-01b-old-qt-contrast",
+    "requirement": "M4A-01",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "except (AttributeError, ImportError, RuntimeError):",
+      "replace": "except (ImportError, RuntimeError):"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "expected": [
+      "test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "baseline_exit": 0,
+    "mutated_sha256": "063878ad408648669801a2564e4565a81c808157644fa05558fe834767b9b5e0",
+    "mutated_exit": 1,
+    "observed": "_ test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms __",
+    "after_sha256": "0fa79cecaa4ce86e4e14ab753a44b0a0700fc32e9a09eea4acc0be743df51d86",
+    "restored_exit": 0
+  }
+]

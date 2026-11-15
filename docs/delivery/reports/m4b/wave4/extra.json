@@ -1,0 +1,120 @@
+{
+ "readiness_method": "Requirements review again at fb19cb9 (readiness.md): M4B-00 to M4B-04 and their 22 criteria re-read against ASSESSMENT.md, the amended ROADMAP.md (the owner's acceptance of the sound cues as they are included) and pyproject.toml as they are now; no conflict or gap; the three CI operations' outcomes recorded; four criteria's red drills need a Mac or a desktop with notifications on.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {
+  "W4-L-02E-linux-player": [
+   "AC-02E"
+  ]
+ },
+ "tests_add": {
+  "AC-00B": [
+   "tests/test_m4b_imports.py::test_it_imports_here"
+  ],
+  "AC-00C": [
+   "tests/test_m4b_imports.py::test_it_imports_here"
+  ],
+  "AC-01D": [
+   "tests/test_hotkey.py::test_macos_registers_it_and_hears_it",
+   "tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had"
+  ],
+  "AC-02F": [
+   "tests/test_sound.py::test_nssound_plays_at_the_volume"
+  ],
+  "AC-03E": [
+   "tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon",
+   "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+  ]
+ },
+ "observe_add": [
+  "tests/test_hotkey.py",
+  "tests/test_hotkey_portal.py",
+  "tests/test_sound.py",
+  "tests/test_m4b_imports.py",
+  "tests/test_wintoast.py"
+ ],
+ "ci": [
+  {
+   "id": "W4-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-132699632422-test-ubuntu-24.04-3.15.log",
+   "acceptance": [
+    "AC-00B",
+    "AC-01E",
+    "AC-01F",
+    "AC-02E"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run with Ubuntu's Xvfb and XTest. Passed: tests/test_m4b_imports.py::test_it_imports_here for each module (AC-00B), tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict (AC-01E), all five tests in tests/test_hotkey_portal.py against the pretend GlobalShortcuts portal (AC-01F), and tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait (AC-02E). Every warning is an error in this run (pyproject.toml), so the two ResourceWarnings the CI-LINUX operation named are gone. The same passed on ubuntu 3.11 and ubuntu-24.04-arm 3.14, and all but the X11 grab test (no X server there) in the three distro containers. This resolves CI-LINUX."
+  },
+  {
+   "id": "W4-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-132699632411-test-macos-latest-3.14.log",
+   "acceptance": [
+    "AC-00C",
+    "AC-01D",
+    "AC-02F"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, which includes CommandPlayer.close. Job test (macos-latest, 3.14). Passed: tests/test_m4b_imports.py::test_it_imports_here for each module (AC-00C). Also passed: tests/test_hotkey.py::test_macos_registers_it_and_hears_it and test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had, Carbon's RegisterEventHotKey with an event sent to the application target (AC-01D). And tests/test_sound.py::test_nssound_plays_at_the_volume and test_quitting_while_a_sound_plays_ends_cleanly (AC-02F). The same passed on the 3.11 and 3.15 legs. This resolves CI-MACOS."
+  },
+  {
+   "id": "W4-BEH-CI-WINDOWS",
+   "leg": "win3.14",
+   "log": "ci-132699632366-test-windows-latest-3.14.log",
+   "acceptance": [
+    "AC-03E"
+   ],
+   "method": "CI run 43677128712 on fb19cb9, job test (windows-latest, 3.14). tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon and test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread passed, as on the 3.11 and 3.15 legs. Those runners take the tests' notifications-on branch. Run 43648733348's failures on the same runner image show that: its log, ci/ci-43648733348-132612225623-test-windows-latest-3.14.log, fails at lines 504-505 and 525, inside 'if notifications_on():' on 'assert tag is not None and toaster.why_not is None'. So on this source the toast reached Windows' history under its tag and was hidden, and Dismissed(HIDDEN_BY_CHATMON) came back on the Qt thread as the last word. This resolves CI-WINDOWS-TOASTS."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W4-RED-AC-00C-deferred",
+   "kind": "red",
+   "status": "deferred",
+   "acceptance": [
+    "AC-00C"
+   ],
+   "method": "A drill for the macOS imports: give one of M4B's modules a top-level import of a Linux-only module, and tests/test_m4b_imports.py::test_it_imports_here must fail on macOS.",
+   "reason": "Not run: the test needs macOS. No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it."
+  },
+  {
+   "id": "W4-RED-AC-01D-deferred",
+   "kind": "red",
+   "status": "deferred",
+   "acceptance": [
+    "AC-01D"
+   ],
+   "method": "A drill for Carbon's backend: in chatmon/hotkey.py, make the macOS conflict check report nothing, and tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had must fail.",
+   "reason": "Not run: the test needs macOS. No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it."
+  },
+  {
+   "id": "W4-RED-AC-02F-deferred",
+   "kind": "red",
+   "status": "deferred",
+   "acceptance": [
+    "AC-02F"
+   ],
+   "method": "A drill for NSSound: in chatmon/sound.py, leave out the volume set on the NSSound, and tests/test_sound.py::test_nssound_plays_at_the_volume must fail.",
+   "reason": "Not run: the test needs macOS. No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it."
+  },
+  {
+   "id": "W4-RED-AC-03E-deferred",
+   "kind": "red",
+   "status": "deferred",
+   "acceptance": [
+    "AC-03E"
+   ],
+   "method": "A drill for a toast Windows shows: in chatmon/wintoast.py, make hide() leave the toast in Action Center, and tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon must fail on a Windows desktop with notifications on.",
+   "reason": "Not run: notifications are off for this PC's user (ToastEnabled = 0), which isn't this worker's to change, and a CI run of a drill branch needs a push. Next action: Randy turns notifications on here for one drill run, or approves a run on a test PC's signed-in desktop (testpc1 or testpc2, where it would need Python, PyQt6 and a task in the console session), or the coordinator pushes a drill branch for CI's Windows legs."
+  }
+ ],
+ "pending": [],
+ "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree.",
+ "drill_skip": {
+  "D-00A-lazy-library": "It went green, red and green again (wave4/drills.log), but it mutates chatmon/libdbus.py, which is T-PORTAL's, not in T-IMPORTS's files or dependencies, so a receipt for AC-00A can't bind it (its earlier receipt was never a passing one). AC-00A's other drills cover it."
+ }
+}

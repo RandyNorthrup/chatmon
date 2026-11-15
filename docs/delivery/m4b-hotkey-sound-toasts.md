@@ -256,6 +256,50 @@ For the 0.10.0 entry, once M7 has wired these in:
   that Chatmon writes its name (and icon) under `HKEY_CURRENT_USER\Software\Classes\AppUserModelId` so Windows can
   show its notifications.
 
+## Reconciliation, wave 4 (2026-11-14)
+
+Wave 4 read the CI run this plan's checkpoint was waiting for, and re-ran every check whose receipt had gone stale. The
+evidence is for **fb19cb9** (`improve/assessment-fixes`), bound to the repository's own bytes: LF, as git stores them
+(ROADMAP.md, *Canonical bytes*). Two other workers were changing code at the same time (wayland: the overlay and
+`ci.yml`; followups: packaging, the requirements and the mypy settings). Their merges will make some of these receipts
+stale again.
+
+**What CI answered.** CI run 43677128712 on fb19cb9, which includes `CommandPlayer.close`, every job green. Each leg's
+result for this plan's tests is in [reports/m4b/ci/observed.txt](reports/m4b/ci/observed.txt).
+
+- **CI-WINDOWS-TOASTS: resolved.** Both toast tests passed on the three Windows legs. Those runners take the tests'
+  notifications-on branch: run 43648733348's traceback fails inside `if notifications_on():`
+  ([reports/m4b/ci/](reports/m4b/ci/)). So AC-03E's behavior was observed where Windows shows toasts.
+- **CI-MACOS: resolved.** The module imports, Carbon's hotkey (registered, heard, a conflict reported) and NSSound passed
+  on all three macOS legs.
+- **CI-LINUX: resolved.** The imports, the X11 grab with and without NumLock, the GlobalShortcuts portal tests and the
+  Linux players passed on the Ubuntu legs. Every warning is an error now, so the two ResourceWarnings are gone too.
+
+**What was re-run.** The whole suite on Windows ([wave4/suite-windows.log](reports/wave4/suite-windows.log): 1241
+passed, 148 skipped). Then the plan's 36 Windows drills and its 6 Linux drills (in WSL) that still apply, every one green,
+red and green again. Two of the Linux drills' texts have gone. L-01F-no-portal's criterion has other drills. AC-02E got
+W4-L-02E-linux-player, on the `servers = {...}` line that replaced the old one, which also went green, red and green. The
+requirements were reviewed again against the amended rules ([wave4/readiness.md](reports/m4b/wave4/readiness.md)).
+T-SOUND-LINUX, T-HOTKEY-X11 and T-PORTAL are now verified. One Windows drill, D-00A-lazy-library, went green, red and
+green but isn't bound. It mutates `chatmon/libdbus.py`, which belongs to T-PORTAL rather than to T-IMPORTS, the task
+that owns AC-00A, so its receipt can't bind that file. Its earlier receipt was never a passing one either. AC-00A's
+other drills cover it.
+
+**What remains: four red drills that need a place to run.**
+
+| Criterion | What its drill needs | Owner |
+|---|---|---|
+| AC-00C (the imports on macOS) | macOS | Randy on a Mac, or the coordinator with a throwaway drill branch on CI |
+| AC-01D (Carbon's hotkey) | macOS | the same |
+| AC-02F (NSSound) | macOS | the same |
+| AC-03E (a toast Windows shows) | a Windows desktop with notifications on. This PC's user has them off (`ToastEnabled = 0`), which isn't this worker's to change. | Randy: turn them on here for one run, approve a run on a test PC's signed-in desktop, or have the coordinator run a drill branch on CI |
+
+Each is a deferred red receipt (W4-RED-AC-...-deferred) saying how to run it. T-IMPORTS-POSIX, T-HOTKEY-MAC,
+T-SOUND-MAC and T-TOAST-SHOWN stay implemented until then.
+
+**Receipts.** Every earlier passing receipt is now marked stale, as history, with its hashes untouched. The W4-
+receipts replace them.
+
 ```quality-ledger
 {
   "schema_version": 1,
@@ -268,16 +312,18 @@ For the 0.10.0 entry, once M7 has wired these in:
     "rules": [
       {
         "path": "docs/delivery/ROADMAP.md",
-        "revision": "5346385"
+        "revision": "fb19cb9+wave4"
       },
       {
         "path": "pyproject.toml",
-        "revision": "5346385"
+        "revision": "fb19cb9"
       }
     ],
     "inputs": [
       "tests/conftest.py",
-      "tests/drills/run.py"
+      "tests/drills/run.py",
+      "docs/delivery/reports/wave4/cilog.py",
+      "docs/delivery/reports/wave4/wsl_drills.py"
     ],
     "environment": {
       "platform": "windows",
@@ -647,7 +693,12 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-03C-settled-r2",
         "EV-RED-D-03C-qt-thread-r2",
         "EV-RED-D-03C-button-r2",
-        "EV-RED-D-03C-action-r2"
+        "EV-RED-D-03C-action-r2",
+        "W4-READY",
+        "W4-BEH-WINDOWS",
+        "W4-RED-D-03C-action",
+        "W4-RED-D-03C-button",
+        "W4-RED-D-03C-qt-thread"
       ],
       "blocker": null,
       "superseded_by": null
@@ -697,7 +748,18 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-03C-qt-thread-r2",
         "EV-RED-D-03C-button-r2",
         "EV-RED-D-03C-action-r2",
-        "EV-RED-D-03D-icon-r2"
+        "EV-RED-D-03D-icon-r2",
+        "W4-READY",
+        "W4-BEH-WINDOWS",
+        "W4-RED-D-03A-control-chars",
+        "W4-RED-D-03A-escaped",
+        "W4-RED-D-03A-five-buttons",
+        "W4-RED-D-03A-reminder-button",
+        "W4-RED-D-03B-setting",
+        "W4-RED-D-03C-action",
+        "W4-RED-D-03C-button",
+        "W4-RED-D-03C-qt-thread",
+        "W4-RED-D-03D-icon"
       ],
       "blocker": null,
       "superseded_by": null
@@ -723,7 +785,10 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "status": "implemented",
       "evidence": [
-        "EV-CI-WINDOWS-TOASTS"
+        "EV-CI-WINDOWS-TOASTS",
+        "W4-READY",
+        "W4-RED-AC-03E-deferred",
+        "W4-BEH-CI-WINDOWS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -757,7 +822,13 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-04A-position-r2",
         "EV-RED-D-04A-bubble-size-r2",
         "EV-RED-D-04A-cleared-r2",
-        "EV-RED-D-04B-magnifier-r2"
+        "EV-RED-D-04B-magnifier-r2",
+        "W4-READY",
+        "W4-BEH-WINDOWS",
+        "W4-RED-D-04A-bubble-size",
+        "W4-RED-D-04A-cleared",
+        "W4-RED-D-04A-position",
+        "W4-RED-D-04B-magnifier"
       ],
       "blocker": null,
       "superseded_by": null
@@ -805,7 +876,19 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-02D-own-thread-r2",
         "EV-RED-D-02A-stopped-at-exit-r2",
         "EV-RED-D-02D-scaled-r2",
-        "EV-RED-D-02D-without-qt-r2"
+        "EV-RED-D-02D-without-qt-r2",
+        "W4-READY",
+        "W4-BEH-WINDOWS",
+        "W4-RED-D-02A-plays",
+        "W4-RED-D-02A-stopped-at-exit",
+        "W4-RED-D-02A-volume",
+        "W4-RED-D-02B-cue-off",
+        "W4-RED-D-02B-one-switch",
+        "W4-RED-D-02B-quiet",
+        "W4-RED-D-02C-defaults",
+        "W4-RED-D-02D-own-thread",
+        "W4-RED-D-02D-scaled",
+        "W4-RED-D-02D-without-qt"
       ],
       "blocker": null,
       "superseded_by": null
@@ -829,12 +912,15 @@ For the 0.10.0 entry, once M7 has wired these in:
           "action": "modify"
         }
       ],
-      "status": "implemented",
+      "status": "verified",
       "evidence": [
         "EV-WSL-TESTS",
         "EV-RED-L-02D-linux-player",
         "EV-WSL-TESTS-r2",
-        "EV-RED-L-02D-linux-player-r2"
+        "EV-RED-L-02D-linux-player-r2",
+        "W4-READY",
+        "W4-BEH-CI-LINUX",
+        "W4-RED-L-02E-linux-player"
       ],
       "blocker": null,
       "superseded_by": null
@@ -860,7 +946,10 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "status": "implemented",
       "evidence": [
-        "EV-CI-MACOS"
+        "EV-CI-MACOS",
+        "W4-READY",
+        "W4-RED-AC-02F-deferred",
+        "W4-BEH-CI-MACOS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -903,7 +992,17 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-01B-its-own-id-r2",
         "EV-RED-D-01B-given-back-r2",
         "EV-RED-D-01C-conflict-r2",
-        "EV-RED-D-01C-keeps-old-r2"
+        "EV-RED-D-01C-keeps-old-r2",
+        "W4-READY",
+        "W4-BEH-WINDOWS",
+        "W4-RED-D-01A-alone",
+        "W4-RED-D-01A-order",
+        "W4-RED-D-01B-filter",
+        "W4-RED-D-01B-given-back",
+        "W4-RED-D-01B-its-own-id",
+        "W4-RED-D-01B-message-only",
+        "W4-RED-D-01C-conflict",
+        "W4-RED-D-01C-keeps-old"
       ],
       "blocker": null,
       "superseded_by": null
@@ -929,7 +1028,10 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "status": "implemented",
       "evidence": [
-        "EV-CI-MACOS"
+        "EV-CI-MACOS",
+        "W4-READY",
+        "W4-RED-AC-01D-deferred",
+        "W4-BEH-CI-MACOS"
       ],
       "blocker": null,
       "superseded_by": null
@@ -953,14 +1055,18 @@ For the 0.10.0 entry, once M7 has wired these in:
           "action": "modify"
         }
       ],
-      "status": "implemented",
+      "status": "verified",
       "evidence": [
         "EV-WSL-TESTS",
         "EV-RED-L-01E-numlock",
         "EV-RED-L-01E-conflict",
         "EV-WSL-TESTS-r2",
         "EV-RED-L-01E-numlock-r2",
-        "EV-RED-L-01E-conflict-r2"
+        "EV-RED-L-01E-conflict-r2",
+        "W4-READY",
+        "W4-BEH-CI-LINUX",
+        "W4-RED-L-01E-conflict",
+        "W4-RED-L-01E-numlock"
       ],
       "blocker": null,
       "superseded_by": null
@@ -992,7 +1098,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           "action": "create"
         }
       ],
-      "status": "implemented",
+      "status": "verified",
       "evidence": [
         "EV-WSL-TESTS",
         "EV-RED-D-01F-trigger",
@@ -1005,7 +1111,13 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-L-01F-its-own-session-r2",
         "EV-RED-L-01F-response-r2",
         "EV-RED-L-01F-carries-on-r2",
-        "EV-RED-L-01F-no-portal-r2"
+        "EV-RED-L-01F-no-portal-r2",
+        "W4-READY",
+        "W4-BEH-CI-LINUX",
+        "W4-RED-D-01F-trigger",
+        "W4-RED-L-01F-carries-on",
+        "W4-RED-L-01F-its-own-session",
+        "W4-RED-L-01F-response"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1035,7 +1147,10 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-RED-D-00A-lazy-library",
         "EV-RED-D-00A-eager-objc",
         "EV-WIN-TESTS-r2",
-        "EV-RED-D-00A-eager-objc-r2"
+        "EV-RED-D-00A-eager-objc-r2",
+        "W4-READY",
+        "W4-BEH-WINDOWS",
+        "W4-RED-D-00A-eager-objc"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1062,7 +1177,12 @@ For the 0.10.0 entry, once M7 has wired these in:
         "EV-CI-MACOS",
         "EV-RED-L-00B-eager-objc",
         "EV-WSL-TESTS-r2",
-        "EV-RED-L-00B-eager-objc-r2"
+        "EV-RED-L-00B-eager-objc-r2",
+        "W4-READY",
+        "W4-RED-AC-00C-deferred",
+        "W4-BEH-CI-LINUX",
+        "W4-BEH-CI-MACOS",
+        "W4-RED-L-00B-eager-objc"
       ],
       "blocker": null,
       "superseded_by": null
@@ -5409,7 +5529,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04B"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Re-review after the merge (rules changed) and the CI follow-up (AC-03C and AC-03E clarified), in the readiness report's revision 4",
       "environment": {
@@ -5450,7 +5570,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "scope_sha256": "53896a37c189d4f0d76521fac65f30587d501f58e52668252e425d5412013fb4",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "EV-WIN-TESTS-r2",
@@ -5471,7 +5591,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04B"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "-m",
@@ -5570,7 +5690,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "scope_sha256": "82b10892220e48ae333e0f84ad41ca407eca0394b6434d9f19c87996dc838671",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-WSL-TESTS-r2",
@@ -5581,7 +5701,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02E"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "env",
         "-u",
@@ -5700,7 +5820,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       ],
       "scope_sha256": "a787d6e9ececc8a6e3b0c8daccddd7758c22a73160fe46a56800a0b307ee6633",
       "red": null,
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01A-alone-r2",
@@ -5708,7 +5828,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -5788,7 +5908,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01A-order-r2",
@@ -5796,7 +5916,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -5876,7 +5996,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01B-message-only-r2",
@@ -5884,7 +6004,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -5964,7 +6084,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01B-filter-r2",
@@ -5972,7 +6092,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6052,7 +6172,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01B-its-own-id-r2",
@@ -6060,7 +6180,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6140,7 +6260,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01B-given-back-r2",
@@ -6148,7 +6268,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6228,7 +6348,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01C-conflict-r2",
@@ -6236,7 +6356,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6316,7 +6436,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01C-keeps-old-r2",
@@ -6324,7 +6444,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6404,7 +6524,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-01F-trigger-r2",
@@ -6412,7 +6532,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6508,7 +6628,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02A-volume-r2",
@@ -6516,7 +6636,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6596,7 +6716,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02A-plays-r2",
@@ -6604,7 +6724,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6684,7 +6804,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02B-quiet-r2",
@@ -6692,7 +6812,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6772,7 +6892,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02B-one-switch-r2",
@@ -6780,7 +6900,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6860,7 +6980,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02B-cue-off-r2",
@@ -6868,7 +6988,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -6948,7 +7068,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02C-defaults-r2",
@@ -6956,7 +7076,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7036,7 +7156,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02D-own-thread-r2",
@@ -7044,7 +7164,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7124,7 +7244,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02A-stopped-at-exit-r2",
@@ -7132,7 +7252,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7212,7 +7332,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02D-scaled-r2",
@@ -7220,7 +7340,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7300,7 +7420,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-02D-without-qt-r2",
@@ -7308,7 +7428,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7388,7 +7508,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03A-escaped-r2",
@@ -7396,7 +7516,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7484,7 +7604,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03A-control-chars-r2",
@@ -7492,7 +7612,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7580,7 +7700,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03A-reminder-button-r2",
@@ -7588,7 +7708,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7676,7 +7796,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03A-five-buttons-r2",
@@ -7684,7 +7804,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7772,7 +7892,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03B-setting-r2",
@@ -7780,7 +7900,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7868,7 +7988,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03B-real-no-r2",
@@ -7876,7 +7996,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -7964,7 +8084,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03C-settled-r2",
@@ -7972,7 +8092,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8060,7 +8180,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03C-qt-thread-r2",
@@ -8068,7 +8188,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8156,7 +8276,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03C-button-r2",
@@ -8164,7 +8284,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8252,7 +8372,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03C-action-r2",
@@ -8260,7 +8380,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03C"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8348,7 +8468,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-03D-icon-r2",
@@ -8356,7 +8476,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-03D"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8444,7 +8564,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-04A-position-r2",
@@ -8452,7 +8572,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8532,7 +8652,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-04A-bubble-size-r2",
@@ -8540,7 +8660,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8620,7 +8740,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-04A-cleared-r2",
@@ -8628,7 +8748,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8708,7 +8828,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-04B-magnifier-r2",
@@ -8716,7 +8836,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-04B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8796,7 +8916,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-D-00A-eager-objc-r2",
@@ -8804,7 +8924,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-00A"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "tests/drills/run.py",
@@ -8920,7 +9040,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: artifact-stale, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-00B-eager-objc-r2",
@@ -8928,7 +9048,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-00B"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9043,7 +9163,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-01E-numlock-r2",
@@ -9051,7 +9171,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9130,7 +9250,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-01E-conflict-r2",
@@ -9138,7 +9258,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9217,7 +9337,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-01F-its-own-session-r2",
@@ -9225,7 +9345,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9320,7 +9440,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-01F-response-r2",
@@ -9328,7 +9448,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9423,7 +9543,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-01F-carries-on-r2",
@@ -9431,7 +9551,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9526,7 +9646,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-01F-no-portal-r2",
@@ -9534,7 +9654,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-01F"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9629,7 +9749,7 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
-      "reason": null
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
     },
     {
       "id": "EV-RED-L-02D-linux-player-r2",
@@ -9637,7 +9757,7 @@ For the 0.10.0 entry, once M7 has wired these in:
         "AC-02E"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "python",
         "docs/delivery/reports/m4b/wsl-drills.py",
@@ -9716,99 +9836,5024 @@ For the 0.10.0 entry, once M7 has wired these in:
           }
         ]
       },
+      "reason": "Stale at wave 4's reconciliation (2026-11-14): the files it was bound to differ from the repository's bytes at fb19cb9 (later merges changed them, and hashes taken on a CRLF checkout never match git's LF), and the plan's rules and narrative were amended; the W4- receipts re-ran its check on fb19cb9 or read it from CI (the validator's findings: evidence-environment, inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W4-READY",
+      "acceptance": [
+        "AC-00A",
+        "AC-00B",
+        "AC-00C",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-01D",
+        "AC-01E",
+        "AC-01F",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-02E",
+        "AC-02F",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-03E",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Requirements review again at fb19cb9 (readiness.md): M4B-00 to M4B-04 and their 22 criteria re-read against ASSESSMENT.md, the amended ROADMAP.md (the owner's acceptance of the sound cues as they are included) and pyproject.toml as they are now; no conflict or gap; the three CI operations' outcomes recorded; four criteria's red drills need a Mac or a desktop with notifications on.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/readiness.md",
+        "sha256": "c8ba3ea700f814df94c73b52da72db60c3827dfc39e4b7c37cd99a5d2f376968"
+      },
+      "inputs": [
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        }
+      ],
+      "scope_sha256": "54b42f345ecb611a7fb96558d00fa373f25f03f395110ae0ee4cc147024cca29",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4-BEH-WINDOWS",
+      "acceptance": [
+        "AC-00A",
+        "AC-01A",
+        "AC-01B",
+        "AC-01C",
+        "AC-02A",
+        "AC-02B",
+        "AC-02C",
+        "AC-02D",
+        "AC-03A",
+        "AC-03B",
+        "AC-03C",
+        "AC-03D",
+        "AC-04A",
+        "AC-04B"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on fb19cb9's source on this Windows 11 workstation (offscreen Qt, the shared venv), which runs every test these criteria's earlier receipts named: 1241 passed, 148 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave4/suite-windows.log",
+        "sha256": "2d041d737c4983f9a73256c95d51463d4792262b3a54516e77e796950e87713b"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "37ceaec7d29db0372fd3ba4aac7ed232cc35a5b8d0004ac1d6d35a2438a5fcc4",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4-RED-AC-00C-deferred",
+      "acceptance": [
+        "AC-00C"
+      ],
+      "kind": "red",
+      "status": "deferred",
+      "command": [],
+      "method": "A drill for the macOS imports: give one of M4B's modules a top-level import of a Linux-only module, and tests/test_m4b_imports.py::test_it_imports_here must fail on macOS.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": null,
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "d7169fdb0df62f718fca3a9c362db530f385cdecc5ddbc4092766234f9e5c3c9",
+      "red": null,
+      "reason": "Not run: the test needs macOS. No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it."
+    },
+    {
+      "id": "W4-RED-AC-01D-deferred",
+      "acceptance": [
+        "AC-01D"
+      ],
+      "kind": "red",
+      "status": "deferred",
+      "command": [],
+      "method": "A drill for Carbon's backend: in chatmon/hotkey.py, make the macOS conflict check report nothing, and tests/test_hotkey.py::test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had must fail.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": null,
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "5d845c403d7045e732211b16e9f1815535c32fa72a3c9445e77993886ba60b0d",
+      "red": null,
+      "reason": "Not run: the test needs macOS. No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it."
+    },
+    {
+      "id": "W4-RED-AC-02F-deferred",
+      "acceptance": [
+        "AC-02F"
+      ],
+      "kind": "red",
+      "status": "deferred",
+      "command": [],
+      "method": "A drill for NSSound: in chatmon/sound.py, leave out the volume set on the NSSound, and tests/test_sound.py::test_nssound_plays_at_the_volume must fail.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": null,
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "88f0d5de9af61f9121fb377640ebbbb821f1cd475c56a18d21530a216f3ce675",
+      "red": null,
+      "reason": "Not run: the test needs macOS. No Mac is here or in the test lab, and a CI run of a drill branch needs a push, which this worker may not make. Next action: Randy on a Mac, or the coordinator pushing a throwaway branch with the mutation and dispatching ci.yml on it."
+    },
+    {
+      "id": "W4-RED-AC-03E-deferred",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "red",
+      "status": "deferred",
+      "command": [],
+      "method": "A drill for a toast Windows shows: in chatmon/wintoast.py, make hide() leave the toast in Action Center, and tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon must fail on a Windows desktop with notifications on.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": null,
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "9a63cdc451ad2e0655bf2e4e398bf9ff3a5927652fab7fe56576a2324005aea8",
+      "red": null,
+      "reason": "Not run: notifications are off for this PC's user (ToastEnabled = 0), which isn't this worker's to change, and a CI run of a drill branch needs a push. Next action: Randy turns notifications on here for one drill run, or approves a run on a test PC's signed-in desktop (testpc1 or testpc2, where it would need Python, PyQt6 and a task in the console session), or the coordinator pushes a drill branch for CI's Windows legs."
+    },
+    {
+      "id": "W4-BEH-CI-LINUX",
+      "acceptance": [
+        "AC-00B",
+        "AC-01E",
+        "AC-01F",
+        "AC-02E"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43677128712",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132699632422",
+        "--log"
+      ],
+      "method": "CI run 43677128712 on fb19cb9, job test (ubuntu-24.04, 3.15), every test under xvfb-run with Ubuntu's Xvfb and XTest. Passed: tests/test_m4b_imports.py::test_it_imports_here for each module (AC-00B), tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict (AC-01E), all five tests in tests/test_hotkey_portal.py against the pretend GlobalShortcuts portal (AC-01F), and tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait (AC-02E). Every warning is an error in this run (pyproject.toml), so the two ResourceWarnings the CI-LINUX operation named are gone. The same passed on ubuntu 3.11 and ubuntu-24.04-arm 3.14, and all but the X11 grab test (no X server there) in the three distro containers. This resolves CI-LINUX. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto fb19cb9's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/ci/ci-132699632422-test-ubuntu-24.04-3.15.log",
+        "sha256": "c8df7ed105a19cceca9f88adc79c3c24358bbdf3b6097f6c4f55b5d5e72de729"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "2f481016c05366fa62291751d4250e4ea40f886affd861a8ac1f401141906abb",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4-BEH-CI-MACOS",
+      "acceptance": [
+        "AC-00C",
+        "AC-01D",
+        "AC-02F"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43677128712",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132699632411",
+        "--log"
+      ],
+      "method": "CI run 43677128712 on fb19cb9, which includes CommandPlayer.close. Job test (macos-latest, 3.14). Passed: tests/test_m4b_imports.py::test_it_imports_here for each module (AC-00C). Also passed: tests/test_hotkey.py::test_macos_registers_it_and_hears_it and test_macos_reports_a_conflict_and_keeps_the_shortcut_it_had, Carbon's RegisterEventHotKey with an event sent to the application target (AC-01D). And tests/test_sound.py::test_nssound_plays_at_the_volume and test_quitting_while_a_sound_plays_ends_cleanly (AC-02F). The same passed on the 3.11 and 3.15 legs. This resolves CI-MACOS. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto fb19cb9's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/ci/ci-132699632411-test-macos-latest-3.14.log",
+        "sha256": "920bde71199ea9324e478253bf5cbbbe73ac6294ce31018d2e94db1ba7e91c04"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "ace1267961084ab7615cd2af9a212d59100e48748fbfe5750819a8e40b61a540",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4-BEH-CI-WINDOWS",
+      "acceptance": [
+        "AC-03E"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43677128712",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "132699632366",
+        "--log"
+      ],
+      "method": "CI run 43677128712 on fb19cb9, job test (windows-latest, 3.14). tests/test_wintoast.py::test_a_toast_is_shown_or_the_caller_is_told_to_use_the_balloon and test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread passed, as on the 3.11 and 3.15 legs. Those runners take the tests' notifications-on branch. Run 43648733348's failures on the same runner image show that: its log, ci/ci-43648733348-132612225623-test-windows-latest-3.14.log, fails at lines 504-505 and 525, inside 'if notifications_on():' on 'assert tag is not None and toaster.why_not is None'. So on this source the toast reached Windows' history under its tag and was hidden, and Dismissed(HIDDEN_BY_CHATMON) came back on the Qt thread as the last word. This resolves CI-WINDOWS-TOASTS. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto fb19cb9's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/ci/ci-132699632366-test-windows-latest-3.14.log",
+        "sha256": "f8f5894f64fbd90ecfd7a5fa8bd6299d4734605169d4b0d27af824d6b070b91c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "9a63cdc451ad2e0655bf2e4e398bf9ff3a5927652fab7fe56576a2324005aea8",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-00A-eager-objc",
+      "acceptance": [
+        "AC-00A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "method": "Red drill D-00A-eager-objc through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "37ceaec7d29db0372fd3ba4aac7ed232cc35a5b8d0004ac1d6d35a2438a5fcc4",
+      "red": {
+        "mutation": "D-00A-eager-objc: in chatmon/sound.py, '_sounds = Sounds()\\n' became '_sounds = Sounds()\\nMacPlayer()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_imports_here[sound]",
+        "observed_diagnostic": "_________________________ test_it_imports_here[sound] _________________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "69b2e4dff9e701153412ec43f423579bcfe78c080fcd89a6ef2fedb60cb2e791"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01A-alone",
+      "acceptance": [
+        "AC-01A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_what_isnt_a_shortcut_says_why"
+      ],
+      "method": "Red drill D-01A-alone through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01A-alone: in chatmon/hotkey.py, 'and key not in ALONE:' became 'and key in ALONE:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_what_isnt_a_shortcut_says_why",
+        "observed_diagnostic": "__________ test_what_isnt_a_shortcut_says_why[A-would take that key] __________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2210ddd0a5a82e48e9b85ca792ac6472019b34c8c17eb5f9c3db16cb357a86e7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01A-order",
+      "acceptance": [
+        "AC-01A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_a_shortcut_is_read_as_qt_writes_it"
+      ],
+      "method": "Red drill D-01A-order through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01A-order: in chatmon/hotkey.py, '[MODIFIER_NAMES[m] for m in MODIFIERS if m in self.modifiers]' became '[MODIFIER_NAMES[m] for m in sorted(self.modifiers)]'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_shortcut_is_read_as_qt_writes_it",
+        "observed_diagnostic": "___ test_a_shortcut_is_read_as_qt_writes_it[Ctrl+Alt+Space-Ctrl+Alt+Space] ____",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "5f0f4ebc1bbb4877360ce5c8f0d20f00cc387f6c0c64a5d3d57ee90daa153348"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01B-filter",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "method": "Red drill D-01B-filter through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01B-filter: in chatmon/hotkey.py, 'msg.message == self.WM_HOTKEY' became 'msg.message == self.WM_HOTKEY + 1'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_registers_it_on_a_message_only_window_and_hears_it",
+        "observed_diagnostic": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9fd3202a2796996652319375af28c4f27c61ba8ad5f8e2fee7c33e1c9cfb016f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01B-given-back",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "method": "Red drill D-01B-given-back through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01B-given-back: in chatmon/hotkey.py, '            self._user32.UnregisterHotKey(self.hwnd, self.id)\\n' became '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_registers_it_on_a_message_only_window_and_hears_it",
+        "observed_diagnostic": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "9f274091cf476da4f0ee44824f92aeb374e53a792442fc9a3ff1456466601124"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01B-its-own-id",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "method": "Red drill D-01B-its-own-id through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01B-its-own-id: in chatmon/hotkey.py, 'msg.wParam == self.id' became 'msg.wParam >= self.id'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "assert [True, True] == [True]",
+        "observed_diagnostic": "E           assert [True, True] == [True]",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "a1a7a266fb34b9f2cbaff813521e9127ef8242388e816d740b631c0f56ac9c62"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01B-message-only",
+      "acceptance": [
+        "AC-01B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_windows_registers_it_on_a_message_only_window_and_hears_it"
+      ],
+      "method": "Red drill D-01B-message-only through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01B-message-only: in chatmon/hotkey.py, 'HWND_MESSAGE = -3' became 'HWND_MESSAGE = 0'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_registers_it_on_a_message_only_window_and_hears_it",
+        "observed_diagnostic": "_______ test_windows_registers_it_on_a_message_only_window_and_hears_it _______",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2f06e357b5a69c9f81ed640bc822e7fe924ffeb5de4570081dafaf7f3dd0ccac"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01C-conflict",
+      "acceptance": [
+        "AC-01C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+      ],
+      "method": "Red drill D-01C-conflict through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01C-conflict: in chatmon/hotkey.py, 'if error == self.ERROR_HOTKEY_ALREADY_REGISTERED:' became 'if error != self.ERROR_HOTKEY_ALREADY_REGISTERED:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "wouldn't set up Ctrl+Alt+Shift+F23",
+        "observed_diagnostic": "E             + Windows wouldn't set up Ctrl+Alt+Shift+F23 (error 1409).",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "38e188ded5378c79602fc15fe8ed7f0a8d39a883f2803a793abfb6c7540adec4"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01C-keeps-old",
+      "acceptance": [
+        "AC-01C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had"
+      ],
+      "method": "Red drill D-01C-keeps-old through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "a54044979f3c889d056c9437a51307a381ac128595ce59ec1274e981eebf0238",
+      "red": {
+        "mutation": "D-01C-keeps-old: in chatmon/hotkey.py, '        new_id = 2 if self.id == 1 else 1  # the old one stays until the new one is in\\n' became '        self.release()\\n        new_id = 2 if self.id == 1 else 1\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had",
+        "observed_diagnostic": "________ test_windows_reports_a_conflict_and_keeps_the_shortcut_it_had ________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "421de7c196bfa3d02af5a04332a7ede48da8b432422915838a18c2838ba28862"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-01F-trigger",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey_portal.py::test_the_keys_are_asked_for_in_the_xdg_shortcuts_format"
+      ],
+      "method": "Red drill D-01F-trigger through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "2fb88bd1b99ab53173a3fe0befc39e9be2cd6633c0f010e3f059f73ff689f16d",
+      "red": {
+        "mutation": "D-01F-trigger: in chatmon/shortcutportal.py, '[KEYS[combo.key].x11]' became '[combo.key]'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "CTRL+ALT+Space",
+        "observed_diagnostic": "E       AssertionError: assert 'CTRL+ALT+Space' == 'CTRL+ALT+space'",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ba614a7dbab62fb2bae73b7d763c3fe500d43367ced327e2fc15921189bc1f3b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02A-plays",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting"
+      ],
+      "method": "Red drill D-02A-plays through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02A-plays: in chatmon/sound.py, '        effect.play()\\n' became '        effect.stop()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "never played",
+        "observed_diagnostic": ">       assert True in playing or effect.isPlaying(), f\"never played (status {effect.status()})\"",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "8ee193aab73b14135ef89b9d7998959ce096665134b59336f2c0f371e1552907"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02A-stopped-at-exit",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_quitting_while_a_sound_plays_ends_cleanly"
+      ],
+      "method": "Red drill D-02A-stopped-at-exit through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02A-stopped-at-exit: in chatmon/sound.py, '        atexit.register(self.close)\\n' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_quitting_while_a_sound_plays_ends_cleanly",
+        "observed_diagnostic": "_______________ test_quitting_while_a_sound_plays_ends_cleanly ________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "c9dde425e4876d9d0882c6818ec8102debbe6e8ec66b79e256c479c27e6f1933"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02A-volume",
+      "acceptance": [
+        "AC-02A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_qsoundeffect_plays_it_without_waiting"
+      ],
+      "method": "Red drill D-02A-volume through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02A-volume: in chatmon/sound.py, '        effect.setVolume(volume)\\n' became '        effect.setVolume(1.0)\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_qsoundeffect_plays_it_without_waiting",
+        "observed_diagnostic": "_________________ test_qsoundeffect_plays_it_without_waiting __________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "75ef96cd5448938de8fbf319e5507da827b303f36bce8522efe5544b77dd7519"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02B-cue-off",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+      ],
+      "method": "Red drill D-02B-cue-off through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02B-cue-off: in chatmon/sound.py, 'if not (self.enabled and self.cues[cue] and self.volume > 0):' became 'if not (self.enabled and self.volume > 0):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_nothing_sounds_when_it_shouldnt",
+        "observed_diagnostic": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "cea6f8b51f7b7b513aeef0e7aa5f7c51ed610bb3c89eb3024375842de2361714"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02B-one-switch",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+      ],
+      "method": "Red drill D-02B-one-switch through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02B-one-switch: in chatmon/sound.py, 'if not (self.enabled and self.cues[cue] and self.volume > 0):' became 'if not (self.cues[cue] and self.volume > 0):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_nothing_sounds_when_it_shouldnt",
+        "observed_diagnostic": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "c2e3ad5672174769709def04df0e69adc9db7fadf0f6cf0bc1ab1b86d86f1cb2"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02B-quiet",
+      "acceptance": [
+        "AC-02B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_nothing_sounds_when_it_shouldnt"
+      ],
+      "method": "Red drill D-02B-quiet through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02B-quiet: in chatmon/sound.py, 'if self._quiet is not None and self._quiet():' became 'if self._quiet is not None and not self._quiet():'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_nothing_sounds_when_it_shouldnt",
+        "observed_diagnostic": "____________________ test_nothing_sounds_when_it_shouldnt _____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "0b23d7404e2fc0f268cdc42a28f8ae4d5e214c3e6eb1ab96e31bea61e5ac9ef0"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02C-defaults",
+      "acceptance": [
+        "AC-02C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_only_the_alerts_sound_until_you_turn_the_others_on"
+      ],
+      "method": "Red drill D-02C-defaults through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02C-defaults: in chatmon/sound.py, 'ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\"})' became 'ON_BY_DEFAULT = frozenset({\"needs-you\", \"reminder\", \"focus-done\", \"pop\"})'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_only_the_alerts_sound_until_you_turn_the_others_on",
+        "observed_diagnostic": "___________ test_only_the_alerts_sound_until_you_turn_the_others_on ___________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "f56375809948690985daafc9dee8dfda0ffcca6daa692abafd62445e1a95b1e9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02D-own-thread",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_playsound_plays_on_its_own_thread"
+      ],
+      "method": "Red drill D-02D-own-thread through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02D-own-thread: in chatmon/sound.py, '        self._queue.put(data)\\n        return True\\n' became '        import winsound\\n        winsound.PlaySound(data, winsound.SND_MEMORY | winsound.SND_NODEFAULT)\\n        return True\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_playsound_plays_on_its_own_thread",
+        "observed_diagnostic": "___________________ test_playsound_plays_on_its_own_thread ____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "c92e03032b0ba0a2aeed041328119406ef50f5c97dd366783a5defcab5b87c67"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02D-scaled",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_samples_are_scaled_for_the_volume"
+      ],
+      "method": "Red drill D-02D-scaled through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02D-scaled: in chatmon/sound.py, '(round(v * volume) for v in values)' became '(round(v) for v in values)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_samples_are_scaled_for_the_volume",
+        "observed_diagnostic": "___________________ test_samples_are_scaled_for_the_volume ____________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "2c2b9d888da039571ac900595dcd48436d4a142acc825c68c5d423af21d207c7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-02D-without-qt",
+      "acceptance": [
+        "AC-02D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_without_qtmultimedia_the_systems_own_player_is_used"
+      ],
+      "method": "Red drill D-02D-without-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "71650679686ead399af53e8c4b50dd5decff74f992b4bfeb035189b827b8c4a4",
+      "red": {
+        "mutation": "D-02D-without-qt: in chatmon/sound.py, \"except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\\n            return False\" became \"except ImportError:  # QtMultimedia not installed (a distribution's PyQt6 without it)\\n            return True\"",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_without_qtmultimedia_the_systems_own_player_is_used",
+        "observed_diagnostic": "__________ test_without_qtmultimedia_the_systems_own_player_is_used ___________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "cf18c4218b25257edf95e52077856e288a509ca2206ba1eeebcb7b19cfe86fc3"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03A-control-chars",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+      ],
+      "method": "Red drill D-03A-control-chars through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03A-control-chars: in chatmon/wintoast.py, 'return NOT_XML.sub(\"\", str(text))' became 'return str(text)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_from_an_agent_is_text_never_markup",
+        "observed_diagnostic": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "b74583db9add0808a09e9933532cf124f2f203b485335a89c70aa9e54c192f4c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03A-escaped",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_text_from_an_agent_is_text_never_markup"
+      ],
+      "method": "Red drill D-03A-escaped through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03A-escaped: in chatmon/wintoast.py, 'return ET.tostring(toast, encoding=\"unicode\")' became 'return ET.tostring(toast, encoding=\"unicode\").replace(\"&lt;\", \"<\").replace(\"&gt;\", \">\")'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_from_an_agent_is_text_never_markup",
+        "observed_diagnostic": "________________ test_text_from_an_agent_is_text_never_markup _________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "6ac7f2a9bbdf093aa149d0bd207b241cebdaeb678ff61d8163179daeda353114"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03A-five-buttons",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_too_many_buttons_or_an_unknown_scenario_is_refused"
+      ],
+      "method": "Red drill D-03A-five-buttons through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03A-five-buttons: in chatmon/wintoast.py, 'if len(buttons) > MAX_BUTTONS:' became 'if len(buttons) >= MAX_BUTTONS:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_too_many_buttons_or_an_unknown_scenario_is_refused",
+        "observed_diagnostic": "___________ test_too_many_buttons_or_an_unknown_scenario_is_refused ___________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "02406f2c84bc995d91c6951460329732295ed5d800d4c10148496058835a5cfd"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03A-reminder-button",
+      "acceptance": [
+        "AC-03A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_reminder_stays_until_answered"
+      ],
+      "method": "Red drill D-03A-reminder-button through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03A-reminder-button: in chatmon/wintoast.py, \"        if not buttons:  # Windows' own Dismiss, so the scenario holds\" became '        if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_reminder_stays_until_answered",
+        "observed_diagnostic": "____________________ test_a_reminder_stays_until_answered _____________________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "f1fb2e03f1f5feaf3ca9eafd481153b092a809509918572271be397c7a1ada83"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03B-setting",
+      "acceptance": [
+        "AC-03B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_only_a_real_no_keeps_a_toast_from_being_tried"
+      ],
+      "method": "Red drill D-03B-setting through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03B-setting: in chatmon/wintoast.py, '        if setting in WHY_NOT:\\n' became '        if setting != ENABLED:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_only_a_real_no_keeps_a_toast_from_being_tried",
+        "observed_diagnostic": "_____________ test_only_a_real_no_keeps_a_toast_from_being_tried ______________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "0e2e8af37567d67d114c7e004cd52c1e0ed4b5680c440639fb44b049aaf15e94"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03C-action",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ],
+      "method": "Red drill D-03C-action through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03C-action: in chatmon/wintoast.py, '                action()\\n' became '                pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread",
+        "observed_diagnostic": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "e0fc41589cd17e000de0041b3f763c0d68b0169468e355584a3846bf3fc5bf1b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03C-button",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread"
+      ],
+      "method": "Red drill D-03C-button through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03C-button: in chatmon/wintoast.py, '                    index = parsed[1]\\n' became '                    index = BODY\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread",
+        "observed_diagnostic": "___ test_a_pressed_button_is_reported_and_its_action_runs_on_the_qt_thread ____",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "a64dfc72767b26a8f4a2c9e9e109e5f2915e4ecd498b572b508faeb017e0b32d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03C-qt-thread",
+      "acceptance": [
+        "AC-03C"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread"
+      ],
+      "method": "Red drill D-03C-qt-thread through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03C-qt-thread: in chatmon/wintoast.py, 'self._heard.emit(\"failed\", tag, code.value)' became 'self.failed.emit(tag, code.value)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread",
+        "observed_diagnostic": "________ test_what_windows_says_of_a_toast_comes_back_on_the_qt_thread ________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "08033d4cc591b9a532d635015534bc3693c39627daac6f7145bf56dc24130edb"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-03D-icon",
+      "acceptance": [
+        "AC-03D"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wintoast.py::test_a_pip_install_tells_windows_its_name_and_icon"
+      ],
+      "method": "Red drill D-03D-icon through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "15daed0bfa8fa6beef8ca26f58701b0780f5da86bc56eff91db47049132d585c",
+      "red": {
+        "mutation": "D-03D-icon: in chatmon/wintoast.py, '        if icon:\\n' became '        if not icon:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_pip_install_tells_windows_its_name_and_icon",
+        "observed_diagnostic": "_____________ test_a_pip_install_tells_windows_its_name_and_icon ______________",
+        "before": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "f65163d3077443050da36f36ffafe6e7e9eb349de678aee0d7dda435533cf7c6"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wintoast.py",
+            "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-04A-bubble-size",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ],
+      "method": "Red drill D-04A-bubble-size through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "b76a0dc5f9e5e8b9a240c74d6369739b34bcc60e57d7674dea9efa33861f57ab",
+      "red": {
+        "mutation": "D-04A-bubble-size: in chatmon/wincaret.py, 'max(1, int(width)), max(1, int(height))' became 'max(1, int(width) // 2), max(1, int(height))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_new_bubble_gets_the_caret_magnifier_follows",
+        "observed_diagnostic": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "b3fc8857befca4ccfe3113500cb7799a069458692749e65c99116535c583ab98"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-04A-cleared",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ],
+      "method": "Red drill D-04A-cleared through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "b76a0dc5f9e5e8b9a240c74d6369739b34bcc60e57d7674dea9efa33861f57ab",
+      "red": {
+        "mutation": "D-04A-cleared: in chatmon/wincaret.py, '            _api().DestroyCaret()\\n' became '            pass\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_new_bubble_gets_the_caret_magnifier_follows",
+        "observed_diagnostic": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "6414dd57e8cb0f25483ca3b7821e631bcc3342b675f31ff2f32ee03c5ebe689f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-04A-position",
+      "acceptance": [
+        "AC-04A"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wincaret.py::test_a_new_bubble_gets_the_caret_magnifier_follows"
+      ],
+      "method": "Red drill D-04A-position through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "b76a0dc5f9e5e8b9a240c74d6369739b34bcc60e57d7674dea9efa33861f57ab",
+      "red": {
+        "mutation": "D-04A-position: in chatmon/wincaret.py, 'user32.SetCaretPos(int(x), int(y))' became 'user32.SetCaretPos(int(y), int(x))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_new_bubble_gets_the_caret_magnifier_follows",
+        "observed_diagnostic": "_____________ test_a_new_bubble_gets_the_caret_magnifier_follows ______________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "1e4d26212015b5b691208b2c4a8b330c93678914637bf2ae757d822ce07dbd2a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-D-04B-magnifier",
+      "acceptance": [
+        "AC-04B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_wincaret.py::test_the_caret_is_only_for_when_magnifier_runs"
+      ],
+      "method": "Red drill D-04B-magnifier through tests/drills/run.py on this Windows workstation, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/drills.log",
+        "sha256": "dbe8d094c51cb8d00ce344f8f73ec6a5a45912e3216408dc7d5cd922af67f06a"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        }
+      ],
+      "scope_sha256": "b76a0dc5f9e5e8b9a240c74d6369739b34bcc60e57d7674dea9efa33861f57ab",
+      "red": {
+        "mutation": "D-04B-magnifier: in chatmon/wincaret.py, 'return bool(_api().FindWindowW(MAGNIFIER_CLASS, None))' became 'return not _api().FindWindowW(MAGNIFIER_CLASS, None)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_caret_is_only_for_when_magnifier_runs",
+        "observed_diagnostic": "_______________ test_the_caret_is_only_for_when_magnifier_runs ________________",
+        "before": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "fed9fa96be583b504d0e861a13657b7097e6b251c48268fac1c0de4269ee133f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/wincaret.py",
+            "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-00B-eager-objc",
+      "acceptance": [
+        "AC-00B"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_m4b_imports.py::test_it_imports_here"
+      ],
+      "method": "Red drill L-00B-eager-objc in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills.log",
+        "sha256": "e3a9577a06817156673e96e127c4ded93f845d92596c83f7dd5c6cdc1fee5505"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "chatmon/wincaret.py",
+          "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
+        },
+        {
+          "path": "chatmon/winfocus.py",
+          "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
+        },
+        {
+          "path": "chatmon/winrt.py",
+          "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_m4b_imports.py",
+          "sha256": "03bb2bb4a5fb34b628073875f153dfa9cd878ec21c7af0b0a8140b03f7809a64"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        },
+        {
+          "path": "tests/test_wincaret.py",
+          "sha256": "0c1ed4dde60d30937d948de00f5914e2d9b1793ef2b8622b0867d2e5d871d191"
+        },
+        {
+          "path": "tests/test_wintoast.py",
+          "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
+        }
+      ],
+      "scope_sha256": "d7169fdb0df62f718fca3a9c362db530f385cdecc5ddbc4092766234f9e5c3c9",
+      "red": {
+        "mutation": "L-00B-eager-objc: in chatmon/sound.py, '_sounds = Sounds()\\n' became '_sounds = Sounds()\\nMacPlayer()\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_imports_here[sound]",
+        "observed_diagnostic": "_________________________ test_it_imports_here[sound] __________________________",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "69b2e4dff9e701153412ec43f423579bcfe78c080fcd89a6ef2fedb60cb2e791"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-01E-conflict",
+      "acceptance": [
+        "AC-01E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+      ],
+      "method": "Red drill L-01E-conflict in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills.log",
+        "sha256": "e3a9577a06817156673e96e127c4ded93f845d92596c83f7dd5c6cdc1fee5505"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "2a9883cd2e5fd1e0d107b60050260d0cf9fc6737b9d514c607dec110d9518abd",
+      "red": {
+        "mutation": "L-01E-conflict: in chatmon/hotkey.py, '            if display == self.display:\\n' became '            if False:\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict",
+        "observed_diagnostic": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "b5f93123a521b6a00f8f783a328f60777aa3ef17f44be0883452bf7d48a06b03"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-01E-numlock",
+      "acceptance": [
+        "AC-01E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey.py::test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict"
+      ],
+      "method": "Red drill L-01E-numlock in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills.log",
+        "sha256": "e3a9577a06817156673e96e127c4ded93f845d92596c83f7dd5c6cdc1fee5505"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        }
+      ],
+      "scope_sha256": "2a9883cd2e5fd1e0d107b60050260d0cf9fc6737b9d514c607dec110d9518abd",
+      "red": {
+        "mutation": "L-01E-numlock: in chatmon/hotkey.py, '(key.keycode, key.state & ~(self.LOCK | self.NUM_LOCK))' became '(key.keycode, key.state)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict",
+        "observed_diagnostic": "________ test_x11_grabs_it_whatever_numlock_says_and_reports_a_conflict ________",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "0ae773044f56462289654dd4e9a0f839ffc0bd11531d6afc5e1b9f68c890fe0f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-01F-carries-on",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey_portal.py::test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked"
+      ],
+      "method": "Red drill L-01F-carries-on in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills.log",
+        "sha256": "e3a9577a06817156673e96e127c4ded93f845d92596c83f7dd5c6cdc1fee5505"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "2fb88bd1b99ab53173a3fe0befc39e9be2cd6633c0f010e3f059f73ff689f16d",
+      "red": {
+        "mutation": "L-01F-carries-on: in chatmon/shortcutportal.py, 'except (libdbus.Failure, TypeError, ValueError, KeyError, IndexError, AttributeError):' became 'except libdbus.Failure:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked",
+        "observed_diagnostic": "_ test_a_portal_answering_nonsense_fails_that_shortcut_and_the_next_can_still_be_asked _",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "9f42d27dc3af0596a3d67b83dccfc9f125f22df77fc994779ef7e79fb0f1ec23"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-01F-its-own-session",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+      ],
+      "method": "Red drill L-01F-its-own-session in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills.log",
+        "sha256": "e3a9577a06817156673e96e127c4ded93f845d92596c83f7dd5c6cdc1fee5505"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "2fb88bd1b99ab53173a3fe0befc39e9be2cd6633c0f010e3f059f73ff689f16d",
+      "red": {
+        "mutation": "L-01F-its-own-session: in chatmon/shortcutportal.py, 'if self._session and str(message.args[0]) == self._session and message.args[1] == SHORTCUT_ID:' became 'if self._session and message.args[1] == SHORTCUT_ID:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_portal_binds_it_and_its_presses_reach_chatmon",
+        "observed_diagnostic": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "b17b7c1d1d9be8740a46be244776bdd331794cb57f22c6c6e3fca1e0d57e13d2"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-01F-response",
+      "acceptance": [
+        "AC-01F"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_hotkey_portal.py::test_the_portal_binds_it_and_its_presses_reach_chatmon"
+      ],
+      "method": "Red drill L-01F-response in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills.log",
+        "sha256": "e3a9577a06817156673e96e127c4ded93f845d92596c83f7dd5c6cdc1fee5505"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
+        },
+        {
+          "path": "chatmon/libdbus.py",
+          "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
+        },
+        {
+          "path": "chatmon/shortcutportal.py",
+          "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/fake_shortcuts_portal.py",
+          "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
+        },
+        {
+          "path": "tests/test_hotkey.py",
+          "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
+        },
+        {
+          "path": "tests/test_hotkey_portal.py",
+          "sha256": "3b1e7969599e80972fb600806916c1140b96ed69dbf9245a2bf6f982feb65ccf"
+        }
+      ],
+      "scope_sha256": "2fb88bd1b99ab53173a3fe0befc39e9be2cd6633c0f010e3f059f73ff689f16d",
+      "red": {
+        "mutation": "L-01F-response: in chatmon/shortcutportal.py, '            then(code, results)\\n' became '            then(1, results)\\n'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_portal_binds_it_and_its_presses_reach_chatmon",
+        "observed_diagnostic": "____________ test_the_portal_binds_it_and_its_presses_reach_chatmon ____________",
+        "before": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "08c6ca81900f76667f18579fb19e8a6704a596b5b139644114766e88c600da6e"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/shortcutportal.py",
+            "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W4-RED-L-02E-linux-player",
+      "acceptance": [
+        "AC-02E"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "/var/tmp/plans-venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_sound.py::test_linux_players_follow_the_sound_server_and_never_make_you_wait"
+      ],
+      "method": "Red drill W4-L-02E-linux-player in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of fb19cb9's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for fb19cb9: two other workers are changing code at the same time (wayland: the overlay's files and ci.yml; followups: packaging, requirements and the mypy settings in pyproject.toml), so their merges will need this re-checked.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m4b/wave4/wsl-drills-new.log",
+        "sha256": "99f60033a14962310d23df99f42e0ebd61ac763c916409c5e953d29340bbb610"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/wsl_drills.py",
+          "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_sound.py",
+          "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
+        }
+      ],
+      "scope_sha256": "0b6577a0b612588bd9ef9dad5bb107c77bbe6f08116b41d77ceca3911c11ac37",
+      "red": {
+        "mutation": "W4-L-02E-linux-player: in chatmon/sound.py, 'servers = {\"pw-play\": folder / \"pipewire-0\", \"paplay\": folder / \"pulse\" / \"native\", \"canberra-gtk-play\": None}' became 'servers = {\"pw-play\": None, \"paplay\": folder / \"pulse\" / \"native\", \"canberra-gtk-play\": None}'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_linux_players_follow_the_sound_server_and_never_make_you_wait",
+        "observed_diagnostic": "______ test_linux_players_follow_the_sound_server_and_never_make_you_wait ______",
+        "before": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "272ca10eb15e7391e856ae4ab284249ab794c9a464d4a397b095a051bb4ec67c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sound.py",
+            "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "environment": {
-      "platform": "windows",
-      "tools": {
-        "python": "3.14.10",
-        "pyqt6": "6.11.0",
-        "pytest": "9.2.0",
-        "ruff": "0.17.4"
-      }
-    },
-    "pending_operations": [
-      {
-        "id": "CI-WINDOWS-TOASTS",
-        "description": "Windows with notifications on (AC-03E): run 43648733348 failed both toast tests on all three Windows legs; fixed here (a real no only; settled toasts not reported again)",
-        "next_action": "Coordinator merges and dispatches CI; read the Windows legs' tests/test_wintoast.py, which now prints the setting if it declines"
-      },
-      {
-        "id": "CI-MACOS",
-        "description": "macOS (AC-00C, AC-01D, AC-02F): passed in run 43648733348, job 132612225608, on 8b4c9fc; sound.py has changed since (CommandPlayer.close), so the next run confirms it on this source",
-        "next_action": "Read the macOS leg's tests/test_hotkey.py, tests/test_sound.py, tests/test_m4b_imports.py in the next run"
-      },
-      {
-        "id": "CI-LINUX",
-        "description": "Linux under the project's profile (AC-00B, AC-01E, AC-01F, AC-02E): passed in run 43648733348, job 132612225501, on 8b4c9fc, the X11 test included now that Xvfb is installed; two ResourceWarnings it showed are fixed here",
-        "next_action": "Read the Linux leg's tests/test_hotkey.py, tests/test_hotkey_portal.py, tests/test_sound.py in the next run; no ResourceWarning from them"
-      }
-    ],
-    "next_action": "After the next CI run: mark T-TOAST-SHOWN, T-SOUND-LINUX, T-SOUND-MAC, T-HOTKEY-MAC, T-HOTKEY-X11, T-PORTAL and T-IMPORTS-POSIX verified from its runs, or reopen them with its failures",
-    "source_revision": "cac004798b3bfaab7c813d4cefda94abb654a94f",
-    "scope_sha256": "53896a37c189d4f0d76521fac65f30587d501f58e52668252e425d5412013fb4",
+    "scope_sha256": "54b42f345ecb611a7fb96558d00fa373f25f03f395110ae0ee4cc147024cca29",
     "inputs": [
       {
         "path": "chatmon/hotkey.py",
-        "sha256": "9620bef724c1e171fe38e0def4c598e659a68392d423eb52de9455bb9d4be4d5"
+        "sha256": "2d096fb601795578bf675a9e258d26d44a93c78c3dc01bbc828e865400ccc2a6"
       },
       {
         "path": "chatmon/libdbus.py",
-        "sha256": "d591a04ac51df633e667d23f9ee6fb8bc96318a7c38dab75b7e0dc6830501a43"
+        "sha256": "625148fb2699b01337a3e4eb0b73fa6fa03849a20d0caa6ba71fcd0940b82953"
       },
       {
         "path": "chatmon/shortcutportal.py",
-        "sha256": "12ce92b60dce230959d4db70864a342a7862d22bf0d035a7cb049d2a8dc1b343"
+        "sha256": "ab562eaf80f48837ccc0631cdf57f90a25f0dc2b1a2278b8126382664778b5e2"
       },
       {
         "path": "chatmon/sound.py",
-        "sha256": "42b9b7dc513e8a05bb1f6082088776c093d669f292eaa6bd8a9f94eb8641953e"
+        "sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de"
       },
       {
         "path": "chatmon/wincaret.py",
-        "sha256": "a570924028029e6adbab036e623dee3448db04bd3014750e0cf4cc463de7575d"
+        "sha256": "ce3b5da4c1f9bf514b781fe1b7adbda331f8e8cfb3e8afd93c0e6eecf23b814f"
       },
       {
         "path": "chatmon/winfocus.py",
-        "sha256": "23ef764c87a6330410f9bbe499d253f8dc7d556fab3f0bceffbfbfcbeb89dbc8"
+        "sha256": "68e99d47beec7fab28339faae28f4ba4e8e8aa4f2af3d42a239275bfb9678824"
       },
       {
         "path": "chatmon/winrt.py",
-        "sha256": "c6a2ca98f0b623fd1df9a7afa5bab9b0c0cc39bffb893875bc58d5bfd8565bcd"
+        "sha256": "2c09f95d9b53c6424cd984d55dbff1c4956e30979beddd62c44cd028bbe2b095"
       },
       {
         "path": "chatmon/wintoast.py",
-        "sha256": "3037785b019afe7b0a54f681506c91ca0afb7f043609bd24ca903f30b3f9acd4"
+        "sha256": "4ba23c09cd81257d0f4bac1b27acdf226adfa1bdffec030da46811c25e11c594"
       },
       {
         "path": "docs/delivery/ASSESSMENT.md",
-        "sha256": "2977d61a84feb17c49dcef4ef887804a59dc4372fc9b3f57a9d2e0e587131cb5"
+        "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
       },
       {
         "path": "docs/delivery/ROADMAP.md",
-        "sha256": "c46dc262e53927389a2827db514cc78e9cfa7840b549562441cba2c234f9fa1a"
+        "sha256": "8d0b2e3ee8658378667dccbd8090a11235a71ca371a2d307f765ae482f7bed8f"
+      },
+      {
+        "path": "docs/delivery/reports/wave4/cilog.py",
+        "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+      },
+      {
+        "path": "docs/delivery/reports/wave4/wsl_drills.py",
+        "sha256": "a2aca37f8755a050308ad61cfddb22745a397de4726ff8adff42adf9a4d0f7e3"
       },
       {
         "path": "pyproject.toml",
-        "sha256": "6a4137718ace8f0f0b196beff5e4dc16225994f4bf18dcc48971dfb742c00567"
+        "sha256": "6748a152142386e6e48b20bbc9c0913b4076c2bc18f67e890f4190bfa9962ced"
       },
       {
         "path": "tests/conftest.py",
-        "sha256": "d7ab148510da9a898f43585921d8f7302655e9134372cf25618ad1fbace53a43"
+        "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
       },
       {
         "path": "tests/drills/run.py",
-        "sha256": "9f7e42e8abf1fdd9190fc9bb5e7576f8b60b5be0310cec38af5e0ac2d7573301"
+        "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
       },
       {
         "path": "tests/fake_shortcuts_portal.py",
-        "sha256": "1a13ed68d62f9a44dd3ad140da5e7a0e4cf84d13931c1516e3475a347512d6e7"
+        "sha256": "c6c601b8dd143af4454e4680b07898378ad392906c7fcf30764d007b81776247"
       },
       {
         "path": "tests/test_hotkey.py",
-        "sha256": "6002c331a6a42f5993f8371fdecef6c266409d68c37fbb01ed0e2e4a21b32771"
+        "sha256": "03666f40b0987e337270d8d69b303648d37ae5cf8bc3f5ccde9e3dddd91d2167"
       },
       {
         "path": "tests/test_hotkey_portal.py",
@@ -9820,7 +14865,7 @@ For the 0.10.0 entry, once M7 has wired these in:
       },
       {
         "path": "tests/test_sound.py",
-        "sha256": "fa40ec736ff347f25b28a68908c93f453bdb74b3f6ca120cff718f8906a79130"
+        "sha256": "ba5b3da09129249a93f5b13d320a9405eb39b7eb3c0ca8a5c80a36404418cd8b"
       },
       {
         "path": "tests/test_wincaret.py",
@@ -9831,14 +14876,29 @@ For the 0.10.0 entry, once M7 has wired these in:
         "sha256": "36ad9bdd69a0793f090314565adc6a9105a0669495745738905ff090313b0876"
       }
     ],
+    "environment": {
+      "platform": "windows",
+      "tools": {
+        "python": "3.14.10",
+        "pyqt6": "6.11.0",
+        "pytest": "9.2.0",
+        "ruff": "0.17.4"
+      }
+    },
     "verified_tasks": [
       "T-WINRT",
       "T-TOAST",
       "T-CARET",
       "T-SOUND",
+      "T-SOUND-LINUX",
       "T-HOTKEY",
+      "T-HOTKEY-X11",
+      "T-PORTAL",
       "T-IMPORTS"
-    ]
+    ],
+    "pending_operations": [],
+    "next_action": "Four red drills remain, each needing a place to run, not new code. AC-00C, AC-01D and AC-02F need macOS (Randy on a Mac, or the coordinator through a CI run of a drill branch). AC-03E needs a Windows desktop with notifications on (see W4-RED-AC-03E-deferred). Then T-IMPORTS-POSIX, T-HOTKEY-MAC, T-SOUND-MAC and T-TOAST-SHOWN can be verified and M4B closed. The other workers' merges change files these receipts are bound to: re-run the suite and this plan's drill specs in wave4/ on the merged tree.",
+    "source_revision": "fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0"
   }
 }
 ```

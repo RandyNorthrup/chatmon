@@ -1,0 +1,36 @@
+# tests/test_presence.py in WSL (Arch), 6.18.58.1-microsoft-standard-WSL2, /var/tmp/m4a-venv: 3.14.9 PyQt6 6.12.1 Qt 6.12.0, under xvfb-run -a, on fb19cb9's files
+$ xvfb-run -a /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider -rA tests/test_presence.py
+ssss....s...s.............                                               [100%]
+==================================== PASSES ====================================
+_____ test_an_x_library_that_wont_load_goes_to_the_log_and_x_says_nothing ______
+------------------------------ Captured log call -------------------------------
+DEBUG    chatmon.presence:presence.py:282 couldn't reach the X server's libraries: /tmp/pytest-of-randy/pytest-144/test_an_x_library_that_wont_lo0/libX11.so.6: file too short
+=========================== short test summary info ============================
+PASSED tests/test_presence.py::test_a_full_screen_app_fills_the_chatmons_screen_from_its_top_edge
+PASSED tests/test_presence.py::test_bubbles_wait_on_macos_while_a_full_screen_app_is_over_the_chatmon
+PASSED tests/test_presence.py::test_every_reading_answers_or_says_it_cant
+PASSED tests/test_presence.py::test_the_overlay_tells_when_youre_away
+PASSED tests/test_presence.py::test_the_portals_contrast_decides_and_says_when_it_changes
+PASSED tests/test_presence.py::test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high
+PASSED tests/test_presence.py::test_macos_high_contrast_is_appkits_increase_contrast
+PASSED tests/test_presence.py::test_without_qt_610_high_contrast_and_its_signal_are_left_to_the_platforms
+PASSED tests/test_presence.py::test_qts_contrast_change_is_passed_on
+PASSED tests/test_presence.py::test_windows_setting_changes_are_passed_on
+PASSED tests/test_presence.py::test_an_x_library_that_wont_load_goes_to_the_log_and_x_says_nothing
+PASSED tests/test_presence.py::test_a_full_screen_window_counts_only_on_the_stages_screen
+PASSED tests/test_presence.py::test_covered_on_x11_asks_where_the_full_screen_window_is
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[dunst-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[Plasma-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[SwayNotificationCenter-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[Xfce Notify Daemon-True-False]
+PASSED tests/test_presence.py::test_each_notification_servers_do_not_disturb_holds_bubbles[mako-on4-off4]
+PASSED tests/test_presence.py::test_the_linux_listeners_go_with_their_desk
+PASSED tests/test_presence.py::test_x11_says_where_a_window_is
+SKIPPED [1] tests/test_presence.py:18: Windows only
+SKIPPED [1] tests/test_presence.py:33: Windows only
+SKIPPED [1] tests/test_presence.py:55: Windows only
+SKIPPED [1] tests/test_presence.py:74: macOS only
+SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+SKIPPED [1] tests/test_presence.py:220: macOS only
+20 passed, 6 skipped in 1.31s
+# exit 0

@@ -1,0 +1,334 @@
+distro (debian:trixie)	Set up job	﻿2026-11-15T04:31:26.8291279Z Current runner version: '2.338.2'
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8317303Z ##[group]Runner Image Provisioner
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8318219Z Hosted Compute Agent
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8318842Z Version: 20261103.629
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8319563Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8320410Z Build Date: 2026-11-03T17:26:59Z
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8321092Z Worker ID: {04d8a36d-b304-4722-98b1-2196947c6f55}
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8321882Z Region: westus2
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8322453Z Cloud: Azure
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8323027Z ##[endgroup]
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8324989Z ##[group]Operating System
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8325720Z Ubuntu
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8326364Z 24.04.5
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8326887Z LTS
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8327449Z ##[endgroup]
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8328077Z ##[group]Runner Image
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8328692Z Image: ubuntu-24.04
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8329315Z Version: 20261111.370.1
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8330391Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8332257Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8333235Z ##[endgroup]
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8334402Z ##[group]GITHUB_TOKEN Permissions
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8336424Z Contents: read
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8337548Z Metadata: read
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8338147Z ##[endgroup]
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8340358Z Secret source: Actions
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8341352Z Cache mode: write
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8342227Z Prepare workflow directory
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8754084Z Prepare all required actions
+distro (debian:trixie)	Set up job	2026-11-15T04:31:26.8802742Z Getting action download info
+distro (debian:trixie)	Set up job	2026-11-15T04:31:27.1961917Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+distro (debian:trixie)	Set up job	2026-11-15T04:31:27.4363480Z Complete job name: distro (debian:trixie)
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:31:27.5357889Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5359006Z with:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5359498Z   persist-credentials: false
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5360053Z   sparse-checkout: /*
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5360655Z   sparse-checkout-cone-mode: false
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5361223Z   repository: RandyNorthrup/chatmon
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5365250Z   token: ***
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5365746Z   ssh-strict: true
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5366205Z   ssh-user: git
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5366700Z   clean: true
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5367135Z   fetch-depth: 1
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5367585Z   fetch-tags: false
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5368040Z   show-progress: true
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5368500Z   lfs: false
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5368920Z   submodules: false
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5369380Z   set-safe-directory: true
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5369893Z   allow-unsafe-pr-checkout: false
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5370730Z env:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5371182Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.5371719Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8257268Z Syncing repository: RandyNorthrup/chatmon
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8259169Z ##[group]Getting Git version info
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8259915Z Working directory is '/home/runner/work/chatmon/chatmon'
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8260919Z [command]/usr/bin/git version
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8350172Z git version 2.56.1
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8371989Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8383158Z Temporarily overriding HOME='/home/runner/work/_temp/10a60744-5a7a-46aa-b02c-dc27482ab937' before making global git config changes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8385439Z Adding repository directory to the temporary git global config as a safe directory
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8388822Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8435025Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8439146Z ##[group]Determining repository object format
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8440884Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8442210Z ##[group]Initializing the repository
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8445924Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8548289Z hint: Using 'master' as the name for the initial branch. This default branch name
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8549761Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8551033Z hint: to use in all of your new repositories, which will suppress this warning,
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8552322Z hint: call:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8553081Z hint:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8553704Z hint: 	git config --global init.defaultBranch <name>
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8554344Z hint:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8555366Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8556375Z hint: 'development'. The just-created branch can be renamed via this command:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8557117Z hint:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8557538Z hint: 	git branch -m <name>
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8558136Z hint:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8558791Z hint: Disable this message with "git config set advice.defaultBranchName false"
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8560497Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8571383Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8622732Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8623542Z ##[group]Disabling automatic garbage collection
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8626379Z [command]/usr/bin/git config --local gc.auto 0
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8658836Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8660258Z ##[group]Setting up auth
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8660840Z Removing SSH command configuration
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8664568Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.8701101Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9080462Z Removing HTTP extra header
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9088251Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9129737Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9382170Z Removing includeIf entries pointing to credentials config files
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9389169Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9435110Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9675694Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9713394Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9745396Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9778030Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9810541Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9840808Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9841579Z ##[group]Fetching the repository
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:27.9847743Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0:refs/remotes/origin/improve/assessment-fixes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2539944Z From https://github.com/RandyNorthrup/chatmon
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2542668Z  * [new ref]         fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 -> origin/improve/assessment-fixes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2552118Z [command]/usr/bin/git branch --list --remote origin/improve/assessment-fixes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2587965Z   origin/improve/assessment-fixes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2597681Z [command]/usr/bin/git rev-parse refs/remotes/origin/improve/assessment-fixes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2621807Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2627283Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2628061Z ##[group]Determining the checkout info
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2629028Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2629828Z ##[group]Setting up sparse checkout
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2632838Z [command]/usr/bin/git config core.sparseCheckout true
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2667408Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2691208Z .git/info/sparse-checkout
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2699389Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2700721Z ##[group]Checking out the ref
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:28.2705669Z [command]/usr/bin/git checkout --progress --force -B improve/assessment-fixes refs/remotes/origin/improve/assessment-fixes
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1144194Z Switched to a new branch 'improve/assessment-fixes'
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1150184Z branch 'improve/assessment-fixes' set up to track 'origin/improve/assessment-fixes'.
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1165417Z ##[endgroup]
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1215264Z [command]/usr/bin/git log -1 --format=%H
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1243010Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1257837Z ##[group]Removing auth
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1258680Z Removing SSH command configuration
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1269374Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1303466Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1558715Z Removing HTTP extra header
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1561373Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1597114Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1837714Z Removing includeIf entries pointing to credentials config files
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1840891Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1872437Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1875295Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1877342Z includeif.gitdir:/github/workspace/.git.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1879261Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1885871Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1909484Z /home/runner/work/_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1921338Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-501d2fd5\-5e2b\-407e\-a08f\-f6bbd92a254f\.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1960757Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1987588Z /home/runner/work/_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.1999678Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-501d2fd5\-5e2b\-407e\-a08f\-f6bbd92a254f\.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2033956Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2060100Z /github/runner_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2070483Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-501d2fd5\-5e2b\-407e\-a08f\-f6bbd92a254f\.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2106170Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2130415Z /github/runner_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2140091Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-501d2fd5\-5e2b\-407e\-a08f\-f6bbd92a254f\.config
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2175703Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2404479Z Removing credentials config '/home/runner/work/_temp/git-credentials-501d2fd5-5e2b-407e-a08f-f6bbd92a254f.config'
+distro (debian:trixie)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:31:29.2413305Z ##[endgroup]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	﻿2026-11-15T04:31:29.2682893Z ##[group]Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.2685813Z [36;1mdocker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh[0m
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.2711095Z shell: /usr/bin/bash -e {0}
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.2712300Z env:
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.2713291Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.2714489Z   IMAGE: debian:trixie
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.2715759Z ##[endgroup]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:29.3703610Z Unable to find image 'debian:trixie' locally
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:30.2428318Z trixie: Pulling from library/debian
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:30.4873307Z a6dd1c05fbba: Pulling fs layer
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:30.8883685Z a6dd1c05fbba: Verifying Checksum
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:30.8884315Z a6dd1c05fbba: Download complete
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:32.3508392Z a6dd1c05fbba: Pull complete
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:32.3555759Z Digest: sha256:9c6e381421d0f48d1b8133e573f33c185ee16cbf505eda9c4a8a4791b25ea8a6
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:32.3572448Z Status: Downloaded newer image for debian:trixie
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:51.3579117Z Debian GNU/Linux 13 (trixie): Python 3.13.5, PyQt6 6.9.0, Qt 6.8.2
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:31:59.1550746Z ...ss................................................................... [  5%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:33:01.3180869Z ................s.............ss........................................ [ 10%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:33:46.5970342Z ........................................................................ [ 15%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:33:51.6597211Z .................................................sss..s................. [ 20%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:33:54.0596357Z ...................................................................s.... [ 25%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:01.5453923Z .s...s.................................................................. [ 31%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:03.3945010Z ......................s............s.......ssss..s...................... [ 36%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:04.9963505Z .....................................................................s.. [ 41%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:16.2539225Z .....................s................................ssssss............ [ 46%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:21.1234328Z .........s..................................sssssssss...........s....... [ 51%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:22.2676333Z ...................ssssssss............................................. [ 57%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:22.4298210Z ........................................................................ [ 62%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:34:38.1184479Z .............................sss..................s......ssss........... [ 67%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:13.1033933Z .......ss.ssss....s...s.s..........s.s.................................. [ 72%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:13.2761070Z ........................................................................ [ 77%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:14.5177449Z ........................................................................ [ 82%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:23.7870240Z .ss.s..s................................................................ [ 88%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:35.8178360Z ..........................................................s............. [ 93%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.0024961Z ..............ss.sssssssssssssssssssssssssssssssssss...ssssssss......sss [ 98%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.1992008Z ssssssssssss.........                                                    [100%]
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.1993475Z =========================== short test summary info ============================
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.1995276Z SKIPPED [1] tests/test_a11y.py:62: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.1996545Z SKIPPED [1] tests/test_a11y.py:70: macOS
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.1998251Z SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.1999659Z SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2000649Z SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2001667Z SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2002807Z SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2004419Z SKIPPED [1] tests/test_attachments.py:125: Windows links
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2005758Z SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2006855Z SKIPPED [1] tests/test_brains.py:479: Claude Code isn't installed here
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2008273Z SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2009531Z SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2010645Z SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2012022Z SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2013294Z SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2014270Z SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2105345Z SKIPPED [1] tests/test_clickthrough.py:98: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2106187Z SKIPPED [1] tests/test_clickthrough.py:107: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2106953Z SKIPPED [1] tests/test_clickthrough.py:156: needs an X server (DISPLAY), as under Xvfb
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2107786Z SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2108400Z SKIPPED [1] tests/test_heads_up.py:135: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2108897Z SKIPPED [1] tests/test_hotkey.py:157: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2109387Z SKIPPED [1] tests/test_hotkey.py:183: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2109872Z SKIPPED [1] tests/test_hotkey.py:200: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2110347Z SKIPPED [1] tests/test_hotkey.py:254: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2110877Z SKIPPED [1] tests/test_hotkey.py:271: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2111441Z SKIPPED [1] tests/test_hotkey.py:352: Linux with Xvfb
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2112321Z SKIPPED [1] tests/test_i18n.py:242: Qt's own translations aren't installed (a separate package on some distributions)
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2113355Z SKIPPED [1] tests/test_install_update.py:256: macOS's root code: ditto, BSD find, osascript
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2114355Z SKIPPED [3] tests/test_install_update.py:267: macOS's root code: ditto, BSD find, osascript
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2115424Z SKIPPED [1] tests/test_install_update.py:282: macOS's root code: ditto, BSD find, osascript
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2116292Z SKIPPED [1] tests/test_install_update.py:291: macOS's root code: ditto, BSD find, osascript
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2117055Z SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2117722Z SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2118360Z SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2118978Z SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2119573Z SKIPPED [1] tests/test_macnative.py:20: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2120472Z SKIPPED [1] tests/test_macnative.py:29: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2120960Z SKIPPED [1] tests/test_macnative.py:63: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2121444Z SKIPPED [1] tests/test_macnative.py:97: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2121932Z SKIPPED [1] tests/test_macnative.py:125: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2122426Z SKIPPED [1] tests/test_macnative.py:143: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2122906Z SKIPPED [1] tests/test_macnative.py:171: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2123378Z SKIPPED [1] tests/test_macnative.py:179: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2124200Z SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2125475Z SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2126558Z SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2127474Z SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2128123Z SKIPPED [1] tests/test_platform_events.py:104: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2128943Z SKIPPED [1] tests/test_platform_events.py:119: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2129527Z SKIPPED [1] tests/test_platform_events.py:127: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2130099Z SKIPPED [1] tests/test_platform_events.py:181: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2130685Z SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2131383Z SKIPPED [1] tests/test_portowner.py:54: no other account listens on anything here
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2132036Z SKIPPED [1] tests/test_presence.py:18: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2132528Z SKIPPED [1] tests/test_presence.py:33: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2133006Z SKIPPED [1] tests/test_presence.py:55: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2133482Z SKIPPED [1] tests/test_presence.py:74: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2134014Z SKIPPED [1] tests/test_presence.py:143: no GNOME session here
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2134556Z SKIPPED [1] tests/test_presence.py:220: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2135423Z SKIPPED [1] tests/test_presence.py:245: Qt 6.8.2 is before 6.10: no contrast preference to follow
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2136198Z SKIPPED [1] tests/test_presence.py:364: Linux with an X display
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2136840Z SKIPPED [1] tests/test_releasecheck.py:59: needs OpenSSL to compare with
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2137603Z SKIPPED [1] tests/test_sound.py:185: no QtMultimedia, or no audio device to play to
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2138306Z SKIPPED [1] tests/test_sound.py:210: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2138774Z SKIPPED [1] tests/test_sound.py:261: macOS only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2139370Z SKIPPED [1] tests/test_sound.py:334: no QtMultimedia, or no audio device to play to
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2140152Z SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2140798Z SKIPPED [1] tests/test_wincaret.py:52: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2141290Z SKIPPED [1] tests/test_wincaret.py:87: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2141776Z SKIPPED [1] tests/test_windows.py:77: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2142254Z SKIPPED [1] tests/test_windows.py:87: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2142733Z SKIPPED [1] tests/test_windows.py:98: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2143496Z SKIPPED [1] tests/test_windows.py:102: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2144000Z SKIPPED [1] tests/test_windows.py:107: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2144473Z SKIPPED [1] tests/test_windows.py:127: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2145149Z SKIPPED [1] tests/test_windows.py:138: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2145627Z SKIPPED [1] tests/test_windows.py:153: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2146114Z SKIPPED [1] tests/test_windows.py:164: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2146601Z SKIPPED [1] tests/test_windows.py:197: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2147072Z SKIPPED [1] tests/test_windows.py:210: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2147556Z SKIPPED [1] tests/test_windows.py:224: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2148440Z SKIPPED [1] tests/test_windows.py:261: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2148919Z SKIPPED [1] tests/test_windows.py:279: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2149407Z SKIPPED [1] tests/test_windows.py:292: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2149899Z SKIPPED [1] tests/test_windows.py:315: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2150393Z SKIPPED [1] tests/test_windows.py:339: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2150881Z SKIPPED [1] tests/test_windows.py:366: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2151351Z SKIPPED [1] tests/test_windows.py:408: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2151824Z SKIPPED [1] tests/test_windows.py:434: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2152300Z SKIPPED [1] tests/test_windows.py:441: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2152774Z SKIPPED [1] tests/test_windows.py:479: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2153257Z SKIPPED [1] tests/test_windows.py:491: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2153747Z SKIPPED [1] tests/test_windows.py:502: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2154215Z SKIPPED [1] tests/test_windows.py:519: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2154970Z SKIPPED [1] tests/test_windows.py:535: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2155480Z SKIPPED [1] tests/test_windows.py:561: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2156153Z SKIPPED [1] tests/test_windows.py:583: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2156632Z SKIPPED [1] tests/test_windows.py:601: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2157459Z SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2158306Z SKIPPED [1] tests/test_windows.py:684: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2158836Z SKIPPED [1] tests/test_windows.py:699: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2159360Z SKIPPED [1] tests/test_windows.py:739: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2160157Z SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2160955Z SKIPPED [1] tests/test_windows.py:818: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2161474Z SKIPPED [1] tests/test_winlock.py:17: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2162007Z SKIPPED [1] tests/test_winlock.py:41: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2162525Z SKIPPED [1] tests/test_winlock.py:78: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2163106Z SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2163716Z SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2164312Z SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2165145Z SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2165762Z SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2166357Z SKIPPED [1] tests/test_wintoast.py:110: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2166908Z SKIPPED [1] tests/test_wintoast.py:124: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2167440Z SKIPPED [1] tests/test_wintoast.py:149: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2167973Z SKIPPED [1] tests/test_wintoast.py:209: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2168460Z SKIPPED [1] tests/test_wintoast.py:233: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2168998Z SKIPPED [1] tests/test_wintoast.py:253: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2169532Z SKIPPED [1] tests/test_wintoast.py:273: Windows only
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2170408Z SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2171221Z SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2172011Z SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2172790Z SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2173563Z SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+distro (debian:trixie)	Run docker run --rm -v "$PWD:/src:ro" "$IMAGE" sh /src/.github/scripts/distro-tests.sh	2026-11-15T04:35:36.2174217Z 1259 passed, 130 skipped in 224.60s (0:03:44)
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:35:37.3176041Z Post job cleanup.
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4073225Z [command]/usr/bin/git version
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4113956Z git version 2.56.1
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4149921Z Temporarily overriding HOME='/home/runner/work/_temp/e419e54d-a2fd-49d6-9063-89bfbdc971a1' before making global git config changes
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4151888Z Adding repository directory to the temporary git global config as a safe directory
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4154347Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4188382Z Removing SSH command configuration
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4194970Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4232286Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4467139Z Removing HTTP extra header
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4472688Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4508448Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4740437Z Removing includeIf entries pointing to credentials config files
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4746796Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+distro (debian:trixie)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:35:37.4781139Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+distro (debian:trixie)	Complete job	﻿2026-11-15T04:35:37.5162268Z Cleaning up orphan processes

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "W4-M0-13-log-left-at-the-umask",
+    "requirement": "M0-13.A1",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "            os.fchmod(fd, 0o600)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "expected": [
+      "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "f1baee7428fa0ac5763e2ca920ac80ae12bc22d902badd68df6c914b31023e2a",
+    "mutated_exit": 1,
+    "observed": "____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M0-13-log-followed-through-a-link",
+    "requirement": "M0-13.A1",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "getattr(os, \"O_NOFOLLOW\", 0)",
+      "replace": "0"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "expected": [
+      "test_the_log_is_readable_only_by_you_and_never_followed_through_a_link"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "ad4e67abd85473a830c4c7bd22d07422411e6f544c5886ba2239508875105a91",
+    "mutated_exit": 1,
+    "observed": "____ test_the_log_is_readable_only_by_you_and_never_followed_through_a_link ____",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  }
+]

@@ -1,0 +1,399 @@
+coverage	Set up job	﻿2026-11-15T04:37:50.5388903Z Current runner version: '2.338.2'
+coverage	Set up job	2026-11-15T04:37:50.5412381Z ##[group]Runner Image Provisioner
+coverage	Set up job	2026-11-15T04:37:50.5413387Z Hosted Compute Agent
+coverage	Set up job	2026-11-15T04:37:50.5413966Z Version: 20261103.629
+coverage	Set up job	2026-11-15T04:37:50.5414573Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+coverage	Set up job	2026-11-15T04:37:50.5415341Z Build Date: 2026-11-03T17:26:59Z
+coverage	Set up job	2026-11-15T04:37:50.5416004Z Worker ID: {16a14660-978b-4aa7-bc05-ba1807dbed29}
+coverage	Set up job	2026-11-15T04:37:50.5416727Z Region: westcentralus
+coverage	Set up job	2026-11-15T04:37:50.5417306Z Cloud: Azure
+coverage	Set up job	2026-11-15T04:37:50.5417844Z ##[endgroup]
+coverage	Set up job	2026-11-15T04:37:50.5419439Z ##[group]Operating System
+coverage	Set up job	2026-11-15T04:37:50.5420331Z Ubuntu
+coverage	Set up job	2026-11-15T04:37:50.5420969Z 24.04.5
+coverage	Set up job	2026-11-15T04:37:50.5421488Z LTS
+coverage	Set up job	2026-11-15T04:37:50.5421996Z ##[endgroup]
+coverage	Set up job	2026-11-15T04:37:50.5422557Z ##[group]Runner Image
+coverage	Set up job	2026-11-15T04:37:50.5423141Z Image: ubuntu-24.04
+coverage	Set up job	2026-11-15T04:37:50.5423700Z Version: 20261111.370.1
+coverage	Set up job	2026-11-15T04:37:50.5424770Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+coverage	Set up job	2026-11-15T04:37:50.5426519Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+coverage	Set up job	2026-11-15T04:37:50.5427453Z ##[endgroup]
+coverage	Set up job	2026-11-15T04:37:50.5428637Z ##[group]GITHUB_TOKEN Permissions
+coverage	Set up job	2026-11-15T04:37:50.5431261Z Contents: read
+coverage	Set up job	2026-11-15T04:37:50.5432195Z Metadata: read
+coverage	Set up job	2026-11-15T04:37:50.5432856Z ##[endgroup]
+coverage	Set up job	2026-11-15T04:37:50.5434956Z Secret source: Actions
+coverage	Set up job	2026-11-15T04:37:50.5435858Z Cache mode: write
+coverage	Set up job	2026-11-15T04:37:50.5436729Z Prepare workflow directory
+coverage	Set up job	2026-11-15T04:37:50.5867909Z Prepare all required actions
+coverage	Set up job	2026-11-15T04:37:50.5926968Z Getting action download info
+coverage	Set up job	2026-11-15T04:37:50.8935646Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+coverage	Set up job	2026-11-15T04:37:51.0429781Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+coverage	Set up job	2026-11-15T04:37:51.1528704Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+coverage	Set up job	2026-11-15T04:37:51.7661082Z Complete job name: coverage
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:37:51.8450253Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8451379Z with:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8452059Z   persist-credentials: false
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8453228Z   sparse-checkout: /chatmon/
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	/packaging/
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	/pyproject.toml
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8454015Z   sparse-checkout-cone-mode: false
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8454711Z   repository: RandyNorthrup/chatmon
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8458462Z   token: ***
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8459052Z   ssh-strict: true
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8459571Z   ssh-user: git
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8460239Z   clean: true
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8460812Z   fetch-depth: 1
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8461319Z   fetch-tags: false
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8461841Z   show-progress: true
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8462404Z   lfs: false
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8462891Z   submodules: false
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8463459Z   set-safe-directory: true
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8464338Z   allow-unsafe-pr-checkout: false
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8465266Z env:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8465786Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:51.8466491Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1055602Z Syncing repository: RandyNorthrup/chatmon
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1057702Z ##[group]Getting Git version info
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1058444Z Working directory is '/home/runner/work/chatmon/chatmon'
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1059687Z [command]/usr/bin/git version
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1121702Z git version 2.56.1
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1139822Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1149521Z Temporarily overriding HOME='/home/runner/work/_temp/e5484cbd-b3fe-49e9-8268-1982e0bdcb88' before making global git config changes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1151687Z Adding repository directory to the temporary git global config as a safe directory
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1154775Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1199674Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1203165Z ##[group]Determining repository object format
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1204629Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1205870Z ##[group]Initializing the repository
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1208538Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1310503Z hint: Using 'master' as the name for the initial branch. This default branch name
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1311848Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1312884Z hint: to use in all of your new repositories, which will suppress this warning,
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1313672Z hint: call:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1314243Z hint:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1314846Z hint: 	git config --global init.defaultBranch <name>
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1315539Z hint:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1316487Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1317881Z hint: 'development'. The just-created branch can be renamed via this command:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1319110Z hint:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1319606Z hint: 	git branch -m <name>
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1320360Z hint:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1321406Z hint: Disable this message with "git config set advice.defaultBranchName false"
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1322684Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1327402Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1381965Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1383312Z ##[group]Disabling automatic garbage collection
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1385095Z [command]/usr/bin/git config --local gc.auto 0
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1419797Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1422143Z ##[group]Setting up auth
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1423224Z Removing SSH command configuration
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1425144Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1458529Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1790465Z Removing HTTP extra header
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1795789Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.1831511Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2013684Z Removing includeIf entries pointing to credentials config files
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2018465Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2048898Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2236667Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2271064Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2302176Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2332892Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2364162Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2391852Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2393137Z ##[group]Fetching the repository
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.2398522Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0:refs/remotes/origin/improve/assessment-fixes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6719949Z From https://github.com/RandyNorthrup/chatmon
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6721918Z  * [new ref]         fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0 -> origin/improve/assessment-fixes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6728818Z [command]/usr/bin/git branch --list --remote origin/improve/assessment-fixes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6762473Z   origin/improve/assessment-fixes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6770212Z [command]/usr/bin/git rev-parse refs/remotes/origin/improve/assessment-fixes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6793662Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6796534Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6797590Z ##[group]Determining the checkout info
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6798719Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6799800Z ##[group]Setting up sparse checkout
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6801208Z [command]/usr/bin/git config core.sparseCheckout true
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6832241Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6853262Z .git/info/sparse-checkout
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6859822Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6861784Z ##[group]Checking out the ref
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:52.6865151Z [command]/usr/bin/git checkout --progress --force -B improve/assessment-fixes refs/remotes/origin/improve/assessment-fixes
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3149001Z Updating files:   0% (1/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3159878Z Updating files:   1% (3/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3172868Z Updating files:   2% (5/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3184066Z Updating files:   3% (7/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3194752Z Updating files:   4% (9/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3199915Z Updating files:   5% (11/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3221457Z Updating files:   6% (13/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3232178Z Updating files:   7% (15/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3250692Z Updating files:   8% (17/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3261532Z Updating files:   9% (19/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3272279Z Updating files:  10% (21/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3281872Z Updating files:  11% (23/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3288632Z Updating files:  12% (25/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3299305Z Updating files:  13% (27/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3308867Z Updating files:  14% (29/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3319640Z Updating files:  15% (31/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3329020Z Updating files:  16% (33/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3338532Z Updating files:  17% (35/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3352476Z Updating files:  18% (37/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3371587Z Updating files:  19% (39/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3380503Z Updating files:  20% (41/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3389545Z Updating files:  21% (43/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3399187Z Updating files:  22% (45/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3408040Z Updating files:  23% (47/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3419364Z Updating files:  24% (49/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3429164Z Updating files:  25% (51/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3437980Z Updating files:  26% (53/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3447486Z Updating files:  27% (55/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3458240Z Updating files:  28% (57/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3469121Z Updating files:  29% (59/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3478072Z Updating files:  30% (61/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3487740Z Updating files:  31% (63/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3496678Z Updating files:  32% (65/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3505865Z Updating files:  33% (67/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3515190Z Updating files:  34% (69/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3517467Z Updating files:  35% (71/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3519560Z Updating files:  36% (73/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3527870Z Updating files:  37% (75/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3532663Z Updating files:  38% (77/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3536906Z Updating files:  39% (79/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3539031Z Updating files:  40% (81/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3541123Z Updating files:  41% (83/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3572812Z Updating files:  42% (85/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3574876Z Updating files:  43% (87/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3578026Z Updating files:  44% (89/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3581458Z Updating files:  45% (91/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3583322Z Updating files:  46% (93/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3585163Z Updating files:  47% (95/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3587252Z Updating files:  48% (97/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3589186Z Updating files:  49% (99/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3591069Z Updating files:  50% (101/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3593016Z Updating files:  51% (103/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3594728Z Updating files:  52% (105/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3596544Z Updating files:  53% (107/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3598243Z Updating files:  54% (109/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3602401Z Updating files:  55% (111/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3604202Z Updating files:  56% (113/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3608139Z Updating files:  57% (115/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3610536Z Updating files:  58% (117/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3612449Z Updating files:  59% (119/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3615325Z Updating files:  60% (121/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3616997Z Updating files:  61% (123/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3621391Z Updating files:  62% (125/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3624225Z Updating files:  63% (127/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3626087Z Updating files:  64% (129/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3628113Z Updating files:  65% (131/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3643851Z Updating files:  66% (133/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3646008Z Updating files:  67% (135/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3648107Z Updating files:  68% (137/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3657656Z Updating files:  69% (139/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3664758Z Updating files:  70% (141/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3680488Z Updating files:  71% (143/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3684336Z Updating files:  72% (145/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3686485Z Updating files:  73% (147/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3688369Z Updating files:  74% (149/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3690372Z Updating files:  75% (151/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3692440Z Updating files:  76% (153/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3694339Z Updating files:  77% (155/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3696340Z Updating files:  78% (157/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3698216Z Updating files:  79% (159/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3700236Z Updating files:  80% (161/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3702339Z Updating files:  81% (163/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3703811Z Updating files:  82% (165/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3705540Z Updating files:  83% (167/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3713124Z Updating files:  84% (169/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3766040Z Updating files:  85% (171/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3769857Z Updating files:  86% (173/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3771820Z Updating files:  87% (175/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3773220Z Updating files:  88% (177/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3781830Z Updating files:  89% (179/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3783579Z Updating files:  90% (181/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3785429Z Updating files:  91% (183/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3787167Z Updating files:  92% (185/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3789527Z Updating files:  93% (187/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3791520Z Updating files:  94% (189/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3793069Z Updating files:  95% (191/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3794422Z Updating files:  96% (193/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3795777Z Updating files:  97% (195/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3797175Z Updating files:  98% (197/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3798558Z Updating files:  99% (199/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3799883Z Updating files: 100% (201/201)
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3801458Z Updating files: 100% (201/201), done.
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3822480Z Switched to a new branch 'improve/assessment-fixes'
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3828123Z branch 'improve/assessment-fixes' set up to track 'origin/improve/assessment-fixes'.
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3839358Z ##[endgroup]
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3882295Z [command]/usr/bin/git log -1 --format=%H
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3908724Z fb19cb934fa03b7e3bc6e3ba192a366f1a3093d0
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3917504Z ##[group]Removing auth
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3918810Z Removing SSH command configuration
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3921593Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.3953302Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4154656Z Removing HTTP extra header
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4157451Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4186200Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4385323Z Removing includeIf entries pointing to credentials config files
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4388077Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4419344Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4422956Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4426124Z includeif.gitdir:/github/workspace/.git.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4428272Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4433323Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4451269Z /home/runner/work/_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4461369Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-42d24edf\-e5bf\-488f\-a985\-8ff77211badb\.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4498531Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4521355Z /home/runner/work/_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4535604Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-42d24edf\-e5bf\-488f\-a985\-8ff77211badb\.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4664842Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4694776Z /github/runner_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4704271Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-42d24edf\-e5bf\-488f\-a985\-8ff77211badb\.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4742550Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4765108Z /github/runner_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4773686Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-42d24edf\-e5bf\-488f\-a985\-8ff77211badb\.config
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.4835778Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.5039382Z Removing credentials config '/home/runner/work/_temp/git-credentials-42d24edf-e5bf-488f-a985-8ff77211badb.config'
+coverage	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:37:54.5045508Z ##[endgroup]
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T04:37:54.5472805Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5474664Z with:
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5475670Z   python-version: 3.14
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5476829Z   check-latest: false
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5487509Z   token: ***
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5489519Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5492446Z   update-environment: true
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5494553Z   allow-prereleases: false
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5496213Z   freethreaded: false
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5497497Z env:
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5498536Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.5499981Z ##[endgroup]
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.6744909Z ##[group]Installed versions
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.6835801Z Successfully set up CPython (3.14.10)
+coverage	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-15T04:37:54.6837981Z ##[endgroup]
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	﻿2026-11-15T04:37:54.7027135Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-test.txt
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7029909Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-test.txt[0m
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7138208Z shell: /usr/bin/bash -e {0}
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7139565Z env:
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7140857Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7142484Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7144400Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7146305Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7148087Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7149848Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7151873Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:54.7153836Z ##[endgroup]
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:59.0837009Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:59.5865631Z Collecting coverage==7.17.0 (from -r packaging/requirements-test.txt (line 7))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:37:59.6981880Z   Downloading coverage-7.17.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.0409240Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-test.txt (line 128))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.0606882Z   Downloading hypothesis-6.170.14-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.1134504Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 21.9 MB/s  0:00:00
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.1418269Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-test.txt (line 213))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.1611957Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.1904916Z Collecting packaging==26.3 (from -r packaging/requirements-test.txt (line 217))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.2094687Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.2373971Z Collecting pluggy==1.7.0 (from -r packaging/requirements-test.txt (line 221))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.2563494Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.3352406Z Collecting psutil==7.2.2 (from -r packaging/requirements-test.txt (line 225))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.3548615Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.3892545Z Collecting pygments==2.21.0 (from -r packaging/requirements-test.txt (line 248))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.4084551Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.4248096Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 72.3 MB/s  0:00:00
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.4591504Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-test.txt (line 252))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.4813131Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.5715229Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 91.8 MB/s  0:00:00
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.6157866Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-test.txt (line 260))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:00.6403774Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.7163360Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 79.9 MB/s  0:00:01
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.8379344Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-test.txt (line 270))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.8599438Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.8995345Z Collecting pytest==9.2.0 (from -r packaging/requirements-test.txt (line 302))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.9197079Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.9526494Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-test.txt (line 308))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:01.9721584Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:02.0021574Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-test.txt (line 312))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:02.0215541Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:02.0511325Z Collecting tzdata==2026.6 (from -r packaging/requirements-test.txt (line 316))
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:02.0711744Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:02.6978858Z Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, pytest, pyqt6, pytest-timeout
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:06.2463569Z 
+coverage	Run python -m pip install --require-hashes -r packaging/requirements-test.txt	2026-11-15T04:38:06.2481681Z Successfully installed coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-11-15T04:38:06.3653802Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3654368Z with:
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3654707Z   pattern: coverage-*
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3655054Z   path: /home/runner/work/_temp/coverage
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3655422Z   merge-multiple: true
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3655795Z   repository: RandyNorthrup/chatmon
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3656145Z   run-id: 43677128712
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3656466Z   skip-decompress: false
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3656793Z   digest-mismatch: error
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3657094Z env:
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3657485Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3657898Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3658419Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3658925Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3659393Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3659908Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3660781Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.3661225Z ##[endgroup]
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.6990667Z Found 3 artifact(s)
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.6992728Z Filtering artifacts by pattern 'coverage-*'
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.7009943Z Preparing to download the following artifacts:
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.7011258Z - coverage-windows-latest-3.14 (ID: 14147030398, Size: 497093, Expected Digest: sha256:f4d9a42251b89f0f36d156363d74052249da865d63ba77b1d565a34fe5213890)
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.7012423Z - coverage-macos-latest-3.14 (ID: 14146906736, Size: 398137, Expected Digest: sha256:2b8c73c97681ca1799726fd579e803af0dc7005fd73ab145a5a09064a7752f7d)
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:06.7013434Z - coverage-ubuntu-24.04-arm-3.14 (ID: 14146684404, Size: 403496, Expected Digest: sha256:04599696ecdb583e95d26aa47c2dd6f3092e2003c187a4f59356ff63819adde4)
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.1636919Z Redirecting to blob download url: https://productionresultssa30.blob.core.windows.net/actions-results/566d92f6-6c8d-46e6-a97b-766a486956e3/workflow-job-run-18c009c0-42d6-5c89-93c6-0df15bc5caf7/artifacts/e1eb92c4634f826366ecdfeec06ead874fa3202f6d001f41d21c97238f57c961.zip
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.1638504Z Starting download of artifact to: /home/runner/work/_temp/coverage
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.1666327Z Redirecting to blob download url: https://productionresultssa30.blob.core.windows.net/actions-results/566d92f6-6c8d-46e6-a97b-766a486956e3/workflow-job-run-cbc8cef1-6446-5157-bb88-4e18deccfd9b/artifacts/f678413e59f62d46b27c884adb8866e930f3eeff01708408d66d8850c62b8534.zip
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.1667654Z Starting download of artifact to: /home/runner/work/_temp/coverage
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.1751843Z Redirecting to blob download url: https://productionresultssa30.blob.core.windows.net/actions-results/566d92f6-6c8d-46e6-a97b-766a486956e3/workflow-job-run-3838e225-d02b-5431-b094-6b0bcdab2644/artifacts/07d44e6806023e244d122b76daf5af3c78fa6125264d611db24bc38e6cb53019.zip
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.1753579Z Starting download of artifact to: /home/runner/work/_temp/coverage
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.4083671Z (node:2541) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.4085451Z (Use `node --trace-deprecation ...` to show where the warning was created)
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.5969050Z SHA256 digest of downloaded artifact is 2b8c73c97681ca1799726fd579e803af0dc7005fd73ab145a5a09064a7752f7d
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.5970420Z Artifact download completed successfully.
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.6321815Z SHA256 digest of downloaded artifact is 04599696ecdb583e95d26aa47c2dd6f3092e2003c187a4f59356ff63819adde4
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.6323108Z Artifact download completed successfully.
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.6342370Z SHA256 digest of downloaded artifact is f4d9a42251b89f0f36d156363d74052249da865d63ba77b1d565a34fe5213890
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.6343532Z Artifact download completed successfully.
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.6344476Z Total of 3 artifact(s) downloaded
+coverage	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-15T04:38:07.6348045Z Download artifact has finished successfully
+coverage	Combine, report, and hold the floor	﻿2026-11-15T04:38:07.6469729Z ##[group]Run python -m coverage combine "$DATA"
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6470613Z [36;1mpython -m coverage combine "$DATA"[0m
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6471076Z [36;1mstatus=0[0m
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6471618Z [36;1mpython -m coverage report --format=markdown > "$RUNNER_TEMP/coverage.md" || status=$?[0m
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6472440Z [36;1m{ echo "## Coverage, every OS combined"; echo; cat "$RUNNER_TEMP/coverage.md"; } >> "$GITHUB_STEP_SUMMARY"[0m
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6473135Z [36;1mtail -n 1 "$RUNNER_TEMP/coverage.md"[0m
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6473575Z [36;1mexit "$status"[0m
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6489027Z shell: /usr/bin/bash -e {0}
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6489463Z env:
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6489854Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6490691Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6491271Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6491847Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6492486Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6493043Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6493558Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6494072Z   DATA: /home/runner/work/_temp/coverage
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:07.6494463Z ##[endgroup]
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:08.2970273Z Combined 5 files
+coverage	Combine, report, and hold the floor	2026-11-15T04:38:10.0875325Z | **TOTAL**                 | **20434** | **2270** | **6230** |  **924** | **86.2%** |
+coverage	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-15T04:38:10.1020987Z Post job cleanup.
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-15T04:38:10.2354095Z Post job cleanup.
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3255596Z [command]/usr/bin/git version
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3293347Z git version 2.56.1
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3326151Z Temporarily overriding HOME='/home/runner/work/_temp/3877771e-92f8-4af2-adc8-fac428e8d5ff' before making global git config changes
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3327661Z Adding repository directory to the temporary git global config as a safe directory
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3331820Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3367002Z Removing SSH command configuration
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3374639Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3412884Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3624736Z Removing HTTP extra header
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3630982Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3664964Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3864475Z Removing includeIf entries pointing to credentials config files
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3872762Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+coverage	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-15T04:38:10.3921690Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+coverage	Complete job	﻿2026-11-15T04:38:10.4292422Z Cleaning up orphan processes

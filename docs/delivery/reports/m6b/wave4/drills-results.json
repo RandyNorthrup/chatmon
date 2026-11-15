@@ -1,0 +1,636 @@
+[
+  {
+    "id": "M6B-01-bubble-not-clear-of-the-box",
+    "requirement": "M6B-01.A2",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            top = min(top, self._clear_of.geometry().top() - origin.y())\n",
+      "replace": "            top = top\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_a_message_goes_above_the_open_box"
+    ],
+    "expected": [
+      "test_a_message_goes_above_the_open_box"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "b3718ddf63554dee6a7ae5682cb6b59ebe5412874c11b7a054fedc3e27194f75",
+    "baseline_exit": 0,
+    "mutated_sha256": "647d2bb5d25d3e6b1628966249fd00c41763cab0bf3588d39e006dbb9c3e970c",
+    "mutated_exit": 1,
+    "observed": "___________________ test_a_message_goes_above_the_open_box ____________________",
+    "after_sha256": "b3718ddf63554dee6a7ae5682cb6b59ebe5412874c11b7a054fedc3e27194f75",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-01-menu-end-key-goes-home",
+    "requirement": "M6B-01.A2",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "self._activate(panel, pickable[0 if key == Qt.Key.Key_Home else -1])",
+      "replace": "self._activate(panel, pickable[0])"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes"
+    ],
+    "expected": [
+      "test_the_keyboard_moves_opens_picks_and_closes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "8b104f0295148014bdda0a8e7274fc2631cb7efbb30c37263b88fe41a91af855",
+    "mutated_exit": 1,
+    "observed": "_______________ test_the_keyboard_moves_opens_picks_and_closes ________________",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-01-extractor-misses-import-time",
+    "requirement": "M6B-01.A2",
+    "file": "packaging/extract_strings.py",
+    "mutation": {
+      "find": "    if marker in TRANSLATED_NOW and at_import:\n",
+      "replace": "    if False:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_i18n.py::test_the_extractor_refuses_a_string_that_couldnt_be_translated"
+    ],
+    "expected": [
+      "test_the_extractor_refuses_a_string_that_couldnt_be_translated"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080",
+    "baseline_exit": 0,
+    "mutated_sha256": "f95d18b88856fac20c2ed4df3bc01456a7c7700a1c619a0627b5384f77abd75f",
+    "mutated_exit": 1,
+    "observed": "_ test_the_extractor_refuses_a_string_that_couldnt_be_translated[GREETING = _(\"Hi\")\\n-imported] _",
+    "after_sha256": "e4212a3f6205b9e80680328e2e4becbad29d3d49cbdef5764ee13d653703b080",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-02-a-module-loads-macos-on-import",
+    "requirement": "M6B-02.A2",
+    "file": "chatmon/macnative.py",
+    "mutation": {
+      "find": "logger = logging.getLogger(__name__)\n",
+      "replace": "logger = logging.getLogger(__name__)\n_objc = ctypes.cdll.LoadLibrary(\"/usr/lib/libobjc.A.dylib\")\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_imports.py"
+    ],
+    "expected": [
+      "chatmon.macnative doesn't import on win32"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138",
+    "baseline_exit": 0,
+    "mutated_sha256": "c5525cd36832dd6d315c97a367e28dd6ca0e758be6f5e5dad95c73741b29a9e4",
+    "mutated_exit": 1,
+    "observed": "E       AssertionError: chatmon.macnative doesn't import on win32:",
+    "after_sha256": "2d08d7cf57234eb38f3fbb605ea0891e557c7206573bab48511f4db282fdf138",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-debug-env-ignored",
+    "requirement": "M6B-03.A1",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "    level = logging.DEBUG if debugging() else logging.INFO\n",
+      "replace": "    level = logging.INFO\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_chatmon_debug_keeps_the_details_too"
+    ],
+    "expected": [
+      "test_chatmon_debug_keeps_the_details_too"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "e36447c4c7e274d1c1c84fa2e78b3782db4393898b93a3388150d3d85420a25b",
+    "mutated_exit": 1,
+    "observed": "__________________ test_chatmon_debug_keeps_the_details_too ___________________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-no-stderr",
+    "requirement": "M6B-03.A1",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "    if sys.stderr is not None:\n",
+      "replace": "    if False:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_problems_reach_stderr_as_well_and_details_and_news_dont"
+    ],
+    "expected": [
+      "test_problems_reach_stderr_as_well_and_details_and_news_dont"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "762273bae88fad83f7bdb9c823582a1f7b1b10bfb3245b99d70e342d2e29103a",
+    "mutated_exit": 1,
+    "observed": "________ test_problems_reach_stderr_as_well_and_details_and_news_dont _________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-setup-twice-doubles",
+    "requirement": "M6B-03.A1",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "    reset()\n    level = ",
+      "replace": "    level = "
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_setting_up_twice_keeps_one_of_each"
+    ],
+    "expected": [
+      "test_setting_up_twice_keeps_one_of_each"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "556c2be548cf050405d8e4dd1244ee6afa54aa9608213c6bdcf021f402b30f4b",
+    "mutated_exit": 1,
+    "observed": "___________________ test_setting_up_twice_keeps_one_of_each ___________________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-rotated-as-dot-1",
+    "requirement": "M6B-03.A2",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "    return default.removesuffix(\".1\") + \".old\"\n",
+      "replace": "    return default\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+    ],
+    "expected": [
+      "test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "3c73a342d73100491091505d702d84367c3714c17904754de96e61fbeba7df31",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_full_log_starts_over_and_the_last_one_is_kept_as_old _________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-limit-ten-times",
+    "requirement": "M6B-03.A2",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "maxBytes=LIMIT,",
+      "replace": "maxBytes=LIMIT * 10,"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+    ],
+    "expected": [
+      "test_a_full_log_starts_over_and_the_last_one_is_kept_as_old"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "8f5ccedcc65dad1c65f439121450c0eef45a535161d15e7a119aa3e659979da1",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_full_log_starts_over_and_the_last_one_is_kept_as_old _________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-keys-not-blanked",
+    "requirement": "M6B-03.A3",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "    return _KEYS.sub(BLANKED, text)\n",
+      "replace": "    return text\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+    ],
+    "expected": [
+      "test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "2e2b4667413f122cd91df69b548a73ace83de53df757ac82949396a1104d6c3f",
+    "mutated_exit": 1,
+    "observed": "_________ test_anything_shaped_like_a_key_is_blanked_as_it_is_written _________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-console-not-blanked",
+    "requirement": "M6B-03.A3",
+    "file": "chatmon/log.py",
+    "mutation": {
+      "find": "        console.setFormatter(_Blanking(CONSOLE_FORMAT))\n",
+      "replace": "        console.setFormatter(logging.Formatter(CONSOLE_FORMAT))\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+    ],
+    "expected": [
+      "test_anything_shaped_like_a_key_is_blanked_as_it_is_written"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "baseline_exit": 0,
+    "mutated_sha256": "91a88abc91cf8c466d3937866502b78f362085cf57608a7d1dd17ffaaf031a7d",
+    "mutated_exit": 1,
+    "observed": "_________ test_anything_shaped_like_a_key_is_blanked_as_it_is_written _________",
+    "after_sha256": "9036df5d396745a4eb3ac3ca3dd89c75dc2d981cf86c1d6ff52bff7aa6a9f54c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-brain-key-not-scrubbed",
+    "requirement": "M6B-03.A3",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "    return text.replace(key, \"\u2026\") if len(key) >= 8 else text\n",
+      "replace": "    return text\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+    ],
+    "expected": [
+      "test_a_logged_brain_error_never_carries_the_key"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38",
+    "baseline_exit": 0,
+    "mutated_sha256": "dc3213c7f1ff70906e9b6808b304a5b30cbb3d23dc9ef993ed4cd293814d4722",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_logged_brain_error_never_carries_the_key _______________",
+    "after_sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-brain-failure-not-logged",
+    "requirement": "M6B-03.A3",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        self.failed.connect(self._log_failure)\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+    ],
+    "expected": [
+      "test_a_logged_brain_error_never_carries_the_key"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38",
+    "baseline_exit": 0,
+    "mutated_sha256": "e25223856a7be87b03ba6f28641f40ca9b3fca523c7494374e28e3b1d30d37d0",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_logged_brain_error_never_carries_the_key _______________",
+    "after_sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-autostart-warning-printed",
+    "requirement": "M6B-03.A4",
+    "file": "chatmon/autostart.py",
+    "mutation": {
+      "find": "        logger.warning(\"couldn't add Chatmon to Login Items (%s), so a LaunchAgent starts it\", problem)\n",
+      "replace": "        print(f\"couldn't add Chatmon to Login Items ({problem}), so a LaunchAgent starts it\", file=sys.stderr)\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_autostart.py::test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent"
+    ],
+    "expected": [
+      "test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4",
+    "baseline_exit": 0,
+    "mutated_sha256": "95e735210931f85cb6067314e7cb9505e81fe8c24c5fc86a6737185e70d6862b",
+    "mutated_exit": 1,
+    "observed": "_______ test_a_login_item_macos_turns_down_falls_back_to_a_launch_agent _______",
+    "after_sha256": "9854822d5e6139cefe1efdbfdeb228b8710bcf751eefba9ff21f8f8518fe26e4",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-chat-failure-hidden",
+    "requirement": "M6B-03.A5",
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "            logger.debug(\"couldn't read chat %s: %s\", chat_id, exc)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not"
+    ],
+    "expected": [
+      "test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "baseline_exit": 0,
+    "mutated_sha256": "311c1789e740a3c3ee5903cc7a8687139b20cb3b385fd9776900260434ea2723",
+    "mutated_exit": 1,
+    "observed": "___ test_a_damaged_chat_file_is_logged_and_left_out_and_one_not_kept_is_not ___",
+    "after_sha256": "f3b2bdce2d193aa9b795215993b34576ce303e31c790182a6bdf89f274e0ce8d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-package-manager-failure-hidden",
+    "requirement": "M6B-03.A5",
+    "file": "chatmon/updates.py",
+    "mutation": {
+      "find": "                    logger.debug(\"couldn't ask %s whether it installed Chatmon: %s\", query[0], exc)\n",
+      "replace": "                    pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_updates.py::test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked"
+    ],
+    "expected": [
+      "test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ca878f84f5df93bb338d03fdc065c213a2ff8f4ff2a21f59afdde2a6f0c45e82",
+    "baseline_exit": 0,
+    "mutated_sha256": "c318175deb4db660aec6b1166228be81dc51f276d11c2c8fda456899fd8a527b",
+    "mutated_exit": 1,
+    "observed": "____ test_a_package_manager_that_wont_run_is_logged_and_the_next_one_asked ____",
+    "after_sha256": "ca878f84f5df93bb338d03fdc065c213a2ff8f4ff2a21f59afdde2a6f0c45e82",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-phrases-failure-hidden",
+    "requirement": "M6B-03.A5",
+    "file": "chatmon/offline.py",
+    "mutation": {
+      "find": "            logger.debug(\"couldn't read the phrases in %s: %s\", folder / f\"{candidate}.json\", exc)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_offline.py::test_a_broken_translation_is_logged_and_a_missing_one_isnt"
+    ],
+    "expected": [
+      "test_a_broken_translation_is_logged_and_a_missing_one_isnt"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee",
+    "baseline_exit": 0,
+    "mutated_sha256": "909ab40077e368296e6c15a7564be78bb0cfad089b0d26da9e78629b1f61bfca",
+    "mutated_exit": 1,
+    "observed": "_________ test_a_broken_translation_is_logged_and_a_missing_one_isnt __________",
+    "after_sha256": "f8022ced0d6dcce550a3a3266c3e1c5bbfa7426da7d6367a27dc8ab842b99aee",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-reminder-words-logged",
+    "requirement": "M6B-03.A5",
+    "file": "chatmon/reminders.py",
+    "mutation": {
+      "find": "                logger.debug(\"skipped a saved reminder that can't be read (%s)\", type(exc).__name__)\n",
+      "replace": "                logger.debug(\"skipped a saved reminder that can't be read (%s): %s\", type(exc).__name__, entry)\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_reminders.py::test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words"
+    ],
+    "expected": [
+      "test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c",
+    "baseline_exit": 0,
+    "mutated_sha256": "ecf34a102a7de7441e12a8470c2fcdc09e188e1cb0cac0f4f17882498faca8be",
+    "mutated_exit": 1,
+    "observed": "_____ test_a_saved_reminder_that_cant_be_read_is_logged_without_its_words _____",
+    "after_sha256": "6a43f6b29f21e1afc8b88c70a8021ad660ead54aba9dcd50ec332d0db3b8b51c",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-03-player-failure-hidden",
+    "requirement": "M6B-03.A5",
+    "file": "chatmon/sound.py",
+    "mutation": {
+      "find": "            logger.debug(\"couldn't start %s: %s\", self.name, exc)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sound.py::test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays"
+    ],
+    "expected": [
+      "test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de",
+    "baseline_exit": 0,
+    "mutated_sha256": "c3cdb763adbb3079c7ad3a72f8d8a0149884c8392e5d659337c5713c35581ec6",
+    "mutated_exit": 1,
+    "observed": "____ test_a_player_that_wont_start_goes_to_the_log_and_the_next_one_plays _____",
+    "after_sha256": "dbd882bbf12ad68d6c639faa7ebdb9ffafb80a108da4086b7c37615c53ca43de",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-RW-http-error-left-open",
+    "requirement": "M6B-RW.A1",
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "        exc.close()\n        raise\n",
+      "replace": "        raise\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "-W",
+      "error::ResourceWarning",
+      "tests/test_brains.py::test_a_local_servers_window_is_asked_for_and_a_redirect_never_followed"
+    ],
+    "expected": [
+      "ResourceWarning"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38",
+    "baseline_exit": 0,
+    "mutated_sha256": "aab9a08b691e7fd449f40da95af0f0079fe3eb5c44f887a3bbde28f231d2dea9",
+    "mutated_exit": 1,
+    "observed": ">           _warnings.warn(self.warn_message, ResourceWarning)",
+    "after_sha256": "562ce2962dea886224b127b59285226238f351895f461fb1330daa07442a0c38",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6B-RW-release-server-left-open",
+    "requirement": "M6B-RW.A1",
+    "file": "tests/test_updates.py",
+    "mutation": {
+      "find": "    server.shutdown()\n    server.server_close()\n\n\ndef run_updater",
+      "replace": "    server.shutdown()\n\n\ndef run_updater"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "-W",
+      "error::ResourceWarning",
+      "tests/test_updates.py"
+    ],
+    "expected": [
+      "ResourceWarning"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136",
+    "baseline_exit": 0,
+    "mutated_sha256": "0d64d678abbb857a1f1fc26ad4f5489f68ec89574238d054dd17625ab772bb4b",
+    "mutated_exit": 1,
+    "observed": "E           ResourceWarning: unclosed <socket.socket fd=968, family=2, type=1, proto=0, laddr=('127.0.0.1', 60822)>",
+    "after_sha256": "d770d014be06e727b398a1a95d514b33b31c99e6bc0b1d0e594dcb5d8a3cc136",
+    "restored_exit": 0
+  }
+]

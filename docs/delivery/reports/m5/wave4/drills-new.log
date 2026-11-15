@@ -1,0 +1,53 @@
+red drills from docs\delivery\reports\m5\wave4\drill-spec-new.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-wrtmpswn
+copied 305 files
+
+=== drill W4-M5-06-help-not-translated (M5-06.A2) on chatmon/offline.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_offline.py::test_another_languages_phrases_and_help_with_english_always_understood
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.34s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___ test_another_languages_phrases_and_help_with_english_always_understood ____
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-4390/test_another_languages_phrases0')
+
+    def test_another_languages_phrases_and_help_with_english_always_understood(tmp_path):
+        shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+        (tmp_path / "fr.json").write_text(json.dumps({
+            "commands": {"help": ["aide", "Que sais-tu faire"], "notes": ["mes notes"], "made up": ["bidule"], "hide": ["help"]},
+            "templates": {"note": ["note : {text}"], "delete note": ["supprimer la note {n}"], "nonsense": ["x {n}"], "clear notes": ["{n} {text}"]},
+            "question_words": ["pourquoi"],
+            "help": {
+                "title": "**Sans IA** :",
+                "sections": [{"id": "notes", "name": "Notes", "examples": ["note : acheter du lait", "mes notes"]}, {"id": "me", "name": "Moi"}],
+                "footer": "Le reste va à l'IA.",
+            },
+        }), encoding="utf-8")
+        fr = offline.load_phrases("fr_CA", tmp_path)
+        assert fr.language == "fr"
+        assert fr.command("Aide") == fr.command("que sais-tu faire ?") == "help"
+        assert fr.command("help") == "help"  # English is always understood, and means what it means in English
+        assert fr.command("mes notes") == "notes" and fr.command("bidule") is None
+        assert fr.template("supprimer la note 3") == fr.template("delete note 3") == ("delete note", "3")
+        assert fr.template("note : acheter du lait") == ("note", "acheter du lait")
+        assert fr.template("x 3") is None
+        assert fr.asks("pourquoi pas") and fr.asks("why not")
+        shown = fr.help()
+        assert shown.startswith("**Sans IA** :\n\n") and shown.endswith("\n\nLe reste va à l'IA.\n")
+        assert "- **Notes:** *note : acheter du lait* · *mes notes*\n" in shown
+>       assert "- **Moi:** *settings* · *hide* · *new chat*" in shown  # named in French, its examples English's
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert '- **Moi:** *settings* · *hide* · *new chat*' in "**Sans IA** :\n\n- **Reminders and timers:** *remind me in 20m to stretch* · *remind me friday at 3pm to call Sam* · ...u ask me to remember goes with every question, to whichever AI you ask: that's what it's for.\n\nLe reste va à l'IA.\n"
+
+tests\test_offline.py:317: AssertionError
+1 failed in 0.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+
+=== summary
+PASS W4-M5-06-help-not-translated
