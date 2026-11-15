@@ -12,8 +12,9 @@ from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtWidgets import QDialog, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPushButton, QVBoxLayout, QWidget
 
 from . import chats
+from .i18n import N_, _
 
-TITLE = "Chats"
+TITLE = N_("Chats")  # the window's title, shown as _(TITLE)
 SEARCH_AFTER_MS = 300  # after the last key, the words inside chats are searched too
 MOST = 2000  # chats listed at most
 
@@ -34,19 +35,19 @@ class ChatsWindow(QDialog):
 
     def __init__(self, book: chats.ChatBook, parent: QWidget | None = None):
         super().__init__(parent)
-        self.setWindowTitle(TITLE)
+        self.setWindowTitle(_(TITLE))
         self.setMinimumSize(520, 460)
         self.book = book
         self.current = ""  # the chat you're in: marked in the list
         self._listed: list[chats.Listed] = []
         self._inside: set[str] | None = None  # chats whose words match the search (None: not looked yet)
         self.search = QLineEdit()
-        self.search.setPlaceholderText("Search your chats")
-        self.search.setAccessibleName("Search your chats")
+        self.search.setPlaceholderText(_("Search your chats"))
+        self.search.setAccessibleName(_("Search your chats"))
         self.search.setClearButtonEnabled(True)
         self.search.textChanged.connect(self._typed)
         self.list = QListWidget()
-        self.list.setAccessibleName("Your chats")
+        self.list.setAccessibleName(_("Your chats"))
         self.list.itemActivated.connect(lambda _item: self._chosen(self.carry_on))
         self.list.currentItemChanged.connect(lambda *_: self._enable())
         self.empty = QLabel()
@@ -60,12 +61,12 @@ class ChatsWindow(QDialog):
         buttons = QHBoxLayout()
         self.buttons: dict[str, QPushButton] = {}
         for name, label, act in (
-            ("carry_on", "Carry on", lambda: self._chosen(self.carry_on)),
-            ("rename", "Rename…", lambda: self._chosen(self.rename)),
-            ("instructions", "Instructions…", lambda: self._chosen(self.instructions)),
-            ("pin", "Pin", self._pin),
-            ("export", "Save as Markdown…", lambda: self._chosen(self.export)),
-            ("delete", "Delete…", lambda: self._chosen(self.delete)),
+            ("carry_on", _("Carry on"), lambda: self._chosen(self.carry_on)),
+            ("rename", _("Rename…"), lambda: self._chosen(self.rename)),
+            ("instructions", _("Instructions…"), lambda: self._chosen(self.instructions)),
+            ("pin", _("Pin"), self._pin),
+            ("export", _("Save as Markdown…"), lambda: self._chosen(self.export)),
+            ("delete", _("Delete…"), lambda: self._chosen(self.delete)),
         ):
             button = QPushButton(label)
             button.clicked.connect(act)
@@ -83,7 +84,10 @@ class ChatsWindow(QDialog):
         self.current = current
         self._listed = self.book.listing(MOST) if kept else []
         self._inside = None
-        self.empty.setText("" if self._listed else ("No saved chats yet." if kept else "Chats aren't being kept (Keep chat history is off)."))
+        if self._listed:
+            self.empty.setText("")
+        else:
+            self.empty.setText(_("No saved chats yet.") if kept else _("Chats aren't being kept (Keep chat history is off)."))
         self._show()
         if self.search.text().strip():
             self._later.start()
@@ -123,8 +127,13 @@ class ChatsWindow(QDialog):
             if words and not (all(w in listed.title.casefold() for w in words) or (self._inside is not None and listed.id in self._inside)):
                 continue
             mark = "★ " if listed.pinned else ""
-            here = "  (this one)" if listed.id == self.current else ""
-            item = QListWidgetItem(f"{mark}{listed.title or 'A chat'}   ·   {chats.when(listed.updated)}{here}")
+            title, when = listed.title or _("A chat"), chats.when(listed.updated)
+            # The same sentences as the menu's list of chats (menus.chats_menu).
+            if listed.id == self.current:
+                label = _("{title}   ·   {when}  (this one)").format(title=title, when=when)
+            else:
+                label = _("{title}   ·   {when}").format(title=title, when=when)
+            item = QListWidgetItem(mark + label)
             item.setData(Qt.ItemDataRole.UserRole, listed.id)
             item.setData(Qt.ItemDataRole.UserRole + 1, listed.pinned)
             self.list.addItem(item)
@@ -133,7 +142,7 @@ class ChatsWindow(QDialog):
         if self.list.currentItem() is None and self.list.count():
             self.list.setCurrentRow(0)
         if words and not self.list.count() and self._listed:
-            self.empty.setText("No chat has those words." if self._inside is not None else "Looking inside your chats…")
+            self.empty.setText(_("No chat has those words.") if self._inside is not None else _("Looking inside your chats…"))
         elif self._listed:
             self.empty.setText("")
         self._enable()
@@ -143,7 +152,7 @@ class ChatsWindow(QDialog):
         for button in self.buttons.values():
             button.setEnabled(item is not None)
         if item is not None:
-            self.buttons["pin"].setText("Unpin" if item.data(Qt.ItemDataRole.UserRole + 1) else "Pin")
+            self.buttons["pin"].setText(_("Unpin") if item.data(Qt.ItemDataRole.UserRole + 1) else _("Pin"))
 
     def _chosen(self, signal) -> None:
         item = self.list.currentItem()

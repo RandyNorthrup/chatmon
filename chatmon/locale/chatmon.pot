@@ -1918,6 +1918,78 @@ msgstr ""
 msgid "yesterday"
 msgstr ""
 
+#: chatmon/chatswin.py chatmon/menus.py chatmon/settingswin.py
+msgid "Chats"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Search your chats"
+msgstr ""
+
+#: chatmon/chatswin.py chatmon/menus.py
+msgid "Your chats"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Carry on"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Rename…"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Instructions…"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Pin"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Save as Markdown…"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Delete…"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "No saved chats yet."
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Chats aren't being kept (Keep chat history is off)."
+msgstr ""
+
+#: chatmon/chatswin.py chatmon/menus.py
+msgid "A chat"
+msgstr ""
+
+#. Translators: the chat open now, in the list of chats: "Trip plans   ·   5 min ago  (this one)".
+#: chatmon/chatswin.py chatmon/menus.py
+#, python-brace-format
+msgid "{title}   ·   {when}  (this one)"
+msgstr ""
+
+#. Translators: a bubble shown lately, and when: "Reminder: stretch   ·   5 min ago".
+#: chatmon/chatswin.py chatmon/menus.py
+#, python-brace-format
+msgid "{title}   ·   {when}"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "No chat has those words."
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Looking inside your chats…"
+msgstr ""
+
+#: chatmon/chatswin.py
+msgid "Unpin"
+msgstr ""
+
 #. Translators: the commands and flags stay as they are (they're what to type); the words after them are yours.
 #: chatmon/cli.py
 msgid ""
@@ -2620,10 +2692,6 @@ msgstr ""
 msgid "Clipboard"
 msgstr ""
 
-#: chatmon/menus.py chatmon/settingswin.py
-msgid "Chats"
-msgstr ""
-
 #: chatmon/menus.py
 #, python-brace-format
 msgid "Reminders ({count})"
@@ -2764,32 +2832,12 @@ msgstr ""
 msgid "Cancel it"
 msgstr ""
 
-#. Translators: a bubble shown lately, and when: "Reminder: stretch   ·   5 min ago".
-#: chatmon/menus.py
-#, python-brace-format
-msgid "{title}   ·   {when}"
-msgstr ""
-
 #: chatmon/menus.py
 msgid "Rename this chat…"
 msgstr ""
 
 #: chatmon/menus.py
 msgid "Ask another brain"
-msgstr ""
-
-#: chatmon/menus.py
-msgid "Your chats"
-msgstr ""
-
-#: chatmon/menus.py
-msgid "A chat"
-msgstr ""
-
-#. Translators: the chat open now, in the list of chats: "Trip plans   ·   5 min ago  (this one)".
-#: chatmon/menus.py
-#, python-brace-format
-msgid "{title}   ·   {when}  (this one)"
 msgstr ""
 
 #: chatmon/menus.py

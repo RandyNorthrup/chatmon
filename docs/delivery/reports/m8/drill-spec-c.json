@@ -1,0 +1,40 @@
+{
+  "drills": [
+    {
+      "id": "M8-01C-window-title-english",
+      "requirement": "M8-01",
+      "file": "chatmon/chatswin.py",
+      "find": "self.setWindowTitle(_(TITLE))",
+      "replace": "self.setWindowTitle(TITLE)",
+      "test": ["tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_window_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01C-this-one-glued",
+      "requirement": "M8-01",
+      "file": "chatmon/chatswin.py",
+      "find": "label = _(\"{title}   ·   {when}  (this one)\").format(title=title, when=when)",
+      "replace": "label = f\"{title}   ·   {when}  (this one)\"",
+      "test": ["tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_window_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01C-pin-label-english",
+      "requirement": "M8-01",
+      "file": "chatmon/chatswin.py",
+      "find": "self.buttons[\"pin\"].setText(_(\"Unpin\") if",
+      "replace": "self.buttons[\"pin\"].setText(\"Unpin\" if",
+      "test": ["tests/test_chatswin.py::test_the_window_speaks_the_translation_and_english_where_it_has_none"],
+      "expect": ["test_the_window_speaks_the_translation_and_english_where_it_has_none"]
+    },
+    {
+      "id": "M8-01C-template-stale",
+      "requirement": "M8-01",
+      "file": "chatmon/chatswin.py",
+      "find": "_(\"Looking inside your chats…\")",
+      "replace": "_(\"Searching inside your chats…\")",
+      "test": ["tests/test_i18n.py::test_the_template_has_every_marked_string_and_reads_as_a_catalog"],
+      "expect": ["test_the_template_has_every_marked_string_and_reads_as_a_catalog", "run: python packaging/extract_strings.py"]
+    }
+  ]
+}
