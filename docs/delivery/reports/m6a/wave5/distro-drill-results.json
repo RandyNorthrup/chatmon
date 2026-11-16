@@ -1,0 +1,33 @@
+[
+  {
+    "id": "W4-M6A-03-distro-fails-on-a-failed-test",
+    "requirement": "M6A-03.A1",
+    "file": "tests/test_cli.py",
+    "mutation": {
+      "find": "    assert cli.main([\"--help\"]) == 0",
+      "replace": "    assert cli.main([\"--help\"]) == 1"
+    },
+    "command": [
+      "podman",
+      "run",
+      "--rm",
+      "-v",
+      "<copy>:/src:ro",
+      "debian:trixie",
+      "sh",
+      "/src/.github/scripts/distro-tests.sh"
+    ],
+    "expected": [
+      "test_help_version_and_what_it_doesnt_know"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "fdbbb7471bd11fa18fb6d1aec0c7f986a7485fbe8905d4c973d94f04ec920c03",
+    "baseline_exit": 0,
+    "mutated_sha256": "1305d31888b729c1ac66b78031b3d0aae275e5ffa28e859aed04df49135f7fff",
+    "mutated_exit": 1,
+    "observed": "__________________ test_help_version_and_what_it_doesnt_know ___________________",
+    "after_sha256": "fdbbb7471bd11fa18fb6d1aec0c7f986a7485fbe8905d4c973d94f04ec920c03",
+    "restored_exit": 0
+  }
+]

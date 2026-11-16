@@ -1,0 +1,414 @@
+M6A gate drills, C:\Users\Randy\Coding\chatmon-wt\measure
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+
+=== G-zizmor-unpinned (M6A-01) on .github/workflows/ci.yml: the lint job's checkout pinned to the tag v7 instead of its commit
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\zizmor.exe --no-online-audits .github
+-- green: exit 0
+No findings to report. Good job! (16 suppressed)
+ INFO zizmor: 🌈 zizmor v1.31.1
+ WARN audit: zizmor: zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+ INFO audit: zizmor: 🌈 completed .github\dependabot.yml
+ INFO audit: zizmor: 🌈 completed .github\workflows\ci.yml
+ WARN audit: zizmor: one or more inputs contains YAML anchors; see https://docs.zizmor.sh/usage/#yaml-anchors for details
+ INFO audit: zizmor: 🌈 completed .github\workflows\packages.yml
+ INFO audit: zizmor: 🌈 completed .github\workflows\pins.yml
+-- red: exit 14
+error[unpinned-uses]: unpinned action reference
+  --> .github\workflows\ci.yml:30:15
+   |
+30 |       - uses: actions/checkout@v7
+   |               ^^^^^^^^^^^^^^^^^^^ action is not pinned to a hash (required by blanket policy)
+   |
+   = note: audit confidence → High
+   = help: audit documentation → https://docs.zizmor.sh/audits/#unpinned-uses
+
+17 findings (16 suppressed): 0 informational, 0 low, 0 medium, 1 high
+ INFO zizmor: 🌈 zizmor v1.31.1
+ WARN audit: zizmor: zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+ INFO audit: zizmor: 🌈 completed .github\dependabot.yml
+ INFO audit: zizmor: 🌈 completed .github\workflows\ci.yml
+ WARN audit: zizmor: one or more inputs contains YAML anchors; see https://docs.zizmor.sh/usage/#yaml-anchors for details
+ INFO audit: zizmor: 🌈 completed .github\workflows\packages.yml
+ INFO audit: zizmor: 🌈 completed .github\workflows\pins.yml
+-- restored green: exit 0
+No findings to report. Good job! (16 suppressed)
+ INFO zizmor: 🌈 zizmor v1.31.1
+ WARN audit: zizmor: zizmor is running in offline mode by default; some audits and auto-fixes will not be available. see https://docs.zizmor.sh/usage/#operating-modes for details
+ INFO audit: zizmor: 🌈 completed .github\dependabot.yml
+ INFO audit: zizmor: 🌈 completed .github\workflows\ci.yml
+ WARN audit: zizmor: one or more inputs contains YAML anchors; see https://docs.zizmor.sh/usage/#yaml-anchors for details
+ INFO audit: zizmor: 🌈 completed .github\workflows\packages.yml
+ INFO audit: zizmor: 🌈 completed .github\workflows\pins.yml
+
+=== G-actionlint-expression (M6A-12) on .github/workflows/ci.yml: the types job reads matrix.platfrom, a property its matrix doesn't have
+command: actionlint .github/workflows/ci.yml
+-- green: exit 0
+
+-- red: exit 1
+.github/workflows/ci.yml:75:25: property "platfrom" is not defined in object type {platform: string} [expression]
+   |
+75 |           PLATFORM: ${{ matrix.platfrom }}
+   |                         ^~~~~~~~~~~~~~~
+-- restored green: exit 0
+
+
+=== G-mypy-gated (M6A-13) on chatmon/changelog.py: a str assigned to an int in changelog.py, a gated module
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m mypy --platform linux --no-incremental --cache-dir <copy>/.mypy
+-- green: exit 0
+chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\changelog.py:88: error: Incompatible types in assignment (expression has type "str", variable has type "int")  [assignment]
+chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Found 1 error in 1 file (checked 70 source files)
+-- restored green: exit 0
+chatmon\bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+chatmon\bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Success: no issues found in 70 source files
+
+=== G-pytest-strict-markers (M6A-01) on tests/test_cli.py: an unregistered mark on test_cli.py's first test
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py
+-- green: exit 0
+.............                                                            [100%]
+13 passed in 1.02s
+-- red: exit 2
+
+=================================== ERRORS ====================================
+_____________________ ERROR collecting tests/test_cli.py ______________________
+'drillmark' not found in `markers` configuration option
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.84s
+-- restored green: exit 0
+.............                                                            [100%]
+13 passed in 2.75s
+
+=== G-pip-hashes (M6A-06) on packaging/requirements-build.txt: every hash of wheel 0.48.0 in requirements-build.txt changed
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pip install --dry-run --ignore-installed --no-cache-dir --require-hashes -r packaging/requirements-build.txt
+-- green: exit 0
+Collecting pywin32-ctypes==0.2.3 (from -r packaging/requirements-build.txt (line 472))
+  Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+  Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+  Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+  Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+  Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+  Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+  Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+     ---------------------------------------- 876.3/876.3 kB 17.4 MB/s  0:00:00
+Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+  Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+  Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+  Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+Would install Pygments-2.21.0 build-1.6.1 certifi-2026.10.23 charset-normalizer-3.5.2 colorama-0.4.6 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pyproject_hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 pywin32-ctypes-0.2.3 readme_renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pip install --upgrade pip
+-- red: exit 1
+Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+  Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+  Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+  Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+  Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+  Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+     --------------------------------------- 876.3/876.3 kB 101.0 MB/s  0:00:00
+Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+  Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+  Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+  Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pip install --upgrade pip
+ERROR: THESE PACKAGES DO NOT MATCH THE HASHES FROM THE REQUIREMENTS FILE. If you have updated the package versions, please update the hashes. Otherwise, examine the package contents carefully; someone may have tampered with them.
+    wheel==0.48.0 from https://files.pythonhosted.org/packages/2e/29/69cfbb602cd91690c55d38ba9fe53e6a7e76a6fa647bf38f19c138d25449/wheel-0.48.0-py3-none-any.whl (from -r packaging/requirements-build.txt (line 517)):
+        Expected sha256 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+        Expected     or ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+             Got        3217dcc807155e45db462d7ef2431f5ddda0d7273b700d05a67b271ceb1287ab
+-- restored green: exit 0
+Collecting pywin32-ctypes==0.2.3 (from -r packaging/requirements-build.txt (line 472))
+  Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+  Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+  Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+  Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+  Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+  Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+  Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+     ---------------------------------------- 876.3/876.3 kB 53.5 MB/s  0:00:00
+Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+  Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+  Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+  Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+Would install Pygments-2.21.0 build-1.6.1 certifi-2026.10.23 charset-normalizer-3.5.2 colorama-0.4.6 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco.classes-3.4.0 jaraco.context-6.1.2 jaraco.functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pyproject_hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 pywin32-ctypes-0.2.3 readme_renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+
+[notice] A new release of pip is available: 26.2.2 -> 26.3
+[notice] To update, run: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pip install --upgrade pip
+
+=== G-checksums-key (M6A-I1) on .github/workflows/packages.yml: the checksums job looks for the key in chatmon/updates.py again, where it was before M1A moved it
+command: C:\Program Files\Git\usr\bin\bash.exe <copy>/run-step.sh
+-- green: exit 0
+ea6c2fdd4d92f616a7b4151d6c90b35c2f7cb8451aef7d294c0c2bb9fe0028b8 *chatmon-0.0.0.tar.gz
+73ae8ffe8f7f0d14b4d8301f5b7a8f55e62c804b1305dfefbeae7e0cc8bc372e *chatmon_0.0.0-1_all.deb
+Signature Verified Successfully
+-- red: exit 1
+ea6c2fdd4d92f616a7b4151d6c90b35c2f7cb8451aef7d294c0c2bb9fe0028b8 *chatmon-0.0.0.tar.gz
+73ae8ffe8f7f0d14b4d8301f5b7a8f55e62c804b1305dfefbeae7e0cc8bc372e *chatmon_0.0.0-1_all.deb
+RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS
+-- restored green: exit 0
+ea6c2fdd4d92f616a7b4151d6c90b35c2f7cb8451aef7d294c0c2bb9fe0028b8 *chatmon-0.0.0.tar.gz
+73ae8ffe8f7f0d14b4d8301f5b7a8f55e62c804b1305dfefbeae7e0cc8bc372e *chatmon_0.0.0-1_all.deb
+Signature Verified Successfully
+
+=== G-coverage-floor (M6A-04) on pyproject.toml: fail_under raised to 99, above the measured total
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m coverage report --data-file build/wave5-coverage/.coverage.combined
+-- green: exit 0
+chatmon\report.py              47      4     12      1  91.5%
+chatmon\richtext.py           227      3     62      5  97.2%
+chatmon\settings.py           223     24     74      8  88.6%
+chatmon\settingswin.py        348      2     30      6  97.9%
+chatmon\shortcutportal.py     157    119     44      0  18.9%
+chatmon\sound.py              259     29     70     13  86.6%
+chatmon\sprites.py            144      2     38      2  97.8%
+chatmon\stagemenu.py          425     33    152     30  88.4%
+chatmon\styles.py             114      4      8      1  95.9%
+chatmon\sysnotify.py          106     32     28      4  68.7%
+chatmon\updates.py            464     66    178     35  83.0%
+chatmon\wayland.py            244     29    104     22  84.8%
+chatmon\wincaret.py            49      4     10      1  91.5%
+chatmon\windrop.py            242     42     54     14  79.7%
+chatmon\winfiles.py            49      0     16      0 100.0%
+chatmon\winfocus.py            61      8     12      5  82.2%
+chatmon\winlock.py            126      1     44      5  96.5%
+chatmon\winpipe.py            205     15     62     15  88.8%
+chatmon\winrt.py              155     10     18      6  90.8%
+chatmon\wintoast.py           358     35    100     17  87.8%
+chatmon\wintrust.py           102      4     16      4  93.2%
+chatmon\winuia.py             152     46     18      2  65.9%
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       20941   2290   6412    943  86.4%
+-- red: exit 2
+chatmon\richtext.py           227      3     62      5  97.2%
+chatmon\settings.py           223     24     74      8  88.6%
+chatmon\settingswin.py        348      2     30      6  97.9%
+chatmon\shortcutportal.py     157    119     44      0  18.9%
+chatmon\sound.py              259     29     70     13  86.6%
+chatmon\sprites.py            144      2     38      2  97.8%
+chatmon\stagemenu.py          425     33    152     30  88.4%
+chatmon\styles.py             114      4      8      1  95.9%
+chatmon\sysnotify.py          106     32     28      4  68.7%
+chatmon\updates.py            464     66    178     35  83.0%
+chatmon\wayland.py            244     29    104     22  84.8%
+chatmon\wincaret.py            49      4     10      1  91.5%
+chatmon\windrop.py            242     42     54     14  79.7%
+chatmon\winfiles.py            49      0     16      0 100.0%
+chatmon\winfocus.py            61      8     12      5  82.2%
+chatmon\winlock.py            126      1     44      5  96.5%
+chatmon\winpipe.py            205     15     62     15  88.8%
+chatmon\winrt.py              155     10     18      6  90.8%
+chatmon\wintoast.py           358     35    100     17  87.8%
+chatmon\wintrust.py           102      4     16      4  93.2%
+chatmon\winuia.py             152     46     18      2  65.9%
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       20941   2290   6412    943  86.4%
+Coverage failure: total of 86.4 is less than fail-under=99.0
+-- restored green: exit 0
+chatmon\report.py              47      4     12      1  91.5%
+chatmon\richtext.py           227      3     62      5  97.2%
+chatmon\settings.py           223     24     74      8  88.6%
+chatmon\settingswin.py        348      2     30      6  97.9%
+chatmon\shortcutportal.py     157    119     44      0  18.9%
+chatmon\sound.py              259     29     70     13  86.6%
+chatmon\sprites.py            144      2     38      2  97.8%
+chatmon\stagemenu.py          425     33    152     30  88.4%
+chatmon\styles.py             114      4      8      1  95.9%
+chatmon\sysnotify.py          106     32     28      4  68.7%
+chatmon\updates.py            464     66    178     35  83.0%
+chatmon\wayland.py            244     29    104     22  84.8%
+chatmon\wincaret.py            49      4     10      1  91.5%
+chatmon\windrop.py            242     42     54     14  79.7%
+chatmon\winfiles.py            49      0     16      0 100.0%
+chatmon\winfocus.py            61      8     12      5  82.2%
+chatmon\winlock.py            126      1     44      5  96.5%
+chatmon\winpipe.py            205     15     62     15  88.8%
+chatmon\winrt.py              155     10     18      6  90.8%
+chatmon\wintoast.py           358     35    100     17  87.8%
+chatmon\wintrust.py           102      4     16      4  93.2%
+chatmon\winuia.py             152     46     18      2  65.9%
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       20941   2290   6412    943  86.4%
+
+=== W-wheel-sounds (M6A-08) on pyproject.toml: the sounds/*.wav package-data glob removed, so the wheel is built without the sounds
+command: C:\Program Files\Git\usr\bin\bash.exe -ec 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m build --no-isolation --outdir dist . >build.log 2>&1 || { tail -20 build.log; exit 1; }; 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m twine check --strict dist/*; CHATMON_DIST=dist 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m pytest -q -p no:cacheprovider tests/test_package_data.py -k 'wheel_holds'
+-- green: exit 0
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+.                                                                        [100%]
+1 passed, 4 deselected in 0.08s
+-- red: exit 1
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_the_wheel_holds_every_tracked_file_of_chatmon_and_nothing_else _____
+
+    @needs_dist
+    def test_the_wheel_holds_every_tracked_file_of_chatmon_and_nothing_else():
+        with zipfile.ZipFile(one("chatmon-*.whl")) as wheel:
+            names = [n for n in wheel.namelist() if not n.endswith("/")]
+        shipped = {n.removeprefix("chatmon/") for n in names if n.startswith("chatmon/")}
+        tracked = tracked_files()
+>       assert sorted(tracked - shipped) == [], "left out of the wheel"
+E       AssertionError: left out of the wheel
+E       assert ['sounds/done...der.wav', ...] == []
+E         
+E         Left contains 7 more items, first extra item: 'sounds/done.wav'
+E         Use -v to get more diff
+
+tests\test_package_data.py:85: AssertionError
+1 failed, 4 deselected in 0.17s
+-- restored green: exit 0
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+.                                                                        [100%]
+1 passed, 4 deselected in 0.07s
+
+=== W-entry-points (M6A-09) on pyproject.toml: the penguin-companion console script put back
+command: C:\Program Files\Git\usr\bin\bash.exe -ec 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m build --no-isolation --outdir dist . >build.log 2>&1 || { tail -20 build.log; exit 1; }; 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m twine check --strict dist/*; CHATMON_DIST=dist 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m pytest -q -p no:cacheprovider tests/test_package_data.py -k 'commands'
+-- green: exit 0
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+.                                                                        [100%]
+1 passed, 4 deselected in 0.04s
+-- red: exit 1
+    @needs_dist
+    def test_the_wheel_installs_chatmons_two_commands_and_no_others():
+        """`chatmon`, and `chatmonw` (Windows without a console). The old name, penguin-companion, was dropped
+        after 0.9; Chatmon still moves over what was set up under it."""
+        with zipfile.ZipFile(one("chatmon-*.whl")) as wheel:
+            (entry_points,) = [n for n in wheel.namelist() if n.endswith(".dist-info/entry_points.txt")]
+            text = wheel.read(entry_points).decode("utf-8")
+        commands, section = {}, None
+        for line in text.splitlines():
+            line = line.strip()
+            if line.startswith("["):
+                section = line.strip("[]")
+            elif "=" in line:
+                name, target = (part.strip() for part in line.split("=", 1))
+                commands[name] = (section, target)
+>       assert commands == {"chatmon": ("console_scripts", "chatmon.cli:main"), "chatmonw": ("gui_scripts", "chatmon.cli:main")}
+E       AssertionError: assert {'chatmon': (...on.cli:main')} == {'chatmon': (...on.cli:main')}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Left contains 1 more item:
+E         {'penguin-companion': ('console_scripts', 'chatmon.cli:main')}
+E         Use -v to get more diff
+
+tests\test_package_data.py:105: AssertionError
+1 failed, 4 deselected in 0.15s
+-- restored green: exit 0
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+.                                                                        [100%]
+1 passed, 4 deselected in 0.04s
+
+=== W-twine-markup (M6A-08) on pyproject.toml: the README declared as reStructuredText, which its Markdown isn't
+command: C:\Program Files\Git\usr\bin\bash.exe -ec 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m build --no-isolation --outdir dist . >build.log 2>&1 || { tail -20 build.log; exit 1; }; 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m twine check --strict dist/*; CHATMON_DIST=dist 'C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/buildvenv/Scripts/python.exe' -m pytest -q -p no:cacheprovider tests/test_package_data.py -k 'wheel_holds'
+-- green: exit 0
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+.                                                                        [100%]
+1 passed, 4 deselected in 0.12s
+-- red: exit 1
+Checking dist/chatmon-0.10.0-py3-none-any.whl: FAILED
+ERROR    `long_description` has syntax errors in markup and would not be       
+         rendered on PyPI.                                                     
+         line 3: Warning: Definition list ends without a blank line; unexpected
+         unindent.                                                             
+Checking dist/chatmon-0.10.0.tar.gz: FAILED
+ERROR    `long_description` has syntax errors in markup and would not be       
+         rendered on PyPI.                                                     
+         line 3: Warning: Definition list ends without a blank line; unexpected
+         unindent.
+-- restored green: exit 0
+Checking dist/chatmon-0.10.0-py3-none-any.whl: PASSED
+Checking dist/chatmon-0.10.0.tar.gz: PASSED
+.                                                                        [100%]
+1 passed, 4 deselected in 0.08s
+
+=== summary
+PASS G-zizmor-unpinned
+PASS G-actionlint-expression
+PASS G-mypy-gated
+PASS G-pytest-strict-markers
+PASS G-pip-hashes
+PASS G-checksums-key
+PASS G-coverage-floor
+PASS W-wheel-sounds
+PASS W-entry-points
+PASS W-twine-markup

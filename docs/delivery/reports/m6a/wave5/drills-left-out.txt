@@ -1,0 +1,2 @@
+docs/delivery/reports/m6a/wave4f/drill-spec.json: 6 drills kept in docs/delivery/reports/m6a/wave5/drill-spec.json, 0 re-aimed
+docs/delivery/reports/m6a/pins/drill-spec.json: 9 drills kept in docs/delivery/reports/m6a/wave5/drill-spec-pins.json, 0 re-aimed (the pins check's drills, from reports/m6a/pins/, for M6A-02B)
