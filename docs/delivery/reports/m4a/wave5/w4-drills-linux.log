@@ -1,0 +1,441 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/measure/docs/delivery/reports/m4a/wave5/w4-drill-spec-linux.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-r4n68flg
+copied 318 files
+
+=== drill L-AC-01a-read-fallback (M4A-01) on chatmon/linuxsession.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.72s
+-- red: exit 1
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+___ test_the_portals_appearance_settings_are_read_once_then_followed[1-Read] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-878/test_the_portals_appearance_se1')
+version = '1', method = 'Read'
+
+    @needs_a_bus
+    @pytest.mark.parametrize("version, method", [("2", "ReadOne"), ("1", "Read")])
+    def test_the_portals_appearance_settings_are_read_once_then_followed(tmp_path, version, method):
+        """High contrast and reduced motion from the portal: each asked once (ReadOne, or Read on a portal before
+        1.15), then followed through SettingChanged, never asked again however often they're read."""
+        pytest.importorskip("PyQt6.QtDBus")
+        log, ready, fake = tmp_path / "asked.jsonl", tmp_path / "ready", HERE / "fake_portal.py"
+        script = (
+            f'"{sys.executable}" "{fake}" "{log}" > "{ready}" 2>&1 & fake=$!; '
+            f'for i in $(seq 100); do grep -q ready "{ready}" 2>/dev/null && break; sleep 0.1; done; '
+            f'"{sys.executable}" -c "$CLIENT" "{HERE.parent}"; kill $fake'
+        )
+        env = dict(os.environ, CLIENT=SETTINGS_CLIENT, QT_QPA_PLATFORM="offscreen", CHATMON_PORTAL_BUS="1", XDG_CURRENT_DESKTOP="",
+                   FAKE_SETTINGS_VERSION=version, FAKE_CONTRAST="1", FAKE_MOTION="1", FAKE_FLIP_CONTRAST="0")
+        env.pop("DBUS_SESSION_BUS_ADDRESS", None)  # a bus of its own: never the desktop's portal
+        out = subprocess.run(["dbus-run-session", "--", "sh", "-c", script], capture_output=True, text=True, timeout=60, env=env)
+        got = json.loads(out.stdout.strip().splitlines()[-1])
+        # Not known at first; then contrast, then reduced motion, are known; then contrast goes back to no preference.
+>       assert got == {"first": [False, False], "seen": [[True, False], [True, True], [False, True]]}, out.stderr
+E       AssertionError: 
+E       assert {'first': [Fa...], 'seen': []} == {'first': [Fa...False, True]]}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'seen': []} != {'seen': [[True, False], [True, True], [False, True]]}
+E         Use -v to get more diff
+
+tests/test_portal_bus.py:98: AssertionError
+1 failed, 1 passed in 5.60s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.90s
+
+=== drill L-AC-04a-asked-each-time (M4A-04) on chatmon/presence.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.85s
+-- red: exit 1
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/subprocess.py:1221: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/subprocess.py:2154: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['dbus-run-session', '--', 'sh', '-c', '"/var/t...>
+endtime = 68794.237578221, orig_timeout = 60, stdout_seq = [], stderr_seq = []
+skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['dbus-run-session', '--', 'sh', '-c', '"/var/tmp/plans-venv/bin/python" "/var/tmp/chatmon-wsl-drill-r4n68flg/tests/fake_portal.py" "/tmp/pytest-of-randy/pytest-881/test_the_portals_appearance_se0/asked.jsonl" > "/tmp/pytest-of-randy/pytest-881/test_the_portals_appearance_se0/ready" 2>&1 & fake=$!; for i in $(seq 100); do grep -q ready "/tmp/pytest-of-randy/pytest-881/test_the_portals_appearance_se0/ready" 2>/dev/null && break; sleep 0.1; done; "/var/tmp/plans-venv/bin/python" -c "$CLIENT" "/var/tmp/chatmon-wsl-drill-r4n68flg"; kill $fake']' timed out after 60 seconds
+
+/usr/lib/python3.14/subprocess.py:1268: TimeoutExpired
+___ test_the_portals_appearance_settings_are_read_once_then_followed[1-Read] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-881/test_the_portals_appearance_se1')
+version = '1', method = 'Read'
+
+    @needs_a_bus
+    @pytest.mark.parametrize("version, method", [("2", "ReadOne"), ("1", "Read")])
+    def test_the_portals_appearance_settings_are_read_once_then_followed(tmp_path, version, method):
+        """High contrast and reduced motion from the portal: each asked once (ReadOne, or Read on a portal before
+        1.15), then followed through SettingChanged, never asked again however often they're read."""
+        pytest.importorskip("PyQt6.QtDBus")
+        log, ready, fake = tmp_path / "asked.jsonl", tmp_path / "ready", HERE / "fake_portal.py"
+        script = (
+            f'"{sys.executable}" "{fake}" "{log}" > "{ready}" 2>&1 & fake=$!; '
+            f'for i in $(seq 100); do grep -q ready "{ready}" 2>/dev/null && break; sleep 0.1; done; '
+            f'"{sys.executable}" -c "$CLIENT" "{HERE.parent}"; kill $fake'
+        )
+        env = dict(os.environ, CLIENT=SETTINGS_CLIENT, QT_QPA_PLATFORM="offscreen", CHATMON_PORTAL_BUS="1", XDG_CURRENT_DESKTOP="",
+                   FAKE_SETTINGS_VERSION=version, FAKE_CONTRAST="1", FAKE_MOTION="1", FAKE_FLIP_CONTRAST="0")
+        env.pop("DBUS_SESSION_BUS_ADDRESS", None)  # a bus of its own: never the desktop's portal
+        out = subprocess.run(["dbus-run-session", "--", "sh", "-c", script], capture_output=True, text=True, timeout=60, env=env)
+        got = json.loads(out.stdout.strip().splitlines()[-1])
+        # Not known at first; then contrast, then reduced motion, are known; then contrast goes back to no preference.
+>       assert got == {"first": [False, False], "seen": [[True, False], [True, True], [False, True]]}, out.stderr
+E       AssertionError: 
+E       assert {'first': [Fa... False], ...]} == {'first': [Fa...False, True]]}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'seen': [[False, False], [False, False], [False, False], [False, False], [False, False], [False, False], ...]} != {'seen': [[True, False], [True, True], [False, True]]}
+E         Use -v to get more diff
+
+tests/test_portal_bus.py:98: AssertionError
+2 failed in 86.30s (0:01:26)
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 5.97s
+
+=== drill L-AC-05-starts-services (M4A-05) on chatmon/linuxsession.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_asking_about_do_not_disturb_never_starts_a_service
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 27.81s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_asking_about_do_not_disturb_never_starts_a_service ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-884/test_asking_about_do_not_distu0')
+
+    @linux_bus
+    def test_asking_about_do_not_disturb_never_starts_a_service(tmp_path):
+        """SwayNotificationCenter named as the server, but its own bus name not running, and startable (a D-Bus
+        service file, as the swaync package installs): asking doesn't start it; an ordinary call would."""
+        pytest.importorskip("PyQt6.QtDBus")
+        services, started = tmp_path / "services", tmp_path / "started"
+        services.mkdir()
+        (services / "org.erikreider.swaync.cc.service").write_text(
+            f"[D-BUS Service]\nName=org.erikreider.swaync.cc\nExec=/bin/sh -c 'touch {started}; sleep 5'\n", encoding="utf-8")
+        config = tmp_path / "session.conf"
+        config.write_text(
+            "<!DOCTYPE busconfig PUBLIC \"-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN\" "
+            "\"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd\">\n"
+            f"<busconfig><type>session</type><listen>unix:tmpdir={tmp_path}</listen><servicedir>{services}</servicedir>"
+            "<policy context=\"default\"><allow send_destination=\"*\" eavesdrop=\"true\"/><allow eavesdrop=\"true\"/><allow own=\"*\"/></policy>"
+            "</busconfig>\n", encoding="utf-8")
+        check = f'echo "started before: $(test -e {started} && echo yes || echo no)"'
+        ordinary = ("dbus-send --session --print-reply --dest=org.erikreider.swaync.cc /org/erikreider/swaync/cc "
+                    "org.erikreider.swaync.cc.GetDnd >/dev/null 2>&1; sleep 0.5")
+        out, _log = _on_a_private_bus(tmp_path, ["--name", "SwayNotificationCenter", "--dnd", "on", "--not-own"], DND_CLIENT, config,
+                                     after=f'{check}; {ordinary}; echo "started after: $(test -e {started} && echo yes || echo no)"')
+>       assert "quiet None" in out and "started before: no" in out, out  # not known, and not started
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: quiet None
+E         started before: yes
+E         started after: yes
+E         dbus-daemon[250046]: [session uid=1000 pid=250046 pidfd=5] Activating service name='org.erikreider.swaync.cc' requested by ':1.1' (uid=1000 pid=250054 comm="/var/tmp/plans-venv/bin/python -c ?import sys?sys." label="kernel")
+E         dbus-daemon[250046]: [session uid=1000 pid=250046 pidfd=5] Failed to activate service 'org.erikreider.swaync.cc': timed out (service_start_timeout=25000ms)
+E         
+E       assert ('quiet None' in "quiet None\nstarted before: yes\nstarted after: yes\ndbus-daemon[250046]: [session uid=1000 pid=250046 pidfd=5] Activ...pid=250046 pidfd=5] Failed to activate service 'org.erikreider.swaync.cc': timed out (service_start_timeout=25000ms)\n" and 'started before: no' in "quiet None\nstarted before: yes\nstarted after: yes\ndbus-daemon[250046]: [session uid=1000 pid=250046 pidfd=5] Activ...pid=250046 pidfd=5] Failed to activate service 'org.erikreider.swaync.cc': timed out (service_start_timeout=25000ms)\n")
+
+tests/test_platform_events.py:426: AssertionError
+1 failed in 27.01s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 28.29s
+
+=== drill L-AC-05-dunst-question (M4A-05) on chatmon/linuxsession.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server
+-- green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 13.15s
+-- red: exit 1
+F.......                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_each_servers_do_not_disturb_is_read_from_the_server[dunst-on-Do Not Disturb] _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-887/test_each_servers_do_not_distu0')
+server = 'dunst', dnd = 'on', expected = 'Do Not Disturb'
+
+    @linux_bus
+    @pytest.mark.parametrize("server, dnd, expected", [
+        ("dunst", "on", "Do Not Disturb"),
+        ("dunst", "off", "None"),
+        ("mako", "on", "Do Not Disturb"),
+        ("mako", "off", "None"),
+        ("SwayNotificationCenter", "on", "Do Not Disturb"),
+        ("Xfce Notify Daemon", "on", "Do Not Disturb"),
+        ("Xfce Notify Daemon", "unset", "None"),
+        ("Plasma", "on", "Do Not Disturb"),
+    ])
+    def test_each_servers_do_not_disturb_is_read_from_the_server(tmp_path, server, dnd, expected):
+        pytest.importorskip("PyQt6.QtDBus")
+        out, log = _on_a_private_bus(tmp_path, ["--name", server, "--dnd", dnd], DND_CLIENT)
+>       assert f"quiet {expected}" in out, out
+E       AssertionError: quiet None
+E         
+E       assert 'quiet Do Not Disturb' in 'quiet None\n'
+
+tests/test_platform_events.py:400: AssertionError
+1 failed, 7 passed in 13.46s
+-- restored green: exit 0, 8 passed
+........                                                                 [100%]
+8 passed in 12.59s
+
+=== drill L-AC-06a-upower-not-followed (M4A-06) on chatmon/linuxsession.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_linuxsession.py::test_power_saving_follows_upower_on_a_bus
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.04s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_power_saving_follows_upower_on_a_bus ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-890/test_power_saving_follows_upow0')
+
+    def test_power_saving_follows_upower_on_a_bus(tmp_path):
+        """Against a pretend UPower (tests/fake_upower.py) and no power-profiles-daemon: on battery at first, then
+        plugged in, each told as UPower says it, without waiting."""
+        import private_bus
+    
+        private_bus.needs_dbus_run_session()
+        out, asked = private_bus.as_system_bus(tmp_path, "fake_upower.py", ["80", "2", "true", "false"], POWER_CLIENT)
+>       assert "saving [True, False] heard ['org.freedesktop.UPower']" in out, out
+E       AssertionError: saving [True] heard []
+E         
+E       assert "saving [True, False] heard ['org.freedesktop.UPower']" in 'saving [True] heard []\n'
+
+tests/test_linuxsession.py:136: AssertionError
+1 failed in 3.53s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.91s
+
+=== drill L-AC-07a-not-replaced (M4A-07) on chatmon/sysnotify.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.24s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_the_notification_server_gets_transient_replacing_and_urgent_notifications _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-893/test_the_notification_server_g0')
+
+    @linux_bus
+    def test_the_notification_server_gets_transient_replacing_and_urgent_notifications(tmp_path):
+        pytest.importorskip("PyQt6.QtDBus")
+        out, log = _on_a_private_bus(tmp_path, ["--name", "dunst", "--press", "1"], NOTIFY_CLIENT)
+        sent = [json.loads(line) for line in log.splitlines() if '"Notify"' in line]
+        assert len(sent) == 3, out
+        first, second, alert = sent
+        assert first["signature"] == "susssasa{sv}i" and first["replaces"] == 0 and first["hints"]["transient"] == ["b", True]
+        assert first["actions"] == ["0", "Snooze 10 min", "1", "Done"]
+>       assert second["replaces"] == first["id"] and second["hints"]["transient"] == ["b", True]  # one replaces the other
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (0 == 1)
+
+tests/test_platform_events.py:359: AssertionError
+1 failed in 4.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.30s
+
+=== drill L-AC-07b-action-unheard (M4A-07) on chatmon/sysnotify.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.19s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_the_notification_server_gets_transient_replacing_and_urgent_notifications _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-896/test_the_notification_server_g0')
+
+    @linux_bus
+    def test_the_notification_server_gets_transient_replacing_and_urgent_notifications(tmp_path):
+        pytest.importorskip("PyQt6.QtDBus")
+        out, log = _on_a_private_bus(tmp_path, ["--name", "dunst", "--press", "1"], NOTIFY_CLIENT)
+        sent = [json.loads(line) for line in log.splitlines() if '"Notify"' in line]
+        assert len(sent) == 3, out
+        first, second, alert = sent
+        assert first["signature"] == "susssasa{sv}i" and first["replaces"] == 0 and first["hints"]["transient"] == ["b", True]
+        assert first["actions"] == ["0", "Snooze 10 min", "1", "Done"]
+        assert second["replaces"] == first["id"] and second["hints"]["transient"] == ["b", True]  # one replaces the other
+        assert alert["hints"]["urgency"] == ["y", 2] and "transient" not in alert["hints"] and alert["replaces"] == 0
+        assert "urgency" not in first["hints"]
+        # The server pressed "Done" on the first: reported, with that button's place.
+>       assert f"pressed [1] read aloud id {second['id']}" in out, out
+E       AssertionError: pressed [] read aloud id 1
+E         
+E       assert 'pressed [1] read aloud id 1' in 'pressed [] read aloud id 1\n'
+
+tests/test_platform_events.py:363: AssertionError
+1 failed in 4.32s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.11s
+
+=== drill L-AC-10-not-one-call (M4A-10) on chatmon/heads_up.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_heads_up.py::test_upower_is_asked_once_from_a_worker_thread
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.51s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_upower_is_asked_once_from_a_worker_thread ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-899/test_upower_is_asked_once_from0')
+
+    def test_upower_is_asked_once_from_a_worker_thread(tmp_path):
+        """QtDBus from a thread like the app's Background's, against a pretend UPower: one GetAll call, and the
+        battery's reading."""
+        import private_bus
+    
+        private_bus.needs_dbus_run_session()
+        out, asked = private_bus.as_system_bus(tmp_path, "fake_upower.py", ["42.5", "2", "true"], UPOWER_CLIENT)
+>       assert "read [(42.5, False)]" in out, out
+E       AssertionError: read [None]
+E         
+E       assert 'read [(42.5, False)]' in 'read [None]\n'
+
+tests/test_heads_up.py:241: AssertionError
+1 failed in 1.67s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.64s
+
+=== drill L-AC-04a-listener-outlives-desk (M4A-04) on chatmon/presence.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.96s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing _______
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-902/test_an_answer_that_comes_afte0')
+
+    @needs_a_bus
+    def test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing(tmp_path):
+        pytest.importorskip("PyQt6.QtDBus")
+        log, ready, fake = tmp_path / "asked.jsonl", tmp_path / "ready", HERE / "fake_portal.py"
+        script = (
+            f'"{sys.executable}" "{fake}" "{log}" > "{ready}" 2>&1 & fake=$!; '
+            f'for i in $(seq 100); do grep -q ready "{ready}" 2>/dev/null && break; sleep 0.1; done; '
+            f'"{sys.executable}" -c "$CLIENT" "{HERE.parent}"; echo "exit $?"; kill $fake'
+        )
+        env = dict(os.environ, CLIENT=GONE_CLIENT, QT_QPA_PLATFORM="offscreen", CHATMON_PORTAL_BUS="1", XDG_CURRENT_DESKTOP="",
+                   FAKE_CONTRAST="1", FAKE_MOTION="0")
+        env.pop("DBUS_SESSION_BUS_ADDRESS", None)
+        out = subprocess.run(["dbus-run-session", "--", "sh", "-c", script], capture_output=True, text=True, timeout=60, env=env)
+>       assert "still running" in out.stdout and "exit 0" in out.stdout, out.stdout + out.stderr
+E       AssertionError: exit 139
+E         
+E       assert ('still running' in 'exit 139\n')
+E        +  where 'exit 139\n' = CompletedProcess(args=['dbus-run-session', '--', 'sh', '-c', '"/var/tmp/plans-venv/bin/python" "/var/tmp/chatmon-wsl-d...ENT" "/var/tmp/chatmon-wsl-drill-r4n68flg"; echo "exit $?"; kill $fake'], returncode=0, stdout='exit 139\n', stderr='').stdout
+
+tests/test_portal_bus.py:132: AssertionError
+1 failed in 1.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.03s
+
+=== drill L-AC-02-x11-place (M4A-02) on chatmon/presence.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_presence.py::test_x11_says_where_a_window_is
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.96s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_x11_says_where_a_window_is ________________________
+
+    @pytest.mark.skipif(not sys.platform.startswith("linux") or not os.environ.get("DISPLAY"), reason="Linux with an X display")
+    def test_x11_says_where_a_window_is():
+        """The X server's own answer (XGetGeometry, XTranslateCoordinates), which covered() compares: a window's place on
+        the whole X screen. The window is made with Xlib itself, override-redirect so no window manager moves it (Qt's xcb
+        platform would need libraries a bare X server, as CI's Xvfb, goes without)."""
+        import ctypes
+    
+        class XSetWindowAttributes(ctypes.Structure):  # Xlib.h; only override_redirect is set
+            _fields_ = [("background_pixmap", ctypes.c_ulong), ("background_pixel", ctypes.c_ulong), ("border_pixmap", ctypes.c_ulong),
+                        ("border_pixel", ctypes.c_ulong), ("bit_gravity", ctypes.c_int), ("win_gravity", ctypes.c_int),
+                        ("backing_store", ctypes.c_int), ("backing_planes", ctypes.c_ulong), ("backing_pixel", ctypes.c_ulong),
+                        ("save_under", ctypes.c_int), ("event_mask", ctypes.c_long), ("do_not_propagate_mask", ctypes.c_long),
+                        ("override_redirect", ctypes.c_int), ("colormap", ctypes.c_ulong), ("cursor", ctypes.c_ulong)]
+    
+        opened = _x_display()
+        if opened is None:
+            pytest.skip(f"no X server answers at DISPLAY={os.environ.get('DISPLAY')}")
+        xlib, display = opened
+        xlib.XDefaultRootWindow.restype = ctypes.c_ulong
+        xlib.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
+        xlib.XCreateWindow.restype = ctypes.c_ulong
+        xlib.XCreateWindow.argtypes = [ctypes.c_void_p, ctypes.c_ulong, ctypes.c_int, ctypes.c_int, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint,
+                                       ctypes.c_int, ctypes.c_uint, ctypes.c_void_p, ctypes.c_ulong, ctypes.POINTER(XSetWindowAttributes)]
+        for name in ("XMapWindow", "XDestroyWindow"):
+            getattr(xlib, name).argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+        xlib.XSync.argtypes = [ctypes.c_void_p, ctypes.c_int]
+        xlib.XCloseDisplay.argtypes = [ctypes.c_void_p]
+        cw_override_redirect, input_output, copy_from_parent = 1 << 9, 1, 0
+        attributes = XSetWindowAttributes(override_redirect=1)
+        window = xlib.XCreateWindow(display, xlib.XDefaultRootWindow(display), 120, 80, 320, 200, 0, copy_from_parent, input_output, None,
+                                    cw_override_redirect, ctypes.byref(attributes))
+        try:
+            xlib.XMapWindow(display, window)
+            xlib.XSync(display, 0)  # made and shown before Chatmon's own connection asks
+            x = presence._X11()
+>           assert x.ok and x.rect(window) == (120, 80, 320, 200)
+E           assert (True and (0, 0, 320, 200) == (120, 80, 320, 200)
+E            +  where True = <chatmon.presence._X11 object at 0x784c69fd92b0>.ok
+E             
+E             At index 0 diff: 0 != 120
+E             Use -v to get more diff)
+
+tests/test_presence.py:420: AssertionError
+1 failed in 1.91s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.85s
+
+=== summary
+PASS L-AC-01a-read-fallback
+PASS L-AC-04a-asked-each-time
+PASS L-AC-05-starts-services
+PASS L-AC-05-dunst-question
+PASS L-AC-06a-upower-not-followed
+PASS L-AC-07a-not-replaced
+PASS L-AC-07b-action-unheard
+PASS L-AC-10-not-one-call
+PASS L-AC-04a-listener-outlives-desk
+PASS L-AC-02-x11-place

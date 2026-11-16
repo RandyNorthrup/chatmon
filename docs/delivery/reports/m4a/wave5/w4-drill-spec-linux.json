@@ -1,0 +1,134 @@
+{
+  "drills": [
+    {
+      "id": "L-AC-01a-read-fallback",
+      "requirement": "M4A-01",
+      "file": "chatmon/linuxsession.py",
+      "find": "elif method == \"ReadOne\" and reply.errorName() == \"org.freedesktop.DBus.Error.UnknownMethod\":",
+      "replace": "elif False:",
+      "test": [
+        "tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed"
+      ],
+      "expect": [
+        "test_the_portals_appearance_settings_are_read_once_then_followed[1-Read]"
+      ]
+    },
+    {
+      "id": "L-AC-04a-asked-each-time",
+      "requirement": "M4A-04",
+      "file": "chatmon/presence.py",
+      "find": "            setattr(self, attr, made)\n",
+      "replace": "",
+      "test": [
+        "tests/test_portal_bus.py::test_the_portals_appearance_settings_are_read_once_then_followed"
+      ],
+      "expect": [
+        "test_the_portals_appearance_settings_are_read_once_then_followed[2-ReadOne]"
+      ]
+    },
+    {
+      "id": "L-AC-05-starts-services",
+      "requirement": "M4A-05",
+      "file": "chatmon/linuxsession.py",
+      "find": "    message.setAutoStartService(False)\n",
+      "replace": "    message.setAutoStartService(True)\n",
+      "test": [
+        "tests/test_platform_events.py::test_asking_about_do_not_disturb_never_starts_a_service"
+      ],
+      "expect": [
+        "test_asking_about_do_not_disturb_never_starts_a_service"
+      ]
+    },
+    {
+      "id": "L-AC-05-dunst-question",
+      "requirement": "M4A-05",
+      "file": "chatmon/linuxsession.py",
+      "find": "\"org.dunstproject.cmd0\", \"paused\"",
+      "replace": "\"org.dunstproject.cmd1\", \"paused\"",
+      "test": [
+        "tests/test_platform_events.py::test_each_servers_do_not_disturb_is_read_from_the_server"
+      ],
+      "expect": [
+        "test_each_servers_do_not_disturb_is_read_from_the_server[dunst-on-Do Not Disturb]"
+      ]
+    },
+    {
+      "id": "L-AC-06a-upower-not-followed",
+      "requirement": "M4A-06",
+      "file": "chatmon/linuxsession.py",
+      "find": "        service, path = UPOWER\n        if self._bus.connect(service, path, PROPERTIES, \"PropertiesChanged\", self._changed):",
+      "replace": "        service, path = UPOWER\n        if False:",
+      "test": [
+        "tests/test_linuxsession.py::test_power_saving_follows_upower_on_a_bus"
+      ],
+      "expect": [
+        "test_power_saving_follows_upower_on_a_bus"
+      ]
+    },
+    {
+      "id": "L-AC-07a-not-replaced",
+      "requirement": "M4A-07",
+      "file": "chatmon/sysnotify.py",
+      "find": "message(title, body, replaces=self.read_aloud_id,",
+      "replace": "message(title, body, replaces=0,",
+      "test": [
+        "tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+      ],
+      "expect": [
+        "test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+      ]
+    },
+    {
+      "id": "L-AC-07b-action-unheard",
+      "requirement": "M4A-07",
+      "file": "chatmon/sysnotify.py",
+      "find": "bus.connect(SERVICE, PATH, SERVICE, \"ActionInvoked\", self._action_invoked)",
+      "replace": "bus.connect(SERVICE, PATH, SERVICE, \"ActionInvokedX\", self._action_invoked)",
+      "test": [
+        "tests/test_platform_events.py::test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+      ],
+      "expect": [
+        "test_the_notification_server_gets_transient_replacing_and_urgent_notifications"
+      ]
+    },
+    {
+      "id": "L-AC-10-not-one-call",
+      "requirement": "M4A-10",
+      "file": "chatmon/heads_up.py",
+      "find": "\"GetAll\", \"org.freedesktop.UPower.Device\"",
+      "replace": "\"Get\", \"org.freedesktop.UPower.Device\"",
+      "test": [
+        "tests/test_heads_up.py::test_upower_is_asked_once_from_a_worker_thread"
+      ],
+      "expect": [
+        "test_upower_is_asked_once_from_a_worker_thread"
+      ]
+    },
+    {
+      "id": "L-AC-04a-listener-outlives-desk",
+      "requirement": "M4A-04",
+      "file": "chatmon/presence.py",
+      "find": "made = linuxsession.PortalSettings(self)\n                    made.changed.connect(self.settings_changed)\n",
+      "replace": "made = linuxsession.PortalSettings()\n                    made.changed.connect(self.settings_changed.emit)\n",
+      "test": [
+        "tests/test_portal_bus.py::test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing"
+      ],
+      "expect": [
+        "test_an_answer_that_comes_after_its_desk_has_gone_reaches_nothing"
+      ]
+    },
+    {
+      "id": "L-AC-02-x11-place",
+      "requirement": "M4A-02",
+      "file": "chatmon/presence.py",
+      "find": "return x.value, y.value, width.value, height.value",
+      "replace": "return 0, 0, width.value, height.value",
+      "test": [
+        "tests/test_presence.py::test_x11_says_where_a_window_is"
+      ],
+      "expect": [
+        "test_x11_says_where_a_window_is"
+      ]
+    }
+  ]
+}

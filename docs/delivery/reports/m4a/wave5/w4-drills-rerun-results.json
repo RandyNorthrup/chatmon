@@ -1,0 +1,32 @@
+[
+  {
+    "id": "AC-03-sleep-wake",
+    "requirement": "M4A-03",
+    "file": "chatmon/macnative.py",
+    "mutation": {
+      "find": "self.slept.emit(selector == \"willSleep:\")",
+      "replace": "self.slept.emit(selector == \"didWake:\")"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+    ],
+    "expected": [
+      "test_each_workspace_notification_is_its_own_signal"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a",
+    "baseline_exit": 0,
+    "mutated_sha256": "fd6cf4fbd50d77fd9244d659bbb9aa07b48cddd4e924305605e354eea548dff6",
+    "mutated_exit": 1,
+    "observed": "_____________ test_each_workspace_notification_is_its_own_signal ______________",
+    "after_sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a",
+    "restored_exit": 0
+  }
+]

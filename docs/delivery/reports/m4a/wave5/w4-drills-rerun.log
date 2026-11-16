@@ -1,0 +1,46 @@
+red drills from docs\delivery\reports\m4a\wave5\w4-drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-anesedrn
+copied 318 files
+
+=== drill AC-03-sleep-wake (M4A-03) on chatmon/macnative.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.52s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_each_workspace_notification_is_its_own_signal ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000171658B16D0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017165A043E0>
+
+    def test_each_workspace_notification_is_its_own_signal(qapp, monkeypatch):
+        """What each of the observer's methods says (here without AppKit: on macOS, tests/test_macnative.py posts the
+        real notifications)."""
+        from chatmon import macnative
+    
+        monkeypatch.setattr(macnative, "low_power_mode", lambda: True)
+        watcher = macnative.WorkspaceWatcher()
+        heard = []
+        watcher.slept.connect(lambda on: heard.append(("slept", on)))
+        watcher.screens_slept.connect(lambda on: heard.append(("screens", on)))
+        watcher.accessibility_changed.connect(lambda: heard.append(("accessibility",)))
+        watcher.low_power_changed.connect(lambda on: heard.append(("low power", on)))
+        for selector, _, _ in macnative.WORKSPACE_EVENTS:
+            watcher.deliver(selector)
+>       assert heard == [("slept", True), ("slept", False), ("screens", True), ("screens", False), ("accessibility",), ("low power", True)]
+E       AssertionError: assert [('slept', Fa...power', True)] == [('slept', Tr...power', True)]
+E         
+E         At index 0 diff: ('slept', False) != ('slept', True)
+E         Use -v to get more diff
+
+tests\test_platform_events.py:308: AssertionError
+1 failed in 0.66s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.54s
+
+=== summary
+PASS AC-03-sleep-wake
