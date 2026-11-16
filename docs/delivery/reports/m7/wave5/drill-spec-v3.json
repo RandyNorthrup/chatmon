@@ -1,0 +1,30 @@
+{
+ "drills": [
+  {
+   "id": "W4-M7-desk-changes-unheard-v2",
+   "requirement": "AC-11-7",
+   "file": "chatmon/app.py",
+   "find": "        desk.settings_changed.connect(self._heard(self._check_accessibility))\n",
+   "replace": "\n",
+   "test": [
+    "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+   ],
+   "expect": [
+    "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+   ]
+  },
+  {
+   "id": "W4-M7-mac-sleep-unheard-v2",
+   "requirement": "AC-11-7",
+   "file": "chatmon/app.py",
+   "find": "            watcher.slept.connect(self._heard(self._sleeping))\n",
+   "replace": "\n",
+   "test": [
+    "tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+   ],
+   "expect": [
+    "test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+   ]
+  }
+ ]
+}

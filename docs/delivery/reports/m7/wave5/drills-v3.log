@@ -1,0 +1,86 @@
+red drills from docs\delivery\reports\m7\wave5\drill-spec-v3.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-wshlrmya
+copied 318 files
+
+=== drill W4-M7-desk-changes-unheard-v2 (AC-11-7) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.91s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___
+
+companion = <chatmon.app.Companion object at 0x00000224527C3D90>
+
+    def test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change(companion):
+        """M4A's Desk says when reduced motion or high contrast may have changed, and when a screen reader starts or stops:
+        applied at once, no longer at the next 30-second look."""
+        from PyQt6.QtGui import QGuiApplication
+    
+        from chatmon import presence
+    
+        c = companion
+        desk = presence.Desk(QGuiApplication.platformName())
+        try:
+            c._watch_desk(desk)
+            c.desk.motion = True  # the readings stay the test's own (PretendDesk); the signal is the real Desk's
+            desk.settings_changed.emit()
+>           assert c._reduce_motion and c.ask_box.reduced_motion
+E           assert (False)
+E            +  where False = <chatmon.app.Companion object at 0x00000224527C3D90>._reduce_motion
+
+tests\test_app_m7.py:726: AssertionError
+1 failed in 1.74s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.48s
+
+=== drill W4-M7-mac-sleep-unheard-v2 (AC-11-7) on chatmon/app.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.83s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard ______
+
+companion = <chatmon.app.Companion object at 0x0000022D5A333CF0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D5A64AC40>
+
+    def test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard(companion, monkeypatch):
+        import types
+    
+        from chatmon import macnative
+    
+        c = companion
+        handlers: dict[str, list] = {}
+    
+        def signal(name):
+            return types.SimpleNamespace(connect=lambda handler: handlers.setdefault(name, []).append(handler))
+    
+        watcher = types.SimpleNamespace(**{n: signal(n) for n in ("slept", "screens_slept", "accessibility_changed", "low_power_changed")})
+        monkeypatch.setattr(macnative, "WorkspaceWatcher", lambda: watcher)
+        monkeypatch.setattr(macnative, "low_power_mode", lambda: True)
+        old = getattr(c, "_lock_watcher", None)
+        if old is not None and hasattr(old, "close"):
+            old.close()  # this platform's own, let go of first
+        monkeypatch.setattr(sys, "platform", "darwin")
+        c._watch_screen_lock()
+        assert c.stage.power_saving and c.ask_box.power_saving  # Low Power Mode, read once at start
+>       handlers["slept"][0](True)  # the Mac goes to sleep
+        ^^^^^^^^^^^^^^^^^
+E       KeyError: 'slept'
+
+tests\test_app_m7.py:754: KeyError
+1 failed in 3.05s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.70s
+
+=== summary
+PASS W4-M7-desk-changes-unheard-v2
+PASS W4-M7-mac-sleep-unheard-v2
