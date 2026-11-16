@@ -1,0 +1,688 @@
+{
+ "m0 resume": {
+  "context": "docs/delivery/reports/m0/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 31,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 238,
+   "findings": [],
+   "passed": true,
+   "requirements": 14,
+   "stage": "resume",
+   "tasks": 15
+  }
+ },
+ "m0 closure": {
+  "context": "docs/delivery/reports/m0/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 31,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 238,
+   "findings": [],
+   "passed": true,
+   "requirements": 14,
+   "stage": "closure",
+   "tasks": 15
+  }
+ },
+ "m1a resume": {
+  "context": "docs/delivery/reports/m1a/wave4c/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 17,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 143,
+   "findings": [],
+   "passed": true,
+   "requirements": 13,
+   "stage": "resume",
+   "tasks": 14
+  }
+ },
+ "m1a closure": {
+  "context": "docs/delivery/reports/m1a/wave4c/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 17,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 143,
+   "findings": [],
+   "passed": true,
+   "requirements": 13,
+   "stage": "closure",
+   "tasks": 14
+  }
+ },
+ "m1b resume": {
+  "context": "docs/delivery/reports/m1b/wave4c/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 17,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 106,
+   "findings": [],
+   "passed": true,
+   "requirements": 17,
+   "stage": "resume",
+   "tasks": 10
+  }
+ },
+ "m1b closure": {
+  "context": "docs/delivery/reports/m1b/wave4c/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 17,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 106,
+   "findings": [],
+   "passed": true,
+   "requirements": 17,
+   "stage": "closure",
+   "tasks": 10
+  }
+ },
+ "m2 resume": {
+  "context": "docs/delivery/reports/m2/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 20,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 266,
+   "findings": [],
+   "passed": true,
+   "requirements": 20,
+   "stage": "resume",
+   "tasks": 8
+  }
+ },
+ "m2 closure": {
+  "context": "docs/delivery/reports/m2/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 20,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 266,
+   "findings": [],
+   "passed": true,
+   "requirements": 20,
+   "stage": "closure",
+   "tasks": 8
+  }
+ },
+ "m3 resume": {
+  "context": "docs/delivery/reports/m3/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 28,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 281,
+   "findings": [],
+   "passed": true,
+   "requirements": 17,
+   "stage": "resume",
+   "tasks": 13
+  }
+ },
+ "m3 closure": {
+  "context": "docs/delivery/reports/m3/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 28,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 281,
+   "findings": [],
+   "passed": true,
+   "requirements": 17,
+   "stage": "closure",
+   "tasks": 13
+  }
+ },
+ "m4a resume": {
+  "context": "docs/delivery/reports/m4a/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 23,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 391,
+   "findings": [],
+   "passed": true,
+   "requirements": 12,
+   "stage": "resume",
+   "tasks": 10
+  }
+ },
+ "m4a closure": {
+  "context": "docs/delivery/reports/m4a/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 23,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 391,
+   "findings": [],
+   "passed": true,
+   "requirements": 12,
+   "stage": "closure",
+   "tasks": 10
+  }
+ },
+ "m4b resume": {
+  "context": "docs/delivery/reports/m4b/w4d/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 22,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 259,
+   "findings": [],
+   "passed": true,
+   "requirements": 5,
+   "stage": "resume",
+   "tasks": 13
+  }
+ },
+ "m4b closure": {
+  "context": "docs/delivery/reports/m4b/w4d/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 22,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 259,
+   "findings": [],
+   "passed": true,
+   "requirements": 5,
+   "stage": "closure",
+   "tasks": 13
+  }
+ },
+ "m5 resume": {
+  "context": "docs/delivery/reports/m5/wave4c/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 15,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 115,
+   "findings": [],
+   "passed": true,
+   "requirements": 8,
+   "stage": "resume",
+   "tasks": 6
+  }
+ },
+ "m5 closure": {
+  "context": "docs/delivery/reports/m5/wave4c/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 15,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 115,
+   "findings": [],
+   "passed": true,
+   "requirements": 8,
+   "stage": "closure",
+   "tasks": 6
+  }
+ },
+ "m6a resume": {
+  "context": "docs/delivery/reports/m6a/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 27,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 215,
+   "findings": [],
+   "passed": true,
+   "requirements": 16,
+   "stage": "resume",
+   "tasks": 8
+  }
+ },
+ "m6a closure": {
+  "context": "docs/delivery/reports/m6a/wave5/context.json",
+  "exit": 1,
+  "report": {
+   "acceptance": 27,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 215,
+   "findings": [
+    {
+     "code": "evidence-coverage",
+     "location": "M6A-10.A1",
+     "message": "No passing manual receipt covers this acceptance criterion"
+    },
+    {
+     "code": "task-unverified",
+     "location": "T7B",
+     "message": "Task is blocked, not verified"
+    }
+   ],
+   "passed": false,
+   "requirements": 16,
+   "stage": "closure",
+   "tasks": 8
+  }
+ },
+ "m6b resume": {
+  "context": "docs/delivery/reports/m6b/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 17,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 224,
+   "findings": [],
+   "passed": true,
+   "requirements": 5,
+   "stage": "resume",
+   "tasks": 7
+  }
+ },
+ "m6b closure": {
+  "context": "docs/delivery/reports/m6b/wave5/context.json",
+  "exit": 1,
+  "report": {
+   "acceptance": 17,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 224,
+   "findings": [
+    {
+     "code": "task-unverified",
+     "location": "T4-mypy",
+     "message": "Task is blocked, not verified"
+    },
+    {
+     "code": "task-unverified",
+     "location": "T6-phase-b",
+     "message": "Task is blocked, not verified"
+    },
+    {
+     "code": "task-unverified",
+     "location": "T7-leftovers",
+     "message": "Task is blocked, not verified"
+    }
+   ],
+   "passed": false,
+   "requirements": 5,
+   "stage": "closure",
+   "tasks": 7
+  }
+ },
+ "m7 resume": {
+  "context": "docs/delivery/reports/m7/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 52,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 488,
+   "findings": [],
+   "passed": true,
+   "requirements": 19,
+   "stage": "resume",
+   "tasks": 23
+  }
+ },
+ "m7 closure": {
+  "context": "docs/delivery/reports/m7/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 52,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 488,
+   "findings": [],
+   "passed": true,
+   "requirements": 19,
+   "stage": "closure",
+   "tasks": 23
+  }
+ },
+ "m8 resume": {
+  "context": "docs/delivery/reports/m8/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 10,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 364,
+   "findings": [],
+   "passed": true,
+   "requirements": 1,
+   "stage": "resume",
+   "tasks": 5
+  }
+ },
+ "m8 closure": {
+  "context": "docs/delivery/reports/m8/wave5/context.json",
+  "exit": 0,
+  "report": {
+   "acceptance": 10,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 364,
+   "findings": [],
+   "passed": true,
+   "requirements": 1,
+   "stage": "closure",
+   "tasks": 5
+  }
+ },
+ "m10 resume": {
+  "context": "docs/delivery/reports/m10/wave5/context.json",
+  "exit": 1,
+  "report": {
+   "acceptance": 7,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "checkpoint-freshness"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 151,
+   "findings": [
+    {
+     "code": "outcome-unresolved",
+     "location": "P-CI-NEXT-STUBS",
+     "message": "From 2026-11-28 (the coordinator): packaging/requirements-types-next.in with PyQt6==6.12.1, psutil==7.2.2 and mypy==2.4.1, locked with the documented command; tests/test_requirements.py taught about it; the types job's stubs axis, as the integration note gives it."
+    }
+   ],
+   "passed": false,
+   "requirements": 3,
+   "stage": "resume",
+   "tasks": 3
+  }
+ },
+ "m10 closure": {
+  "context": "docs/delivery/reports/m10/wave5/context.json",
+  "exit": 1,
+  "report": {
+   "acceptance": 7,
+   "checks": [
+    "schema",
+    "record-graph",
+    "owned-paths",
+    "active-path-ownership",
+    "environment",
+    "readiness-receipts",
+    "completed-receipts",
+    "behavior-receipts",
+    "task-completion"
+   ],
+   "claim_scope": "Structural and recorded-evidence checks; semantic review remains required.",
+   "evidence": 151,
+   "findings": [
+    {
+     "code": "evidence-coverage",
+     "location": "M10-03.A3",
+     "message": "No passing manual receipt covers this acceptance criterion"
+    },
+    {
+     "code": "outcome-unresolved",
+     "location": "P-CI-NEXT-STUBS",
+     "message": "From 2026-11-28 (the coordinator): packaging/requirements-types-next.in with PyQt6==6.12.1, psutil==7.2.2 and mypy==2.4.1, locked with the documented command; tests/test_requirements.py taught about it; the types job's stubs axis, as the integration note gives it."
+    },
+    {
+     "code": "task-unverified",
+     "location": "T3-qt612-types",
+     "message": "Task is blocked, not verified"
+    }
+   ],
+   "passed": false,
+   "requirements": 3,
+   "stage": "closure",
+   "tasks": 3
+  }
+ }
+}

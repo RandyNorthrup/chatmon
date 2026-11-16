@@ -82,7 +82,7 @@ PLANS: dict[str, dict[str, str]] = {
             "fixes add behaviour on compositors no criterion names, and change none of what the criteria ask on sway, on\n"
             "the pretend compositor or on Windows; the `NonRudeHWND` mark changes what Windows reports about Chatmon's\n"
             "stage, not its click-through shape (AC-M3-10-shape). One drill's line moved: M3-RC-clipboard took out\n"
-            "`board.setText(text)`, which now occurs twice; M3-RC-clipboard-v2 takes out the same line in `copy()`."
+            "`board.setText(text)`, which now occurs twice; M3-RC-clipboard-v3 takes out both, the whole of the copy to Qt's clipboard."
         ),
         "middle_fn": "m3_middle",
         "closed": "M3 is closed on 7816159.",
@@ -99,6 +99,14 @@ PLANS: dict[str, dict[str, str]] = {
             "unchanged. `macnative.activate_app` is new and serves `chatmon ask` (M0-12), not an M4A criterion."
         ),
         "middle_fn": "m4a_middle",
+        "middle_extra": (
+            "**One drill run again.** In the batch, AC-03-sleep-wake's green run crashed after its test had passed: a\n"
+            "Windows access violation in pytest's own summary hook (hypothesis's plugin asking `platform.system()`, which\n"
+            "runs `ver` in a subprocess), exit 0xC0000005, with the WSL suite running beside it. That is the test run's host\n"
+            "process, not Chatmon. Run again on its own, the drill went green, red and green\n"
+            "([wave5/w4-drills-rerun.log](reports/m4a/wave5/w4-drills-rerun.log)); the batch's log keeps the crash\n"
+            "([wave5/w4-drills.log](reports/m4a/wave5/w4-drills.log))."
+        ),
         "closed": "M4A is closed on 7816159.",
     },
     "m6b": {
@@ -106,12 +114,31 @@ PLANS: dict[str, dict[str, str]] = {
         "ready": (
             "M6B-01 to M6B-03, M6B-RW and M6B-LEFT still map both ways to their 17 criteria. T1-ruff, T3-loggers,\n"
             "T4-mypy, T5-leaks, T6-phase-b and T7-leftovers own the changed files. The new code passes ruff (CI's lint job)\n"
-            "and mypy on linux, win32 and darwin with PyQt6 6.11's stubs (CI's types jobs) and 6.12.1's (here and in WSL),\n"
-            "with no new `type: ignore` or `noqa` in `chatmon/`; its new loggers' messages follow M6B-03. The M6A and M8\n"
+            "and mypy on linux, win32 and darwin with PyQt6 6.11's stubs (CI's types jobs), with no new `type: ignore` or\n"
+            "`noqa` in `chatmon/`; its new loggers' messages follow M6B-03. M6B-02.A1 asks for 6.12's stubs too, and there\n"
+            "two of its new lines fail (see the section): a fault in the code, not a gap in the requirement. The M6A and M8\n"
             "plans this plan takes as inputs are re-bound in this round before M6B."
         ),
-        "middle": "",
-        "closed": "M6B is closed on 7816159.",
+        "middle": (
+            "**Archived history, again.** Binding this round's 56 receipts would have taken the plan to the validator's\n"
+            "4 MiB limit. So, as in the final round, the oldest stale receipts were moved out first, byte for byte: round\n"
+            "two's 55 `W4B-` receipts are in [reports/m6b/history/w4b-round-two.json](reports/m6b/history/README.md), by\n"
+            "[reports/wave5/archive_receipts.py](reports/wave5/archive_receipts.py). Nothing else in the ledger changed\n"
+            "with them."
+        ),
+        "middle_extra": (
+            "**M6B-02.A1's 6.12 half fails again.** mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors on linux, win32\n"
+            "and darwin: `chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated]`, and `:917` the same.\n"
+            "It does so in WSL ([reports/m6a/wave5/mypy-pyqt6-6.12.1-linux.log](reports/m6a/wave5/mypy-pyqt6-6.12.1-linux.log),\n"
+            "`-win32`, `-darwin`) and here ([reports/m10/wave5/mypy-6121.log](reports/m10/wave5/mypy-6121.log)). Both lines are\n"
+            "`app = QGuiApplication.instance()` in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static\n"
+            "`instance()` as returning `Self`, which CONTRIBUTING.md's second workaround covers, and the two lines don't\n"
+            "have it. CI is green because its types jobs lock 6.11's stubs. This round changes no product code, so\n"
+            "W5-BEH-WSL-MYPY-6121 is recorded as failing. T4-mypy is blocked, with T6-phase-b and T7-leftovers, which depend\n"
+            "on it and whose own receipts pass. Next: the coordinator gives `app` its type on both lines\n"
+            "(`app: QCoreApplication | None = QGuiApplication.instance()`); then mypy with 6.12.1's stubs runs again."
+        ),
+        "closed": "M6B stops on M6B-02.A1's 6.12 half at 7816159; every other criterion passes.",
     },
     "m7": {
         "name": "M7",
@@ -140,29 +167,51 @@ PLANS: dict[str, dict[str, str]] = {
         "name": "M10",
         "ready": (
             "M10-01 to M10-03 still map both ways to their seven criteria. T3-qt612-types owns `chatmon/a11y.py`,\n"
-            "`chatmon/bubble.py`, `chatmon/macnative.py` and CONTRIBUTING.md; their new code passes mypy with 6.11's and\n"
-            "6.12.1's stubs on every platform, and CONTRIBUTING.md's how-to for the next stubs is unchanged (only its\n"
+            "`chatmon/bubble.py`, `chatmon/macnative.py` and CONTRIBUTING.md, and M10-03.A1 asks mypy with 6.12.1's stubs\n"
+            "of the whole tree. Two new lines of PR #22's `chatmon/layer.py` fail it (see the section): a fault in the code,\n"
+            "not a gap in the requirement. CONTRIBUTING.md's how-to for the next stubs is unchanged (only its\n"
             "Dependencies section moved). T1-comtypes owns `tests/test_requirements.py`, which now checks the pins lock too.\n"
-            "Integration note 2's CI check is the coordinator's from 2026-11-28 (P-CI-NEXT-STUBS) and note 4's upstream\n"
-            "report the owner's: neither is a criterion. The M4A, M6A, M6B and M8 plans this plan takes as inputs are\n"
-            "re-bound in this round before M10."
+            "Integration note 2's CI check is the coordinator's from 2026-11-28 (P-CI-NEXT-STUBS), and note 4's upstream\n"
+            "report has been posted (an observed outcome, [stub-report.log](stub-report.log)): neither is a criterion. The\n"
+            "M4A, M6A, M6B and M8 plans this plan takes as inputs are re-bound in this round before M10."
+        ),
+        "middle_extra": (
+            "**Note 4, the upstream report: posted.** Others had reported the core of it on the PyQt mailing list: Veronica\n"
+            "Berglyd Olsen on 2026-11-14 (pyright: `pyqtSignal`'s required `arguments`, and `typing.Self` for a parent,\n"
+            "https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046574.html) and Dragan A. on 2026-11-15\n"
+            "(`typing.Self` throughout, .../046578.html). On the owner's instruction the coordinator posted the follow-up from\n"
+            "the owner's subscription on 2026-11-16, archived at\n"
+            "https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046579.html. It adds mypy 2.4.1 `--strict`'s\n"
+            "repro (four errors on 6.12.1, none on 6.11.0): `installEventFilter`, `removeEventFilter` and `setParent` taking\n"
+            "`Self`, `setParent` losing `| None`, and the static methods that return `Self`. All three pages were read again\n"
+            "here ([wave5/stub-report.log](reports/m10/wave5/stub-report.log), no addresses kept). It is reported, and waits\n"
+            "on Riverbank's fix."
         ),
         "middle": (
-            "**M10-03.A1 holds on the new code.** mypy with PyQt6 6.12.1's stubs finds no issues on linux, win32 and darwin\n"
-            "([wave5/mypy-6121.log](reports/m10/wave5/mypy-6121.log)), and with 6.11's none either\n"
-            "([wave5/mypy-611.log](reports/m10/wave5/mypy-611.log)). All five gate drills went green, red and green again\n"
-            "([wave5/gate-drills.log](reports/m10/wave5/gate-drills.log)). The how-to was reviewed and replayed in WSL\n"
-            "again ([wave5/howto-review.md](reports/m10/wave5/howto-review.md)). The locks (locked again, byte for byte the\n"
-            "committed ones), the UI Automation test in the CI-shaped venv and its red drill ran again too, and passed\n"
+            "**M10-03.A1 and M10-03.A3 fail on two new lines.** mypy with PyQt6 6.11's stubs finds no issues on linux, win32\n"
+            "and darwin ([wave5/mypy-611.log](reports/m10/wave5/mypy-611.log)). With 6.12.1's it finds two on each\n"
+            "([wave5/mypy-6121.log](reports/m10/wave5/mypy-6121.log)): `chatmon/layer.py:824: error: Need type annotation for\n"
+            "\"app\"  [var-annotated]`, and `:917` the same. Both are `app = QGuiApplication.instance()` in PR #22's KWin and\n"
+            "Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static `instance()` as returning `Self`, the case of\n"
+            "CONTRIBUTING.md's second workaround, and these lines don't have it. CI is green because its types jobs lock\n"
+            "6.11's stubs; P-CI-NEXT-STUBS is the check that would catch this. The four gate drills on 6.12.1's stubs\n"
+            "couldn't run, since their first step, mypy green with those stubs, fails; the fifth, on 6.11's, went green, red\n"
+            "and green ([wave5/gate-drills.log](reports/m10/wave5/gate-drills.log)).\n"
+            "The how-to's replay in WSL finds the same two errors ([wave5/howto-review.md](reports/m10/wave5/howto-review.md)).\n"
+            "This round changes no product code, so these receipts are recorded as failing and T3-qt612-types is blocked.\n"
+            "Next: the coordinator gives `app` its type on both lines\n"
+            "(`app: QCoreApplication | None = QGuiApplication.instance()`); then the 6.12.1 runs, the gate drills and the\n"
+            "how-to review run again. Everything else passed: the locks (locked again, byte for byte the committed ones),\n"
+            "the UI Automation test in the CI-shaped venv and its red drill, and the nine drills\n"
             "([wave5/locks.log](reports/m10/wave5/locks.log), [wave5/uia-ci-venv.log](reports/m10/wave5/uia-ci-venv.log))."
         ),
         "remains": (
             "**What remains, outside the criteria.** From 2026-11-28, when 6.12.1 can be hash-locked, the `types` job's check\n"
             "against the next stubs (P-CI-NEXT-STUBS, integration note 2): the coordinator. The pins check proposes 6.12.1\n"
-            "from that day too (reports/m6a/pins/skip-check.log). The upstream report on PyQt6's stubs (note 4): the owner,\n"
-            "with the owner's PyQt mailing-list account."
+            "from that day too ([reports/m6a/pins/skip-check.log](reports/m6a/pins/skip-check.log)). Note 4's report needs\n"
+            "nothing more from us; Riverbank's fix to the stubs is theirs."
         ),
-        "closed": "",
+        "closed": "M10 stops on M10-03.A1 and A3 at 7816159, and on P-CI-NEXT-STUBS.",
     },
 }
 
@@ -173,17 +222,38 @@ def summary(log: Path) -> str:
 
 
 def m3_middle() -> str:
+    text = lambda name: (REPORTS / name).read_text(encoding="utf-8", errors="replace")  # noqa: E731
+    loaded = re.findall(r"(\d+ failed, \d+ passed, \d+ skipped, \d+ error)", text("wave5/suite-linux.log"))[-1]
+    quiet = re.findall(r"(\d+ failed, \d+ passed, \d+ skipped)", text("wave5/suite-linux-quiet.log"))[-1]
     return (
-        "**Linux.** The whole suite in WSL ([wave5/suite-linux.log](reports/wave5/suite-linux.log): "
-        + summary(REPORTS / "wave5/suite-linux.log") + ", exit 0), M3's own test files\n"
+        "**The whole suite in WSL failed twice, on different tests, each passing alone.**\n\n"
+        "- **Beside the Windows runner's drills** ([wave5/suite-linux.log](reports/wave5/suite-linux.log)): " + loaded + ".\n"
+        "  sway's click test errored at setup: the probe said nothing in 30 s, stuck in `shutil.which` over a PATH of\n"
+        "  `/mnt/c` folders. The hook smoke test failed, with the greeting still up when the hook's bubble came. So did\n"
+        "  four headless KWin and Hyprland checks of `tests/test_compositors.py`. Each of the six passed alone\n"
+        "  ([wave5/suite-linux-failures-rerun.log](reports/wave5/suite-linux-failures-rerun.log)).\n"
+        "- **Again, with nothing else running** ([wave5/suite-linux-quiet.log](reports/wave5/suite-linux-quiet.log)):\n"
+        "  " + quiet + ". The one was `test_app_smoke.py::test_hide_menu_and_reload`: its menu had a 'Recent messages'\n"
+        "  entry. `tests/test_app_smoke.py` then passed five runs in five on its own\n"
+        "  ([wave5/smoke-wsl-5-runs.log](reports/wave5/smoke-wsl-5-runs.log)).\n\n"
+        "In main's CI run of 7816159 the two smoke tests passed on all twelve test legs and the sway click test in the\n"
+        "sway job; the compositor checks skip there, where KWin and Hyprland aren't installed. These are timing-sensitive\n"
+        "tests on WSL's `/mnt/c` tree, not M3 behaviour, and that is a finding for the coordinator. Both runs are kept as failed receipts\n"
+        "(W5-BEH-WSL-SUITE, W5-BEH-WSL-SUITE-LOADED); M3's criteria rest on the receipts below, the Windows suite, CI and\n"
+        "the drills.\n\n"
+        "**Linux, M3's own runs.** M3's own test files\n"
         "([wave5/m3-tests-linux.log](reports/m3/wave5/m3-tests-linux.log): " + summary(REPORTS / "m3/wave5/m3-tests-linux.log")
         + ") and the real sway's tests\n([wave5/sway-tests-linux.log](reports/m3/wave5/sway-tests-linux.log): "
         + summary(REPORTS / "m3/wave5/sway-tests-linux.log") + ") passed again, as did the overlay's memory\n"
         "check ([wave5/memory-after--window.json](reports/m3/wave5/memory-after--window.json)) and CI's sway job.\n\n"
-        "**One drill re-aimed.** The KWin clipboard fix put a second `board.setText(text)` in `chatmon/layer.py`, so\n"
-        "M3-RC-clipboard's text occurs twice ([wave5/drills-left-out.txt](reports/m3/wave5/drills-left-out.txt)).\n"
-        "M3-RC-clipboard-v2 takes out the same line in `copy()`, found by the comment that follows it, and the same\n"
-        "tests fail, so AC-M3-RC-sway keeps its red receipt."
+        "**One drill re-aimed, twice.** The KWin clipboard fix put a second `board.setText(text)` in `chatmon/layer.py`,\n"
+        "so M3-RC-clipboard's text occurs twice ([wave5/drills-left-out.txt](reports/m3/wave5/drills-left-out.txt)).\n"
+        "M3-RC-clipboard-v2 took out the line in `copy()` only. The pretend compositor's clipboard test went red, but the\n"
+        "real sway's stayed green, since the fix puts the copy on Qt's clipboard a second way, once one of Qt's windows\n"
+        "has the keyboard. So -v2 isn't bound ([wave5/drills-wayland-linux.log](reports/m3/wave5/drills-wayland-linux.log)).\n"
+        "M3-RC-clipboard-v3 takes out both lines, the whole of \"Qt's clipboard is set too\", and both tests fail\n"
+        "([wave5/drills-wayland-linux-v3.log](reports/m3/wave5/drills-wayland-linux-v3.log)), so AC-M3-RC-sway keeps its\n"
+        "red receipt."
     )
 
 
@@ -199,23 +269,26 @@ def m4a_middle() -> str:
 
 
 def results(plan: str) -> tuple[int, int, int]:
-    win = linux = bad = 0
+    """Each drill once, as mkbind6.py binds it: the first results file (by name) that has it, so a -rerun's record
+    stands for the run it repeated."""
+    seen: dict[str, tuple[str, str]] = {}
     for path in sorted((REPORTS / plan / "wave5").glob("*-results.json")):
         if path.name.startswith("gate-") or path.name.startswith("distro-"):
             continue
         for rec in json.loads(path.read_text(encoding="utf-8")):
-            if rec.get("status") != "pass":
-                bad += 1
-            elif "linux" in path.name or "wsl" in path.name:
-                linux += 1
-            else:
-                win += 1
+            seen.setdefault(rec["id"], (path.name, rec.get("status")))
+    win = sum(1 for name, status in seen.values() if status == "pass" and "linux" not in name and "wsl" not in name)
+    linux = sum(1 for name, status in seen.values() if status == "pass" and ("linux" in name or "wsl" in name))
+    bad = sum(1 for _, status in seen.values() if status != "pass")
     return win, linux, bad
 
 
-def gates(plan: str) -> int:
+def gates(plan: str) -> tuple[int, int]:
+    """The gate drills that went green, red and green, and those that didn't."""
     path = REPORTS / plan / "wave5" / "gate-drills-results.json"
-    return sum(r.get("status") == "pass" for r in json.loads(path.read_text(encoding="utf-8"))) if path.is_file() else 0
+    records = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else []
+    passed = sum(r.get("status") == "pass" for r in records)
+    return passed, len(records) - passed
 
 
 def stale(plan: str) -> tuple[int, int, list[str]]:
@@ -231,7 +304,7 @@ def stale(plan: str) -> tuple[int, int, list[str]]:
 def section(plan: str) -> str:
     info = PLANS[plan]
     win, linux, bad = results(plan)
-    gate = gates(plan)
+    gate, gate_bad = gates(plan)
     n, of, files = stale(plan)
     suite = summary(REPORTS / "wave5/suite-windows.log")
     parts = ["## Reconciliation, the plans round for v0.10.0 (2026-11-15)", ""]
@@ -244,8 +317,10 @@ def section(plan: str) -> str:
         "was run again on 7816159 or read from main's CI run of it."
     )
     parts.append("")
-    drills = f"{win} Windows drills" + (f" and {linux} Linux ones (in WSL)" if linux else "") + (f", and {gate} gate drills" if gate else "")
-    verdict = "Every one went green, red and green again." if not bad else f"{bad} did not: see below."
+    drills = (f"{win} Windows drills" + (f" and {linux} Linux ones (in WSL)" if linux else "")
+              + (f", and {gate + gate_bad} gate drills" if gate + gate_bad else ""))
+    verdict = ("Every one went green, red and green again." if not bad and not gate_bad else
+               f"All but {bad + gate_bad} went green, red and green again; see below.")
     parts.append(
         f"**What was re-run.** The whole suite on Windows ([wave5/suite-windows.log](reports/wave5/suite-windows.log): {suite}),\n"
         f"then {drills}. {verdict} main's CI run 43778643147 on 7816159 (all 19 jobs green; each\n"
@@ -254,7 +329,7 @@ def section(plan: str) -> str:
         f"reviewed again ([wave5/readiness.md](reports/{plan}/wave5/readiness.md))."
     )
     middle = globals()[info["middle_fn"]]() if info.get("middle_fn") else info.get("middle", "")
-    for text in (middle, info.get("remains", "")):
+    for text in (middle, info.get("middle_extra", ""), info.get("remains", "")):
         if text:
             parts += ["", text]
     parts.append("")

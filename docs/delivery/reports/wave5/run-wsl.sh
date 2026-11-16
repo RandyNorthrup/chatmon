@@ -2,7 +2,8 @@
 # The plans round for v0.10.0 (7816159): the Linux checks of the nine plans PR #22's merge staled, in WSL (Arch), on
 # the measure worktree's files. Each run gets its own CHATMON_INSTANCE; the whole script runs under nice -n 10.
 # Leaves nothing running.
-#   wsl.exe -d archlinux -- nice -n 10 bash /mnt/c/Users/Randy/Coding/chatmon-wt/measure/docs/delivery/reports/wave5/run-wsl.sh
+#   MSYS_NO_PATHCONV=1 wsl.exe -d archlinux -- nice -n 10 bash /mnt/c/Users/Randy/Coding/chatmon-wt/measure/docs/delivery/reports/wave5/run-wsl.sh
+#   (from Git Bash; MSYS_NO_PATHCONV keeps the /mnt path as it is)
 R=/mnt/c/Users/Randy/Coding/chatmon-wt/measure
 D=$R/docs/delivery/reports
 PY=/var/tmp/plans-venv/bin/python      # packaging/requirements-test.txt: PyQt6 6.11.0, as CI

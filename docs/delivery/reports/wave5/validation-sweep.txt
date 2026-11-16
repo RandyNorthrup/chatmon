@@ -1,0 +1,26 @@
+m0 resume: PASS 
+m0 closure: PASS 
+m1a resume: PASS 
+m1a closure: PASS 
+m1b resume: PASS 
+m1b closure: PASS 
+m2 resume: PASS 
+m2 closure: PASS 
+m3 resume: PASS 
+m3 closure: PASS 
+m4a resume: PASS 
+m4a closure: PASS 
+m4b resume: PASS 
+m4b closure: PASS 
+m5 resume: PASS 
+m5 closure: PASS 
+m6a resume: PASS 
+m6a closure: FAIL evidence-coverage:M6A-10.A1 task-unverified:T7B
+m6b resume: PASS 
+m6b closure: FAIL task-unverified:T4-mypy task-unverified:T6-phase-b task-unverified:T7-leftovers
+m7 resume: PASS 
+m7 closure: PASS 
+m8 resume: PASS 
+m8 closure: PASS 
+m10 resume: FAIL outcome-unresolved:P-CI-NEXT-STUBS
+m10 closure: FAIL evidence-coverage:M10-03.A3 outcome-unresolved:P-CI-NEXT-STUBS task-unverified:T3-qt612-types
