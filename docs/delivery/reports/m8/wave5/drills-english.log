@@ -1,0 +1,69 @@
+red drills from docs\delivery\reports\m8\wave5\drill-spec-english.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-xtvj8ehg
+copied 318 files
+
+=== drill M8-01-english-list-broken (M8-01) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_before_a_language_is_chosen_every_string_is_its_english
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.51s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_before_a_language_is_chosen_every_string_is_its_english _________
+
+    def test_before_a_language_is_chosen_every_string_is_its_english():
+        assert i18n.language() == "en"
+        assert i18n._("Stop") == "Stop"
+        assert [i18n.ngettext("{n} note", "{n} notes", n).format(n=n) for n in (0, 1, 2)] == ["0 notes", "1 note", "2 notes"]
+>       assert [i18n.join(items) for items in ([], ["tacos"], ["tacos", "sushi"], ["tacos", "sushi", "pizza"])] == [
+            "", "tacos", "tacos and sushi", "tacos, sushi and pizza",
+        ]
+E       AssertionError: assert ['', 'tacos',...za and pizza'] == ['', 'tacos',...hi and pizza']
+E         
+E         At index 2 diff: 'tacos, sushi and sushi' != 'tacos and sushi'
+E         Use -v to get more diff
+
+tests\test_i18n.py:89: AssertionError
+1 failed in 0.56s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+
+=== drill M8-01-english-sentence-changed (M8-01) on chatmon/backup.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_backup.py::test_a_backup_moves_everything_to_another_computer
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.51s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_a_backup_moves_everything_to_another_computer ______________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9547/test_a_backup_moves_everything0')
+keys = <chatmon.keychain.InMemory object at 0x000002074B816CF0>
+
+    def test_a_backup_moves_everything_to_another_computer(tmp_path, keys):
+        state, mem, book = _here(tmp_path / "old")
+        made = backup.export(tmp_path / "chatmon-backup.zip", state, mem, book)
+        assert made.summary() == "your settings, 1 thing remembered, 1 note, 1 reminder and 2 chats"
+        new_state, new_mem, new_book = State(tmp_path / "new" / "state.json", {"x": 10}), memory.Memory([], tmp_path / "new" / "memory.json"), chats.ChatBook(tmp_path / "new" / "chats")
+        contents = backup.read(tmp_path / "chatmon-backup.zip")
+        said = backup.bring_back(contents, new_state, new_mem, new_book)
+>       assert said == "Brought back your settings, 1 thing remembered, 1 note, 1 reminder and 2 chats."
+E       AssertionError: assert 'Brought back... and 2 chats.' == 'Brought back... and 2 chats.'
+E         
+E         - Brought back your settings, 1 thing remembered, 1 note, 1 reminder and 2 chats.
+E         + Brought back: your settings, 1 thing remembered, 1 note, 1 reminder and 2 chats.
+E         ?             +
+
+tests\test_backup.py:56: AssertionError
+1 failed in 0.69s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.71s
+
+=== summary
+PASS M8-01-english-list-broken
+PASS M8-01-english-sentence-changed
