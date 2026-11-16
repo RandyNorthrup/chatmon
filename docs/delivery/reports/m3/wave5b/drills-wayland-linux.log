@@ -1,0 +1,530 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/measure/docs/delivery/reports/m3/wave5b/drill-spec-wayland-linux.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-zhh_oorp
+copied 318 files
+
+=== drill M3-04-content (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown tests/test_sway.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales
+-- green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 13.04s
+-- red: exit 1
+        answer = self._read(seconds)
+        if "error" in answer:
+>           raise ProbeError(f"{answer['error']}\nin:\n{code}")
+E           sway_session.ProbeError: Traceback (most recent call last):
+E             File "/var/tmp/chatmon-wsl-drill-zhh_oorp/tests/sway_session.py", line 648, in command
+E               exec(compile(message["code"], "<probe>", "exec"), ns)  # noqa: S102  # the test's own code, in its own process
+E               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             File "<probe>", line 1, in <module>
+E           AttributeError: 'NoneType' object has no attribute 'getRect'
+E           
+E           in:
+E           result = dict(buffers=[[b.width, b.height] for b in surface._buffers], box=list(surface._box.getRect()), size=surface._size, scale=surface._scale(), backdrop=[surface._backdrop.width, surface._backdrop.height])
+
+tests/sway_session.py:463: ProbeError
+_ test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[2560x1440-1.5] _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-979/test_buffers_are_the_size_of_w1')
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7136eb5689b0>
+mode = '2560x1440', scale = 1.5
+
+    @pytest.mark.parametrize("mode, scale", [("3840x2160", 2), ("2560x1440", 1.5)])
+    def test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales(tmp_path, qapp, mode, scale):
+        _needs()
+        session = Session(tmp_path, mode=mode, scale=scale)
+        try:
+            probe = Probe(session)
+            try:
+                probe.call(SETUP)
+>               got = probe.call(
+                    "result = dict(buffers=[[b.width, b.height] for b in surface._buffers], box=list(surface._box.getRect()), "
+                    "size=surface._size, scale=surface._scale(), backdrop=[surface._backdrop.width, surface._backdrop.height])"
+                )
+
+tests/test_sway.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sway_session.Probe object at 0x7136eb54afd0>
+code = 'result = dict(buffers=[[b.width, b.height] for b in surface._buffers], box=list(surface._box.getRect()), size=surface._size, scale=surface._scale(), backdrop=[surface._backdrop.width, surface._backdrop.height])'
+seconds = 30.0, settle = 0.05
+
+    def call(self, code: str, seconds: float = 30.0, settle: float = 0.05):
+        """Run `code` in the probe once it has handled what sway sent it (for `settle` s at least); its `result`."""
+        assert self.proc.stdin is not None
+        self.proc.stdin.write(json.dumps({"code": code, "settle": settle}) + "\n")
+        self.proc.stdin.flush()
+        answer = self._read(seconds)
+        if "error" in answer:
+>           raise ProbeError(f"{answer['error']}\nin:\n{code}")
+E           sway_session.ProbeError: Traceback (most recent call last):
+E             File "/var/tmp/chatmon-wsl-drill-zhh_oorp/tests/sway_session.py", line 648, in command
+E               exec(compile(message["code"], "<probe>", "exec"), ns)  # noqa: S102  # the test's own code, in its own process
+E               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             File "<probe>", line 1, in <module>
+E           AttributeError: 'NoneType' object has no attribute 'getRect'
+E           
+E           in:
+E           result = dict(buffers=[[b.width, b.height] for b in surface._buffers], box=list(surface._box.getRect()), size=surface._size, scale=surface._scale(), backdrop=[surface._backdrop.width, surface._backdrop.height])
+
+tests/sway_session.py:463: ProbeError
+3 failed in 12.84s
+-- restored green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 11.68s
+
+=== drill M3-04-move-waits (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.14s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__ test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place ___
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7be1f89c51d0>
+
+    @linux_only
+    def test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place(qapp):
+        conn, server, _stage, surf, ids = _configured(qapp, extra=CONTENT, before_configure=lambda s, _sv, _i: s.set_extent(QRect(10, 10, 50, 50)))
+        subsurface, sub, _parent = wayland.decode("noo", named(ids["setup"], ids["bound"]["wl_subcompositor"], layer.SUBCOMPOSITOR_GET_SUBSURFACE)[0])
+        callbacks = [wayland.decode("n", p)[0] for p in named(ids["first"], sub, layer.SURFACE_FRAME)]
+    
+        def frame():
+            server.send(callbacks[-1], 0, "u", 0)
+            conn.read()
+    
+        frame()
+        surf.damage(QRegion(10, 10, 50, 50))
+        surf._present()  # the first is still the compositor's: a second
+        callbacks.extend(wayland.decode("n", p)[0] for p in named(server.requests(), sub, layer.SURFACE_FRAME))
+        frame()
+        assert len(surf._buffers) == 2 and all(b.busy for b in surf._buffers)
+        surf.set_extent(QRect(700, 500, 50, 50))  # both held by the compositor
+        surf._present()
+        reqs = server.requests()
+>       assert not named(reqs, subsurface, layer.SUBSURFACE_SET_POSITION) and not named(reqs, sub, layer.SURFACE_COMMIT)
+E       AssertionError: assert (not [b'\x95\x02\x00\x00\xcd\x01\x00\x00'])
+E        +  where [b'\x95\x02\x00\x00\xcd\x01\x00\x00'] = named([(25, 1, b'\x95\x02\x00\x00\xcd\x01\x00\x00')], 25, 1)
+E        +    where 1 = layer.SUBSURFACE_SET_POSITION
+
+tests/test_wayland.py:586: AssertionError
+1 failed in 1.04s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.02s
+
+=== drill M3-04-placed (M3-04) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.16s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else _
+
+sway = <sway_session.Session object at 0x79c844d0d010>
+chatmon = <sway_session.Probe object at 0x79c844d0d2b0>
+hands = <sway_session.Input object at 0x79c844d0d400>
+
+    def test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else(sway, chatmon, hands):
+        """The subsurface goes with the chatmon, its new place and pixels shown together: in every frame sway shows,
+        the chatmon is where the stage put it, once, with no trail where it was."""
+        rect = penguin(chatmon)
+        x, y = centre(rect)
+        hands.move(x, y)
+        hands.button(sway_session.BTN_LEFT, True)
+        seen = []
+        for step in range(1, 6):
+            hands.move(x - 110 * step, y)  # each step farther than the subsurface's margin: it moves every time
+            chatmon.call("settled()", settle=0.15)
+            shot = sway.screenshot(f"drag-{step}")
+            now = penguin(chatmon)
+            columns = drawn_columns(shot, (0, now[1] + now[3] * 0.3, 1280, now[3] * 0.4), sway.background)
+>           seen.append((now, min(columns), max(columns)))
+                              ^^^^^^^^^^^^
+E           ValueError: min() iterable argument is empty
+
+tests/test_sway.py:293: ValueError
+1 failed in 5.73s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.36s
+
+=== drill M3-RC-input (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_layer_surface_draws_and_takes_clicks_only_on_the_penguin tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.28s
+-- red: exit 1
+        assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY) == [struct.pack("<I", 0)]  # never the keyboard
+        assert named(reqs, layer_id, layer.LAYER_SURFACE_SET_EXCLUSIVE_ZONE) == [struct.pack("<i", -1)]
+        assert named(reqs, surface_id, layer.SURFACE_SET_INPUT_REGION)  # an empty one, before anything's drawn
+        assert not [r for r in reqs if r[0] == surface_id and r[1] == layer.SURFACE_ATTACH]  # nothing before configure
+    
+        # Configured at 1280x800 on a scale-2 screen: draw a patch and make it the only clickable part.
+        server.send(surface_id, layer.EV_SURFACE_PREFERRED_BUFFER_SCALE, "i", 2)
+        server.send(layer_id, layer.EV_LAYER_SURFACE_CONFIGURE, "uuu", 7, 1280, 800)
+        conn.read()
+        surf.damage(QRegion(10, 10, 50, 50))
+        surf.set_input([QRect(10, 10, 50, 50)])
+        surf._present()
+        reqs = server.requests()
+        assert named(reqs, layer_id, layer.LAYER_SURFACE_ACK_CONFIGURE) == [struct.pack("<I", 7)]
+        assert struct.pack("<i", 2) in named(reqs, surface_id, layer.SURFACE_SET_BUFFER_SCALE)
+        (pool_req,) = named(reqs, bound["wl_shm"][0], layer.SHM_CREATE_POOL)
+        _pool, size = wayland.decode("ni", pool_req)
+        assert size == 2560 * 1600 * 4
+        (buffer_req,) = [p for o, op, p in reqs if op == layer.SHM_POOL_CREATE_BUFFER and o == _pool]
+        _buf, _offset, w, h, stride, fmt = wayland.decode("niiiiu", buffer_req)
+        assert (w, h, stride, fmt) == (2560, 1600, 2560 * 4, layer.SHM_ARGB8888)
+        assert named(reqs, surface_id, layer.SURFACE_ATTACH)
+        (damage,) = named(reqs, surface_id, layer.SURFACE_DAMAGE_BUFFER)
+        assert wayland.decode("iiii", damage) == [0, 0, 2560, 1600]  # a new surface: all of it
+        regions = {wayland.decode("n", p)[0] for p in named(reqs, bound["wl_compositor"][0], layer.COMPOSITOR_CREATE_REGION)}
+        region_adds = [wayland.decode("iiii", p) for o, op, p in reqs if o in regions and op == layer.REGION_ADD]
+>       assert region_adds == [[10, 10, 50, 50]]  # the only part that takes clicks
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [[0, 0, 32768, 32768]] == [[10, 10, 50, 50]]
+E         
+E         At index 0 diff: [0, 0, 32768, 32768] != [10, 10, 50, 50]
+E         Use -v to get more diff
+
+tests/test_wayland.py:378: AssertionError
+_______ test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else _______
+
+sway = <sway_session.Session object at 0x7ad2877a4050>
+chatmon = <sway_session.Probe object at 0x7ad2877a42f0>
+hands = <sway_session.Input object at 0x7ad2877a4440>
+
+    def test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else(sway, chatmon, hands):
+        chatmon.call(DESK_WINDOW)
+        chatmon.call("clicked = []; stage.clicked.connect(lambda: clicked.append(1))")
+        x, y, w, h = penguin(chatmon)
+        hands.click(300, 200)  # nowhere near it
+        hands.click(x + 2, y + 2)  # inside its frame, but where the sprite is see-through
+        hands.click(*centre((x, y, w, h)))  # on it
+        got = chatmon.call("result = dict(desk=len(desk.presses), stage=len(clicked), box=box.isVisible())", settle=0.3)
+>       assert got == {"desk": 2, "stage": 1, "box": True}  # the click on it opened the ask box; the others went through
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert {'desk': 0, '... 'box': False} == {'desk': 2, '..., 'box': True}
+E         
+E         Differing items:
+E         {'box': False} != {'box': True}
+E         {'desk': 0} != {'desk': 2}
+E         {'stage': 0} != {'stage': 1}
+E         Use -v to get more diff
+
+tests/test_sway.py:149: AssertionError
+2 failed in 6.12s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.10s
+
+=== drill M3-RC-keyboard (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive tests/test_sway.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.67s
+-- red: exit 1
+_ test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x78f2a7db0af0>
+
+    @linux_only
+    def test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive(qapp):
+        """sway 1.12 gives the keyboard back to the window it came from as an exclusive layer surface goes on_demand
+        (tests/test_sway.py sees it happen): the overlay takes it again at once and keeps grabs exclusive from then on."""
+        conn, server, stage, surf, ids = _configured(qapp)
+        surf.set_input([QRect(100, 100, 200, 100)])
+        surf._present()
+        server.requests()
+        surf.focus_keyboard(True)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 1, ids["surface"], b"")
+        server.send(ids["pointer"], layer.EV_POINTER_ENTER, "uoff", 2, ids["surface"], 150.0, 150.0)
+        conn.read()
+        conn.flush()
+        assert interactivity(server.requests(), ids) == [layer.KEYBOARD_EXCLUSIVE, layer.KEYBOARD_ON_DEMAND]
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_LEAVE, "uo", 3, ids["surface"])  # straight away, with nothing done
+        conn.read()
+        conn.flush()
+>       assert interactivity(server.requests(), ids) == [layer.KEYBOARD_EXCLUSIVE]  # taken back
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [] == [1]
+E         
+E         Right contains one more item: 1
+E         Use -v to get more diff
+
+tests/test_wayland.py:818: AssertionError
+_______ test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open _______
+
+sway = <sway_session.Session object at 0x78f2a86f82f0>
+chatmon = <sway_session.Probe object at 0x78f2a86f8590>
+hands = <sway_session.Input object at 0x78f2a86f86e0>
+
+    def test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open(sway, chatmon, hands):
+        chatmon.call(DESK_WINDOW)
+        hands.move(300, 200)
+        hands.type("ab")
+        hands.click(*centre(penguin(chatmon)))  # the ask box, on the overlay
+        chatmon.call("until(lambda: surface._kb_focus, 5)", settle=0.2)
+        hands.type("hello")
+        got = chatmon.call("result = dict(desk=desk.keys[:], entry=box.entry.text(), hosted=stage.hosts_windows(), mode=surface._kb_mode, "
+                           "kept=surface._kb_focus, holds=surface._on_demand_holds)")
+        # sway (1.12) takes the keyboard back from an on_demand layer surface on the commit that makes it one: the overlay
+        # saw that on the handover, took the keyboard again, and keeps it exclusive while the box is open.
+>       assert got == {"desk": ["a", "b"], "entry": "hello", "hosted": True, "mode": 1, "kept": True, "holds": False}
+E       AssertionError: assert {'desk': ['a'...mode': 2, ...} == {'desk': ['a'...mode': 1, ...}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'mode': 2} != {'mode': 1}
+E         {'entry': ''} != {'entry': 'hello'}
+E         {'desk': ['a', 'b', 'h', 'e', 'l', 'l', ...]} != {'desk': ['a', 'b']}
+E         {'kept': False} != {'kept': True}
+E         {'holds': True} != {'holds': False}
+E         Use -v to get more diff
+
+tests/test_sway.py:163: AssertionError
+2 failed in 11.32s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.78s
+
+=== drill M3-14-sway-menu (M3-14) on chatmon/penguin.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 7.13s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back _
+
+reader_session = <sway_session.Session object at 0x7836b43fd160>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7836b4387750>
+
+    def test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back(reader_session, qapp):
+        session = reader_session
+        probe = Probe(session)
+        hands = Input(session)
+        try:
+            probe.call(SETUP)
+            _screen_reader(session, probe)
+            rect = penguin(probe)
+            hands.click(*centre(rect))
+            probe.call("until(lambda: box.isVisible() and box.windowHandle().isExposed(), 5)", settle=0.3)
+            hands.type("ab")
+            hands.click(*centre(rect), BTN_RIGHT)  # the penguin's menu: on the overlay, Qt's menus having no window to go with
+            assert probe.call("until(lambda: surface._kb_focus, 5); result = stage.menu.is_open()", settle=0.2)
+            hands.key("Down")
+            hands.key("Down")
+            got = probe.call("result = dict(hover=stage.menu.hover, entry=box.entry.text())", settle=0.2)
+>           assert got == {"hover": [0, 1], "entry": "ab"}  # the menu has the keys, the box none of them
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert {'hover': None, 'entry': 'ab'} == {'hover': [0,...'entry': 'ab'}
+E             
+E             Omitting 1 identical items, use -vv to show
+E             Differing items:
+E             {'hover': None} != {'hover': [0, 1]}
+E             Use -v to get more diff
+
+tests/test_sway.py:365: AssertionError
+1 failed in 10.97s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.70s
+
+=== drill M3-14-sway-bubble (M3-14) on chatmon/penguin.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.97s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses _
+
+reader_session = <sway_session.Session object at 0x7c106a37d160>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7c106a3db750>
+
+    def test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses(reader_session, qapp):
+        session = reader_session
+        probe = Probe(session)
+        hands = Input(session)
+        try:
+            probe.call(SETUP)
+            state = _screen_reader(session, probe)
+            assert state["hosted"] is False and state["reader"] is not None
+            hands.click(*centre(penguin(probe)))
+            probe.call("until(lambda: box.isVisible() and box.windowHandle().isExposed(), 5)", settle=0.3)
+            (view,) = session.views()
+            r = view["rect"]
+            assert view["pid"] == state["pid"] and view["floating"] and view["focused"]  # not tiled over your windows; focused
+            assert abs(r["x"] - (1280 - r["width"]) / 2) <= 1 and abs(r["y"] - (800 - r["height"]) / 2) <= 1  # sway centres it
+            hands.type("hi there")
+            assert probe.call("result = box.entry.text()", settle=0.2) == "hi there"
+            # A bubble while it's open: over the chatmon's head, not over the box (whose place only sway knows).
+            probe.call("stage.show_message('A reminder', 'Stretch your legs.'); settled()", settle=0.4)
+            bx, by, bw, bh = probe.call("result = list(stage._bubble_box.getRect())")
+>           assert bx + bw <= r["x"] or bx >= r["x"] + r["width"] or by + bh <= r["y"] or by >= r["y"] + r["height"]
+E           assert ((488.0 + 224.0) <= 450 or 488.0 >= (450 + 380) or (387.0 + 119.046875) <= 311 or 387.0 >= (311 + 177))
+
+tests/test_sway.py:341: AssertionError
+1 failed in 6.98s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.88s
+
+=== drill M3-14-hosting (M3-14) on chatmon/app.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses tests/test_sway.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader tests/test_sway.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said
+-- green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 52.90s
+-- red: exit 1
+a_window = True
+
+    @pytest.mark.parametrize("setting, a_window", [("auto", True), ("off", False)])
+    def test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader(reader_session, qapp, setting, a_window):
+        """Why the box becomes a window for a screen reader. Drawn on the overlay (Settings' "accessible ask box" off),
+        Qt still lists it in AT-SPI's tree, but it is never a window anyone activates: no window:activate, so a screen
+        reader neither announces it nor follows what's typed in it (Orca, below). As a window of its own, it is."""
+        session = reader_session
+        probe = Probe(session)
+        hands = Input(session)
+        try:
+            probe.call(SETUP + f"c.config['accessibility']['accessible_ask_box'] = '{setting}'")
+            state = _screen_reader(session, probe)
+>           assert state["hosted"] is not a_window and state["reader"] is not None
+E           assert (True is not True)
+
+tests/test_sway.py:441: AssertionError
+_ test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-1000/test_with_orca_the_box_as_a_wi0')
+qapp = <PyQt6.QtWidgets.QApplication object at 0x77b3213f39d0>
+
+    def test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said(tmp_path, qapp):
+        _needs(orca=True)
+        session = Session(tmp_path, atspi=True, orca=True)
+        try:
+            probe = Probe(session)
+            hands = Input(session)
+            try:
+                probe.call(SETUP)
+>               state = probe.call("c._reader_seen = float('-inf'); c._check_hosting(); result = dict(hosted=stage.hosts_windows(), reader=c._reader.name)")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_sway.py:498: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sway_session.Probe object at 0x77b3215e88a0>
+code = "c._reader_seen = float('-inf'); c._check_hosting(); result = dict(hosted=stage.hosts_windows(), reader=c._reader.name)"
+seconds = 30.0, settle = 0.05
+
+    def call(self, code: str, seconds: float = 30.0, settle: float = 0.05):
+        """Run `code` in the probe once it has handled what sway sent it (for `settle` s at least); its `result`."""
+        assert self.proc.stdin is not None
+        self.proc.stdin.write(json.dumps({"code": code, "settle": settle}) + "\n")
+        self.proc.stdin.flush()
+        answer = self._read(seconds)
+        if "error" in answer:
+>           raise ProbeError(f"{answer['error']}\nin:\n{code}")
+E           sway_session.ProbeError: Traceback (most recent call last):
+E             File "/var/tmp/chatmon-wsl-drill-zhh_oorp/tests/sway_session.py", line 648, in command
+E               exec(compile(message["code"], "<probe>", "exec"), ns)  # noqa: S102  # the test's own code, in its own process
+E               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             File "<probe>", line 1, in <module>
+E           AttributeError: 'NoneType' object has no attribute 'name'
+E           
+E           in:
+E           c._reader_seen = float('-inf'); c._check_hosting(); result = dict(hosted=stage.hosts_windows(), reader=c._reader.name)
+
+tests/sway_session.py:463: ProbeError
+3 failed, 1 passed in 52.12s
+-- restored green: exit 0, 4 passed
+....                                                                     [100%]
+4 passed in 56.53s
+
+=== drill M3-RC-clipboard-v3 (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_the_clipboard_is_the_overlays_own tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 9.93s
+-- red: exit 1
+        assert surf.clipboard_has_text()
+    
+        got = []
+        surf.paste(got.append)
+        (receive,) = named(server.requests(), offer, layer.DATA_OFFER_RECEIVE)
+        assert wayland.decode("sh", receive) == ["text/plain;charset=utf-8"]
+        write_end = server.fds[-1]  # the pasting app writes into it, then closes it
+        os.write(write_end, "héllo".encode())
+        os.close(write_end)
+        deadline = time.monotonic() + 3
+        while not got and time.monotonic() < deadline:
+            qapp.processEvents()
+        assert got == ["héllo"]
+    
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
+        conn.read()
+        surf.copy("copied ✓")
+>       assert qapp.clipboard().text() == "copied ✓"  # Qt's too, for Chatmon's own windows: they'd ask this connection, on the thread they block
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert '' == 'copied ✓'
+E         
+E         - copied ✓
+
+tests/test_wayland.py:992: AssertionError
+_ test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows _
+
+sway = <sway_session.Session object at 0x72b41a2a8440>
+chatmon = <sway_session.Probe object at 0x72b41a2a86e0>
+hands = <sway_session.Input object at 0x72b41a2a8830>
+
+    def test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows(sway, chatmon, hands):
+        """The overlay keeps its own clipboard (Qt's can't reach what's on it): another app's copy pasted into the ask
+        box, the box's copy pasted by another app (wl-clipboard's, separate processes) and by Chatmon's own windows,
+        which read Qt's clipboard in the same process: before, they froze two seconds and got nothing."""
+        if shutil.which("wl-copy") is None:
+            if os.environ.get("CHATMON_SWAY") == "1":
+                pytest.fail("CHATMON_SWAY=1, but wl-clipboard isn't installed")
+            pytest.skip("wl-clipboard isn't installed (CI's sway job installs it)")
+        chatmon.call(DESK_WINDOW)
+        subprocess.run(["wl-copy", "from another app"], env=sway.env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, check=True)
+        hands.click(*centre(penguin(chatmon)))
+        chatmon.call("until(lambda: surface._kb_focus and stage.clipboard_has_text(), 5)", settle=0.2)
+        hands.key("v", mods=4)  # Ctrl+V
+        assert chatmon.call("until(lambda: box.entry.text() != '', 5); result = box.entry.text()") == "from another app"
+        hands.key("a", mods=4)
+        hands.type("mine")
+        hands.key("a", mods=4)
+        hands.key("c", mods=4)  # Ctrl+C in the box: the overlay's clipboard
+        chatmon.call("settled()", settle=0.2)
+        pasted = subprocess.run(["wl-paste", "--no-newline"], env=sway.env, capture_output=True, text=True, timeout=10, check=True)
+        assert pasted.stdout == "mine"
+        hands.key("Escape")  # the box closes; the desk window, Chatmon's own, has the keyboard
+        got = chatmon.call("import time; t = time.monotonic(); text = QtWidgets.QApplication.clipboard().text(); result = [text, time.monotonic() - t]", settle=0.3)
+>       assert got[0] == "mine" and got[1] < 0.5
+E       AssertionError: assert ('' == 'mine'
+E         
+E         - mine)
+
+tests/test_sway.py:218: AssertionError
+2 failed in 10.73s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 8.28s
+
+=== summary
+PASS M3-04-content
+PASS M3-04-move-waits
+PASS M3-04-placed
+PASS M3-RC-input
+PASS M3-RC-keyboard
+PASS M3-14-sway-menu
+PASS M3-14-sway-bubble
+PASS M3-14-hosting
+PASS M3-RC-clipboard-v3

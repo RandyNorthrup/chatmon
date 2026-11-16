@@ -1,0 +1,7 @@
+
+=== summary
+PASS M3-04-buffers
+PASS M3-04-trim
+PASS M3-09-latin
+PASS M3-09-overlay
+PASS M3-10-xserver
