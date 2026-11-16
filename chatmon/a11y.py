@@ -13,9 +13,10 @@ notifications; Orca reads GNOME's). `announce()` picks.
   still keeps it (before 2.62), GNOME's screen-reader-enabled setting, or its own process, and the notification
   says it (linuxsession.ScreenReaders, which hears each without waiting).
 - macOS, VoiceOver: NSAccessibilityAnnouncementRequestedNotification, posted on the app. VoiceOver speaks it for
-  the app in front (with the chat open, Chatmon is); from the background it may stay silent. So while Chatmon
-  isn't in front, announcements wait (the last few) and are said when you come to it; or, if you chose it
-  (`set_speech_fallback`), macOS's own voice says them at once.
+  the app in front (with the chat open, Chatmon is); from the background it may stay silent, and it drops one
+  that comes while it moves to Chatmon. So while Chatmon isn't in front, announcements wait (the last few) and are
+  said a moment after you come to it; or, if you chose it (`set_speech_fallback`), macOS's own voice says them at
+  once.
   https://developer.apple.com/documentation/appkit/nsaccessibility-swift.struct/notification/announcementrequested
 - Windows: UI Automation's notification event (winuia.py) while Chatmon is in front; NVDA ignores those from apps
   in the background, so then the notification. https://github.com/nvaccess/nvda/blob/master/source/NVDAObjects/UIA/__init__.py
@@ -27,10 +28,11 @@ import ctypes
 import logging
 import re
 import sys
+import time
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt
+from PyQt6.QtCore import QCoreApplication, QObject, QProcess, Qt, QTimer
 
 from .i18n import _, either
 
@@ -227,10 +229,18 @@ def set_speech_fallback(on: bool) -> None:
 
 class VoiceOver(QObject):
     """Announcements for VoiceOver: posted at once while Chatmon is the active app; otherwise held (the last
-    `HELD`) and posted together when it becomes active, or, with the speech fallback on, said by `say` at once.
+    `HELD`) and posted together SETTLE_MS after it becomes active, or, with the speech fallback on, said by `say`
+    at once. VoiceOver drops an announcement that comes while it moves to an app that has just become active (or
+    just started): on macOS 26.7, every one posted at that moment, or a second after, went unsaid, and each posted
+    2.5 s after was said. So what's held, and what's said in that first moment, waits until then.
     `post`, `active` and `speak` are AppKit's announcement, Qt's application state and macOS's `say` command."""
 
     HELD = 5
+    # From Chatmon becoming active (or starting active) to VoiceOver taking its announcements. Measured with VoiceOver
+    # itself (docs/delivery/reports/release/screen-readers): at 1 s it still dropped them, at 2.5 s and 4 s it said
+    # every one. AppKit has no word for when VoiceOver has finished announcing the newly active window (no
+    # counterpart of iOS's UIAccessibilityAnnouncementDidFinishNotification), so it's a time.
+    SETTLE_MS = 2500
 
     def __init__(self, post: Callable[[str, bool], None] | None = None, active: Callable[[], bool] | None = None,
                  speak: Callable[[str], None] | None = None):
@@ -243,20 +253,43 @@ class VoiceOver(QObject):
         self.held: list[tuple[str, bool]] = []
         self._voice: QProcess | None = None
         self._to_say: list[str] = []
+        self._settled_at: float | None = time.monotonic() + self.SETTLE_MS / 1000 if self._active() else None
+        self._settle = QTimer(self)
+        self._settle.setSingleShot(True)
+        self._settle.timeout.connect(self._post_held)
         app: QCoreApplication | None = QGuiApplication.instance()
         if isinstance(app, QGuiApplication):  # only a GUI application has a state (and Chatmon's always is one)
             app.applicationStateChanged.connect(self.state_changed)
 
     def say(self, text: str, important: bool = False) -> None:
-        if self._active():
+        wait = self._settling_ms()
+        if self._active() and not wait:
             self._post(text, important)
+        elif self._active():  # just became active: VoiceOver would drop it yet
+            self.held = [*self.held, (text, important)][-self.HELD:]
+            self._settle.start(wait)
         elif _speech_fallback:
             self._speak(text)
         else:
             self.held = [*self.held, (text, important)][-self.HELD:]
 
     def state_changed(self, state) -> None:
-        if state == Qt.ApplicationState.ApplicationActive and self.held:
+        if state == Qt.ApplicationState.ApplicationActive:
+            self._settled_at = time.monotonic() + self.SETTLE_MS / 1000
+            if self.held:
+                self._settle.start(self.SETTLE_MS)
+        else:
+            self._settled_at = None
+            self._settle.stop()
+
+    def _settling_ms(self) -> int:
+        """How long until VoiceOver takes Chatmon's announcements (0: it does now)."""
+        if self._settled_at is None:
+            return 0
+        return max(0, round((self._settled_at - time.monotonic()) * 1000))
+
+    def _post_held(self) -> None:
+        if self.held and self._active():
             held, self.held = self.held, []
             self._post(" ".join(text for text, _ in held), any(important for _, important in held))
 

@@ -1,0 +1,19 @@
+{"t": 1794781264.914, "event": "start", "pid": 3327, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794781268.358, "event": "reader", "found": null}
+{"t": 1794781280.006, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781285.156, "event": "focus", "widget": null}
+{"t": 1794781289.163, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781294.163, "event": "focus", "widget": null}
+{"t": 1794781298.068, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781301.226, "event": "focus", "widget": null}
+{"t": 1794781305.176, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781308.257, "event": "focus", "widget": null}
+{"t": 1794781312.195, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781315.506, "event": "focus", "widget": null}
+{"t": 1794781319.361, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781322.691, "event": "focus", "widget": null}
+{"t": 1794781326.863, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781332.155, "event": "focus", "widget": null}
+{"t": 1794781336.312, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794781341.616, "event": "focus", "widget": null}
+{"t": 1794781341.653, "event": "exit", "code": 0}

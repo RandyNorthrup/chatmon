@@ -1,0 +1,34 @@
+{"t": 1794776077.169, "at": "20:54:37.169", "speaking": "[LangChangeCommand ('en_US'), 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794776077.42, "at": "20:54:37.420", "speaking": "[LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', CancellableSpeech (still valid)]"}
+{"t": 1794776106.491, "at": "20:55:06.491", "speaking": "[LangChangeCommand ('en_US'), 'Ask Chatmon', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794776106.491, "at": "20:55:06.491", "speaking": "[LangChangeCommand ('en_US'), 'Ask Chatmon', 'edit', 'Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work', CancellableSpeech (still valid), 'blank']"}
+{"t": 1794776115.513, "at": "20:55:15.513", "speaking": "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"}
+{"t": 1794776118.771, "at": "20:55:18.770", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776118.771, "at": "20:55:18.770", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776118.771, "at": "20:55:18.770", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.022, "at": "20:55:19.021", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.022, "at": "20:55:19.021", "speaking": "[LangChangeCommand ('en_US'), 'colon', EndUtteranceCommand()]"}
+{"t": 1794776119.022, "at": "20:55:19.021", "speaking": "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"}
+{"t": 1794776119.022, "at": "20:55:19.021", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.272, "at": "20:55:19.272", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.272, "at": "20:55:19.272", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.272, "at": "20:55:19.272", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.272, "at": "20:55:19.272", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.523, "at": "20:55:19.523", "speaking": "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"}
+{"t": 1794776119.523, "at": "20:55:19.523", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.523, "at": "20:55:19.523", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.523, "at": "20:55:19.523", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.774, "at": "20:55:19.773", "speaking": "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"}
+{"t": 1794776119.774, "at": "20:55:19.773", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.774, "at": "20:55:19.773", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776119.774, "at": "20:55:19.773", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776120.024, "at": "20:55:20.024", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776120.024, "at": "20:55:20.024", "speaking": "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]"}
+{"t": 1794776121.027, "at": "20:55:21.027", "speaking": "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']"}
+{"t": 1794776121.278, "at": "20:55:21.277", "speaking": "[LangChangeCommand ('en_US'), 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794776121.278, "at": "20:55:21.277", "speaking": "[LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', CancellableSpeech (still valid)]"}
+{"t": 1794776126.293, "at": "20:55:26.293", "speaking": "[LangChangeCommand ('en_US'), 'out - File Explorer', CancellableSpeech (still valid)]"}
+{"t": 1794776126.293, "at": "20:55:26.293", "speaking": "[LangChangeCommand ('en_US'), 'Items View', 'list', CancellableSpeech (still valid)]"}
+{"t": 1794776126.293, "at": "20:55:26.293", "speaking": "[LangChangeCommand ('en_US'), 'chatmon-stdout', 'not selected', '1 of 7', CancellableSpeech (still valid)]"}
+{"t": 1794776206.244, "at": "20:56:46.244", "speaking": "[LangChangeCommand ('en_US'), 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', 'window', CancellableSpeech (still valid)]"}
+{"t": 1794776206.244, "at": "20:56:46.244", "speaking": "[LangChangeCommand ('en_US'), 'Default', 'terminal', 'C:\\\\ProgramData\\\\GitHub\\\\HostedComputeAgent\\\\hosted-compute-agent', CancellableSpeech (still valid)]"}

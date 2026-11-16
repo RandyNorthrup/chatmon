@@ -1,0 +1,8 @@
+# The opt-in test that runs the real uv on the real lists (it skips unless CHATMON_PINS_NETWORK=1), at 806bb34, 2026-11-15T20:49:45Z
+# uv on PATH: the one requirements-pins.txt installs, as in real-run.log
+$ uv --version
+uv 0.13.6 (329bf9448 2026-10-26 x86_64-pc-windows-msvc)
+$ CHATMON_PINS_NETWORK=1 python -m pytest -q -p no:cacheprovider tests/test_pins.py -k real_uv   (CHATMON_INSTANCE=pins-net-2)
+.                                                                        [100%]
+1 passed, 22 deselected in 5.96s
+# exit 0

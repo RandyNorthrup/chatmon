@@ -83,6 +83,17 @@ def test_every_control_shows_a_focus_outline(box, name):
         assert ring(box, control, focus) == 4, f"{what} shows its focus ({name})"
 
 
+def test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field(box):
+    """VoiceOver's cursor lands on the title first and, with "keyboard focus follows the VoiceOver cursor", gives the
+    title the focus: typing must still reach the field."""
+    open_chat(box, activate=True)
+    box.activateWindow()
+    spin(0.05)
+    box.title.setFocus(Qt.FocusReason.OtherFocusReason)
+    spin(0.01)
+    assert QApplication.focusWidget() is box.entry  # the title "has" it only through its proxy
+
+
 @pytest.mark.parametrize("name", STYLES)
 def test_the_focus_colour_stands_out_from_the_bubble(qapp, name):
     c = styles.get(name).colours()

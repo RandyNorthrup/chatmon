@@ -12,7 +12,7 @@ from packaging.version import Version
 
 REPO = Path(__file__).resolve().parent.parent
 PACKAGING = REPO / "packaging"
-LISTS = ["requirements", "requirements-build", "requirements-test", "requirements-dev"]
+LISTS = ["requirements", "requirements-build", "requirements-test", "requirements-dev", "requirements-pins"]
 PIN = re.compile(r"([A-Za-z0-9][A-Za-z0-9._-]*)==([^\s;\\]+)")
 
 

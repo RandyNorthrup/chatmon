@@ -1,0 +1,130 @@
+== state 2026-11-15 12:44:25 -08:00, testpc2\technician
+== state before 2026-11-15 12:44:25 -08:00
+last boot: 2026-11-12 11:59:51
+-- processes (screen readers, captions, Python, Explorer windows)
+-- registry keys (each listed with its values)
+  key HKEY_CURRENT_USER\Software\Microsoft\Narrator\NoRoam
+HKCU:\Software\Microsoft\LiveCaptions : absent
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AppLexicons
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AppLexicons\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AudioInput
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AudioInput\TokenEnums
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AudioInput\TokenEnums\MMAudioIn
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AudioOutput
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AudioOutput\TokenEnums
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\AudioOutput\TokenEnums\MMAudioOut
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Chinese
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Chinese\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\English
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\English\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\French
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\French\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\German
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\German\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Japanese
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Japanese\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Spanish
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Spanish\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\TraditionalChinese
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\TraditionalChinese\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Universal
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\PhoneConverters\Tokens\Universal\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\LocaleHandler
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Lookup
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Lts
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Models
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Models\1033
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Models\1033\L1033
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\Models\1033\L1033\AMs
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Recognizers\Tokens\MS-1033-110-WINMO-DNN\TextNorm
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\SpeechUXPlugins
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\SpeechUXPlugins\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\SpeechUXPlugins\Tokens\DebugPlugin
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\SpeechUXPlugins\Tokens\DebugPlugin\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\SpeechUXPlugins\Tokens\SpeechUXPlugin
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\SpeechUXPlugins\Tokens\SpeechUXPlugin\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\UXLanguages
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\UXLanguages\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\UXLanguages\Tokens\en-US
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\UXLanguages\Tokens\en-US\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\VoiceActivation
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\VoiceActivation\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\VoiceActivation\Tokens\en-US-HW
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\VoiceActivation\Tokens\en-US-HW\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\VoiceActivation\Tokens\en-US-SW
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\VoiceActivation\Tokens\en-US-SW\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens\MSTTS_V110_enUS_DavidM
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens\MSTTS_V110_enUS_DavidM\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens\MSTTS_V110_enUS_MarkM
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens\MSTTS_V110_enUS_MarkM\Attributes
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens\MSTTS_V110_enUS_ZiraM
+  key HKEY_CURRENT_USER\Software\Microsoft\Speech_OneCore\Isolated\vijg8X-e2LDjfVKN-HP9oIRe2l8-sVQBlmFW_LvwpQc\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech_OneCore\Voices\Tokens\MSTTS_V110_enUS_ZiraM\Attributes
+  key HKEY_CURRENT_USER\Software\Classes\AppUserModelId\Acrobat.Reader.Notification.Manager
+  key HKEY_CURRENT_USER\Software\Classes\AppUserModelId\Adobe.Acrobat.Notification.Manager
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Adobe.Acrobat.Notification.Manager
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Logi.OptionsPlus.App
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Microsoft.YourPhone_8wekyb3d8bbwe!YourPhoneSetup
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\NotifyIconGeneratedAumid_8351446704211087619
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.Defender.SecurityCenter
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.AutoPlay
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.CloudExperienceHostLauncherCustom
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Print.Notification
+  key HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.StartupApp
+  value HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings : QuietHoursTelemetryLastRun
+  value HKCU:\Software\Microsoft\Windows\CurrentVersion\Run : Mozilla-Firefox-308046B0AF4A39CB
+  value HKCU:\Software\Microsoft\Windows\CurrentVersion\Run : MicrosoftEdgeAutoLaunch_F551FB7C33CC702E7F136D8102E6A39D
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\AudioDescription
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\Blind Access
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\HighContrast
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\Keyboard Preference
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\Keyboard Response
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\MouseKeys
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\On
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\ShowSounds
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\SlateLaunch
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\SoundSentry
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\TimeOut
+  key HKEY_CURRENT_USER\Control Panel\Accessibility\ToggleKeys
+  value HKCU:\Control Panel\Accessibility : MessageDuration
+  value HKCU:\Control Panel\Accessibility : MinimumHitRadius
+HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Accessibility : absent
+-- values under Narrator, LiveCaptions and the accessibility keys (each key and its subkeys)
+  HKEY_CURRENT_USER\Software\Microsoft\Narrator\NoRoam : RunningState = 0
+-- appx packages for speech and captions
+  Microsoft.XboxSpeechToTextOverlay_1.97.17002.0_x64__8wekyb3d8bbwe
+-- Chatmon's folders
+  C:\Users\Technician\AppData\Local\chatmon : False
+  C:\Users\Technician\AppData\Roaming\chatmon : False
+  C:\Users\Technician\AppData\Roaming\nvda : False
+-- scheduled tasks under \
+  Adobe Acrobat Update Task Ready
+  MicrosoftEdgeUpdateTaskMachineCore{53515101-CC38-4C45-A154-25B3684270EF} Ready
+  MicrosoftEdgeUpdateTaskMachineUA{FC3BDEF7-60DB-49FA-9628-FD89A255B951} Ready
+  SAKCapture Ready
+  SAKCaptureElevated Ready
+  SAKCertClient Ready
+  SAKOpsProofRunner Ready
+-- claims
+  --- chatmon.txt
+  drive 0025_38B8_21B7_37C0. 2026-11-15 12:33 -08:00 until 2026-11-15 15:33 -08:00: Chatmon screen-reader probe writes W:\chatmon-sr only (source, venv, logs), no erase; removed at the end
+  --- sak-utility-secfix.txt
+  fix6 cpu (round 6: Release build, ctest -j 6 and drills; tree under W:\fix6) 2026-11-15T12:01:01 to 2026-11-15T20:01:01

@@ -1,0 +1,22 @@
+23:32:42 Chatmon running: state 5
+23:32:43 full-screen window up: state 2
+23:32:44 full-screen window up: state 2
+23:32:45 full-screen window up: state 2
+23:32:46 full-screen window up: state 2
+23:32:47 full-screen window up: state 2
+23:32:48 full-screen window up: state 2
+23:32:49 full-screen window up: state 2
+23:32:50 full-screen window up: state 2
+23:32:58 while full screen: [{"t": 1794785570.671, "event": "queue-add", "title": "Chatmon", "text": "Probe FS: said while a full-screen app was in front.", "background": true, "yours": false, "alert": false, "holds": ["quiet"], "passes": false}, {"t": 1794785570.672, "event": "queue-next", "shown": null, "waiting": ["Chatmon"], "holds": ["quiet"], "showing": null, "visible": false}, {"t": 1794785573.103, "event": "quiet", "said": "a full-screen app", "state": 2}, {"t": 1794785578.105, "event": "quiet", "said": "a full-screen app", "state": 2}]
+23:32:59 full-screen window closed: state 5
+23:33:00 full-screen window closed: state 5
+23:33:01 full-screen window closed: state 5
+23:33:02 full-screen window closed: state 5
+23:33:03 full-screen window closed: state 5
+23:33:04 full-screen window closed: state 5
+23:33:05 full-screen window closed: state 5
+23:33:06 full-screen window closed: state 5
+23:33:07 full-screen window closed: state 5
+23:33:08 full-screen window closed: state 5
+23:33:08 after it closed: [{"t": 1794785583.114, "event": "queue-release", "reason": "quiet"}, {"t": 1794785583.73, "event": "queue-next", "shown": "Chatmon", "waiting": [], "holds": [], "showing": "Chatmon", "visible": false}]
+23:33:08 RESULT {'held_while_full_screen': True, 'shown_after_it_closed': True}

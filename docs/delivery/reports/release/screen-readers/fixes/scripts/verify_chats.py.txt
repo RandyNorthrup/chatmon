@@ -1,0 +1,68 @@
+"""VoiceOver with the fixed Chatmon from source: the Chats window, opened as a person opens it from the keyboard (the
+ask box, `history`, the History menu's "All chats…"), and where its keyboard focus lands. The helpers are
+verify_voiceover.py's.
+
+usage: verify_chats.py OUT_DIR SOURCE_TREE SHIM FRONT_SCRIPT
+"""
+
+import json
+import subprocess
+import sys
+import time
+
+import verify_voiceover as v
+
+DOWN = 'tell application "System Events" to key code 125'
+
+
+def main() -> int:
+    subprocess.run(["/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter"], capture_output=True, timeout=60)
+    deadline = time.time() + 120
+    while v.osa(v.LAST_PHRASE)[0] != 0:
+        if time.time() > deadline:
+            v.note("VoiceOver never answered its AppleScript")
+            return 2
+        time.sleep(1)
+    heard = v.Heard()
+    heard.start()
+    time.sleep(5)
+    r = v.Run("source", heard)
+    v.act('tell application "Finder" to activate', "Finder activate")
+    time.sleep(2)
+    r.start()
+    time.sleep(10)
+    for attempt in (1, 2):
+        v.note(f"== Chats window, attempt {attempt}: the shortcut, `history`, the History menu's All chats…")
+        r.to_finder()
+        v.act(v.SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+        time.sleep(4)
+        opened = time.time()
+        v.keys("history")
+        time.sleep(2)
+        for _ in range(3):  # New chat, the dimmed "No saved chats yet" (a native menu stops on it), then All chats…
+            v.act(DOWN, "Down")
+            time.sleep(0.6)
+        v.act('tell application "System Events" to key code 36', "Return")
+        time.sleep(6)  # the window opens, and VoiceOver lands in it
+        focus = r.focused()
+        qt_focus = [e.get("widget") for e in r.traced(opened) if e["event"] == "focus"]
+        phrases = [(v.stamp(t), x) for t, x in heard.phrases if t >= opened]
+        on_label = "AXStaticText" in focus or any(w and w.startswith("QLabel") for w in qt_focus[-1:])
+        v.results.append({"run": "source", "case": f"S3-{attempt}", "how": "`history` typed, the History menu's All chats…",
+                          "focused_element": focus, "qt_focus_changes": qt_focus, "keyboard_on_a_label": on_label, "phrases": phrases})
+        v.note(f"CASE source/S3-{attempt}: focused {focus!r}; Qt focus {qt_focus[-1:] or 'not traced'}; on a label: {on_label}")
+        v.shot(f"chats-{attempt}")
+        v.act('tell application "System Events" to key code 53', "Esc (the window closes)")
+        time.sleep(2)
+    r.quit()
+    heard.stopping = True
+    heard.join(10)
+    v.osa('tell application "VoiceOver" to quit')
+    (v.OUT / "results.json").write_text(json.dumps(v.results, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    events = sorted([(t, f"   [step] {x}") for t, x in v.timeline] + [(t, f"VO SAID: {x}") for t, x in heard.phrases])
+    (v.OUT / "transcript.txt").write_text("".join(f"{v.stamp(t)} {x}\n" for t, x in events), encoding="utf-8")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

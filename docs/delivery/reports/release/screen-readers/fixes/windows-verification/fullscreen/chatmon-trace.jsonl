@@ -1,0 +1,15 @@
+{"t": 1794785547.663, "event": "start", "pid": 1700, "platform": "win32", "python": "3.14.10"}
+{"t": 1794785549.488, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794785549.488, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794785549.493, "event": "reader", "found": null}
+{"t": 1794785562.976, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785562.976, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794785568.094, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785570.671, "event": "queue-add", "title": "Chatmon", "text": "Probe FS: said while a full-screen app was in front.", "background": true, "yours": false, "alert": false, "holds": ["quiet"], "passes": false}
+{"t": 1794785570.672, "event": "queue-next", "shown": null, "waiting": ["Chatmon"], "holds": ["quiet"], "showing": null, "visible": false}
+{"t": 1794785573.103, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785578.105, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785583.114, "event": "queue-release", "reason": "quiet"}
+{"t": 1794785583.73, "event": "queue-next", "shown": "Chatmon", "waiting": [], "holds": [], "showing": "Chatmon", "visible": false}
+{"t": 1794785583.735, "event": "reader", "found": null}
+{"t": 1794785588.821, "event": "exit", "code": 0}

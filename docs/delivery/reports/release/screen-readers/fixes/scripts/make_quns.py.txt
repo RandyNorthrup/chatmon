@@ -1,0 +1,85 @@
+"""Write the Windows notification-state job (its scripts embedded), for a workflow run of its own."""
+
+import sys
+import textwrap
+from pathlib import Path
+
+HERE = Path(__file__).parent
+
+
+def block(path: Path) -> str:
+    return textwrap.indent(path.read_text(encoding="utf-8"), " " * 10)
+
+
+TEXT = """\
+name: Probe screen readers
+
+# A throwaway probe before v0.10.0, on a branch of its own that holds only this file and is deleted afterwards. This
+# round: does Chatmon's own stage make Windows report a full-screen app (SHQueryUserNotificationState, QUNS_BUSY) on a
+# Windows runner, and does marking the stage window not "rude" (the NonRudeHWND property, or ITaskbarList2's
+# MarkFullscreenWindow(FALSE)) stop it? Silent: no screen reader. Chatmon's code is 65ed989's; the hypotheses are the
+# shim's (run_chatmon.py), each in a run of its own.
+on:
+  push:
+    branches: [probe/screen-readers]
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  quns:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - name: The scripts, and Chatmon's settings
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/out"
+          cat > "$RUNNER_TEMP/probe/run_chatmon.py" <<'PY'
+{shim}          PY
+          cat > "$RUNNER_TEMP/probe/quns_check.py" <<'PY'
+{quns}          PY
+          conf="$(cygpath -u "$LOCALAPPDATA")/chatmon"
+          mkdir -p "$conf"
+          printf '%s\\n' 'name = "Chatmon"' '[updates]' 'check = false' '[breaks]' 'remind = false' '[heads_up]' 'updates = false' > "$conf/config.toml"
+          sha256sum "$RUNNER_TEMP/probe/"*.py | tee "$RUNNER_TEMP/out/scripts.sha256"
+      - name: Windows' notification state with Chatmon as it is, and with each hypothesis
+        run: |
+          for run in plain-1 nonrude-1 markfs-1 plain-2 nonrude-2 markfs-2; do
+            flag="${{run%-*}}"; [ "$flag" = plain ] && flag=""
+            python "$RUNNER_TEMP/probe/quns_check.py" "$RUNNER_TEMP/out/$run" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py" $flag
+            for phase in "before Chatmon" "Chatmon running" "after Chatmon"; do
+              echo "SUMMARY $run $phase: $(grep "$phase: state" "$RUNNER_TEMP/out/$run/quns.log" | grep -o 'state [0-9]' | sort | uniq -c | tr '\\n' ' ')"
+            done | tee -a "$RUNNER_TEMP/out/summary.txt"
+          done
+      - if: ${{{{ always() }}}}
+        run: cmd //c ver > "$RUNNER_TEMP/out/environment.txt" 2>&1
+      - if: ${{{{ always() }}}}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quns
+          path: ${{{{ runner.temp }}}}/out
+          if-no-files-found: error
+          retention-days: 30
+"""
+
+text = TEXT.format(shim=block(HERE / "run_chatmon.py"), quns=block(HERE.parent / "tp2" / "quns_check.py"))
+Path(sys.argv[1]).write_text(text, encoding="utf-8", newline="\n")
+print("wrote", sys.argv[1])

@@ -1,0 +1,10 @@
+{"t": 1794785466.617, "event": "start", "pid": 5076, "platform": "win32", "python": "3.14.10"}
+{"t": 1794785468.441, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794785468.442, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794785468.447, "event": "reader", "found": null}
+{"t": 1794785471.924, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785471.924, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794785476.93, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785481.926, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785486.935, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794785491.681, "event": "exit", "code": 0}

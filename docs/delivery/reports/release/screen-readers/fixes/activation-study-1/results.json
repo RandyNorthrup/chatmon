@@ -1,0 +1,182 @@
+[
+ {
+  "kind": "source",
+  "method": "none",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "none",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "options",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "options",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "from-current",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "from-current",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "workspace",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "workspace",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "open-a",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "source",
+  "method": "open-a",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Python 6920",
+  "chatmon_frontmost": true,
+  "processes": "6920 /Library/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/runner/work/_temp/probe/run_chatmon.py"
+ },
+ {
+  "kind": "bundle",
+  "method": "none",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "none",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "options",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "options",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "from-current",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "from-current",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "workspace",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "workspace",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "open-a",
+  "attempt": 1,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ },
+ {
+  "kind": "bundle",
+  "method": "open-a",
+  "attempt": 2,
+  "front_before": "Finder 336",
+  "front_after": "Finder 336",
+  "chatmon_frontmost": false,
+  "processes": "9177 /Applications/Chatmon.app/Contents/MacOS/Chatmon"
+ }
+]

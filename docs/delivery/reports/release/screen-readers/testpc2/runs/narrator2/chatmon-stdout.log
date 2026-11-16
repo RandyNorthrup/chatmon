@@ -1,0 +1,6 @@
+chatmon: Chatmon 0.10.0 started
+chatmon: Windows didn't say whether Chatmon's notifications are on: [WinError -2147023728] Element not found
+chatmon: couldn't ask Claude Code for its plugins: Claude Code's settings are here (C:\Users\Technician\.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+chatmon: couldn't ask Claude Code for its plugins: Claude Code's settings are here (C:\Users\Technician\.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+chatmon: couldn't ask Muse Code for its plugins: Muse Code isn't installed.
+chatmon: couldn't ask Muse Code for its plugins: Muse Code isn't installed.

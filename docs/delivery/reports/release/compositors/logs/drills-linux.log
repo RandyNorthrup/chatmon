@@ -1,0 +1,613 @@
+red drills from docs\delivery\reports\release\compositors\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-i5jyqw3s
+copied 312 files
+
+=== drill FIX1-kept-keyboard (fix 1 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.40s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7009bfc9d630>
+
+    @linux_only
+    def test_a_compositor_that_keeps_the_keyboard_after_its_let_go_gets_the_surface_made_again(qapp):
+        """KWin 6.8 leaves the keyboard on a layer surface set to keyboard interactivity none, and gives it to no window:
+        what you type after closing the box goes nowhere. Still here KEPT_GRACE later, the surface is made again (an
+        unmapped one loses the keyboard, and KWin gives it back), and the stage told the keyboard has gone."""
+        conn, server, stage, surf, ids = _configured(qapp)
+        _box_open_with_the_keyboard(conn, server, surf, ids)
+        surf.focus_keyboard(False)  # the box closed
+        assert interactivity(server.requests(), ids) == [layer.KEYBOARD_NONE]
+        _events_for(qapp, layer.KEPT_GRACE + 0.3)  # and no leave comes
+        conn.flush()
+        reqs = server.requests()
+>       assert named(reqs, ids["layer"], layer.LAYER_SURFACE_DESTROY)  # the surface that kept it, gone
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert []
+E        +  where [] = named([], 21, 7)
+E        +    where 7 = layer.LAYER_SURFACE_DESTROY
+
+tests/test_wayland.py:1237: AssertionError
+1 failed in 2.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.43s
+
+=== drill FIX1-leave-respected (fix 1 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.43s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface _______
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7da6f4bcd3b0>
+
+    @linux_only
+    def test_a_compositor_that_takes_the_keyboard_away_keeps_its_surface(qapp):
+        """sway and Hyprland send the leave as the overlay lets the keyboard go: nothing more to do."""
+        conn, server, stage, surf, ids = _configured(qapp)
+        _box_open_with_the_keyboard(conn, server, surf, ids)
+        surf.focus_keyboard(False)
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_LEAVE, "uo", 3, ids["surface"])
+        conn.read()
+        _events_for(qapp, layer.KEPT_GRACE + 0.3)
+        conn.flush()
+        reqs = server.requests()
+>       assert not named(reqs, ids["layer"], layer.LAYER_SURFACE_DESTROY) and not _layer_surfaces_made(reqs, ids)
+E       AssertionError: assert (not [b''])
+E        +  where [b''] = named([(21, 4, b'\x00\x00\x00\x00'), (20, 6, b''), (24, 0, b''), (21, 7, b''), (20, 0, b''), (3, 0, b'\x1b\x00\x00\x00'), ...], 21, 7)
+E        +    where 7 = layer.LAYER_SURFACE_DESTROY
+
+tests/test_wayland.py:1256: AssertionError
+1 failed in 2.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.82s
+
+=== drill FIX1-stopped-on-close (fix 1 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.81s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go ____
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7657a8c3d3b0>
+
+    @linux_only
+    def test_once_closed_the_overlay_makes_no_surface_for_a_keyboard_it_let_go(qapp):
+        """Quitting with the keyboard let go and still here: the wait for it stops with the surface, and nothing is made."""
+        conn, server, stage, surf, ids = _configured(qapp)
+        _box_open_with_the_keyboard(conn, server, surf, ids)
+        surf.focus_keyboard(False)
+        surf.close()
+>       assert not surf._kept_timer.isActive()
+E       assert not True
+E        +  where True = <built-in method isActive of QTimer object at 0x7657a8c3d950>()
+E        +    where <built-in method isActive of QTimer object at 0x7657a8c3d950> = <PyQt6.QtCore.QTimer object at 0x7657a8c3d950>.isActive
+E        +      where <PyQt6.QtCore.QTimer object at 0x7657a8c3d950> = <chatmon.layer.LayerSurface object at 0x7657a8c3d6d0>._kept_timer
+
+tests/test_wayland.py:1269: AssertionError
+1 failed in 2.18s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.76s
+
+=== drill FIX2-held-press (fix 2 (Hyprland)) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.51s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer _
+
+stage = (<chatmon.penguin.Stage object at 0x76a62d81ae90>, <chatmon.bubble.AskBox object at 0x76a62d81b890>)
+
+    def test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer(stage):
+        """Hyprland ends a press as soon as the pointer leaves the input region, though Wayland keeps a press with the
+        surface it began on (tests/test_compositors.py sees a drag drop the chatmon there, or turn into a click): while a
+        button is held on it, the whole stage is the input region, and the chatmon's own pixels again once it's let go."""
+        s, _box = stage
+        s._tick()
+        whole = [(0, 0, s._geo.width(), s._geo.height())]
+        assert s.surface.input and s.surface.input != whole
+        sprite = s.sprites.frame(s._frame.anim, s._frame.index, s._frame.mirror)
+        x, y, w, h = max(sprite.rects, key=lambda r: r[2] * r[3])
+        on = QPointF(s._penguin.x() + x + w / 2, s._penguin.y() + y + h / 2)
+        assert s._target_at(on.toPoint()) == "penguin"
+        gpos = on + QPointF(s.origin())
+        assert s.press(on, gpos, Qt.MouseButton.LeftButton)
+        s._tick()
+>       assert s.surface.input == whole
+E       assert [(393, 684, 1..., 66, 4), ...] == [(0, 0, 800, 800)]
+E         
+E         At index 0 diff: (393, 684, 10, 4) != (0, 0, 800, 800)
+E         Left contains 28 more items, first extra item: (389, 688, 18, 4)
+E         Use -v to get more diff
+
+tests/test_overlay_stage.py:582: AssertionError
+1 failed in 3.10s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.71s
+
+=== drill FIX3-qt-clipboard-again (fix 3 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.25s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x78e2f79ad630>
+
+    @linux_only
+    def test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard(qapp):
+        """KWin takes a selection only from the client with the keyboard: when the box copies, that's the overlay's
+        connection, and Qt's copy is refused, so Chatmon's own windows read the overlay's (a 2 s freeze, and nothing).
+        Once one of Qt's windows has the keyboard, the text goes on Qt's clipboard again, if it's still the clipboard."""
+        from PyQt6.QtGui import QWindow
+    
+        conn, server, _stage, surf, ids = _configured(qapp)
+        window = QWindow()
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
+        conn.read()
+        _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied in the box")
+        qapp.focusWindowChanged.emit(None)  # no window: nothing yet
+        assert qapp.clipboard().text() == ""
+        qapp.focusWindowChanged.emit(window)  # Settings, say, gets the keyboard
+>       assert qapp.clipboard().text() == "copied in the box"
+E       AssertionError: assert '' == 'copied in the box'
+E         
+E         - copied in the box
+
+tests/test_wayland.py:1300: AssertionError
+1 failed in 2.24s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.24s
+
+=== drill FIX3-only-if-ours (fix 3 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.26s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard _
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x76e2da775630>
+
+    @linux_only
+    def test_what_the_overlay_copied_goes_on_qts_clipboard_again_when_a_qt_window_gets_the_keyboard(qapp):
+        """KWin takes a selection only from the client with the keyboard: when the box copies, that's the overlay's
+        connection, and Qt's copy is refused, so Chatmon's own windows read the overlay's (a 2 s freeze, and nothing).
+        Once one of Qt's windows has the keyboard, the text goes on Qt's clipboard again, if it's still the clipboard."""
+        from PyQt6.QtGui import QWindow
+    
+        conn, server, _stage, surf, ids = _configured(qapp)
+        window = QWindow()
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
+        conn.read()
+        _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied in the box")
+        qapp.focusWindowChanged.emit(None)  # no window: nothing yet
+        assert qapp.clipboard().text() == ""
+        qapp.focusWindowChanged.emit(window)  # Settings, say, gets the keyboard
+        assert qapp.clipboard().text() == "copied in the box"
+        qapp.clipboard().clear()
+        qapp.focusWindowChanged.emit(window)  # once only
+        assert qapp.clipboard().text() == ""
+    
+        source = _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied again")
+        server.send(source, layer.EV_DATA_SOURCE_CANCELLED)  # another app copied since: it's theirs now
+        conn.read()
+        conn.flush()
+        qapp.focusWindowChanged.emit(window)
+>       assert qapp.clipboard().text() == ""
+E       AssertionError: assert 'copied again' == ''
+E         
+E         + copied again
+
+tests/test_wayland.py:1310: AssertionError
+1 failed in 2.45s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.12s
+
+=== drill FIX3-disconnected-on-close (fix 3 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_a_closed_overlay_puts_nothing_on_qts_clipboard
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.15s
+-- red: exit 1
+ResourceWarning: unclosed <socket.socket fd=15, family=1, type=1, proto=0>
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pytest/__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 286, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 262, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 380, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/main.py", line 375, in wrap_session
+    config._ensure_unconfigure()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/config/__init__.py", line 1377, in _ensure_unconfigure
+    self.hook.pytest_unconfigure(config=self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_caller.py", line 197, in __call__
+    return self._hookexec(
+           ~~~~~~~~~~~~~~^
+        self.name, self._hookimpls.copy(), call_kwargs, firstresult
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_manager.py", line 183, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 195, in _multicall
+    raise exception
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/pluggy/_execution.py", line 147, in _multicall
+    res = hook_impl.function(*args)
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 169, in pytest_unconfigure
+    collect_unraisable(config)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 75, in collect_unraisable
+    raise errors[0]
+  File "/var/tmp/plans-venv/lib/python3.14/site-packages/_pytest/unraisableexception.py", line 63, in collect_unraisable
+    warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pytest.PytestUnraisableExceptionWarning: Exception ignored while finalizing socket <socket.socket fd=15, family=1, type=1, proto=0>: None
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.11s
+
+=== drill FIX3-nothing-once-closed (fix 3 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_a_closed_overlay_puts_nothing_on_qts_clipboard
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.00s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_a_closed_overlay_puts_nothing_on_qts_clipboard ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x793ab02bd3b0>
+
+    @linux_only
+    def test_a_closed_overlay_puts_nothing_on_qts_clipboard(qapp):
+        """A Qt window getting the keyboard after the overlay closed (as Chatmon quits) does nothing: close() stops
+        listening, and a call already on its way finds the surface closed."""
+        from PyQt6.QtGui import QWindow
+    
+        conn, server, _stage, surf, ids = _configured(qapp)
+        window = QWindow()
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")
+        conn.read()
+        _copied_on_the_overlay(conn, server, surf, ids, qapp, "copied in the box")
+        watch = surf._focus_watch
+        surf.close()
+        assert surf._focus_watch is None
+        qapp.focusWindowChanged.emit(window)  # no longer heard
+        assert qapp.clipboard().text() == ""
+        with pytest.raises(TypeError):
+            qapp.focusWindowChanged.disconnect(watch)  # not connected any more
+        watch(window)  # a call already on its way when it closed
+>       assert qapp.clipboard().text() == ""
+E       AssertionError: assert 'copied in the box' == ''
+E         
+E         + copied in the box
+
+tests/test_wayland.py:1335: AssertionError
+1 failed in 2.05s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.91s
+
+=== drill FIX4-own-screen-moved (screen moved) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_stage_screens.py::test_a_screen_that_moves_under_it_is_covered_where_it_is_now
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.12s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_a_screen_that_moves_under_it_is_covered_where_it_is_now _________
+
+stage = <chatmon.penguin.Stage object at 0x7df4bb685b30>
+
+    def test_a_screen_that_moves_under_it_is_covered_where_it_is_now(stage):
+        """Another screen unplugged: KDE Plasma and sway move the one left (to 0,0), and the chatmon's place, on the old
+        spot, is on no screen. The stage covers its own screen where it is now, on its next tick (tests/test_compositors.py
+        sees KWin do it)."""
+        now = stage.screen().geometry()
+        stage._geo = now.translated(now.width(), 0)  # where it was: right of the screen that went
+        stage.behavior.x = stage._geo.x() + 600  # walking there, on the old spot
+        assert stage._screen_at(QPoint(int(stage.behavior.x), stage._geo.center().y())) is None
+        stage._tick()
+>       assert stage._geo == now and now.contains(int(stage.behavior.x), now.center().y())
+E       assert (PyQt6.QtCore.QRect(800, 0, 800, 800) == PyQt6.QtCore.QRect(0, 0, 800, 800))
+E        +  where PyQt6.QtCore.QRect(800, 0, 800, 800) = <chatmon.penguin.Stage object at 0x7df4bb685b30>._geo
+
+tests/test_stage_screens.py:58: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+This plugin does not support setting window masks
+This plugin does not support raise()
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support setting window masks
+1 failed in 2.22s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.24s
+
+=== drill FIX4-woken-by-the-move (screen moved) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_stage_screens.py::test_a_screen_that_moves_wakes_the_stage_within_a_frame
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.12s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_a_screen_that_moves_wakes_the_stage_within_a_frame ____________
+
+stage = <chatmon.penguin.Stage object at 0x7dc460fc1b30>
+
+    def test_a_screen_that_moves_wakes_the_stage_within_a_frame(stage):
+        """Not at its next idle tick (up to IDLE_FLOOR, a second, away): the screen's own word that it moved."""
+        stage._tick()
+        stage._timer.start(1000)  # idle
+        stage.screen().geometryChanged.emit(stage.screen().geometry())
+>       assert stage._timer.remainingTime() <= 1000 / 60 + 1
+E       assert 1000 <= ((1000 / 60) + 1)
+E        +  where 1000 = <built-in method remainingTime of QTimer object at 0x7dc460fc2530>()
+E        +    where <built-in method remainingTime of QTimer object at 0x7dc460fc2530> = <PyQt6.QtCore.QTimer object at 0x7dc460fc2530>.remainingTime
+E        +      where <PyQt6.QtCore.QTimer object at 0x7dc460fc2530> = <chatmon.penguin.Stage object at 0x7dc460fc1b30>._timer
+
+tests/test_stage_screens.py:66: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+This plugin does not support setting window masks
+This plugin does not support raise()
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support setting window masks
+1 failed in 1.73s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.62s
+
+=== drill FIX4-deaf-once-closed (screen moved) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_stage_screens.py::test_a_closed_stage_hears_no_more_of_its_screen
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.49s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_a_closed_stage_hears_no_more_of_its_screen ________________
+
+stage = <chatmon.penguin.Stage object at 0x773d150cdb30>
+
+    def test_a_closed_stage_hears_no_more_of_its_screen(stage):
+        screen = stage.screen()
+        stage.close_stage()
+>       assert stage._watched is None
+E       assert <PyQt6.QtGui.QScreen object at 0x773d150ce3f0> is None
+E        +  where <PyQt6.QtGui.QScreen object at 0x773d150ce3f0> = <chatmon.penguin.Stage object at 0x773d150cdb30>._watched
+
+tests/test_stage_screens.py:72: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+This plugin does not support setting window masks
+This plugin does not support raise()
+1 failed in 1.70s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.42s
+
+=== drill REAL1-kwin-keyboard (fix 1 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_compositors.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open[kwin] tests/test_compositors.py::test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin] tests/test_compositors.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin]
+-- green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 28.82s
+-- red: exit 1
+_ test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin] _
+
+desktop = <compositor_session.KWinSession object at 0x788f73be8cd0>
+chatmon = <sway_session.Probe object at 0x788f73be8e10>
+hands = <compositor_session.KWinInput object at 0x788f73be8f50>
+request = <FixtureRequest for <Function test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin]>>
+
+    def test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box(desktop, chatmon, hands, request):
+        # The last step: on KWin, a full-screen window comes back on top once the overlay hands the keyboard back.
+        chatmon.call(DESK_WINDOW)
+        chatmon.call("desk.showFullScreen(); until(lambda: desk.windowState() & Qt.WindowState.WindowFullScreen, 5); settled()", settle=0.5)
+        x, y = centre(penguin(chatmon))
+        desk = tuple(int(DESK[i : i + 2], 16) for i in (1, 3, 5))
+        assert colour(desktop.screenshot("under"), x, y) == desk  # the top layer: under a full-screen video, game or slides
+        chatmon.call("c.open_ask(); settled()", settle=0.5)
+        assert colour(desktop.screenshot("above"), x, y) != desk  # the ask box asked for: above it, with the chatmon
+        hands.key("Escape")
+        chatmon.call("until(lambda: not box.isVisible(), 5); settled()", settle=0.5)
+>       assert colour(desktop.screenshot("under-again"), x, y) == desk
+E       assert (251, 241, 221) == (51, 68, 102)
+E         
+E         At index 0 diff: 251 != 51
+E         Use -v to get more diff
+
+tests/test_compositors.py:215: AssertionError
+_ test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin] _
+
+reader_session = <compositor_session.KWinSession object at 0x788f73be9450>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x788f73f38910>
+request = <FixtureRequest for <Function test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin]>>
+
+    def test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back(reader_session, qapp, request):
+        session = reader_session
+        probe = Probe(session)
+        hands = compositor_session.devices(session)
+        try:
+            probe.call(SETUP)
+            _screen_reader(session, probe)
+            rect = penguin(probe)
+            hands.click(*centre(rect))
+            probe.call("until(lambda: box.isVisible() and box.windowHandle().isExposed(), 5)", settle=0.5)
+            hands.type("ab")
+            hands.click(*centre(rect), BTN_RIGHT)  # the penguin's menu: on the overlay
+            assert probe.call("until(lambda: surface._kb_focus, 5); result = stage.menu.is_open()", settle=0.2)
+            hands.key("Down")
+            hands.key("Down")
+            got = probe.call("result = dict(hover=stage.menu.hover, entry=box.entry.text())", settle=0.2)
+            assert got == {"hover": [0, 1], "entry": "ab"}  # the menu has the keys, the box none of them
+            hands.key("Escape")
+            assert probe.call("until(lambda: not surface._kb_focus, 5); result = stage.menu.is_open()", settle=0.2) is False
+            time.sleep(0.3)
+>           assert [v["focused"] for v in session.views()] == [True]  # the keyboard back to the box
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert [False] == [True]
+E             
+E             At index 0 diff: False != True
+E             Use -v to get more diff
+
+tests/test_compositors.py:368: AssertionError
+3 failed in 47.25s
+-- restored green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 39.35s
+
+=== drill REAL2-hyprland-drag (fix 2 (Hyprland)) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_compositors.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland]
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 20.21s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland] _
+
+desktop = <compositor_session.HyprlandSession object at 0x7fe64dc48d70>
+chatmon = <sway_session.Probe object at 0x7fe64dc49d30>
+hands = <sway_session.Input object at 0x7fe64dc49e80>
+request = <FixtureRequest for <Function test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland]>>
+
+    def test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else(desktop, chatmon, hands, request):
+        rect = penguin(chatmon)
+        x, y = centre(rect)
+        hands.move(x, y)
+        hands.button(sway_session.BTN_LEFT, True)
+        chatmon.call("settled()", settle=0.1)  # as a hand: the press, then the move (the overlay has heard the press)
+        for step in range(1, 6):
+            hands.move(x - 110 * step, y)  # each step farther than the subsurface's margin: it moves every time
+            chatmon.call("settled()", settle=0.15)
+            shot = desktop.screenshot(f"drag-{step}")
+            now = penguin(chatmon)
+            columns = drawn_columns(shot, (0, now[1] + now[3] * 0.3, 1280, now[3] * 0.4), desktop.background)
+>           assert now[0] < rect[0] - 100 * step + 20  # it moved with the pointer
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert 542.0 < ((542.0 - (100 * 1)) + 20)
+
+tests/test_compositors.py:297: AssertionError
+1 failed in 16.85s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 13.43s
+
+=== drill REAL3-kwin-clipboard (fix 3 (KWin)) on chatmon/layer.py
+command: C:\Users\Randy\Coding\chatmon-wt\compositors\docs\delivery\reports\release\compositors\wslvenv.bat -m pytest -q -p no:cacheprovider tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin]
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 9.40s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin] _
+
+desktop = <compositor_session.KWinSession object at 0x710ee205cd70>
+chatmon = <sway_session.Probe object at 0x710ee205dbe0>
+hands = <compositor_session.KWinInput object at 0x710ee205dd30>
+request = <FixtureRequest for <Function test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin]>>
+
+    def test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows(desktop, chatmon, hands, request):
+        # The last step: Chatmon's own window reads Qt's clipboard, which a Wayland client gets only with the keyboard
+        # (KWin: the overlay hands it back on letting go, and puts its copy on Qt's clipboard again: layer.py).
+        if shutil.which("wl-copy") is None:
+            if os.environ.get("CHATMON_COMPOSITORS") == "1":
+                pytest.fail("CHATMON_COMPOSITORS=1, but wl-clipboard isn't installed")
+            pytest.skip("wl-clipboard isn't installed")
+        chatmon.call(DESK_WINDOW)
+        subprocess.run(["wl-copy", "from another app"], env=desktop.env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, check=True)
+        hands.click(*centre(penguin(chatmon)))
+        chatmon.call("until(lambda: surface._kb_focus and stage.clipboard_has_text(), 5)", settle=0.2)
+        hands.key("v", mods=4)  # Ctrl+V
+        assert chatmon.call("until(lambda: box.entry.text() != '', 5); result = box.entry.text()") == "from another app"
+        hands.key("a", mods=4)
+        hands.type("mine")
+        hands.key("a", mods=4)
+        hands.key("c", mods=4)  # Ctrl+C in the box: the overlay's clipboard
+        chatmon.call("settled()", settle=0.2)
+        pasted = subprocess.run(["wl-paste", "--no-newline"], env=desktop.env, capture_output=True, text=True, timeout=10, check=True)
+        assert pasted.stdout == "mine"
+        hands.key("Escape")  # the box closes; the desk window, Chatmon's own, has the keyboard (once the compositor says)
+        got = chatmon.call("until(lambda: desk.isActiveWindow(), 5); import time; t = time.monotonic(); text = QtWidgets.QApplication.clipboard().text(); "
+                           "result = [text, time.monotonic() - t]", settle=0.3)
+>       assert got[0] == "mine" and got[1] < 0.5
+E       AssertionError: assert ('' == 'mine'
+E         
+E         - mine)
+
+tests/test_compositors.py:201: AssertionError
+1 failed in 11.91s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 14.27s
+
+=== summary
+PASS FIX1-kept-keyboard
+PASS FIX1-leave-respected
+PASS FIX1-stopped-on-close
+PASS FIX2-held-press
+PASS FIX3-qt-clipboard-again
+PASS FIX3-only-if-ours
+PASS FIX3-disconnected-on-close
+PASS FIX3-nothing-once-closed
+PASS FIX4-own-screen-moved
+PASS FIX4-woken-by-the-move
+PASS FIX4-deaf-once-closed
+PASS REAL1-kwin-keyboard
+PASS REAL2-hyprland-drag
+PASS REAL3-kwin-clipboard

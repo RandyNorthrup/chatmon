@@ -1,0 +1,12 @@
+SUMMARY shipped-1 before Chatmon:      10 state 5 
+SUMMARY shipped-1 Chatmon running:      22 state 2       3 state 5 
+SUMMARY shipped-1 after Chatmon:      10 state 5 
+SUMMARY fixed-1 before Chatmon:      10 state 5 
+SUMMARY fixed-1 Chatmon running:      25 state 5 
+SUMMARY fixed-1 after Chatmon:      10 state 5 
+SUMMARY shipped-2 before Chatmon:      10 state 5 
+SUMMARY shipped-2 Chatmon running:      25 state 2 
+SUMMARY shipped-2 after Chatmon:      10 state 5 
+SUMMARY fixed-2 before Chatmon:      10 state 5 
+SUMMARY fixed-2 Chatmon running:      25 state 5 
+SUMMARY fixed-2 after Chatmon:      10 state 5 

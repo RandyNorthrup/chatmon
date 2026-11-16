@@ -1,0 +1,4 @@
+﻿job quiet1 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+SHQueryUserNotificationState: hr 0, state 5; Chatmon reads it as None
+message duration (s): 5
+foreground: hwnd 32048702 pid 7472 class 'CabinetWClass' title 'rel - File Explorer' rect [266, 162, 1405, 762]

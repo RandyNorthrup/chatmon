@@ -1,0 +1,10 @@
+== 2026-11-15 12:33:55 -08:00
+-- other claims:
+--- sak-utility-secfix.txt (11/15/2026 12:01:01)
+fix6 cpu (round 6: Release build, ctest -j 6 and drills; tree under W:\fix6) 2026-11-15T12:01:01 to 2026-11-15T20:01:01
+--- WinAppMigrator.txt (11/15/2026 11:10:41)
+console  start 2026-11-15T10:34:55  expected end +3h  (WinAppMigrator issue #2 repro: installer GUI driven by UIA)
+console  start 2026-11-15T11:10:41  +30m  (Hyper-V WIN7X64 screenshot run)
+W: pinned: disk 0 SAMSUNG MZVL2512HCJQ-00BH1 0025_38B8_21B7_37C0. 512110190592 bytes, boot False
+-- chatmon.txt:
+drive 0025_38B8_21B7_37C0. 2026-11-15 12:33 -08:00 until 2026-11-15 15:33 -08:00: Chatmon screen-reader probe writes W:\chatmon-sr only (source, venv, logs), no erase; removed at the end

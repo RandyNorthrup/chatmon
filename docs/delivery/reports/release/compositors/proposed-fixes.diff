@@ -1,0 +1,86 @@
+diff --git a/chatmon/layer.py b/chatmon/layer.py
+index d41a3fa..2b8c4f1 100644
+--- a/chatmon/layer.py
++++ b/chatmon/layer.py
+@@ -122,6 +122,7 @@ IDLE_AFTER_MS = 300_000
+ ANCHOR_ALL = 1 | 2 | 4 | 8  # top, bottom, left, right: the whole output
+ KEYBOARD_NONE, KEYBOARD_EXCLUSIVE, KEYBOARD_ON_DEMAND = 0, 1, 2  # on_demand: layer-shell version 4
+ HANDOVER_GRACE = 0.5  # s: the keyboard gone this soon after a handover to on_demand was the compositor's doing
++KEPT_GRACE = 0.3  # s: the keyboard still here this long after the overlay let it go: the compositor kept it (KWin)
+ KEYMAP_XKB_V1 = 1
+ SHM_ARGB8888 = 0  # premultiplied, byte order B G R A: QImage's ARGB32_Premultiplied on little-endian
+ CAP_POINTER, CAP_KEYBOARD = 1, 2
+@@ -635,6 +636,10 @@ class LayerSurface(QObject):
+             "primary": Selection(self, PRIMARY),
+         }
+         self._text_state: TextState | None = None  # the focused text field, as the stage last said
++        self._qt_clipboard: str | None = None  # copied on the overlay, for Qt's clipboard once a Qt window has the keyboard
++        app = QGuiApplication.instance()
++        if isinstance(app, QGuiApplication):
++            app.focusWindowChanged.connect(self._qt_window_focused)
+         self._seat_versions: dict[int, int] = {}
+         self._registry = conn.new_id(self._registry_event)
+         conn.request(DISPLAY_ID, 1, "n", self._registry)  # wl_display.get_registry
+@@ -804,6 +809,15 @@ class LayerSurface(QObject):
+         board = QGuiApplication.clipboard() if which == "clipboard" and text else None
+         if board is not None:
+             board.setText(text)
++            # KWin takes a selection only from the client with the keyboard: the overlay's connection has it now, so
++            # KWin refuses Qt's, and Chatmon's windows would read the overlay's instead (the freeze above). Qt's
++            # again when one of them has the keyboard.
++            self._qt_clipboard = text
++
++    def _qt_window_focused(self, window) -> None:
++        text, self._qt_clipboard = self._qt_clipboard, None
++        if window is not None and text is not None and self.selections["clipboard"].source is not None:  # still ours
++            QGuiApplication.clipboard().setText(text)
+ 
+     def set_text_input(self, state: TextState | None) -> None:
+         """The text field that has the focus on the stage (None: none does),
+@@ -1146,6 +1160,22 @@ class LayerSurface(QObject):
+         self.conn.request(self._layer, LAYER_SURFACE_SET_KEYBOARD_INTERACTIVITY, "u", mode)
+         self.conn.request(self._surface, SURFACE_COMMIT)
+         self._flush()
++        if mode == KEYBOARD_NONE and self._kb_focus:
++            QTimer.singleShot(round(KEPT_GRACE * 1000), self._keyboard_kept)
++
++    def _keyboard_kept(self) -> None:
++        """KWin (6.8) leaves the keyboard on a layer surface that has let it go, and gives it to no window: what you
++        type next goes nowhere, and a full-screen window, no longer the active one, stays under the chatmon. A
++        layer surface unmapped loses the keyboard, and KWin gives it back to the window it came from: so the
++        surface is made again, as for a new screen (the chatmon is back a frame later)."""
++        if self._closing or self._kb_wanted or not self._kb_focus or self._surface is None:
++            return
++        logger.debug("the compositor kept the keyboard on the overlay after it was let go; making the surface again")
++        self._kb_focus = False
++        self._stop_repeat()
++        self.stage.keyboard_focus(False)
++        self._destroy_surface()
++        self._create_surface()
+ 
+ 
+     # -- away from the desk (ext-idle-notify-v1)
+diff --git a/chatmon/penguin.py b/chatmon/penguin.py
+index 1df5d8b..7bd5cf4 100644
+--- a/chatmon/penguin.py
++++ b/chatmon/penguin.py
+@@ -1063,7 +1063,7 @@ class Stage(QObject):
+             (bubble_rect.x(), bubble_rect.y(), bubble_rect.width(), bubble_rect.height()) if bubble_rect is not None else None,
+             (zs.x(), zs.y(), zs.width(), zs.height()) if zs.isValid() else None,
+             hosted_rects,
+-            (self._geo.width(), self._geo.height()) if self.menu.is_open() else None,
++            (self._geo.width(), self._geo.height()) if self.menu.is_open() or self._press is not None else None,
+         )
+         if parts != self._input_parts:
+             self._take_input(parts)
+@@ -1164,7 +1164,9 @@ class Stage(QObject):
+ 
+     def _take_input(self, parts: tuple) -> None:
+         """Take clicks where `parts` (plain numbers) says: the whole stage while the menu is open, as any popup menu
+-        does (a click anywhere else closes it), else the sprite, the bubble, the z's and the hosted scene."""
++        does (a click anywhere else closes it), and while a button is held on the chatmon or its bubble (a drag:
++        Hyprland ends a press as soon as the pointer leaves the input region, though Wayland keeps it with the
++        surface it began on), else the sprite, the bubble, the z's and the hosted scene."""
+         self._input_parts = parts
+         rects, (px, py), bubble_t, zs_t, hosted_t, menu = parts
+         if menu is not None:

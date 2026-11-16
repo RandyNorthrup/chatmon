@@ -1,0 +1,7 @@
+name = "Chatmon"
+[updates]
+check = false
+[breaks]
+remind = false
+[heads_up]
+updates = false

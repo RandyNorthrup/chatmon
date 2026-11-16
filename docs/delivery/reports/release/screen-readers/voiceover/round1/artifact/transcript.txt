@@ -1,0 +1,74 @@
+20:25:33.330Z    [step] probe started: Chatmon 0.10.0 from /Users/runner/work/chatmon/chatmon, Python 3.14.10
+20:25:33.330Z    [step] $ sw_vers
+20:25:33.343Z    [step]   exit 0: ProductName:		macOS | ProductVersion:		26.7.2 | BuildVersion:		25G332
+20:25:33.343Z    [step] $ /System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter
+20:25:33.668Z    [step]   exit 0: ******** Launching VoiceOver from starter application ******** |  | 2026-11-15 20:25:33.366 VoiceOverStarter[3014:12771] VoiceOverDebug: _ScreenReaderStartWithTarget with option 0 | 2026-11-15 20:25:33.386 VoiceOverStarter[3014:12771] VoiceOverDebug: after boostrap_look_up succeeded | 2026-11-15 20:25:33.391 VoiceOverStarter[3014:12771] VoiceOverDebug: calling _SCRStartup returned 0
+20:25:39.050Z    [step] VoiceOver answers its AppleScript; last phrase so far: 'missing value'
+20:25:44.556Z VO SAID: application
+20:25:45.414Z    [step] Chatmon started from source through run_chatmon.py, pid 3189
+20:25:49.762Z VO SAID: Python is not responding
+20:25:49.856Z    [step] python -m chatmon status: Chatmon is running.
+20:25:51.933Z VO SAID: Python Chatmon dialog
+20:25:52.879Z VO SAID: In Chatmon dialog content is empty
+20:25:55.950Z VO SAID: You are currently on a dialog.
+20:26:00.697Z    [step] osascript -e "tell application \"Finder\" to activate": exit 0
+20:26:01.069Z VO SAID: Finder desktop Desktop empty group
+20:26:03.972Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:03.973Z    [step] == A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)
+20:26:03.974Z    [step] $ python -m chatmon ask
+20:26:04.100Z    [step]   exit 0
+20:26:04.465Z VO SAID: Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon
+20:26:05.317Z VO SAID: Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work
+20:26:07.259Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:07.259Z    [step] Chatmon's own activation left another app in front: bringing it forward through System Events, as a click would
+20:26:07.365Z    [step] osascript -e "tell application \"System Events\" to set frontmost of (first application process whose unix id is 3189) to true": exit 0
+20:26:09.653Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:14.965Z    [step] $ python -m chatmon say "Probe A1, said while Chatmon is in front."
+20:26:15.135Z    [step]   exit 0
+20:26:15.206Z VO SAID: Chatmon. Probe A1, said while Chatmon is in front.
+20:26:15.263Z    [step] CASE A1: VoiceOver said 'Chatmon. Probe A1, said while Chatmon is in front.' 0.24 s after
+20:26:15.466Z    [step] == A2: Chatmon in front, a command typed in the ask box (version, Return)
+20:26:17.586Z    [step] osascript -e "tell application \"System Events\" to keystroke \"version\"": exit 0
+20:26:18.751Z    [step] osascript -e "tell application \"System Events\" to key code 36": exit 0
+20:26:26.889Z VO SAID: You are currently on a text element.
+20:26:38.845Z    [step] CASE A2: VoiceOver never said it
+20:26:39.100Z    [step] == B: Chatmon behind, a message comes; then the ask box is opened (chatmon ask)
+20:26:39.289Z    [step] osascript -e "tell application \"System Events\" to key code 53": exit 0
+20:26:39.550Z VO SAID: Chatmon dialog
+20:26:40.574Z    [step] osascript -e "tell application \"Finder\" to activate": exit 0
+20:26:40.698Z VO SAID: Finder desktop Desktop empty group
+20:26:43.737Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:43.737Z    [step] $ python -m chatmon say "Probe B, held while Chatmon is behind."
+20:26:43.985Z    [step]   exit 0
+20:26:45.074Z VO SAID: You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow.
+20:26:56.006Z    [step] B while behind: nothing said (held), as designed
+20:26:56.208Z    [step] $ python -m chatmon ask
+20:26:56.501Z    [step]   exit 0
+20:26:57.229Z VO SAID: Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon
+20:26:57.771Z VO SAID: Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work
+20:26:59.743Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:59.744Z    [step] Chatmon's own activation left another app in front: bringing it forward through System Events
+20:27:00.029Z    [step] osascript -e "tell application \"System Events\" to set frontmost of (first application process whose unix id is 3189) to true": exit 0
+20:27:00.387Z VO SAID: Chatmon. Probe B, held while Chatmon is behind.
+20:27:00.467Z    [step] CASE B: VoiceOver said 'Chatmon. Probe B, held while Chatmon is behind.' 16.65 s after
+20:27:00.752Z    [step] == C: Chatmon behind, an agent's needs-you alert comes; then you switch to Chatmon
+20:27:00.936Z    [step] osascript -e "tell application \"System Events\" to key code 53": exit 0
+20:27:01.068Z VO SAID: Chatmon dialog
+20:27:02.092Z    [step] osascript -e "tell application \"Finder\" to activate": exit 0
+20:27:02.466Z VO SAID: Finder desktop Desktop empty group
+20:27:05.294Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:27:05.300Z    [step] $ python -m chatmon notify needs-you --source claude --message "Probe C, waiting for your approval."
+20:27:06.266Z    [step]   exit 0
+20:27:06.785Z VO SAID: You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow.
+20:27:18.267Z    [step] C while behind: nothing said (held), as designed
+20:27:18.621Z    [step] osascript -e "tell application \"System Events\" to set frontmost of (first application process whose unix id is 3189) to true": exit 0
+20:27:18.889Z VO SAID: Python Chatmon dialog
+20:27:19.840Z    [step] frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:27:20.020Z VO SAID: In Chatmon dialog content is empty
+20:27:23.071Z VO SAID: You are currently on a dialog.
+20:27:39.929Z    [step] CASE C: VoiceOver never said it
+20:27:43.227Z    [step] $ python -m chatmon quit
+20:27:43.523Z    [step]   exit 0
+20:27:44.265Z    [step] Chatmon exited: 0
+20:27:44.520Z VO SAID: Finder desktop Desktop empty group
+20:27:44.594Z    [step] VoiceOver's last phrase was read 613 times (0 failed); 23 phrases kept

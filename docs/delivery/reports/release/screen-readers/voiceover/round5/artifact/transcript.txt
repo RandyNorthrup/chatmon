@@ -1,0 +1,113 @@
+21:01:08.390Z    [step] probe started: Chatmon 0.10.0 from /Users/runner/work/chatmon/chatmon, Python 3.14.10
+21:01:08.391Z    [step] $ sw_vers
+21:01:08.406Z    [step]   exit 0: ProductName:		macOS | ProductVersion:		26.7.2 | BuildVersion:		25G332
+21:01:08.407Z    [step] $ /System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter
+21:01:08.456Z    [step]   exit 0: ******** Launching VoiceOver from starter application ******** |  | 2026-11-15 21:01:08.424 VoiceOverStarter[3125:12855] VoiceOverDebug: _ScreenReaderStartWithTarget with option 0 | 2026-11-15 21:01:08.430 VoiceOverStarter[3125:12855] VoiceOverDebug: after boostrap_look_up succeeded | 2026-11-15 21:01:08.430 VoiceOverStarter[3125:12855] VoiceOverDebug: calling _SCRStartup returned 0
+21:01:18.743Z    [step] VoiceOver answers its AppleScript; last phrase so far: 'application'
+21:01:18.922Z VO SAID: application
+21:01:23.980Z    [step] frontmost app: Finder 370
+21:01:24.256Z    [step] osascript (Finder activate): exit 0
+21:01:24.826Z VO SAID: Finder desktop Desktop empty group
+21:01:26.299Z    [step] Chatmon started from source through run_chatmon.py (pass proposed, PROBE_SETTLE_MS=2500, PROBE_TITLE_PROXY=1), pid 3341
+21:01:29.463Z VO SAID: You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow.
+21:01:30.293Z    [step] python -m chatmon status: Chatmon is running.
+21:01:30.450Z VO SAID: Python is not responding
+21:01:31.924Z VO SAID: Python Chatmon dialog
+21:01:32.996Z VO SAID: In Chatmon dialog content is empty
+21:01:34.477Z VO SAID: Hi, I'm Chatmon! Click me to ask anything.
+21:01:39.224Z VO SAID: You are currently on a dialog.
+21:01:42.537Z    [step] CASE proposed/G: VoiceOver said "Hi, I'm Chatmon! Click me to ask anything." 8.18 s after
+21:01:45.605Z    [step] == proposed/A2: Finder in front; the shortcut opens the ask box; `version` typed, Return
+21:01:45.762Z    [step] frontmost app: Python 3341
+21:01:45.872Z    [step] osascript (Esc): exit 0
+21:01:47.082Z    [step] osascript (Finder activate): exit 0
+21:01:47.327Z VO SAID: Finder desktop Desktop empty group
+21:01:50.298Z    [step] frontmost app: Finder 370
+21:01:50.392Z    [step] osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:01:51.770Z VO SAID: Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon edit text
+21:01:52.264Z VO SAID: Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work
+21:01:53.582Z    [step] frontmost app: Python 3341
+21:01:57.760Z    [step] Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+21:01:57.874Z    [step] osascript (keystroke version): exit 0
+21:01:58.051Z VO SAID: version
+21:01:59.167Z VO SAID: You are currently on a text area.
+21:01:59.211Z    [step] Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version
+21:01:59.990Z    [step] osascript (Return): exit 0
+21:02:00.181Z VO SAID: I'm Chatmon 0.10.0.
+21:02:08.215Z    [step] CASE proposed/A2: VoiceOver said "I'm Chatmon 0.10.0." 2.42 s after
+21:02:09.514Z    [step] == proposed/A1: Finder in front; Chatmon's shortcut opens the ask box; a hook's message comes
+21:02:09.698Z    [step] frontmost app: Python 3341
+21:02:09.846Z    [step] osascript (Esc): exit 0
+21:02:10.042Z VO SAID: Chatmon dialog
+21:02:11.029Z    [step] osascript (Finder activate): exit 0
+21:02:11.212Z VO SAID: In Chatmon dialog content is empty
+21:02:11.421Z VO SAID: Finder desktop Desktop empty group
+21:02:14.196Z    [step] frontmost app: Finder 370
+21:02:14.309Z    [step] osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:02:14.587Z VO SAID: Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon edit text
+21:02:15.539Z VO SAID: Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work
+21:02:17.549Z    [step] frontmost app: Python 3341
+21:02:22.568Z    [step] $ python -m chatmon say "Probe A1, said while Chatmon is in front."
+21:02:22.818Z    [step]   exit 0
+21:02:22.981Z VO SAID: Chatmon. Probe A1, said while Chatmon is in front.
+21:02:30.998Z    [step] CASE proposed/A1: VoiceOver said 'Chatmon. Probe A1, said while Chatmon is in front.' 0.41 s after
+21:02:31.188Z    [step] == proposed/B1: HYPOTHESIS: behind: `chatmon say`; then Chatmon's shortcut opens the ask box
+21:02:31.399Z    [step] frontmost app: Python 3341
+21:02:31.610Z    [step] osascript (Esc): exit 0
+21:02:32.073Z VO SAID: Chatmon dialog
+21:02:32.796Z    [step] osascript (Finder activate): exit 0
+21:02:33.148Z VO SAID: Finder desktop Desktop empty group
+21:02:35.984Z    [step] frontmost app: Finder 370
+21:02:35.984Z    [step] $ python -m chatmon say "Probe P-B1, held while Chatmon is behind."
+21:02:36.138Z    [step]   exit 0
+21:02:37.478Z VO SAID: You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow.
+21:02:46.655Z    [step] osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:02:46.995Z VO SAID: 
+21:02:47.632Z VO SAID: Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon edit text
+21:02:47.951Z VO SAID: Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work
+21:02:49.700Z    [step] frontmost app: Python 3341
+21:02:49.729Z VO SAID: Chatmon. Probe P-B1, held while Chatmon is behind.
+21:02:57.771Z    [step] CASE proposed/B1: VoiceOver said 'Chatmon. Probe P-B1, held while Chatmon is behind.' 13.74 s after; held while behind: True
+21:02:58.013Z    [step] == proposed/A2-after-B1: Finder in front; the shortcut opens the ask box; `version` typed, Return
+21:02:58.232Z    [step] frontmost app: Python 3341
+21:02:58.416Z    [step] osascript (Esc): exit 0
+21:02:58.721Z VO SAID: Chatmon dialog
+21:02:59.740Z    [step] osascript (Finder activate): exit 0
+21:03:00.094Z VO SAID: Finder desktop Desktop empty group
+21:03:02.966Z    [step] frontmost app: Finder 370
+21:03:03.108Z    [step] osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+21:03:03.380Z VO SAID: 
+21:03:03.806Z VO SAID: Python dialog Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work Ask Chatmon edit text
+21:03:04.325Z VO SAID: Ask Chatmon Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up ye… Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work
+21:03:06.248Z    [step] frontmost app: Python 3341
+21:03:10.502Z    [step] Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+21:03:10.614Z    [step] osascript (keystroke version): exit 0
+21:03:10.816Z VO SAID: version
+21:03:11.882Z VO SAID: You are currently on a text area.
+21:03:11.951Z    [step] Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version
+21:03:12.333Z    [step] osascript (Return): exit 0
+21:03:12.507Z VO SAID: I'm Chatmon 0.10.0.
+21:03:20.544Z    [step] CASE proposed/A2-after-B1: VoiceOver said "I'm Chatmon 0.10.0." 2.0 s after
+21:03:21.847Z    [step] == proposed/C1: HYPOTHESIS: behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)
+21:03:22.067Z    [step] frontmost app: Python 3341
+21:03:22.283Z    [step] osascript (Esc): exit 0
+21:03:22.639Z VO SAID: Chatmon dialog
+21:03:23.569Z VO SAID: In Chatmon dialog content is empty
+21:03:23.583Z    [step] osascript (Finder activate): exit 0
+21:03:23.980Z VO SAID: Finder desktop Desktop empty group
+21:03:26.784Z    [step] frontmost app: Finder 370
+21:03:26.786Z    [step] $ python -m chatmon notify needs-you --source claude --message "Probe P-C1, waiting for your approval."
+21:03:27.627Z    [step]   exit 0
+21:03:28.326Z VO SAID: You are currently in a group. To exit this group, press Control-Option-Shift-Up Arrow.
+21:03:38.565Z    [step] osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+21:03:39.246Z VO SAID: Python Chatmon dialog
+21:03:40.101Z VO SAID: In Chatmon dialog content is empty
+21:03:41.806Z VO SAID: Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.
+21:03:41.845Z    [step] frontmost app: Python 3341
+21:03:48.403Z VO SAID: You are currently on a dialog.
+21:03:49.828Z    [step] CASE proposed/C1: VoiceOver said 'Claude needs you. Probe P-C1, waiting for your approval. To answer, type “OK” in the chat.' 15.02 s after; held while behind: True
+21:03:52.176Z    [step] $ python -m chatmon quit
+21:03:52.469Z    [step]   exit 0
+21:03:53.064Z    [step] Chatmon exited: 0
+21:03:53.168Z VO SAID: Finder desktop Desktop empty group
+21:03:55.231Z    [step] VoiceOver's last phrase was read 716 times (0 failed); 44 phrases kept

@@ -1,0 +1,4 @@
+﻿job narratoroff2 in session 1 as testpc2\technician, Mandatory Label\Medium Mandatory Level Label S-1-16-8192
+Narrator before: [8952]
+pressed Insert+Esc, SendInput 4
+Narrator after: [8952]

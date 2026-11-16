@@ -1,0 +1,28 @@
+{"t": 1794778573.461, "event": "start", "pid": 21080, "platform": "win32", "python": "3.14.10"}
+{"t": 1794778576.443, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794778576.443, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794778576.464, "event": "reader", "found": "Narrator"}
+{"t": 1794778576.464, "event": "uia-in-front", "value": false}
+{"t": 1794778576.504, "event": "toast", "title": "Hi, I'm Chatmon!", "text": "Hi, I'm Chatmon! Click me to ask anything.", "buttons": [], "tag": "aa388f4e3c3d433b"}
+{"t": 1794778576.504, "event": "announce", "reader": "Narrator", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "notification"}
+{"t": 1794778579.939, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778579.94, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794778584.935, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778588.252, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794778589.937, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778594.945, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778596.549, "event": "queue-add", "title": "Chatmon", "text": "Probe one: the build finished while Chatmon was in front.", "background": true, "yours": true, "alert": false, "holds": ["quiet"], "passes": true}
+{"t": 1794778596.549, "event": "queue-next", "shown": "Chatmon", "waiting": [], "holds": ["quiet"], "showing": "Chatmon", "visible": false}
+{"t": 1794778596.558, "event": "reader", "found": "Narrator"}
+{"t": 1794778596.558, "event": "uia-in-front", "value": true}
+{"t": 1794778596.559, "event": "uia-say", "text": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "raised": true}
+{"t": 1794778596.559, "event": "announce", "reader": "Narrator", "words": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "route": "uia"}
+{"t": 1794778599.937, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778604.935, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778605.905, "event": "uia-in-front", "value": true}
+{"t": 1794778605.906, "event": "uia-say", "text": "Noted (note 3). delete note 3 takes it back.", "important": false, "raised": true}
+{"t": 1794778605.906, "event": "announce", "reader": "Narrator", "words": "Noted (note 3). delete note 3 takes it back.", "important": false, "route": "uia"}
+{"t": 1794778609.943, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778613.105, "event": "focus", "widget": null}
+{"t": 1794778614.943, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778618.18, "event": "exit", "code": 0}

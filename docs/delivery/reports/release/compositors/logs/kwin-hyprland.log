@@ -1,0 +1,64 @@
+$ env CHATMON_COMPOSITORS=1 CHATMON_COMPOSITORS_NOTES=/var/tmp/compositors-evidence/observed.jsonl CHATMON_COMPOSITORS_SHOTS=/var/tmp/compositors-evidence/shots python -m pytest -p no:cacheprovider -v -rxXs --tb=short tests/test_compositors.py --basetemp=/var/tmp/compositors-tmp/final
+# WSL Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; worktree HEAD 65ed989; CHATMON_INSTANCE=compositors-201237-1794777446
+# kwin 6.8.2; Hyprland 0.57.0; sway 1.12
+# packages: kwin 6.8.2-2 hyprland 0.57.0-1 aquamarine 0.15.1-1 sway 1:1.12-4 wlroots0.20 0.20.2-1 grim 1.5.0-2 wl-clipboard 1:2.3.0-1 orca 51.1-1 at-spi2-core 2.62.1-1 mesa 1:26.2.6-1 qt6-base 6.12.0-3 qt6-wayland 6.12.0-1 
+# venv /var/tmp/plans-venv Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+============================= test session starts ==============================
+platform linux -- Python 3.14.9, pytest-9.2.0, pluggy-1.7.0 -- /var/tmp/plans-venv/bin/python
+hypothesis profile 'default'
+rootdir: /mnt/c/Users/Randy/Coding/chatmon-wt/compositors
+configfile: pyproject.toml
+plugins: hypothesis-6.170.14, timeout-2.4.0
+timeout: 120.0s
+timeout method: signal
+timeout func_only: False
+collecting ... collected 39 items
+
+tests/test_compositors.py::test_the_fake_inputs_opcodes_match_the_protocol_file PASSED [  2%]
+tests/test_compositors.py::test_the_overlay_is_a_layer_surface_the_compositor_draws_and_keeps_out_of_its_windows[kwin] PASSED [  5%]
+tests/test_compositors.py::test_the_overlay_is_a_layer_surface_the_compositor_draws_and_keeps_out_of_its_windows[hyprland] PASSED [  7%]
+tests/test_compositors.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else[kwin] PASSED [ 10%]
+tests/test_compositors.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else[hyprland] PASSED [ 12%]
+tests/test_compositors.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open[kwin] XFAIL [ 15%]
+tests/test_compositors.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open[hyprland] PASSED [ 17%]
+tests/test_compositors.py::test_the_penguins_menu_opens_on_the_overlay_and_works_from_the_keyboard_and_pointer[kwin] PASSED [ 20%]
+tests/test_compositors.py::test_the_penguins_menu_opens_on_the_overlay_and_works_from_the_keyboard_and_pointer[hyprland] PASSED [ 23%]
+tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin] XFAIL [ 25%]
+tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[hyprland] PASSED [ 28%]
+tests/test_compositors.py::test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin] XFAIL [ 30%]
+tests/test_compositors.py::test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[hyprland] PASSED [ 33%]
+tests/test_compositors.py::test_when_its_screen_goes_it_comes_back_on_the_one_left[kwin] PASSED [ 35%]
+tests/test_compositors.py::test_when_its_screen_goes_it_comes_back_on_the_one_left[hyprland] PASSED [ 38%]
+tests/test_compositors.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[3840x2160-2-kwin] PASSED [ 41%]
+tests/test_compositors.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[3840x2160-2-hyprland] PASSED [ 43%]
+tests/test_compositors.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[2560x1440-1.5-kwin] PASSED [ 46%]
+tests/test_compositors.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[2560x1440-1.5-hyprland] PASSED [ 48%]
+tests/test_compositors.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[kwin] PASSED [ 51%]
+tests/test_compositors.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland] XFAIL [ 53%]
+tests/test_compositors.py::test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused[kwin] PASSED [ 56%]
+tests/test_compositors.py::test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused[hyprland] PASSED [ 58%]
+tests/test_compositors.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin] XFAIL [ 61%]
+tests/test_compositors.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[hyprland] PASSED [ 64%]
+tests/test_compositors.py::test_with_the_box_a_window_its_own_menus_are_qts_beside_it[kwin] PASSED [ 66%]
+tests/test_compositors.py::test_with_the_box_a_window_its_own_menus_are_qts_beside_it[hyprland] PASSED [ 69%]
+tests/test_compositors.py::test_a_screen_reader_finds_the_box_its_field_its_buttons_and_the_conversation[kwin] PASSED [ 71%]
+tests/test_compositors.py::test_a_screen_reader_finds_the_box_its_field_its_buttons_and_the_conversation[hyprland] PASSED [ 74%]
+tests/test_compositors.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[kwin-auto-True] PASSED [ 76%]
+tests/test_compositors.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[kwin-off-False] PASSED [ 79%]
+tests/test_compositors.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[hyprland-auto-True] PASSED [ 82%]
+tests/test_compositors.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[hyprland-off-False] PASSED [ 84%]
+tests/test_compositors.py::test_what_changes_in_the_box_reaches_atspi_listeners[kwin] PASSED [ 87%]
+tests/test_compositors.py::test_what_changes_in_the_box_reaches_atspi_listeners[hyprland] PASSED [ 89%]
+tests/test_compositors.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said[kwin] PASSED [ 92%]
+tests/test_compositors.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said[hyprland] PASSED [ 94%]
+tests/test_compositors.py::test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window[kwin] PASSED [ 97%]
+tests/test_compositors.py::test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window[hyprland] PASSED [100%]
+
+=========================== short test summary info ============================
+XFAIL tests/test_compositors.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open[kwin] - KWin 6.8 leaves the keyboard on the overlay after the overlay lets it go (keyboard interactivity none): no window gets it back (README, problem 1)
+XFAIL tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin] - KWin 6.8 takes a selection only from the client with the keyboard, the overlay's connection when the box copies, so Qt's copy is refused and Chatmon's windows read the overlay's: a 2 s freeze, nothing pasted (README, problem 3; and problem 1 before it)
+XFAIL tests/test_compositors.py::test_it_gives_way_to_a_full_screen_window_and_comes_above_it_for_the_ask_box[kwin] - KWin 6.8 leaves the keyboard on the overlay after the overlay lets it go (keyboard interactivity none): no window gets it back (README, problem 1)
+XFAIL tests/test_compositors.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else[hyprland] - Hyprland 0.57 releases the button on the overlay as soon as the pointer leaves its input region, mid-drag: the chatmon drops (README, problem 2)
+XFAIL tests/test_compositors.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back[kwin] - KWin 6.8 leaves the keyboard on the overlay after the overlay lets it go (keyboard interactivity none): no window gets it back (README, problem 1)
+================== 34 passed, 5 xfailed in 400.36s (0:06:40) ===================
+exit=0

@@ -1,0 +1,426 @@
+[
+ {
+  "case": "G",
+  "how": "Chatmon just started (behind: the notification route): its greeting",
+  "expected_words": "Hi, I'm Chatmon! Click me to ask anything.",
+  "needles": [
+   "Hi, I'm Chatmon"
+  ],
+  "said_at": "23:33:24.240",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), \"New notification from Chatmon, Hi, I'm Chatmon!, Hi, I'm Chatmon! Click me to ask anything... 1 of 1\", 'window', CancellableSpeech (still valid)]",
+  "heard_at": "23:33:27.529",
+  "seconds_after_said": 3.29,
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794785606.154,
+    "event": "queue-add",
+    "title": "Hi, I'm Chatmon!",
+    "text": "Click me to ask anything.",
+    "background": false,
+    "yours": false,
+    "alert": false,
+    "holds": [],
+    "passes": true
+   },
+   {
+    "t": 1794785606.154,
+    "event": "queue-next",
+    "shown": "Hi, I'm Chatmon!",
+    "waiting": [],
+    "holds": [],
+    "showing": "Hi, I'm Chatmon!",
+    "visible": false
+   },
+   {
+    "t": 1794785606.159,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794785606.16,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794785606.175,
+    "event": "toast",
+    "title": "Hi, I'm Chatmon!",
+    "text": "Hi, I'm Chatmon! Click me to ask anything.",
+    "buttons": [],
+    "tag": "c6ac109385804ab4"
+   },
+   {
+    "t": 1794785606.176,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Hi, I'm Chatmon! Click me to ask anything.",
+    "important": false,
+    "route": "notification"
+   }
+  ],
+  "windows_notification_state": 5,
+  "banner_seen": [],
+  "transcript_meanwhile": [
+   [
+    "23:33:27.529",
+    "[LangChangeCommand ('en_US'), \"New notification from Chatmon, Hi, I'm Chatmon!, Hi, I'm Chatmon! Click me to ask anything... 1 of 1\", 'window', CancellableSpeech (still valid)]"
+   ]
+  ]
+ },
+ {
+  "case": "A1",
+  "how": "in front: the ask box open, then `chatmon say`",
+  "expected_words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+  "needles": [
+   "build finished"
+  ],
+  "said_at": "23:33:57.032",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']",
+  "heard_at": "23:33:57.351",
+  "seconds_after_said": 0.32,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794785637.115,
+    "event": "queue-add",
+    "title": "Chatmon",
+    "text": "Probe one: the build finished while Chatmon was in front.",
+    "background": true,
+    "yours": true,
+    "alert": false,
+    "holds": [],
+    "passes": true
+   },
+   {
+    "t": 1794785637.115,
+    "event": "queue-next",
+    "shown": "Chatmon",
+    "waiting": [],
+    "holds": [],
+    "showing": "Chatmon",
+    "visible": false
+   },
+   {
+    "t": 1794785637.116,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794785637.116,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794785637.117,
+    "event": "uia-say",
+    "text": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794785637.117,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Chatmon. Probe one: the build finished while Chatmon was in front.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "windows_notification_state": 5,
+  "banner_seen": [],
+  "transcript_meanwhile": [
+   [
+    "23:33:57.351",
+    "[LangChangeCommand ('en_US'), 'Chatmon. Probe one: the build finished while Chatmon was in front.']"
+   ]
+  ]
+ },
+ {
+  "case": "A2",
+  "how": "in front: `note: water the ferns` typed in the ask box, Enter",
+  "expected_words": "Noted (note 1). delete note 1 takes it back.",
+  "needles": [
+   "takes it back"
+  ],
+  "said_at": "23:34:25.189",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']",
+  "heard_at": "23:34:27.675",
+  "seconds_after_said": 2.49,
+  "chatmon_routes": [
+   "uia"
+  ],
+  "trace": [
+   {
+    "t": 1794785667.511,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794785667.511,
+    "event": "uia-in-front",
+    "value": true
+   },
+   {
+    "t": 1794785667.511,
+    "event": "uia-say",
+    "text": "Noted (note 1). delete note 1 takes it back.",
+    "important": false,
+    "raised": true
+   },
+   {
+    "t": 1794785667.511,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Noted (note 1). delete note 1 takes it back.",
+    "important": false,
+    "route": "uia"
+   }
+  ],
+  "windows_notification_state": 5,
+  "banner_seen": [],
+  "transcript_meanwhile": [
+   [
+    "23:34:25.419",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.419",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'o', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.419",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.419",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.670",
+    "[LangChangeCommand ('en_US'), 'colon', EndUtteranceCommand()]"
+   ],
+   [
+    "23:34:25.670",
+    "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "23:34:25.670",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'w', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.670",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'a', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.921",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.921",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.921",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:25.921",
+    "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "23:34:26.171",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 't', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.171",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'h', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.171",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.171",
+    "[LangChangeCommand ('en_US'), 'space', EndUtteranceCommand()]"
+   ],
+   [
+    "23:34:26.422",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'f', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.422",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'e', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.422",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'r', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.422",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 'n', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:26.673",
+    "[CharacterModeCommand(True), LangChangeCommand ('en_US'), 's', EndUtteranceCommand(), CharacterModeCommand(False)]"
+   ],
+   [
+    "23:34:27.675",
+    "[LangChangeCommand ('en_US'), 'Noted (note 1). delete note 1 takes it back.']"
+   ]
+  ]
+ },
+ {
+  "case": "B",
+  "how": "behind: File Explorer in front, then `chatmon say`",
+  "expected_words": "Chatmon. Probe two: the tests passed while Chatmon was behind.",
+  "needles": [
+   "tests passed"
+  ],
+  "said_at": "23:35:03.775",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]",
+  "heard_at": "23:35:04.013",
+  "seconds_after_said": 0.24,
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794785703.854,
+    "event": "queue-add",
+    "title": "Chatmon",
+    "text": "Probe two: the tests passed while Chatmon was behind.",
+    "background": true,
+    "yours": false,
+    "alert": false,
+    "holds": [],
+    "passes": true
+   },
+   {
+    "t": 1794785703.854,
+    "event": "queue-next",
+    "shown": "Chatmon",
+    "waiting": [],
+    "holds": [],
+    "showing": "Chatmon",
+    "visible": false
+   },
+   {
+    "t": 1794785703.855,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794785703.855,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794785703.861,
+    "event": "toast",
+    "title": "Chatmon",
+    "text": "Chatmon. Probe two: the tests passed while Chatmon was behind.",
+    "buttons": [],
+    "tag": "ac8bfa8e146d4c26"
+   },
+   {
+    "t": 1794785703.861,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Chatmon. Probe two: the tests passed while Chatmon was behind.",
+    "important": false,
+    "route": "notification"
+   }
+  ],
+  "windows_notification_state": 5,
+  "banner_seen": [],
+  "transcript_meanwhile": [
+   [
+    "23:35:04.013",
+    "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Chatmon, Chatmon. Probe two: the tests passed while Chatmon was behind... 1 of 1', 'window', CancellableSpeech (still valid)]"
+   ]
+  ]
+ },
+ {
+  "case": "C",
+  "how": "behind: File Explorer in front, then `chatmon notify needs-you`",
+  "expected_words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+  "needles": [
+   "approval"
+  ],
+  "said_at": "23:35:41.953",
+  "heard": true,
+  "transcript": "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]",
+  "heard_at": "23:35:42.355",
+  "seconds_after_said": 0.4,
+  "chatmon_routes": [
+   "notification"
+  ],
+  "trace": [
+   {
+    "t": 1794785742.033,
+    "event": "queue-add",
+    "title": "Claude needs you",
+    "text": "Probe three: Claude is waiting for your approval.",
+    "background": true,
+    "yours": false,
+    "alert": true,
+    "holds": [],
+    "passes": true
+   },
+   {
+    "t": 1794785742.033,
+    "event": "queue-next",
+    "shown": "Claude needs you",
+    "waiting": [],
+    "holds": [],
+    "showing": "Claude needs you",
+    "visible": false
+   },
+   {
+    "t": 1794785742.035,
+    "event": "reader",
+    "found": "a screen reader"
+   },
+   {
+    "t": 1794785742.035,
+    "event": "uia-in-front",
+    "value": false
+   },
+   {
+    "t": 1794785742.04,
+    "event": "toast",
+    "title": "Claude needs you",
+    "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "buttons": [
+     "OK"
+    ],
+    "tag": "b4a3561c8bb042dc"
+   },
+   {
+    "t": 1794785742.04,
+    "event": "announce",
+    "reader": "a screen reader",
+    "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.",
+    "important": true,
+    "route": "notification"
+   }
+  ],
+  "windows_notification_state": 5,
+  "banner_seen": [],
+  "transcript_meanwhile": [
+   [
+    "23:35:42.355",
+    "[LangChangeCommand ('en_US'), 'New notification from Chatmon, Claude needs you, Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat... . Actions. 1 of 1', 'window', CancellableSpeech (still valid)]"
+   ]
+  ]
+ }
+]

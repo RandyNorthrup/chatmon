@@ -1,0 +1,32 @@
+{"t": 1794775482.48, "event": "start", "pid": 3153, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794775486.221, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775486.222, "event": "voiceover-post", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false}
+{"t": 1794775486.222, "event": "voiceover-say", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "active": true, "fallback": false, "held": []}
+{"t": 1794775486.222, "event": "announce", "reader": "VoiceOver", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "spoken"}
+{"t": 1794775507.171, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794775510.852, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794775537.246, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794775540.615, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775540.615, "event": "voiceover-say", "text": "Chatmon. Probe B1, held while Chatmon is behind.", "important": false, "active": false, "fallback": false, "held": ["Chatmon. Probe B1, held while Chatmon is behind."]}
+{"t": 1794775540.615, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe B1, held while Chatmon is behind.", "important": false, "route": "spoken"}
+{"t": 1794775550.986, "event": "app-state", "state": "ApplicationActive", "held": ["Chatmon. Probe B1, held while Chatmon is behind."]}
+{"t": 1794775550.987, "event": "voiceover-post", "text": "Chatmon. Probe B1, held while Chatmon is behind.", "important": false}
+{"t": 1794775570.386, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794775573.796, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775573.797, "event": "voiceover-say", "text": "Chatmon. Probe B3, held while Chatmon is behind.", "important": false, "active": false, "fallback": false, "held": ["Chatmon. Probe B3, held while Chatmon is behind."]}
+{"t": 1794775573.797, "event": "announce", "reader": "VoiceOver", "words": "Chatmon. Probe B3, held while Chatmon is behind.", "important": false, "route": "spoken"}
+{"t": 1794775584.161, "event": "app-state", "state": "ApplicationActive", "held": ["Chatmon. Probe B3, held while Chatmon is behind."]}
+{"t": 1794775584.161, "event": "voiceover-post", "text": "Chatmon. Probe B3, held while Chatmon is behind.", "important": false}
+{"t": 1794775603.681, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794775607.002, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775607.002, "event": "voiceover-say", "text": "Claude needs you. Probe C1, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "active": false, "fallback": false, "held": ["Claude needs you. Probe C1, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794775607.002, "event": "announce", "reader": "VoiceOver", "words": "Claude needs you. Probe C1, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "spoken"}
+{"t": 1794775617.545, "event": "app-state", "state": "ApplicationActive", "held": ["Claude needs you. Probe C1, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794775617.546, "event": "voiceover-post", "text": "Claude needs you. Probe C1, waiting for your approval. To answer, type “OK” in the chat.", "important": true}
+{"t": 1794775637.175, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794775640.512, "event": "reader", "found": "VoiceOver"}
+{"t": 1794775640.513, "event": "voiceover-say", "text": "Claude needs you. Probe C2, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "active": false, "fallback": false, "held": ["Claude needs you. Probe C2, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794775640.513, "event": "announce", "reader": "VoiceOver", "words": "Claude needs you. Probe C2, waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "spoken"}
+{"t": 1794775650.992, "event": "app-state", "state": "ApplicationActive", "held": ["Claude needs you. Probe C2, waiting for your approval. To answer, type “OK” in the chat."]}
+{"t": 1794775650.993, "event": "voiceover-post", "text": "Claude needs you. Probe C2, waiting for your approval. To answer, type “OK” in the chat.", "important": true}
+{"t": 1794775671.386, "event": "exit", "code": 0}

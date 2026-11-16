@@ -1,0 +1,20 @@
+{"t": 1794777341.068, "event": "start", "pid": 20980, "platform": "win32", "python": "3.14.10"}
+{"t": 1794777352.964, "event": "reader", "found": "Narrator"}
+{"t": 1794777352.965, "event": "uia-in-front", "value": false}
+{"t": 1794777353.009, "event": "toast", "title": "Hi, I'm Chatmon!", "text": "Hi, I'm Chatmon! Click me to ask anything.", "buttons": [], "tag": "9773563ed30e48c0"}
+{"t": 1794777353.009, "event": "announce", "reader": "Narrator", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "notification"}
+{"t": 1794777365.653, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794777375.074, "event": "reader", "found": "Narrator"}
+{"t": 1794777375.075, "event": "uia-in-front", "value": true}
+{"t": 1794777375.075, "event": "uia-say", "text": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "raised": true}
+{"t": 1794777375.075, "event": "announce", "reader": "Narrator", "words": "Chatmon. Probe one: the build finished while Chatmon was in front.", "important": false, "route": "uia"}
+{"t": 1794777405.488, "event": "reader", "found": "Narrator"}
+{"t": 1794777405.488, "event": "uia-in-front", "value": true}
+{"t": 1794777405.488, "event": "uia-say", "text": "Noted (note 1). delete note 1 takes it back.", "important": false, "raised": true}
+{"t": 1794777405.488, "event": "announce", "reader": "Narrator", "words": "Noted (note 1). delete note 1 takes it back.", "important": false, "route": "uia"}
+{"t": 1794777430.519, "event": "focus", "widget": null}
+{"t": 1794777480.198, "event": "reader", "found": "Narrator"}
+{"t": 1794777480.198, "event": "uia-in-front", "value": false}
+{"t": 1794777480.216, "event": "toast", "title": "Claude needs you", "text": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.", "buttons": ["OK"], "tag": "fd87e6173a3d46bd"}
+{"t": 1794777480.216, "event": "announce", "reader": "Narrator", "words": "Claude needs you. Probe three: Claude is waiting for your approval. To answer, type “OK” in the chat.", "important": true, "route": "notification"}
+{"t": 1794777515.525, "event": "exit", "code": 0}

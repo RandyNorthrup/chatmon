@@ -1,0 +1,119 @@
+name: Pins
+
+# Every Monday, packaging/pins.py: each hash-locked list in packaging/ locked again by uv with every pin set free,
+# taking only releases at least two weeks old, as CONTRIBUTING.md moves a pin. When something can move, one issue
+# (its title is below) holds the report and the command that moves it; when nothing can, that issue is closed.
+# Dependabot can't lock these lists (uv's universal locks, every platform's packages in one file), so it only moves
+# the actions (.github/dependabot.yml). Nothing here pushes: the token reads the code and writes that one issue.
+# A pull request or a push to main that touches pins.py, its tests or this file runs the types job instead: mypy
+# --strict on pins.py for each platform, and its tests. Those runs never touch the issue.
+on:
+  schedule:
+    - cron: "37 6 * * 1"  # Mondays, 06:37 UTC
+  workflow_dispatch:
+  pull_request:
+    paths: &checked
+      - "packaging/pins.py"
+      - "packaging/requirements-pins.*"
+      - "tests/test_pins.py"
+      - "tests/fake_uv.py"
+      - ".github/workflows/pins.yml"
+  push:
+    branches: [main]
+    paths: *checked
+
+permissions: {}
+
+concurrency:
+  # A newer push to a pull request stops the run it replaces; main's runs all finish.
+  group: pins-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  types:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-dev.txt
+      - name: mypy --strict on pins.py, for each platform it runs on
+        # Every platform is checked before the step fails, so one run shows them all.
+        run: |
+          status=0
+          for platform in linux win32 darwin; do
+            echo "mypy --strict --platform $platform packaging/pins.py"
+            mypy --strict --platform "$platform" packaging/pins.py || status=1
+          done
+          exit "$status"
+      - name: pins.py's tests, and the locks' own
+        run: python -m pytest -p no:cacheprovider tests/test_pins.py tests/test_requirements.py
+
+  pins:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read  # the checkout
+      issues: write  # the one issue: opened, updated or closed
+    concurrency:
+      group: pins-issue  # one run at a time writes the issue, whichever branch it was started from
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-pins.txt  # uv, hash-locked
+      - name: What each lock would move to
+        id: pins
+        # pins.py exits 0 when nothing can move, 3 when something can, and 2 (or a traceback's 1) when it fails,
+        # which fails the run instead of touching the issue.
+        run: |
+          status=0
+          python packaging/pins.py --report "$RUNNER_TEMP/pins.md" || status=$?
+          case "$status" in
+            0) echo "movable=false" >> "$GITHUB_OUTPUT" ;;
+            3) echo "movable=true" >> "$GITHUB_OUTPUT" ;;
+            *) exit "$status" ;;
+          esac
+          cat "$RUNNER_TEMP/pins.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: The issue that says so
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MOVABLE: ${{ steps.pins.outputs.movable }}
+          TITLE: Python pins ready to move
+        # Only an open issue this workflow opened itself, as github-actions, is ever edited or closed. gh issue list
+        # names that author app/github-actions; the other forms are how other gh versions and the REST API name it,
+        # so a change there can't make the weekly run open a second issue.
+        run: |
+          number=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 200 --json number,title,author \
+            --jq '[.[] | select(.title == env.TITLE and (.author.login == "app/github-actions" or .author.login == "github-actions"
+                  or .author.login == "github-actions[bot]"))][0].number // empty')
+          run="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          body="$RUNNER_TEMP/body.md"
+          { cat "$RUNNER_TEMP/pins.md"; printf '\nFrom [this run](%s).\n' "$run"; } > "$body"
+          if [ "$(wc -c < "$body")" -gt 60000 ]; then  # an issue's body holds 65,536 characters
+            { head -c 60000 "$RUNNER_TEMP/pins.md"; printf '\n\nCut short: the whole report is in the summary of [this run](%s).\n' "$run"; } > "$body"
+          fi
+          if [ "$MOVABLE" = true ]; then
+            if [ -n "$number" ]; then
+              gh issue edit "$number" --repo "$GITHUB_REPOSITORY" --body-file "$body"
+            else
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$body"
+            fi
+          elif [ -n "$number" ]; then
+            gh issue close "$number" --repo "$GITHUB_REPOSITORY" --comment "Nothing left to move: every lock holds the newest releases at least two weeks old ([run]($run))."
+          fi

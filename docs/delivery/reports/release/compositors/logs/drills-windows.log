@@ -1,0 +1,135 @@
+red drills from docs\delivery\reports\release\compositors\drill-spec.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-qslchwvo
+copied 312 files
+
+=== drill FIX2-held-press (fix 2 (Hyprland)) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.17s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer _
+
+stage = (<chatmon.penguin.Stage object at 0x000002151D054690>, <chatmon.bubble.AskBox object at 0x000002151D0542D0>)
+
+    def test_while_a_button_is_held_on_the_chatmon_the_whole_stage_takes_the_pointer(stage):
+        """Hyprland ends a press as soon as the pointer leaves the input region, though Wayland keeps a press with the
+        surface it began on (tests/test_compositors.py sees a drag drop the chatmon there, or turn into a click): while a
+        button is held on it, the whole stage is the input region, and the chatmon's own pixels again once it's let go."""
+        s, _box = stage
+        s._tick()
+        whole = [(0, 0, s._geo.width(), s._geo.height())]
+        assert s.surface.input and s.surface.input != whole
+        sprite = s.sprites.frame(s._frame.anim, s._frame.index, s._frame.mirror)
+        x, y, w, h = max(sprite.rects, key=lambda r: r[2] * r[3])
+        on = QPointF(s._penguin.x() + x + w / 2, s._penguin.y() + y + h / 2)
+        assert s._target_at(on.toPoint()) == "penguin"
+        gpos = on + QPointF(s.origin())
+        assert s.press(on, gpos, Qt.MouseButton.LeftButton)
+        s._tick()
+>       assert s.surface.input == whole
+E       assert [(393, 684, 1..., 66, 4), ...] == [(0, 0, 800, 800)]
+E         
+E         At index 0 diff: (393, 684, 10, 4) != (0, 0, 800, 800)
+E         Left contains 28 more items, first extra item: (389, 688, 18, 4)
+E         Use -v to get more diff
+
+tests\test_overlay_stage.py:582: AssertionError
+1 failed in 0.79s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.70s
+
+=== drill FIX4-own-screen-moved (screen moved) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_screens.py::test_a_screen_that_moves_under_it_is_covered_where_it_is_now
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.80s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_a_screen_that_moves_under_it_is_covered_where_it_is_now _________
+
+stage = <chatmon.penguin.Stage object at 0x000001B7C7FAB390>
+
+    def test_a_screen_that_moves_under_it_is_covered_where_it_is_now(stage):
+        """Another screen unplugged: KDE Plasma and sway move the one left (to 0,0), and the chatmon's place, on the old
+        spot, is on no screen. The stage covers its own screen where it is now, on its next tick (tests/test_compositors.py
+        sees KWin do it)."""
+        now = stage.screen().geometry()
+        stage._geo = now.translated(now.width(), 0)  # where it was: right of the screen that went
+        stage.behavior.x = stage._geo.x() + 600  # walking there, on the old spot
+        assert stage._screen_at(QPoint(int(stage.behavior.x), stage._geo.center().y())) is None
+        stage._tick()
+>       assert stage._geo == now and now.contains(int(stage.behavior.x), now.center().y())
+E       assert (PyQt6.QtCore.QRect(800, 0, 800, 800) == PyQt6.QtCore.QRect(0, 0, 800, 800))
+E        +  where PyQt6.QtCore.QRect(800, 0, 800, 800) = <chatmon.penguin.Stage object at 0x000001B7C7FAB390>._geo
+
+tests\test_stage_screens.py:58: AssertionError
+1 failed in 0.71s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.58s
+
+=== drill FIX4-woken-by-the-move (screen moved) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_screens.py::test_a_screen_that_moves_wakes_the_stage_within_a_frame
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_a_screen_that_moves_wakes_the_stage_within_a_frame ___________
+
+stage = <chatmon.penguin.Stage object at 0x0000015D585C32F0>
+
+    def test_a_screen_that_moves_wakes_the_stage_within_a_frame(stage):
+        """Not at its next idle tick (up to IDLE_FLOOR, a second, away): the screen's own word that it moved."""
+        stage._tick()
+        stage._timer.start(1000)  # idle
+        stage.screen().geometryChanged.emit(stage.screen().geometry())
+>       assert stage._timer.remainingTime() <= 1000 / 60 + 1
+E       assert 1000 <= ((1000 / 60) + 1)
+E        +  where 1000 = <built-in method remainingTime of QTimer object at 0x0000015D585C3D90>()
+E        +    where <built-in method remainingTime of QTimer object at 0x0000015D585C3D90> = <PyQt6.QtCore.QTimer object at 0x0000015D585C3D90>.remainingTime
+E        +      where <PyQt6.QtCore.QTimer object at 0x0000015D585C3D90> = <chatmon.penguin.Stage object at 0x0000015D585C32F0>._timer
+
+tests\test_stage_screens.py:66: AssertionError
+1 failed in 0.62s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+
+=== drill FIX4-deaf-once-closed (screen moved) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_screens.py::test_a_closed_stage_hears_no_more_of_its_screen
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.55s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_a_closed_stage_hears_no_more_of_its_screen _______________
+
+stage = <chatmon.penguin.Stage object at 0x000002A2D112F2F0>
+
+    def test_a_closed_stage_hears_no_more_of_its_screen(stage):
+        screen = stage.screen()
+        stage.close_stage()
+>       assert stage._watched is None
+E       assert <PyQt6.QtGui.QScreen object at 0x000002A2D112FC50> is None
+E        +  where <PyQt6.QtGui.QScreen object at 0x000002A2D112FC50> = <chatmon.penguin.Stage object at 0x000002A2D112F2F0>._watched
+
+tests\test_stage_screens.py:72: AssertionError
+1 failed in 0.58s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.51s
+
+=== summary
+PASS FIX2-held-press
+PASS FIX4-own-screen-moved
+PASS FIX4-woken-by-the-move
+PASS FIX4-deaf-once-closed

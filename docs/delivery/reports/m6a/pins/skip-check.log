@@ -1,0 +1,20 @@
+# What PyPI offers the Qt group at real-run.log's cutoff, with and without pins.py's skip of PyQt6 6.12.0: uv 0.13.6, in a scratch folder, 2026-11-15T20:48:14Z
+$ printf "PyQt6\nPyQt6-Qt6\n" > qt.in
+$ uv pip compile qt.in -o without-skip.txt --universal --python-version 3.14 --exclude-newer 2026-11-01T20:47:00Z --quiet && grep == without-skip.txt
+# exit 0
+pyqt6==6.12.0
+pyqt6-qt6==6.12.0
+pyqt6-sip==13.13.0
+$ printf "PyQt6!=6.12.0\n" > skip.txt   (the constraint pins.py writes for SKIP)
+$ uv pip compile qt.in -o with-skip.txt --universal --python-version 3.14 --exclude-newer 2026-11-01T20:47:00Z -c skip.txt --quiet && grep == with-skip.txt
+# exit 0
+pyqt6==6.11.0
+pyqt6-qt6==6.11.2
+pyqt6-sip==13.13.0
+# When 6.12.1 (the release that fixes the stubs) clears the cooldown: uv names its upload time when asked for it
+$ uv pip compile next.in (PyQt6==6.12.1) --universal --python-version 3.14 --exclude-newer 2026-11-01T20:47:00Z
+error: No solution found when resolving dependencies
+  cause: Because there is no version of pyqt6==6.12.1 and you require pyqt6==6.12.1, we can conclude that your requirements are unsatisfiable.
+
+hint: `pyqt6` was filtered by `exclude-newer` to only include packages uploaded before 2026-11-01T20:47:00Z. The requested version, v6.12.1, was published at 2026-11-14T14:52:38.18Z. Consider using `exclude-newer-package` to override the cutoff for this package.
+# exit 1 (expected: 6.12.1 is newer than the cutoff)

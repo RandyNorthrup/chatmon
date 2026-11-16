@@ -1,0 +1,23 @@
+ProductName:		macOS
+ProductVersion:		26.7.2
+BuildVersion:		25G332
+Darwin sat12-bq163-0ec66c38-be1a-4c10-a824-06cca61b2a27-0A85FE10A0D0.local 25.6.0 Darwin Kernel Version 25.6.0: Mon Oct 12 00:39:04 PDT 2026; root:xnu-12377.161.15.701.48~2/RELEASE_ARM64_VMAPPLE arm64
+Python 3.14.10
+certifi==2026.10.23
+coverage==7.17.0
+hypothesis==6.170.14
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6_sip==13.13.0
+pytest==9.2.0
+pytest-timeout==2.4.0
+sortedcontainers==2.4.0
+tzdata==2026.6
+81e4dbdfc54f86c68c6d3ebf96d861b073e1f13f
+2026-11-15 20:58:00.228 defaults[8771:54605] 
+The domain/default pair of (com.apple.VoiceOver4/default, SCREnableAppleScript) does not exist

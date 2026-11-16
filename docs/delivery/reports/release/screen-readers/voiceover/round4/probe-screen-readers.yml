@@ -1,0 +1,1234 @@
+name: Probe screen readers
+
+# A throwaway probe before v0.10.0, on a branch of its own that holds only this file and is deleted afterwards:
+# does a real VoiceOver speak what Chatmon announces? Chatmon runs from source with CI's pinned packages (as CI's
+# macOS leg installs them) and is told what to say the ways a person meets it: a hook's message with Chatmon in
+# front, a command typed in its ask box, and a message and an agent's alert while another app is in front, then
+# Chatmon brought forward. VoiceOver is driven and read through its own AppleScript, which guidepup/setup-action
+# turns on; each new `content of last phrase` is kept with its time. Chatmon's own log, a trace of what it handed
+# VoiceOver (run_chatmon.py: Chatmon's functions wrapped, not changed) and screenshots go in the artifact.
+# A later pass runs one hypothesis, applied by run_chatmon.py and labelled so: held announcements posted 2.5 s
+# after Chatmon becomes the active app. It tests a proposed fix; Chatmon's own code is unchanged. The nvda job runs
+# the same kind of probe with NVDA on a Windows runner.
+on:
+  push:
+    branches: [probe/screen-readers]
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  voiceover:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - name: VoiceOver's AppleScript control, and the runner's permissions to drive it
+        uses: guidepup/setup-action@acf1a64cc26292ebe0db6a28d1341bd1bae93c65 # 0.21.0
+      - name: The probe's scripts, and Chatmon's settings (named, so it doesn't ask; no update or break checks)
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/out"
+          cat > "$RUNNER_TEMP/probe/run_chatmon.py" <<'PY'
+          """Chatmon from source, as `python -m chatmon` starts it, with a trace of what it hands the screen reader.
+
+          Nothing in Chatmon is changed: each function wrapped here is called as it was, with what it was given, and what it
+          was given and gave back is written to PROBE_TRACE (a JSON line each). PROBE_SRC is the source tree to run.
+          """
+
+          import json
+          import os
+          import sys
+          import time
+
+          sys.path.insert(0, os.environ["PROBE_SRC"])
+
+          from chatmon import a11y  # noqa: E402
+
+          _trace = open(os.environ["PROBE_TRACE"], "a", encoding="utf-8", buffering=1)  # noqa: SIM115 - open for the whole run
+
+
+          def note(event: str, **said) -> None:
+              _trace.write(json.dumps({"t": round(time.time(), 3), "event": event, **said}, ensure_ascii=False) + "\n")
+
+
+          note("start", pid=os.getpid(), platform=sys.platform, python=sys.version.split()[0])
+
+          _announce = a11y.announce
+
+
+          def announce(found, words, important=False, notify=None):
+              route = _announce(found, words, important, notify)
+              note("announce", reader=found.name if found else None, words=words, important=important, route=route)
+              return route
+
+
+          a11y.announce = announce
+
+          _reader = a11y.reader
+
+
+          def reader():
+              found = _reader()
+              note("reader", found=found.name if found else None)
+              return found
+
+
+          a11y.reader = reader
+
+          SETTLE_MS = int(os.environ.get("PROBE_SETTLE_MS") or 0)
+          if sys.platform == "darwin" and SETTLE_MS:
+              # A HYPOTHESIS, NOT CHATMON'S CODE: what's held, and what's said in the first SETTLE_MS after Chatmon becomes the
+              # active app (or after the queue is made while it's active), is posted SETTLE_MS after that moment, once
+              # VoiceOver has moved to Chatmon, instead of at once. Run only in the probe's second pass, to test a proposed fix.
+              from PyQt6.QtCore import Qt, QTimer
+
+              note("hypothesis", settle_ms=SETTLE_MS)
+              _shipped_init, _shipped_say = a11y.VoiceOver.__init__, a11y.VoiceOver.say
+
+              def _flush(self):
+                  if self.held and self._active() and self._settled_at is not None and time.monotonic() >= self._settled_at - 0.02:
+                      held, self.held = self.held, []
+                      self._post(" ".join(text for text, _ in held), any(important for _, important in held))
+
+              def _settled_init(self, *args, **kwargs):
+                  _shipped_init(self, *args, **kwargs)
+                  self._settled_at = time.monotonic() + SETTLE_MS / 1000 if self._active() else None
+
+              def _settled_say(self, text, important=False):
+                  if self._active() and self._settled_at is not None and time.monotonic() < self._settled_at:
+                      self.held = [*self.held, (text, important)][-self.HELD:]
+                      QTimer.singleShot(int((self._settled_at - time.monotonic()) * 1000) + 20, lambda: _flush(self))
+                  else:
+                      _shipped_say(self, text, important)
+
+              def _settled_state_changed(self, state):
+                  if state == Qt.ApplicationState.ApplicationActive:
+                      self._settled_at = time.monotonic() + SETTLE_MS / 1000
+                      if self.held:
+                          QTimer.singleShot(SETTLE_MS + 20, lambda: _flush(self))
+                  else:
+                      self._settled_at = None
+
+              a11y.VoiceOver.__init__ = _settled_init
+              a11y.VoiceOver.say = _settled_say
+              a11y.VoiceOver.state_changed = _settled_state_changed
+
+          if sys.platform == "darwin":
+              _post = a11y._voiceover
+
+              def post(text, important):
+                  note("voiceover-post", text=text, important=important)  # NSAccessibilityAnnouncementRequestedNotification, now
+                  return _post(text, important)
+
+              a11y._voiceover = post  # VoiceOver() takes it as its default `post` when it's made, after this
+
+              _say = a11y.VoiceOver.say
+
+              def voiceover_say(self, text, important=False):
+                  active = bool(self._active())
+                  _say(self, text, important)
+                  note("voiceover-say", text=text, important=important, active=active, fallback=a11y._speech_fallback,
+                       held=[held for held, _ in self.held])
+
+              a11y.VoiceOver.say = voiceover_say
+
+              _changed = a11y.VoiceOver.state_changed
+
+              def state_changed(self, state):
+                  note("app-state", state=getattr(state, "name", str(state)), held=[held for held, _ in self.held])
+                  return _changed(self, state)
+
+              a11y.VoiceOver.state_changed = state_changed  # connected when VoiceOver() is made, after this
+
+          if sys.platform == "win32":
+              from chatmon import winuia, wintoast
+
+              _in_front = winuia.in_front
+
+              def in_front():
+                  front = _in_front()
+                  note("uia-in-front", value=front)
+                  return front
+
+              winuia.in_front = in_front
+
+              _uia_say = winuia.say
+
+              def uia_say(text, important=False):
+                  raised = _uia_say(text, important)
+                  note("uia-say", text=text, important=important, raised=raised)  # UiaRaiseNotificationEvent's S_OK
+                  return raised
+
+              winuia.say = uia_say
+
+              _show = wintoast.show
+
+              def show(title, text="", buttons=(), scenario=None):
+                  tag = _show(title, text, buttons, scenario)
+                  note("toast", title=title, text=text, buttons=[label for label, _ in buttons], tag=tag)
+                  return tag
+
+              wintoast.show = show
+
+          import chatmon.app as _chatmon_app  # noqa: E402
+          from PyQt6.QtWidgets import QApplication  # noqa: E402
+
+
+          def _describe(widget) -> str | None:
+              if widget is None:
+                  return None
+              return f"{type(widget).__name__} {widget.objectName()!r} accessible {widget.accessibleName()!r} in {widget.window().windowTitle()!r}"
+
+
+          class _TracedApplication(QApplication):
+              """Qt's own application, with its keyboard focus changes noted (where typing goes)."""
+
+              def __init__(self, *args):
+                  super().__init__(*args)
+                  self.focusChanged.connect(lambda old, new: note("focus", widget=_describe(new)))
+
+
+          _chatmon_app.QApplication = _TracedApplication  # app.run() makes the application with the name it imported
+
+          from chatmon.cli import main  # noqa: E402
+
+          code = main([])
+          note("exit", code=code)
+          sys.exit(code)
+          PY
+          cat > "$RUNNER_TEMP/probe/drive_voiceover.py" <<'PY'
+          """The VoiceOver probe: VoiceOver on, Chatmon started, Chatmon made to announce things the ways a person meets
+          them, and every phrase VoiceOver speaks meanwhile kept, from its own AppleScript (`content of last phrase`, polled).
+
+          usage: drive_voiceover.py OUT_DIR SOURCE_TREE SHIM
+          Passes. "shipped": Chatmon as it is (its greeting, a message with it in front, a command typed, with Qt's keyboard
+          focus traced). "settle-2500": the same Chatmon with one hypothesis applied by the shim (run_chatmon.py,
+          PROBE_SETTLE_MS): VoiceOver's held announcements posted 2.5 s after Chatmon becomes active. After each announcement
+          VoiceOver is left alone for 8 s, so its next phrase shows whether it went on to something else first.
+          Writes OUT_DIR/voiceover-phrases.jsonl (each new last phrase, when first seen), driver.log (each step), results.json
+          (each case: what was expected, whether VoiceOver said it, and when), transcript.txt (steps and phrases in order), and
+          screenshots. Chatmon's trace goes to OUT_DIR/chatmon-trace-<pass>.jsonl.
+          """
+
+          import json
+          import os
+          import re
+          import subprocess
+          import sys
+          import threading
+          import time
+          from pathlib import Path
+
+          OUT, SRC, SHIM = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+          OUT.mkdir(parents=True, exist_ok=True)
+          PY = sys.executable
+          VERSION = re.search(r'__version__ = "([^"]+)"', (SRC / "chatmon" / "__init__.py").read_text(encoding="utf-8")).group(1)
+          LAST_PHRASE = 'tell application "VoiceOver" to get content of last phrase'
+          FRONT = ('tell application "System Events"\nset p to first application process whose frontmost is true\n'
+                   'return (name of p) & " " & (unix id of p)\nend tell')
+          SHORTCUT = 'tell application "System Events" to key code 49 using {command down, shift down}'  # Chatmon's Ctrl+Shift+Space
+          timeline: list[tuple[float, str]] = []
+          _log = open(OUT / "driver.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+
+          def stamp(t: float) -> str:
+              return time.strftime("%H:%M:%S", time.gmtime(t)) + f".{int(t % 1 * 1000):03d}Z"
+
+
+          def note(text: str) -> None:
+              t = time.time()
+              timeline.append((t, text))
+              line = f"{stamp(t)} {text}"
+              print(line, flush=True)
+              _log.write(line + "\n")
+
+
+          def run(args: list[str], timeout: float = 60, show: str | None = None) -> subprocess.CompletedProcess:
+              note("$ " + (show or " ".join(args)))
+              r = subprocess.run(args, capture_output=True, text=True, timeout=timeout, cwd=SRC)
+              out = (r.stdout + r.stderr).strip()
+              note(f"  exit {r.returncode}" + (": " + out.replace("\n", " | ") if out else ""))
+              return r
+
+
+          def chatmon(*args: str) -> subprocess.CompletedProcess:
+              shown = " ".join(a if re.fullmatch(r"[\w.-]+", a) else json.dumps(a) for a in args)
+              return run([PY, "-m", "chatmon", *args], show=f"python -m chatmon {shown}")
+
+
+          def osa(script: str, timeout: float = 15) -> tuple[int, str, str]:
+              try:
+                  r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True, timeout=timeout)
+              except subprocess.TimeoutExpired:
+                  return 124, "", "timed out"
+              return r.returncode, r.stdout.strip(), r.stderr.strip()
+
+
+          def act(script: str, label: str = "") -> str:
+              code, out, err = osa(script)
+              note(f"osascript ({label or script}): exit {code}" + (f", {out}" if out else "") + (f", {err}" if err else ""))
+              return out
+
+
+          def front() -> str:
+              code, out, err = osa(FRONT)
+              said = out if code == 0 else f"unknown ({err})"
+              note(f"frontmost app: {said}")
+              return said
+
+
+          def shot(name: str) -> None:
+              subprocess.run(["screencapture", "-x", str(OUT / f"screen-{name}.png")], capture_output=True, timeout=30)
+
+
+          class Heard(threading.Thread):
+              """VoiceOver's last phrase, asked for again and again; each new one kept with when it was first seen."""
+
+              def __init__(self) -> None:
+                  super().__init__(daemon=True)
+                  self.phrases: list[tuple[float, str]] = []
+                  self.polls = self.errors = 0
+                  self.stopping = False
+                  self.file = open(OUT / "voiceover-phrases.jsonl", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+              def run(self) -> None:
+                  last = None
+                  while not self.stopping:
+                      code, text, err = osa(LAST_PHRASE, timeout=5)
+                      t = time.time()
+                      self.polls += 1
+                      if code == 0 and text != last:
+                          last = text
+                          self.phrases.append((t, text))
+                          self.file.write(json.dumps({"t": round(t, 3), "at": stamp(t), "phrase": text}, ensure_ascii=False) + "\n")
+                      elif code != 0:
+                          self.errors += 1
+                          if self.errors <= 5 or self.errors % 100 == 0:
+                              note(f"VoiceOver's last phrase couldn't be read ({code}): {err}")
+                      time.sleep(0.05)
+
+              def find(self, needle: str, since: float, until: float | None = None) -> tuple[float, str] | None:
+                  return next(((t, x) for t, x in self.phrases if t >= since and (until is None or t <= until) and needle.lower() in x.lower()), None)
+
+              def wait_for(self, needle: str, since: float, seconds: float) -> tuple[float, str] | None:
+                  end = time.time() + seconds
+                  while time.time() < end:
+                      found = self.find(needle, since)
+                      if found:
+                          return found
+                      time.sleep(0.1)
+                  return self.find(needle, since)
+
+
+          class Pass:
+              """One run of Chatmon: started, its cases, quit."""
+
+              def __init__(self, name: str, settle_ms: int, heard: Heard) -> None:
+                  self.name, self.settle_ms, self.heard = name, settle_ms, heard
+                  self.trace = OUT / f"chatmon-trace-{name}.jsonl"
+                  self.app: subprocess.Popen | None = None
+
+              def start(self) -> float:
+                  env = dict(os.environ, CHATMON_DEBUG="1", PROBE_SRC=str(SRC), PROBE_TRACE=str(self.trace), PROBE_SETTLE_MS=str(self.settle_ms))
+                  with open(OUT / f"chatmon-stdout-{self.name}.log", "w", encoding="utf-8") as console:
+                      self.app = subprocess.Popen([PY, str(SHIM)], cwd=SRC, env=env, stdout=console, stderr=subprocess.STDOUT)
+                  started = time.time()
+                  note(f"Chatmon started from source through run_chatmon.py (pass {self.name}, PROBE_SETTLE_MS={self.settle_ms}), pid {self.app.pid}")
+                  for _ in range(90):
+                      r = subprocess.run([PY, "-m", "chatmon", "status"], capture_output=True, text=True, timeout=60, cwd=SRC)
+                      if r.stdout.startswith("Chatmon is running."):
+                          break
+                      time.sleep(1)
+                  note(f"python -m chatmon status: {r.stdout.splitlines()[0] if r.stdout else r.stderr.strip()}")
+                  return started
+
+              def quit(self) -> None:
+                  chatmon("quit")
+                  try:
+                      self.app.wait(30)
+                  except subprocess.TimeoutExpired:
+                      self.app.kill()
+                  note(f"Chatmon exited: {self.app.returncode}")
+
+              def traced(self, since: float) -> list[dict]:
+                  lines = self.trace.read_text(encoding="utf-8").splitlines() if self.trace.exists() else []
+                  wanted = ("announce", "voiceover-say", "voiceover-post", "app-state", "hypothesis", "focus")
+                  return [e for e in map(json.loads, lines) if e["t"] >= since and e["event"] in wanted]
+
+              def active(self) -> bool:
+                  return str(self.app.pid) in front().split()[-1:]
+
+              def to_front_by_system_events(self) -> None:
+                  act(f'tell application "System Events" to set frontmost of (first application process whose unix id is {self.app.pid}) to true',
+                      "System Events: Chatmon frontmost, as Cmd-Tab or the Dock would")
+
+              def focused(self) -> str:
+                  script = (f'tell application "System Events"\nset p to first application process whose unix id is {self.app.pid}\n'
+                            'set f to value of attribute "AXFocusedUIElement" of p\nset r to ""\n'
+                            'try\nset r to r & (role of f)\nend try\ntry\nset r to r & " | " & (description of f)\nend try\n'
+                            'try\nset r to r & " | value: " & (value of f)\nend try\nreturn r\nend tell')
+                  code, out, err = osa(script)
+                  said = out if code == 0 else f"unknown ({err})"
+                  note(f"Chatmon's focused element: {said}")
+                  return said
+
+              def to_finder(self) -> None:
+                  if not self.active():  # the ask box may still be open behind: Esc reaches it only with Chatmon in front
+                      self.to_front_by_system_events()
+                      time.sleep(1.5)
+                  act('tell application "System Events" to key code 53', "Esc")
+                  time.sleep(1)
+                  act('tell application "Finder" to activate', "Finder activate")
+                  time.sleep(3)
+                  front()
+
+
+          results: list[dict] = []
+
+
+          def record(p: Pass, case: str, how: str, expected: str, needle: str, said_at: float, *, fronted_at: float | None = None,
+                     wait: float = 15, extra: dict | None = None, linger: float = 8) -> dict:
+              got = p.heard.wait_for(needle, said_at, wait)
+              entry = {
+                  "pass": p.name, "case": case, "how": how, "expected_words": expected, "needle": needle, "said_at": stamp(said_at),
+                  "heard": bool(got), "spoken": got[1] if got else None, "spoken_at": stamp(got[0]) if got else None,
+                  "seconds_after_said": round(got[0] - said_at, 2) if got else None, **(extra or {}),
+              }
+              if got:
+                  # "last phrase" says what VoiceOver started to say. Nothing more is done for `linger` seconds, so the next
+                  # phrase VoiceOver starts of its own accord bounds how much of this one it said before moving on.
+                  time.sleep(max(0.0, got[0] + linger - time.time()))
+                  later = [(t, x) for t, x in p.heard.phrases if t > got[0]]
+                  entry["words"] = len(got[1].split())
+                  entry["next_phrase"] = (round(later[0][0] - got[0], 2), later[0][1]) if later else None
+                  entry["quiet_after_for_at_least"] = None if later else linger
+              if fronted_at is not None:
+                  early = p.heard.find(needle, said_at, fronted_at)
+                  entry.update(brought_to_front_at=stamp(fronted_at), held_while_behind=early is None,
+                               seconds_after_front=round(got[0] - fronted_at, 2) if got else None)
+              entry["trace"] = p.traced(said_at - 0.5)
+              entry["phrases_meanwhile"] = [(stamp(t), x) for t, x in p.heard.phrases if said_at - 0.5 <= t <= time.time()]
+              results.append(entry)
+              note(f"CASE {p.name}/{case}: " + (f"VoiceOver said {got[1]!r} {entry['seconds_after_said']} s after" if got else "VoiceOver never said it")
+                   + (f"; held while behind: {entry['held_while_behind']}" if fronted_at is not None else ""))
+              return entry
+
+
+          def held_case(p: Pass, case: str, how: str, send, expected: str, needle: str, bring: str) -> None:
+              """Chatmon behind (Finder in front), something to say comes, then Chatmon is brought forward by `bring`."""
+              note(f"== {p.name}/{case}: {how}")
+              p.to_finder()
+              said = time.time()
+              send()
+              time.sleep(10)  # held, if it's held
+              shot(f"{p.name}-{case}-behind")
+              fronted = time.time()
+              if bring == "shortcut":
+                  act(SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+              elif bring == "chatmon ask":
+                  chatmon("ask")
+              else:
+                  p.to_front_by_system_events()
+              time.sleep(2.5)
+              activated = p.active()
+              entry = record(p, case, how, expected, needle, said, fronted_at=fronted, extra={"chatmon_active_after_bringing": activated})
+              shot(f"{p.name}-{case}-front")
+              if not entry["heard"] and not activated:
+                  note(f"{case}: Chatmon didn't become the active app; now through System Events, to see whether the held words come then")
+                  again = time.time()
+                  p.to_front_by_system_events()
+                  time.sleep(2)
+                  record(p, case + "+SE", how + "; then System Events makes it frontmost", expected, needle, said, fronted_at=again,
+                         extra={"chatmon_active_after_bringing": p.active()})
+
+
+          def typing(p: Pass, case: str) -> None:
+              note(f"== {p.name}/{case}: Finder in front; the shortcut opens the ask box; `version` typed, Return")
+              p.to_finder()
+              act(SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+              time.sleep(3)
+              activated = p.active()
+              time.sleep(4)
+              before = p.focused()
+              said = time.time()
+              act('tell application "System Events" to keystroke "version"', "keystroke version")
+              time.sleep(1)
+              after = p.focused()
+              shot(f"{p.name}-{case}-typed")
+              act('tell application "System Events" to key code 36', "Return")
+              record(p, case, "in front (the shortcut opened the ask box): `version` typed, Return", f"I'm Chatmon {VERSION}.", f"Chatmon {VERSION}",
+                     said, extra={"chatmon_active_after_shortcut": activated, "focused_before_typing": before, "focused_after_typing": after})
+              time.sleep(1)
+              shot(f"{p.name}-{case}-answered")
+
+
+          HELD_CASES = (
+              ("B1", "behind: `chatmon say`; then Chatmon's shortcut opens the ask box", "say", "shortcut"),
+              ("B3", "behind: `chatmon say`; then System Events makes Chatmon frontmost (no ask box)", "say", "system events"),
+              ("C1", "behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)", "alert", "system events"),
+              ("C2", "behind: an agent's needs-you alert; then Chatmon's shortcut opens the ask box", "alert", "shortcut"),
+          )
+
+
+          def held_cases(p: Pass, prefix: str) -> None:
+              for case, how, kind, bring in HELD_CASES:
+                  tag = f"Probe {prefix}{case}"
+                  if kind == "say":
+                      text = f"{tag}, held while Chatmon is behind."
+                      expected = f"Chatmon. {text}"
+
+                      def send(text=text):
+                          chatmon("say", text)
+                  else:
+                      text = f"{tag}, waiting for your approval."
+                      expected = f"Claude needs you. {text} To answer, type “OK” in the chat."
+
+                      def send(text=text):
+                          chatmon("notify", "needs-you", "--source", "claude", "--message", text)
+                  held_case(p, case, ("HYPOTHESIS: " if p.settle_ms else "") + how, send, expected, tag, bring)
+
+
+          def greeting(p: Pass, started: float) -> None:
+              record(p, "G", ("HYPOTHESIS: " if p.settle_ms else "") + "Chatmon just started (active, as launched): its greeting",
+                     "Hi, I'm Chatmon! Click me to ask anything.", "Hi, I'm Chatmon", started, wait=20)
+
+
+          def in_front(p: Pass, case: str) -> None:
+              note(f"== {p.name}/{case}: Finder in front; Chatmon's shortcut opens the ask box; a hook's message comes")
+              p.to_finder()
+              act(SHORTCUT, "Cmd+Shift+Space, Chatmon's shortcut")
+              time.sleep(3)
+              activated = p.active()
+              time.sleep(5)  # VoiceOver says where it's landed first
+              text = f"Probe {case}, said while Chatmon is in front."
+              said = time.time()
+              chatmon("say", text)
+              record(p, case, "in front (the shortcut opened the ask box), then `chatmon say`", f"Chatmon. {text}", f"Probe {case}", said,
+                     extra={"chatmon_active_after_shortcut": activated})
+              shot(f"{p.name}-{case}")
+
+
+          def shipped(heard: Heard) -> None:
+              p = Pass("shipped", 0, heard)
+              greeting(p, p.start())
+              shot("shipped-G")
+              in_front(p, "A1")
+              typing(p, "A2")
+              time.sleep(2)
+              p.quit()
+
+
+          def settled(heard: Heard, ms: int) -> None:
+              p = Pass(f"settle-{ms}", ms, heard)
+              act('tell application "Finder" to activate', "Finder activate")
+              time.sleep(2)
+              greeting(p, p.start())
+              time.sleep(3)
+              held_cases(p, f"S{ms // 100}-")
+              time.sleep(2)
+              p.quit()
+
+
+          def main() -> int:
+              note(f"probe started: Chatmon {VERSION} from {SRC}, Python {sys.version.split()[0]}")
+              run(["sw_vers"])
+              run(["/System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter"])
+              deadline = time.time() + 120
+              while True:
+                  code, out, err = osa(LAST_PHRASE)
+                  if code == 0:
+                      note(f"VoiceOver answers its AppleScript; last phrase so far: {out!r}")
+                      break
+                  if time.time() > deadline:
+                      note(f"VoiceOver never answered its AppleScript: {err}")
+                      return 2
+                  time.sleep(1)
+              heard = Heard()
+              heard.start()
+              time.sleep(5)
+              front()
+              try:
+                  shipped(heard)
+                  settled(heard, 2500)
+              finally:
+                  time.sleep(2)
+                  heard.stopping = True
+                  heard.join(10)
+                  note(f"VoiceOver's last phrase was read {heard.polls} times ({heard.errors} failed); {len(heard.phrases)} phrases kept")
+                  osa('tell application "VoiceOver" to quit')
+                  (OUT / "results.json").write_text(json.dumps(results, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+                  events = sorted([(t, f"   [step] {x}") for t, x in timeline] + [(t, f"VO SAID: {x}") for t, x in heard.phrases])
+                  (OUT / "transcript.txt").write_text("".join(f"{stamp(t)} {x}\n" for t, x in events), encoding="utf-8")
+              (OUT / "results.json").write_text(json.dumps(results, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+              for r in results:
+                  note(f"{r['pass']}/{r['case']}: heard={r.get('heard')} spoken={r.get('spoken')!r}"
+                       + (f" held_while_behind={r['held_while_behind']}" if "held_while_behind" in r else ""))
+              return 0
+
+
+          if __name__ == "__main__":
+              sys.exit(main())
+          PY
+          conf="$HOME/Library/Application Support/chatmon"
+          mkdir -p "$conf"
+          printf '%s\n' 'name = "Chatmon"' '[updates]' 'check = false' '[breaks]' 'remind = false' '[heads_up]' 'updates = false' > "$conf/config.toml"
+          cp "$conf/config.toml" "$RUNNER_TEMP/out/config.toml"
+          shasum -a 256 "$RUNNER_TEMP/probe/"*.py | tee "$RUNNER_TEMP/out/scripts.sha256"
+      - name: Probe VoiceOver
+        run: python "$RUNNER_TEMP/probe/drive_voiceover.py" "$RUNNER_TEMP/out" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py"
+      - name: Chatmon's own log, and what ran
+        if: ${{ always() }}
+        run: |
+          cp "$HOME/Library/Application Support/chatmon/state/chatmon.log" "$RUNNER_TEMP/out/" || true
+          { sw_vers; uname -a; python --version; python -m pip freeze; git -C "$GITHUB_WORKSPACE" rev-parse HEAD; } > "$RUNNER_TEMP/out/environment.txt" 2>&1
+          defaults read com.apple.VoiceOver4/default SCREnableAppleScript >> "$RUNNER_TEMP/out/environment.txt" 2>&1 || true
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: voiceover-transcript
+          path: ${{ runner.temp }}/out
+          if-no-files-found: error
+          retention-days: 30
+
+  nvda:
+    # NVDA on a Windows runner's desktop: NV Access's own 2026.3.1 installer (its published SHA-256 checked) made a
+    # portable copy, run with its log at the input/output level, whose "Speaking" lines are the transcript.
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - name: NVDA 2026.3.1 from NV Access, checked, made a portable copy
+        shell: pwsh
+        run: |
+          $exe = "$env:RUNNER_TEMP\nvda_2026.3.1.exe"
+          Invoke-WebRequest -Uri https://download.nvaccess.org/releases/2026.3.1/nvda_2026.3.1.exe -OutFile $exe
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash
+          if ($hash -ne '6F80A5B0CA720A7D0D314B5BE212F37388BBE81A1107AC3298C1821A1CD3F052') { throw "NVDA's installer has SHA-256 $hash" }
+          $sig = Get-AuthenticodeSignature $exe
+          "signature: $($sig.Status), $($sig.SignerCertificate.Subject)"
+          New-Item -ItemType Directory "$env:RUNNER_TEMP\out" -Force | Out-Null
+          Start-Process -FilePath $exe -ArgumentList '--create-portable-silent', "--portable-path=$env:RUNNER_TEMP\nvda" -Wait
+          $deadline = (Get-Date).AddMinutes(5)
+          while (-not (Test-Path "$env:RUNNER_TEMP\nvda\nvda.exe") -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 2 }
+          while ((Get-Process -Name nvda*, nvda_* -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 2 }
+          Get-ChildItem "$env:RUNNER_TEMP\nvda" | Select-Object -First 12 | Format-Table -AutoSize Name, Length
+          "nvda.exe: $(Test-Path "$env:RUNNER_TEMP\nvda\nvda.exe")"
+      - name: The probe's scripts, and Chatmon's settings (named, so it doesn't ask; no update or break checks)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/out"
+          cat > "$RUNNER_TEMP/probe/run_chatmon.py" <<'PY'
+          """Chatmon from source, as `python -m chatmon` starts it, with a trace of what it hands the screen reader.
+
+          Nothing in Chatmon is changed: each function wrapped here is called as it was, with what it was given, and what it
+          was given and gave back is written to PROBE_TRACE (a JSON line each). PROBE_SRC is the source tree to run.
+          """
+
+          import json
+          import os
+          import sys
+          import time
+
+          sys.path.insert(0, os.environ["PROBE_SRC"])
+
+          from chatmon import a11y  # noqa: E402
+
+          _trace = open(os.environ["PROBE_TRACE"], "a", encoding="utf-8", buffering=1)  # noqa: SIM115 - open for the whole run
+
+
+          def note(event: str, **said) -> None:
+              _trace.write(json.dumps({"t": round(time.time(), 3), "event": event, **said}, ensure_ascii=False) + "\n")
+
+
+          note("start", pid=os.getpid(), platform=sys.platform, python=sys.version.split()[0])
+
+          _announce = a11y.announce
+
+
+          def announce(found, words, important=False, notify=None):
+              route = _announce(found, words, important, notify)
+              note("announce", reader=found.name if found else None, words=words, important=important, route=route)
+              return route
+
+
+          a11y.announce = announce
+
+          _reader = a11y.reader
+
+
+          def reader():
+              found = _reader()
+              note("reader", found=found.name if found else None)
+              return found
+
+
+          a11y.reader = reader
+
+          SETTLE_MS = int(os.environ.get("PROBE_SETTLE_MS") or 0)
+          if sys.platform == "darwin" and SETTLE_MS:
+              # A HYPOTHESIS, NOT CHATMON'S CODE: what's held, and what's said in the first SETTLE_MS after Chatmon becomes the
+              # active app (or after the queue is made while it's active), is posted SETTLE_MS after that moment, once
+              # VoiceOver has moved to Chatmon, instead of at once. Run only in the probe's second pass, to test a proposed fix.
+              from PyQt6.QtCore import Qt, QTimer
+
+              note("hypothesis", settle_ms=SETTLE_MS)
+              _shipped_init, _shipped_say = a11y.VoiceOver.__init__, a11y.VoiceOver.say
+
+              def _flush(self):
+                  if self.held and self._active() and self._settled_at is not None and time.monotonic() >= self._settled_at - 0.02:
+                      held, self.held = self.held, []
+                      self._post(" ".join(text for text, _ in held), any(important for _, important in held))
+
+              def _settled_init(self, *args, **kwargs):
+                  _shipped_init(self, *args, **kwargs)
+                  self._settled_at = time.monotonic() + SETTLE_MS / 1000 if self._active() else None
+
+              def _settled_say(self, text, important=False):
+                  if self._active() and self._settled_at is not None and time.monotonic() < self._settled_at:
+                      self.held = [*self.held, (text, important)][-self.HELD:]
+                      QTimer.singleShot(int((self._settled_at - time.monotonic()) * 1000) + 20, lambda: _flush(self))
+                  else:
+                      _shipped_say(self, text, important)
+
+              def _settled_state_changed(self, state):
+                  if state == Qt.ApplicationState.ApplicationActive:
+                      self._settled_at = time.monotonic() + SETTLE_MS / 1000
+                      if self.held:
+                          QTimer.singleShot(SETTLE_MS + 20, lambda: _flush(self))
+                  else:
+                      self._settled_at = None
+
+              a11y.VoiceOver.__init__ = _settled_init
+              a11y.VoiceOver.say = _settled_say
+              a11y.VoiceOver.state_changed = _settled_state_changed
+
+          if sys.platform == "darwin":
+              _post = a11y._voiceover
+
+              def post(text, important):
+                  note("voiceover-post", text=text, important=important)  # NSAccessibilityAnnouncementRequestedNotification, now
+                  return _post(text, important)
+
+              a11y._voiceover = post  # VoiceOver() takes it as its default `post` when it's made, after this
+
+              _say = a11y.VoiceOver.say
+
+              def voiceover_say(self, text, important=False):
+                  active = bool(self._active())
+                  _say(self, text, important)
+                  note("voiceover-say", text=text, important=important, active=active, fallback=a11y._speech_fallback,
+                       held=[held for held, _ in self.held])
+
+              a11y.VoiceOver.say = voiceover_say
+
+              _changed = a11y.VoiceOver.state_changed
+
+              def state_changed(self, state):
+                  note("app-state", state=getattr(state, "name", str(state)), held=[held for held, _ in self.held])
+                  return _changed(self, state)
+
+              a11y.VoiceOver.state_changed = state_changed  # connected when VoiceOver() is made, after this
+
+          if sys.platform == "win32":
+              from chatmon import winuia, wintoast
+
+              _in_front = winuia.in_front
+
+              def in_front():
+                  front = _in_front()
+                  note("uia-in-front", value=front)
+                  return front
+
+              winuia.in_front = in_front
+
+              _uia_say = winuia.say
+
+              def uia_say(text, important=False):
+                  raised = _uia_say(text, important)
+                  note("uia-say", text=text, important=important, raised=raised)  # UiaRaiseNotificationEvent's S_OK
+                  return raised
+
+              winuia.say = uia_say
+
+              _show = wintoast.show
+
+              def show(title, text="", buttons=(), scenario=None):
+                  tag = _show(title, text, buttons, scenario)
+                  note("toast", title=title, text=text, buttons=[label for label, _ in buttons], tag=tag)
+                  return tag
+
+              wintoast.show = show
+
+          import chatmon.app as _chatmon_app  # noqa: E402
+          from PyQt6.QtWidgets import QApplication  # noqa: E402
+
+
+          def _describe(widget) -> str | None:
+              if widget is None:
+                  return None
+              return f"{type(widget).__name__} {widget.objectName()!r} accessible {widget.accessibleName()!r} in {widget.window().windowTitle()!r}"
+
+
+          class _TracedApplication(QApplication):
+              """Qt's own application, with its keyboard focus changes noted (where typing goes)."""
+
+              def __init__(self, *args):
+                  super().__init__(*args)
+                  self.focusChanged.connect(lambda old, new: note("focus", widget=_describe(new)))
+
+
+          _chatmon_app.QApplication = _TracedApplication  # app.run() makes the application with the name it imported
+
+          from chatmon.cli import main  # noqa: E402
+
+          code = main([])
+          note("exit", code=code)
+          sys.exit(code)
+          PY
+          cat > "$RUNNER_TEMP/probe/drive_windows.py" <<'PY'
+          """The Windows probe, run in Technician's signed-in console session on testpc2: a screen reader on, Chatmon
+          started, Chatmon made to announce things the ways a person meets them, and what the screen reader said kept.
+
+          usage: drive_windows.py OUT_DIR SOURCE_TREE SHIM narrator|nvda [NVDA_EXE]
+            narrator: Narrator speaks; Windows 11's Live captions (already set up) captions the speakers, and its window's text
+                      is read through UI Automation as it changes (captions.jsonl).
+            nvda:     NVDA (a portable copy) speaks, with its log at the input/output level; its "Speaking" lines are the
+                      transcript (nvda.log, nvda-speech.jsonl).
+          Writes driver.log, results.json, transcript.txt; Chatmon's trace (run_chatmon.py) goes to chatmon-trace.jsonl.
+          Only this session's input is used (SendInput: typing in Chatmon's ask box, a click on a window's title bar).
+          """
+
+          import sys
+
+          sys.coinit_flags = 0  # the multithreaded apartment: the caption reader asks UI Automation from a thread of its own
+
+          import ctypes  # noqa: E402
+          import json  # noqa: E402
+          import os  # noqa: E402
+          import re  # noqa: E402
+          import subprocess  # noqa: E402
+          import threading  # noqa: E402
+          import time  # noqa: E402
+          from ctypes import wintypes  # noqa: E402
+          from pathlib import Path  # noqa: E402
+
+          import comtypes  # noqa: E402
+          import comtypes.client  # noqa: E402
+
+          OUT, SRC, SHIM, READER = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), sys.argv[4]
+          NVDA_EXE = sys.argv[5] if len(sys.argv) > 5 else ""
+          OUT.mkdir(parents=True, exist_ok=True)
+          PY = sys.executable
+          BELOW_NORMAL = 0x4000  # BELOW_NORMAL_PRIORITY_CLASS: the PC is shared
+          VERSION = re.search(r'__version__ = "([^"]+)"', (SRC / "chatmon" / "__init__.py").read_text(encoding="utf-8")).group(1)
+          UIA = comtypes.client.GetModule("UIAutomationCore.dll")
+          timeline: list[tuple[float, str]] = []
+          _log = open(OUT / "driver.log", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+          user32 = ctypes.WinDLL("user32", use_last_error=True)
+          user32.GetForegroundWindow.restype = wintypes.HWND
+          user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+          user32.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+          user32.GetClassNameW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+          user32.GetWindowRect.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.RECT)]
+          user32.IsWindowVisible.argtypes = [wintypes.HWND]
+          user32.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
+          WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+          user32.EnumWindows.argtypes = [WNDENUMPROC, wintypes.LPARAM]
+
+
+          def stamp(t: float) -> str:
+              return time.strftime("%H:%M:%S", time.localtime(t)) + f".{int(t % 1 * 1000):03d}"
+
+
+          def note(text: str) -> None:
+              t = time.time()
+              timeline.append((t, text))
+              line = f"{stamp(t)} {text}"
+              print(line, flush=True)
+              _log.write(line + "\n")
+
+
+          def run(args: list[str], timeout: float = 60, show: str | None = None) -> subprocess.CompletedProcess:
+              note("$ " + (show or " ".join(args)))
+              r = subprocess.run(args, capture_output=True, text=True, timeout=timeout, cwd=SRC, creationflags=BELOW_NORMAL,
+                                 encoding="utf-8", errors="replace")
+              out = (r.stdout + r.stderr).strip()
+              note(f"  exit {r.returncode}" + (": " + out.replace("\n", " | ") if out else ""))
+              return r
+
+
+          def chatmon(*args: str) -> subprocess.CompletedProcess:
+              shown = " ".join(a if re.fullmatch(r"[\w.-]+", a) else json.dumps(a) for a in args)
+              return run([PY, "-m", "chatmon", *args], show=f"python -m chatmon {shown}")
+
+
+          # -- windows and input (this session's own)
+
+          def window_info(hwnd) -> dict:
+              pid = wintypes.DWORD(0)
+              user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+              title, cls, rect = ctypes.create_unicode_buffer(256), ctypes.create_unicode_buffer(256), wintypes.RECT()
+              user32.GetWindowTextW(hwnd, title, 256)
+              user32.GetClassNameW(hwnd, cls, 256)
+              user32.GetWindowRect(hwnd, ctypes.byref(rect))
+              return {"hwnd": hwnd or 0, "pid": pid.value, "title": title.value, "class": cls.value,
+                      "rect": [rect.left, rect.top, rect.right, rect.bottom]}
+
+
+          def front() -> dict:
+              info = window_info(user32.GetForegroundWindow())
+              note(f"foreground window: pid {info['pid']}, class {info['class']!r}, title {info['title']!r}")
+              return info
+
+
+          def windows_of(pid: int | None = None, cls: str | None = None) -> list[dict]:
+              found = []
+
+              def each(hwnd, _):
+                  if user32.IsWindowVisible(hwnd):
+                      info = window_info(hwnd)
+                      if (pid is None or info["pid"] == pid) and (cls is None or info["class"] == cls):
+                          found.append(info)
+                  return True
+
+              user32.EnumWindows(WNDENUMPROC(each), 0)
+              return found
+
+
+          class KEYBDINPUT(ctypes.Structure):
+              _fields_ = [("wVk", wintypes.WORD), ("wScan", wintypes.WORD), ("dwFlags", wintypes.DWORD), ("time", wintypes.DWORD),
+                          ("dwExtraInfo", ctypes.c_size_t)]
+
+
+          class MOUSEINPUT(ctypes.Structure):
+              _fields_ = [("dx", wintypes.LONG), ("dy", wintypes.LONG), ("mouseData", wintypes.DWORD), ("dwFlags", wintypes.DWORD),
+                          ("time", wintypes.DWORD), ("dwExtraInfo", ctypes.c_size_t)]
+
+
+          class _Either(ctypes.Union):
+              _fields_ = [("ki", KEYBDINPUT), ("mi", MOUSEINPUT), ("pad", ctypes.c_byte * 32)]
+
+
+          class INPUT(ctypes.Structure):
+              _fields_ = [("type", wintypes.DWORD), ("u", _Either)]
+
+
+          KEYUP, UNICODE = 0x2, 0x4
+          VK_RETURN, VK_ESCAPE, VK_CONTROL, VK_LWIN = 0x0D, 0x1B, 0x11, 0x5B
+          LEFTDOWN, LEFTUP = 0x2, 0x4
+
+
+          def _send(*inputs: INPUT) -> int:
+              array = (INPUT * len(inputs))(*inputs)
+              return user32.SendInput(len(inputs), array, ctypes.sizeof(INPUT))
+
+
+          def _key(vk: int = 0, scan: int = 0, flags: int = 0) -> INPUT:
+              return INPUT(1, _Either(ki=KEYBDINPUT(vk, scan, flags, 0, 0)))
+
+
+          def press(*vks: int, label: str = "") -> None:
+              sent = _send(*[_key(vk) for vk in vks], *[_key(vk, flags=KEYUP) for vk in reversed(vks)])
+              note(f"pressed {label or vks} (SendInput: {sent})")
+
+
+          def type_text(text: str) -> None:
+              for ch in text:
+                  _send(_key(scan=ord(ch), flags=UNICODE), _key(scan=ord(ch), flags=UNICODE | KEYUP))
+                  time.sleep(0.06)
+              note(f"typed {text!r} (SendInput)")
+
+
+          def click(x: int, y: int, why: str) -> None:
+              user32.SetCursorPos(x, y)
+              time.sleep(0.2)
+              sent = _send(INPUT(0, _Either(mi=MOUSEINPUT(0, 0, 0, LEFTDOWN, 0, 0))), INPUT(0, _Either(mi=MOUSEINPUT(0, 0, 0, LEFTUP, 0, 0))))
+              note(f"clicked ({x}, {y}): {why} (SendInput: {sent})")
+
+
+          # -- what the screen reader said
+
+          class Captions(threading.Thread):
+              """Live captions' window, read through UI Automation: the caption text as it changes, each change kept."""
+
+              def __init__(self) -> None:
+                  super().__init__(daemon=True)
+                  self.seen: list[tuple[float, str]] = []
+                  self.stopping = False
+                  self.problem = ""
+                  self.file = open(OUT / "captions.jsonl", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+              def _text_element(self, automation):
+                  root = automation.GetRootElement()
+                  window = root.FindFirst(UIA.TreeScope_Children, automation.CreatePropertyCondition(UIA.UIA_ClassNamePropertyId, "LiveCaptionsDesktopWindow"))
+                  if not window:
+                      return None
+                  return window.FindFirst(UIA.TreeScope_Descendants, automation.CreatePropertyCondition(UIA.UIA_AutomationIdPropertyId, "CaptionsTextBlock"))
+
+              def run(self) -> None:
+                  comtypes.CoInitializeEx(comtypes.COINIT_MULTITHREADED)
+                  automation = comtypes.client.CreateObject(UIA.CUIAutomation8, interface=UIA.IUIAutomation5)
+                  element, last = None, None
+                  while not self.stopping:
+                      try:
+                          element = element or self._text_element(automation)
+                          text = element.CurrentName if element else None
+                      except comtypes.COMError as exc:
+                          element, text = None, None
+                          self.problem = str(exc)
+                      t = time.time()
+                      if text is not None and text != last:
+                          last = text
+                          self.seen.append((t, text))
+                          self.file.write(json.dumps({"t": round(t, 3), "at": stamp(t), "text": text}, ensure_ascii=False) + "\n")
+                      time.sleep(0.25)
+
+              def find(self, needles: list[str], since: float) -> tuple[float, str] | None:
+                  for t, text in self.seen:
+                      if t >= since and all(n.lower() in text.lower() for n in needles):
+                          return t, text
+                  return None
+
+
+          class NvdaLog(threading.Thread):
+              """NVDA's log at the input/output level: each "Speaking [...]" entry, as NVDA wrote it, kept."""
+
+              def __init__(self, path: Path) -> None:
+                  super().__init__(daemon=True)
+                  self.path = path
+                  self.seen: list[tuple[float, str]] = []
+                  self.stopping = False
+                  self.problem = ""
+                  self.file = open(OUT / "nvda-speech.jsonl", "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+
+              def run(self) -> None:
+                  offset = 0
+                  while not self.stopping:
+                      if self.path.exists():
+                          with open(self.path, encoding="utf-8", errors="replace") as log:
+                              log.seek(offset)
+                              chunk = log.read()
+                              offset = log.tell()
+                          t = time.time()
+                          for spoken in re.findall(r"^Speaking (\[.*?\])\s*$", chunk, flags=re.M):
+                              self.seen.append((t, spoken))
+                              self.file.write(json.dumps({"t": round(t, 3), "at": stamp(t), "speaking": spoken}, ensure_ascii=False) + "\n")
+                      time.sleep(0.25)
+
+              def find(self, needles: list[str], since: float) -> tuple[float, str] | None:
+                  for t, text in self.seen:
+                      if t >= since and all(n.lower() in text.lower() for n in needles):
+                          return t, text
+                  return None
+
+
+          def traced(since: float, *events: str) -> list[dict]:
+              path = OUT / "chatmon-trace.jsonl"
+              lines = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+              return [e for e in map(json.loads, lines) if e["t"] >= since and (not events or e["event"] in events)]
+
+
+          results: list[dict] = []
+
+
+          def record(heard, case: str, how: str, expected: str, needles: list[str], said_at: float, wait: float = 25) -> None:
+              end = time.time() + wait
+              got = heard.find(needles, said_at)
+              while got is None and time.time() < end:
+                  time.sleep(0.25)
+                  got = heard.find(needles, said_at)
+              trace = traced(said_at - 0.5, "announce", "uia-say", "uia-in-front", "toast", "reader")
+              routes = [e.get("route") for e in trace if e["event"] == "announce"]
+              results.append({
+                  "case": case, "how": how, "expected_words": expected, "needles": needles, "said_at": stamp(said_at),
+                  "heard": bool(got), "transcript": got[1] if got else None, "heard_at": stamp(got[0]) if got else None,
+                  "seconds_after_said": round(got[0] - said_at, 2) if got else None, "chatmon_routes": routes, "trace": trace,
+                  "transcript_meanwhile": [(stamp(t), x) for t, x in heard.seen if said_at - 0.5 <= t <= time.time()],
+              })
+              note(f"CASE {case}: routes {routes}; " + (f"heard {got[1]!r} {round(got[0] - said_at, 2)} s after" if got else "not heard"))
+
+
+          def main() -> int:
+              note(f"probe started: Chatmon {VERSION} from {SRC}, Python {sys.version.split()[0]}, reader {READER}, "
+                   f"session {os.getpid() and ctypes.windll.kernel32.WTSGetActiveConsoleSessionId()}")
+              started: list[subprocess.Popen] = []
+              if READER == "narrator":
+                  heard = Captions()
+                  heard.start()
+                  captions = subprocess.Popen([r"C:\Windows\System32\LiveCaptions.exe"])
+                  note(f"Live captions started, pid {captions.pid}")
+                  time.sleep(8)
+                  note(f"Live captions windows: {windows_of(cls='LiveCaptionsDesktopWindow')}")
+                  narrator = subprocess.Popen([r"C:\Windows\System32\Narrator.exe"])
+                  note(f"Narrator started, pid {narrator.pid}")
+                  time.sleep(15)
+              else:
+                  log = OUT / "nvda.log"
+                  heard = NvdaLog(log)
+                  heard.start()
+                  nvda = subprocess.Popen([NVDA_EXE, "--log-level=12", f"--log-file={log}", "--minimal"])
+                  note(f"NVDA started: {NVDA_EXE} --log-level=12 --log-file={log} --minimal, pid {nvda.pid}")
+                  time.sleep(15)
+              front()
+
+              env = dict(os.environ, CHATMON_DEBUG="1", PROBE_SRC=str(SRC), PROBE_TRACE=str(OUT / "chatmon-trace.jsonl"))
+              with open(OUT / "chatmon-stdout.log", "w", encoding="utf-8") as console:
+                  app = subprocess.Popen([PY, str(SHIM)], cwd=SRC, env=env, stdout=console, stderr=subprocess.STDOUT, creationflags=BELOW_NORMAL)
+              started.append(app)
+              note(f"Chatmon started from source through run_chatmon.py, pid {app.pid}, below normal priority")
+              for _ in range(90):
+                  r = subprocess.run([PY, "-m", "chatmon", "status"], capture_output=True, text=True, timeout=60, cwd=SRC, creationflags=BELOW_NORMAL)
+                  if r.stdout.startswith("Chatmon is running."):
+                      break
+                  time.sleep(1)
+              note(f"python -m chatmon status: {r.stdout.splitlines()[0] if r.stdout else r.stderr.strip()}")
+              time.sleep(12)  # its greeting comes and goes; UI Automation takes in its announcer window
+              note(f"Chatmon's windows: {windows_of(pid=app.pid)}")
+
+              # A1: Chatmon in front (its ask box open and focused), and a hook's message comes.
+              note("== A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)")
+              chatmon("ask")
+              time.sleep(3)
+              if front()["pid"] != app.pid:
+                  boxes = [w for w in windows_of(pid=app.pid) if w["rect"][2] - w["rect"][0] > 100 and w["rect"][3] - w["rect"][1] > 60]
+                  note(f"Chatmon isn't in front after `chatmon ask`; its windows now: {boxes}")
+                  box = max(boxes, key=lambda w: w["rect"][1], default=None) if boxes else None
+                  ask = [w for w in boxes if "ask" in w["title"].lower()] or ([box] if box else [])
+                  if ask:
+                      left, top, right, bottom = ask[0]["rect"]
+                      click((left + right) // 2, top + 12, "the ask box's top edge, as a person clicks into it")
+                      time.sleep(2)
+                      front()
+              time.sleep(6)  # the screen reader says where it's landed first
+              text = "Probe one: the build finished while Chatmon was in front."
+              said = time.time()
+              chatmon("say", text)
+              record(heard, "A1", "in front: the ask box open, then `chatmon say`", f"Chatmon. {text}", ["build finished"], said)
+
+              # A2: in front, typing a command in the ask box: Chatmon's own answer is read out.
+              note("== A2: Chatmon in front, a command typed in the ask box (note: water the ferns, Enter)")
+              time.sleep(3)
+              front()
+              said = time.time()
+              type_text("note: water the ferns")
+              time.sleep(1)
+              press(VK_RETURN, label="Enter")
+              record(heard, "A2", "in front: `note: water the ferns` typed in the ask box, Enter",
+                     "Noted (note 1). delete note 1 takes it back.", ["takes it back"], said)
+
+              # B: Chatmon behind (File Explorer in front), a message comes: the notification route.
+              note("== B: Chatmon behind (File Explorer in front), a message comes")
+              press(VK_ESCAPE, label="Esc")
+              time.sleep(1)
+              explorer = subprocess.Popen(["explorer.exe", str(OUT)])
+              time.sleep(4)
+              shells = windows_of(cls="CabinetWClass")
+              note(f"File Explorer windows: {shells}")
+              if shells:
+                  left, top, right, _ = shells[0]["rect"]
+                  click((left + right) // 2, top + 8, "File Explorer's title bar")
+                  time.sleep(2)
+              if front()["pid"] == app.pid:
+                  note("Chatmon is still in front: case B can't be what it says")
+              time.sleep(4)
+              text = "Probe two: the tests passed while Chatmon was behind."
+              said = time.time()
+              chatmon("say", text)
+              record(heard, "B", "behind: File Explorer in front, then `chatmon say`", f"Chatmon. {text}", ["tests passed"], said, wait=30)
+
+              # C: an agent needs you while Chatmon is behind (an alert: important, with its button).
+              note("== C: Chatmon behind, an agent's needs-you alert comes")
+              time.sleep(8)
+              front()
+              text = "Probe three: Claude is waiting for your approval."
+              said = time.time()
+              chatmon("notify", "needs-you", "--source", "claude", "--message", text)
+              record(heard, "C", "behind: File Explorer in front, then `chatmon notify needs-you`",
+                     f"Claude needs you. {text} To answer, type “OK” in the chat.", ["approval"], said, wait=30)
+
+              time.sleep(5)
+              chatmon("quit")
+              try:
+                  app.wait(30)
+              except subprocess.TimeoutExpired:
+                  app.kill()
+              note(f"Chatmon exited: {app.returncode}")
+              for shell in windows_of(cls="CabinetWClass"):
+                  if str(OUT).lower().rstrip("\\").split("\\")[-1] in shell["title"].lower():
+                      user32.PostMessageW(shell["hwnd"], 0x0010, 0, 0)  # WM_CLOSE: the window this opened
+              note(f"explorer.exe {explorer.pid} (it hands the folder to the running Explorer and exits)")
+              if READER == "narrator":
+                  press(VK_CONTROL, VK_LWIN, VK_RETURN, label="Ctrl+Win+Enter (Narrator off)")
+                  time.sleep(4)
+                  note(f"Narrator running after Ctrl+Win+Enter: {narrator.poll() is None}")
+              else:
+                  time.sleep(3)  # its last words reach the log
+                  run([NVDA_EXE, "-q"], show=f"{NVDA_EXE} -q (NVDA quits)")
+                  try:
+                      nvda.wait(30)
+                  except subprocess.TimeoutExpired:
+                      nvda.kill()
+                  note(f"NVDA exited: {nvda.returncode}")
+              heard.stopping = True
+              heard.join(5)
+              note(f"transcript entries kept: {len(heard.seen)}; reader problem: {heard.problem or 'none'}")
+
+              (OUT / "results.json").write_text(json.dumps(results, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+              label = "CAPTION" if READER == "narrator" else "NVDA SPEAKING"
+              events = sorted([(t, f"   [step] {x}") for t, x in timeline] + [(t, f"{label}: {x}") for t, x in heard.seen])
+              (OUT / "transcript.txt").write_text("".join(f"{stamp(t)} {x}\n" for t, x in events), encoding="utf-8")
+              for r in results:
+                  note(f"{r['case']}: heard={r['heard']} routes={r['chatmon_routes']} transcript={r['transcript']!r}")
+              return 0 if all(r["heard"] for r in results) else 1
+
+
+          if __name__ == "__main__":
+              sys.exit(main())
+          PY
+          conf="$(cygpath -u "$LOCALAPPDATA")/chatmon"
+          mkdir -p "$conf"
+          printf '%s\n' 'name = "Chatmon"' '[updates]' 'check = false' '[breaks]' 'remind = false' '[heads_up]' 'updates = false' > "$conf/config.toml"
+          cp "$conf/config.toml" "$RUNNER_TEMP/out/config.toml"
+          sha256sum "$RUNNER_TEMP/probe/"*.py | tee "$RUNNER_TEMP/out/scripts.sha256"
+      - name: Probe NVDA
+        shell: bash
+        run: python "$RUNNER_TEMP/probe/drive_windows.py" "$RUNNER_TEMP/out" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py" nvda "$RUNNER_TEMP/nvda/nvda.exe"
+      - name: Chatmon's own log, and what ran
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          cp "$(cygpath -u "$LOCALAPPDATA")/chatmon/state/chatmon.log" "$RUNNER_TEMP/out/" || true
+          { cmd //c ver; python --version; python -m pip freeze; git -C "$GITHUB_WORKSPACE" rev-parse HEAD; } > "$RUNNER_TEMP/out/environment.txt" 2>&1
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: nvda-transcript
+          path: ${{ runner.temp }}/out
+          if-no-files-found: error
+          retention-days: 30

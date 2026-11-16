@@ -1,0 +1,30 @@
+
+Microsoft Windows [Version 10.0.26100.33674]
+Python 3.14.10
+colorama==0.4.6
+comtypes==1.4.17
+coverage==7.17.0
+hypothesis==6.170.14
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6_sip==13.13.0
+pytest==9.2.0
+pytest-timeout==2.4.0
+sortedcontainers==2.4.0
+tzdata==2026.6
+ M chatmon/a11y.py
+ M chatmon/bubble.py
+ M chatmon/cli.py
+ M chatmon/clickthrough.py
+ M chatmon/macnative.py
+ M tests/test_ask_box.py
+ M tests/test_cli.py
+ M tests/test_clickthrough.py
+ M tests/test_macnative.py
+ M tests/test_platform_events.py
+ M tests/test_presence.py

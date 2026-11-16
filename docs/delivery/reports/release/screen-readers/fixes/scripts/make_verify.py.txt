@@ -1,0 +1,189 @@
+"""Write the verification round's workflow: VoiceOver (macOS) and NVDA (Windows) with wave5/screen-readers' fixes,
+applied from fix.patch in the job (the probe branch holds the workflow file alone)."""
+
+import sys
+import textwrap
+from pathlib import Path
+
+HERE = Path(__file__).parent
+TP2 = HERE.parent / "tp2"
+NL = "\\" + "n"  # what printf and tr are given: a backslash and n
+
+
+def block(path: Path) -> str:
+    return textwrap.indent(path.read_text(encoding="utf-8"), " " * 10, lambda line: True)  # blank lines too: a patch needs them
+
+
+TEXT = """\
+name: Probe screen readers
+
+# A throwaway probe before v0.10.0, on a branch of its own that holds only this file and is deleted afterwards. This
+# round verifies wave5/screen-readers' fixes, applied from the patch below to 65ed989 in each job: VoiceOver with
+# Chatmon from source and as the installed Chatmon.app (macOS); and on Windows, the notification state with the stage
+# as shipped and as fixed (once the runner's first-hour quiet time is over), a real full-screen app, and NVDA with
+# Chatmon in front and behind. run_chatmon.py traces what Chatmon hands the screen reader; it changes nothing.
+on:
+  push:
+    branches: [probe/screen-readers]
+
+permissions:
+  contents: read
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  voiceover:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - name: VoiceOver's AppleScript control, and the runner's permissions to drive it
+        uses: guidepup/setup-action@acf1a64cc26292ebe0db6a28d1341bd1bae93c65 # 0.21.0
+      - name: wave5/screen-readers' fixes, applied
+        run: |
+          cat > "$RUNNER_TEMP/fix.patch" <<'PATCH'
+@PATCH@          PATCH
+          git apply --check "$RUNNER_TEMP/fix.patch"
+          git apply "$RUNNER_TEMP/fix.patch"
+          git status --short
+      - name: Date the build by its commit
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+      - name: What the installers are built with, hash-locked
+        run: |
+          python -m pip install --require-hashes -r packaging/requirements-build.txt
+          python -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt
+      - run: python packaging/build.py macos
+      - name: Install the .pkg, as a person does
+        run: sudo installer -pkg dist/Chatmon-*.pkg -target /
+      - name: The probe's scripts, and Chatmon's settings
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/out"
+          cat > "$RUNNER_TEMP/probe/run_chatmon.py" <<'PY'
+@SHIM@          PY
+          cat > "$RUNNER_TEMP/probe/front_app.py" <<'PY'
+@FRONT@          PY
+          cat > "$RUNNER_TEMP/probe/verify_voiceover.py" <<'PY'
+@VERIFY@          PY
+          conf="$HOME/Library/Application Support/chatmon"
+          mkdir -p "$conf"
+          printf '%s@NL@' 'name = "Chatmon"' '[updates]' 'check = false' '[breaks]' 'remind = false' '[heads_up]' 'updates = false' > "$conf/config.toml"
+          shasum -a 256 "$RUNNER_TEMP/probe/"*.py "$RUNNER_TEMP/fix.patch" | tee "$RUNNER_TEMP/out/scripts.sha256"
+      - name: VoiceOver, from source and as Chatmon.app
+        run: python "$RUNNER_TEMP/probe/verify_voiceover.py" "$RUNNER_TEMP/out" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py" "$RUNNER_TEMP/probe/front_app.py"
+      - name: What ran
+        if: ${{ always() }}
+        run: |
+          { sw_vers; uname -a; python --version; python -m pip freeze; git -C "$GITHUB_WORKSPACE" rev-parse HEAD; git -C "$GITHUB_WORKSPACE" status --short; } > "$RUNNER_TEMP/out/environment.txt" 2>&1
+          cp "$HOME/Library/Application Support/chatmon/state/chatmon.log" "$RUNNER_TEMP/out/" || true
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: voiceover-verification
+          path: ${{ runner.temp }}/out
+          if-no-files-found: error
+          retention-days: 30
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 150
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/art/
+            !/docs/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r packaging/requirements-test.txt
+      - name: 65ed989 as shipped beside it, then wave5/screen-readers' fixes applied
+        run: |
+          mkdir -p "$RUNNER_TEMP/shipped"
+          cp -r chatmon pyproject.toml "$RUNNER_TEMP/shipped/"
+          cat > "$RUNNER_TEMP/fix.patch" <<'PATCH'
+@PATCH@          PATCH
+          git apply --check "$RUNNER_TEMP/fix.patch"
+          git apply "$RUNNER_TEMP/fix.patch"
+          git status --short
+      - name: NVDA 2026.3.1 from NV Access, checked, made a portable copy
+        shell: pwsh
+        run: |
+          $exe = "$env:RUNNER_TEMP\\nvda_2026.3.1.exe"
+          Invoke-WebRequest -Uri https://download.nvaccess.org/releases/2026.3.1/nvda_2026.3.1.exe -OutFile $exe
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash
+          if ($hash -ne '6F80A5B0CA720A7D0D314B5BE212F37388BBE81A1107AC3298C1821A1CD3F052') { throw "NVDA's installer has SHA-256 $hash" }
+          "signature: $((Get-AuthenticodeSignature $exe).Status)"
+          Start-Process -FilePath $exe -ArgumentList '--create-portable-silent', "--portable-path=$env:RUNNER_TEMP\\nvda" -Wait
+          $deadline = (Get-Date).AddMinutes(5)
+          while (-not (Test-Path "$env:RUNNER_TEMP\\nvda\\nvda.exe") -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 2 }
+          while ((Get-Process -Name nvda*, nvda_* -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 2 }
+          "nvda.exe: $(Test-Path "$env:RUNNER_TEMP\\nvda\\nvda.exe")"
+      - name: The probe's scripts, and Chatmon's settings
+        run: |
+          mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/out"
+          cat > "$RUNNER_TEMP/probe/run_chatmon.py" <<'PY'
+@SHIM@          PY
+          cat > "$RUNNER_TEMP/probe/drive_windows.py" <<'PY'
+@WINDOWS@          PY
+          cat > "$RUNNER_TEMP/probe/quns_check.py" <<'PY'
+@QUNS@          PY
+          cat > "$RUNNER_TEMP/probe/wait_quns.py" <<'PY'
+@WAIT@          PY
+          cat > "$RUNNER_TEMP/probe/fullscreen_check.py" <<'PY'
+@FULL@          PY
+          conf="$(cygpath -u "$LOCALAPPDATA")/chatmon"
+          mkdir -p "$conf"
+          printf '%s@NL@' 'name = "Chatmon"' '[updates]' 'check = false' '[breaks]' 'remind = false' '[heads_up]' 'updates = false' > "$conf/config.toml"
+          sha256sum "$RUNNER_TEMP/probe/"*.py "$RUNNER_TEMP/fix.patch" | tee "$RUNNER_TEMP/out/scripts.sha256"
+      - name: Wait for the runner's first-hour quiet time (QUNS 6) to end
+        timeout-minutes: 95
+        run: python "$RUNNER_TEMP/probe/wait_quns.py" 90 | tee "$RUNNER_TEMP/out/wait-quns.log"
+      - name: Windows' notification state, Chatmon as shipped and fixed, in turn
+        run: |
+          for run in shipped-1 fixed-1 shipped-2 fixed-2; do
+            src="$GITHUB_WORKSPACE"; [ "${run%-*}" = shipped ] && src="$RUNNER_TEMP/shipped"
+            python "$RUNNER_TEMP/probe/quns_check.py" "$RUNNER_TEMP/out/quns-$run" "$src" "$RUNNER_TEMP/probe/run_chatmon.py"
+            for phase in "before Chatmon" "Chatmon running" "after Chatmon"; do
+              echo "SUMMARY $run $phase: $(grep "$phase: state" "$RUNNER_TEMP/out/quns-$run/quns.log" | grep -o 'state [0-9]' | sort | uniq -c | tr '@NL@' ' ')"
+            done | tee -a "$RUNNER_TEMP/out/quns-summary.txt"
+          done
+      - name: A real full-screen app still holds Chatmon's bubbles (fixed)
+        if: ${{ !cancelled() }}
+        run: python "$RUNNER_TEMP/probe/fullscreen_check.py" "$RUNNER_TEMP/out/fullscreen" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py"
+      - name: NVDA, Chatmon fixed, in front and behind
+        if: ${{ !cancelled() }}
+        run: python "$RUNNER_TEMP/probe/drive_windows.py" "$RUNNER_TEMP/out/nvda" "$GITHUB_WORKSPACE" "$RUNNER_TEMP/probe/run_chatmon.py" nvda "$RUNNER_TEMP/nvda/nvda.exe"
+      - name: What ran
+        if: ${{ always() }}
+        run: |
+          { cmd //c ver; python --version; python -m pip freeze; git -C "$GITHUB_WORKSPACE" status --short; } > "$RUNNER_TEMP/out/environment.txt" 2>&1
+          cp "$(cygpath -u "$LOCALAPPDATA")/chatmon/state/chatmon.log" "$RUNNER_TEMP/out/" || true
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: windows-verification
+          path: ${{ runner.temp }}/out
+          if-no-files-found: error
+          retention-days: 30
+"""
+
+parts = {"@PATCH@": HERE / "fix.patch", "@SHIM@": HERE / "run_chatmon.py", "@FRONT@": HERE / "front_app.py",
+         "@VERIFY@": HERE / "verify_voiceover.py", "@WINDOWS@": TP2 / "drive_windows.py", "@QUNS@": TP2 / "quns_check.py",
+         "@WAIT@": TP2 / "wait_quns.py", "@FULL@": TP2 / "fullscreen_check.py"}
+text = TEXT.replace("@NL@", NL)
+for key, path in parts.items():
+    text = text.replace(key, block(path))
+Path(sys.argv[1]).write_text(text, encoding="utf-8", newline="\n")
+print("wrote", sys.argv[1], len(text), "bytes")

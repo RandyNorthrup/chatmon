@@ -1,0 +1,9 @@
+$ env CHATMON_SWAY=1 python -m pytest -p no:cacheprovider -q tests/test_sway.py tests/test_wayland.py tests/test_overlay_stage.py tests/test_stage_features.py tests/test_stage_screens.py tests/test_stage_timer.py tests/test_stagemenu.py --basetemp=/var/tmp/compositors-tmp/fixes-sway
+# WSL Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; worktree HEAD 65ed989; CHATMON_INSTANCE=compositors-198888-1794777247
+# kwin 6.8.2; Hyprland 0.57.0; sway 1.12
+# packages: kwin 6.8.2-2 hyprland 0.57.0-1 aquamarine 0.15.1-1 sway 1:1.12-4 wlroots0.20 0.20.2-1 grim 1.5.0-2 wl-clipboard 1:2.3.0-1 orca 51.1-1 at-spi2-core 2.62.1-1 mesa 1:26.2.6-1 qt6-base 6.12.0-3 qt6-wayland 6.12.0-1 
+# venv /var/tmp/plans-venv Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+........................................................................ [ 67%]
+..................................                                       [100%]
+106 passed in 162.51s (0:02:42)
+exit=0

@@ -1,0 +1,20 @@
+{"t": 1794782569.523, "event": "start", "pid": 2718, "platform": "darwin", "python": "3.14.10"}
+{"t": 1794782574.315, "event": "reader", "found": "VoiceOver"}
+{"t": 1794782574.315, "event": "voiceover-say", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "active": true, "fallback": false, "held": ["Hi, I'm Chatmon! Click me to ask anything."]}
+{"t": 1794782574.315, "event": "announce", "reader": "VoiceOver", "words": "Hi, I'm Chatmon! Click me to ask anything.", "important": false, "route": "spoken"}
+{"t": 1794782576.939, "event": "voiceover-post", "text": "Hi, I'm Chatmon! Click me to ask anything.", "important": false}
+{"t": 1794782584.762, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794782588.045, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782588.49, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794782598.335, "event": "focus", "widget": "QLineEdit '' accessible 'Search your chats' in 'Chats'"}
+{"t": 1794782604.797, "event": "focus", "widget": null}
+{"t": 1794782604.806, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782607.43, "event": "focus", "widget": null}
+{"t": 1794782608.685, "event": "app-state", "state": "ApplicationInactive", "held": []}
+{"t": 1794782612.007, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782612.025, "event": "app-state", "state": "ApplicationActive", "held": []}
+{"t": 1794782621.984, "event": "focus", "widget": "QLineEdit '' accessible 'Search your chats' in 'Chats'"}
+{"t": 1794782628.186, "event": "focus", "widget": null}
+{"t": 1794782628.192, "event": "focus", "widget": "Entry 'entry' accessible 'Ask Chatmon' in ''"}
+{"t": 1794782630.668, "event": "focus", "widget": null}
+{"t": 1794782630.701, "event": "exit", "code": 0}

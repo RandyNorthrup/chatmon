@@ -1,0 +1,100 @@
+diff --git a/chatmon/presence.py b/chatmon/presence.py
+index 52c0a5f..bac0a51 100644
+--- a/chatmon/presence.py
++++ b/chatmon/presence.py
+@@ -63,7 +63,10 @@ def _win_idle() -> float | None:
+ 
+ 
+ # SHQueryUserNotificationState: https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ne-shellapi-query_user_notification_state
+-_QUNS = {2: "a full-screen app", 3: "a full-screen game", 4: "a presentation", 6: "quiet hours", 7: "a full-screen app"}
++# 2, QUNS_BUSY ("a full-screen app"), is left out: Chatmon's own stage, a topmost window over its whole monitor, makes
++# Windows say it for as long as Chatmon runs (Windows 11 25H2, Windows Server 2025), so it can't tell another app's full
++# screen from Chatmon's own. `_win_full_screen_app` looks for that one instead.
++_QUNS = {3: "a full-screen game", 4: "a presentation", 6: "quiet hours", 7: "a full-screen app"}
+ 
+ 
+ def _win_quiet() -> str | None:
+@@ -81,6 +84,18 @@ def _win_quiet() -> str | None:
+ 
+ def _win_covered(stage_window: int) -> bool:
+     """Is a full-screen window in front, on the chatmon's own monitor? (A video, a game, slides.)"""
++    return bool(stage_window) and _win_front_fills_its_monitor(stage_window)
++
++
++def _win_full_screen_app() -> bool:
++    """Is another app's window in front, filling its monitor, on any monitor (as Windows' own notification state
++    counts one)? Chatmon's own windows aren't another app's."""
++    return _win_front_fills_its_monitor(None)
++
++
++def _win_front_fills_its_monitor(stage_window: int | None) -> bool:
++    """The window in front fills its monitor: the stage's monitor (`stage_window`), or any (None), where then it
++    mustn't be one of Chatmon's own."""
+     if sys.platform != "win32":
+         return False
+ 
+@@ -98,16 +113,22 @@ def _win_covered(stage_window: int) -> bool:
+         user32.GetWindowRect.argtypes = [ctypes.c_void_p, ctypes.POINTER(RECT)]
+         user32.GetMonitorInfoW.argtypes = [ctypes.c_void_p, ctypes.POINTER(MONITORINFO)]
+         user32.GetClassNameW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_int]
++        user32.GetWindowThreadProcessId.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_ulong)]
+         front = user32.GetForegroundWindow()
+-        if not front or not stage_window:
++        if not front:
+             return False
+         name = ctypes.create_unicode_buffer(64)
+         user32.GetClassNameW(front, name, 64)
+         if name.value in ("Progman", "WorkerW", "Shell_TrayWnd"):  # the desktop and the taskbar
+             return False
+         monitor = user32.MonitorFromWindow(front, 2)  # MONITOR_DEFAULTTONEAREST
+-        if monitor != user32.MonitorFromWindow(stage_window, 2):
++        if stage_window is not None and monitor != user32.MonitorFromWindow(stage_window, 2):
+             return False
++        if stage_window is None:
++            pid = ctypes.c_ulong(0)
++            user32.GetWindowThreadProcessId(front, ctypes.byref(pid))
++            if pid.value == os.getpid():
++                return False
+         rect, info = RECT(), MONITORINFO(ctypes.sizeof(MONITORINFO))
+         if not user32.GetWindowRect(front, ctypes.byref(rect)) or not user32.GetMonitorInfoW(monitor, ctypes.byref(info)):
+             return False
+@@ -533,7 +554,7 @@ class Desk(QObject):
+         is the stage's native window, which macOS needs: its full-screen apps are on one screen at a time. A
+         full-screen app on any monitor holds bubbles, as Windows' own notification state does."""
+         if sys.platform == "win32":
+-            return _win_quiet() or ("Focus" if self._win_focus() else None)
++            return _win_quiet() or ("a full-screen app" if _win_full_screen_app() else None) or ("Focus" if self._win_focus() else None)
+         if sys.platform == "darwin":
+             # A full-screen app has a Space of its own, which the chatmon stays out of: bubbles there go unseen.
+             return "a full-screen app" if self.covered(stage_window) else None
+diff --git a/tests/test_presence.py b/tests/test_presence.py
+index 1860660..5868e44 100644
+--- a/tests/test_presence.py
++++ b/tests/test_presence.py
+@@ -71,6 +71,26 @@ def test_focus_holds_bubbles_on_windows(monkeypatch):
+     assert desk.quiet() == "a presentation"  # what SHQueryUserNotificationState says comes first
+ 
+ 
++def test_windows_busy_state_is_not_read_as_quiet():
++    """QUNS_BUSY (2) is what Windows says of Chatmon's own stage, a topmost window over its monitor, for as long as
++    Chatmon runs: taken as "a full-screen app", it held every bubble that came on its own."""
++    assert 2 not in presence._QUNS
++
++
++@windows
++def test_another_apps_full_screen_window_still_holds_bubbles_on_windows(monkeypatch):
++    desk = presence.Desk("windows")
++    try:
++        monkeypatch.setattr(presence, "_win_quiet", lambda: None)
++        monkeypatch.setattr(desk, "_win_focus", lambda: False)
++        monkeypatch.setattr(presence, "_win_full_screen_app", lambda: True)
++        assert desk.quiet() == "a full-screen app"
++        monkeypatch.setattr(presence, "_win_full_screen_app", lambda: False)
++        assert desk.quiet() is None
++    finally:
++        desk.close()
++
++
+ @macos
+ def test_macos_readings():
+     idle = presence._mac_idle()

@@ -1,0 +1,22 @@
+# Windows, Python 3.14.10, worktree HEAD 65ed989 plus the uncommitted test bed; ruff 0.17.4; mypy 2.4.1 (compiled: yes)
+$ python -m ruff check .
+All checks passed!
+exit=0
+
+$ python -m mypy --platform linux --follow-imports=silent tests/compositor_session.py tests/test_compositors.py
+Success: no issues found in 2 source files
+
+$ python -m mypy --platform linux chatmon tests/compositor_session.py tests/test_compositors.py
+tests\sway_session.py:638: error: Item "None" of "QCoreApplication | None" has no attribute "quit"  [union-attr]
+tests\sway_session.py:643: error: Item "None" of "QCoreApplication | None" has no attribute "quit"  [union-attr]
+tests\sway_session.py:653: error: Argument 1 to "QSocketNotifier" has incompatible type "int | Any"; expected "voidptr"  [arg-type]
+tests\sway_session.py:658: error: Item "None" of "QCoreApplication | None" has no attribute "exec"  [union-attr]
+Found 4 errors in 1 file (checked 72 source files)
+
+$ python -m mypy --platform linux chatmon tests/sway_session.py   # sway_session.py as on main (unchanged): its own 4
+(tests/sway_session.py: no change from HEAD)
+tests\sway_session.py:638: error: Item "None" of "QCoreApplication | None" has no attribute "quit"  [union-attr]
+tests\sway_session.py:643: error: Item "None" of "QCoreApplication | None" has no attribute "quit"  [union-attr]
+tests\sway_session.py:653: error: Argument 1 to "QSocketNotifier" has incompatible type "int | Any"; expected "voidptr"  [arg-type]
+tests\sway_session.py:658: error: Item "None" of "QCoreApplication | None" has no attribute "exec"  [union-attr]
+Found 4 errors in 1 file (checked 71 source files)

@@ -1,0 +1,5 @@
+2026-11-15 20:54:50,054 INFO chatmon.app: Chatmon 0.10.0 started
+2026-11-15 20:54:54,366 DEBUG chatmon.wintoast: Windows didn't say whether Chatmon's notifications are on: [WinError -2147023728] Element not found
+2026-11-15 20:54:55,838 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (C:\Users\runneradmin\.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:54:55,839 DEBUG chatmon.agents: couldn't ask Claude Code for its plugins: Claude Code's settings are here (C:\Users\runneradmin\.claude), but not its command line, `claude`: it isn't on your PATH, nor in a VS Code, Cursor or Windsurf extension.
+2026-11-15 20:54:55,842 DEBUG chatmon.agents: couldn't ask Muse Code for its plugins: I don't start Muse Code's command line with administrator rights (it's found in folders you can write to). Run `chatmon hooks` as yourself to change Muse Code.

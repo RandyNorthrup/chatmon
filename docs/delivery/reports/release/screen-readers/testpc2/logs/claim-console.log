@@ -1,0 +1,7 @@
+== 2026-11-15 13:01:50 -08:00
+-- other claims:
+--- sak-utility-secfix.txt (11/15/2026 12:01:01)
+fix6 cpu (round 6: Release build, ctest -j 6 and drills; tree under W:\fix6) 2026-11-15T12:01:01 to 2026-11-15T20:01:01
+-- chatmon.txt:
+drive 0025_38B8_21B7_37C0. 2026-11-15 12:33 -08:00 until 2026-11-15 15:33 -08:00: Chatmon screen-reader probe writes W:\chatmon-sr only (source, venv, logs), no erase; removed at the end
+console 2026-11-15 13:01 -08:00 until 2026-11-15 15:01 -08:00: Chatmon screen-reader probe: Narrator (and Live captions or NVDA) with Chatmon on Technician's console, run by an on-demand scheduled task; it types and clicks there

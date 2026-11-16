@@ -1,0 +1,58 @@
+$ bash docs/delivery/reports/release/compositors/probes/hyprland_headless.sh
+# WSL Arch Linux, kernel 6.18.58.1-microsoft-standard-WSL2; worktree HEAD 65ed989; CHATMON_INSTANCE=compositors-219228-1794778651
+# kwin 6.8.2; Hyprland 0.57.0; sway 1.12
+# packages: kwin 6.8.2-2 hyprland 0.57.0-1 aquamarine 0.15.1-1 sway 1:1.12-4 wlroots0.20 0.20.2-1 grim 1.5.0-2 wl-clipboard 1:2.3.0-1 orca 51.1-1 at-spi2-core 2.62.1-1 mesa 1:26.2.6-1 qt6-base 6.12.0-3 qt6-wayland 6.12.0-1 
+# venv /var/tmp/plans-venv Python 3.14.9 PyQt6 6.11.0 Qt 6.11.2
+== Hyprland on its own
+docs/delivery/reports/release/compositors/probes/hyprland_headless.sh: line 40: 219256 Aborted                    LIBSEAT_BACKEND=noop LIBGL_ALWAYS_SOFTWARE=1 HYPRLAND_NO_SD_NOTIFY=1 HYPRLAND_NO_SD_VARS=1 HYPRLAND_NO_SD_TARGET=1 HYPRLAND_NO_CRASHREPORTER=1 timeout 30 nice -n 10 Hyprland -c hyprland.lua > hypr.log 2>&1
+  Hyprland stopped: exit 134
+      1 ERR from aquamarine ]: drm: Skipping device /sys/devices/faux/vgem/drm/card0, not a KMS device
+      1 ERR from aquamarine ]: drm: Found no gpus to use, cannot continue
+      1 ERR from aquamarine ]: Wayland backend cannot start: wl_display_connect failed (is a wayland compositor running?)
+      1 ERR from aquamarine ]: Requested backend (wayland) could not start, enabling fallbacks
+      1 ERR from aquamarine ]: Implementation wayland failed, erasing.
+      1 ERR from aquamarine ]: DRM Backend failed
+      1 DEBUG from aquamarine ]: drm: Enumerated device /sys/devices/faux/vgem/drm/card0
+      1 DEBUG from aquamarine ]: Starting the Wayland backend!
+      1 DEBUG from aquamarine ]: Starting the Aquamarine backend!
+      1 DEBUG from aquamarine ]: Creating an Aquamarine backend!
+      1 CRIT from aquamarine ]: Cannot open backend: no allocator available
+      1 CRIT ]: [throwError] Critical error thrown: CBackend::create() failed!
+      1 CRIT ]: [CCompositor::initServer] m_pAqBackend couldn't start! This usually means aquamarine could not find a GPU or encountered some issues. Make sure you're running either on a tty or on a Wayland session, NOT an X11 one.
+      1   what():  CBackend::create() failed!
+== Hyprland inside a headless KWin, vgem's render node as it is
+  hyprctl -j monitors all:
+       "name": "WAYLAND-1",	    "width": 0,	    "height": 0,	    "disabled": true,
+       "name": "CHATMON-1",	    "width": 0,	    "height": 0,	    "disabled": false,
+     86 KMS: DRM_IOCTL_MODE_CREATE_DUMB failed: Permission denied
+     43 ERR from aquamarine ]: Swapchain: Failed acquiring a buffer
+     43 ERR from aquamarine ]: GBM: Failed to allocate a GBM buffer: bo null
+     43 ERR from aquamarine ]: GBM: Allocating with modifiers failed, falling back to modifier-less allocation
+     29 ERR from aquamarine ]: Couldn't allocate a gbm buffer with size [Vector2D: x: 1920, y: 1080] and format XR24
+     12 ERR from aquamarine ]: Couldn't allocate a gbm buffer with size [Vector2D: x: 1280, y: 800] and format XR24
+      6 ERR ]: [Monitor::CMonitor::applyMonitorRule] Monitor CHATMON-1: REJECTED preferred mode!!!
+      6 ERR ]: [Monitor::CMonitor::applyMonitorRule] Monitor CHATMON-1: REJECTED available mode 1920x1080@60.00Hz!
+      3 ERR ]: [Monitor::CMonitor::applyMonitorRule] Monitor CHATMON-1: REJECTED custom mode 1280x800@0.00Hz!
+      3 ERR ]: [Monitor::CMonitor::applyMonitorRule] Monitor CHATMON-1: REJECTED available mode 1280x800@60.00Hz!
+      2 ERR from aquamarine ]: Couldn't allocate a gbm buffer with size [Vector2D: x: 1280, y: 720] and format XR24
+      2 ERR ]: [Monitor::CMonitor::applyMonitorRule] Monitor FALLBACK: REJECTED preferred mode!!!
+      2 ERR ]: [Monitor::CMonitor::applyMonitorRule] Monitor FALLBACK: REJECTED available mode 1920x1080@60.00Hz!
+      1 ERR from aquamarine ]: drm: Skipping device /sys/devices/faux/vgem/drm/card0, not a KMS device
+== Hyprland inside a headless sway 1.12 (GLES)
+docs/delivery/reports/release/compositors/probes/hyprland_headless.sh: line 40: 219508 Aborted                    LIBSEAT_BACKEND=noop LIBGL_ALWAYS_SOFTWARE=1 HYPRLAND_NO_SD_NOTIFY=1 HYPRLAND_NO_SD_VARS=1 HYPRLAND_NO_SD_TARGET=1 HYPRLAND_NO_CRASHREPORTER=1 timeout 30 nice -n 10 Hyprland -c hyprland.lua > hypr.log 2>&1
+  Hyprland stopped: exit 134
+      1 wl_registry#2: error 0: invalid version for global xdg_wm_base (12): expected at most 5, got 6
+      1 ERR from aquamarine ]: drm: Skipping device /sys/devices/faux/vgem/drm/card0, not a KMS device
+      1 ERR from aquamarine ]: drm: Found no gpus to use, cannot continue
+      1 ERR from aquamarine ]: DRM Backend failed
+      1 DEBUG from aquamarine ]: drm: Enumerated device /sys/devices/faux/vgem/drm/card0
+      1 DEBUG from aquamarine ]: Starting the Wayland backend!
+      1 DEBUG from aquamarine ]: Starting the Aquamarine backend!
+      1 DEBUG from aquamarine ]: Output WAYLAND-1: initialized
+      1 DEBUG from aquamarine ]: Got registry at 0x55853ef339d0
+      1 DEBUG from aquamarine ]: Creating an Aquamarine backend!
+      1 DEBUG from aquamarine ]: Connected to a wayland compositor: unknown (XDG_CURRENT_DEKSTOP unset?)
+      1 CRIT from aquamarine ]: Cannot open backend: no allocator available
+      1 CRIT ]: [throwError] Critical error thrown: CBackend::create() failed!
+      1 CRIT ]: [CCompositor::initServer] m_pAqBackend couldn't start! This usually means aquamarine could not find a GPU or encountered some issues. Make sure you're running either on a tty or on a Wayland session, NOT an X11 one.
+exit=0

@@ -1,0 +1,22 @@
+== build 2026-11-15 12:35:13 -08:00, testpc2\technician
+zip: chatmon-65ed989.zip 26855716 bytes, SHA-256 3F511876249891456A1DADF40D96A08F290A23D91CB92FB17BAD6E309263AD24
+Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, comtypes, colorama, pytest, pyqt6, pytest-timeout
+
+Successfully installed colorama-0.4.6 comtypes-1.4.17 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+colorama==0.4.6
+comtypes==1.4.17
+coverage==7.17.0
+hypothesis==6.170.14
+iniconfig==2.3.1
+packaging==26.3
+pluggy==1.7.0
+psutil==7.2.2
+Pygments==2.21.0
+PyQt6==6.11.0
+PyQt6-Qt6==6.11.2
+PyQt6_sip==13.13.0
+pytest==9.2.0
+pytest-timeout==2.4.0
+sortedcontainers==2.4.0
+tzdata==2026.6
+Qt 6.11.0 PyQt 6.11.0 comtypes 1.4.17

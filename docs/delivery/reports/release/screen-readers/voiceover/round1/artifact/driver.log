@@ -1,0 +1,55 @@
+20:25:33.330Z probe started: Chatmon 0.10.0 from /Users/runner/work/chatmon/chatmon, Python 3.14.10
+20:25:33.330Z $ sw_vers
+20:25:33.343Z   exit 0: ProductName:		macOS | ProductVersion:		26.7.2 | BuildVersion:		25G332
+20:25:33.343Z $ /System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter
+20:25:33.668Z   exit 0: ******** Launching VoiceOver from starter application ******** |  | 2026-11-15 20:25:33.366 VoiceOverStarter[3014:12771] VoiceOverDebug: _ScreenReaderStartWithTarget with option 0 | 2026-11-15 20:25:33.386 VoiceOverStarter[3014:12771] VoiceOverDebug: after boostrap_look_up succeeded | 2026-11-15 20:25:33.391 VoiceOverStarter[3014:12771] VoiceOverDebug: calling _SCRStartup returned 0
+20:25:39.050Z VoiceOver answers its AppleScript; last phrase so far: 'missing value'
+20:25:45.414Z Chatmon started from source through run_chatmon.py, pid 3189
+20:25:49.856Z python -m chatmon status: Chatmon is running.
+20:26:00.697Z osascript -e "tell application \"Finder\" to activate": exit 0
+20:26:03.972Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:03.973Z == A1: Chatmon in front, a message comes (chatmon say, as a script or hook sends one)
+20:26:03.974Z $ python -m chatmon ask
+20:26:04.100Z   exit 0
+20:26:07.259Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:07.259Z Chatmon's own activation left another app in front: bringing it forward through System Events, as a click would
+20:26:07.365Z osascript -e "tell application \"System Events\" to set frontmost of (first application process whose unix id is 3189) to true": exit 0
+20:26:09.653Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:14.965Z $ python -m chatmon say "Probe A1, said while Chatmon is in front."
+20:26:15.135Z   exit 0
+20:26:15.263Z CASE A1: VoiceOver said 'Chatmon. Probe A1, said while Chatmon is in front.' 0.24 s after
+20:26:15.466Z == A2: Chatmon in front, a command typed in the ask box (version, Return)
+20:26:17.586Z osascript -e "tell application \"System Events\" to keystroke \"version\"": exit 0
+20:26:18.751Z osascript -e "tell application \"System Events\" to key code 36": exit 0
+20:26:38.845Z CASE A2: VoiceOver never said it
+20:26:39.100Z == B: Chatmon behind, a message comes; then the ask box is opened (chatmon ask)
+20:26:39.289Z osascript -e "tell application \"System Events\" to key code 53": exit 0
+20:26:40.574Z osascript -e "tell application \"Finder\" to activate": exit 0
+20:26:43.737Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:43.737Z $ python -m chatmon say "Probe B, held while Chatmon is behind."
+20:26:43.985Z   exit 0
+20:26:56.006Z B while behind: nothing said (held), as designed
+20:26:56.208Z $ python -m chatmon ask
+20:26:56.501Z   exit 0
+20:26:59.743Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:26:59.744Z Chatmon's own activation left another app in front: bringing it forward through System Events
+20:27:00.029Z osascript -e "tell application \"System Events\" to set frontmost of (first application process whose unix id is 3189) to true": exit 0
+20:27:00.467Z CASE B: VoiceOver said 'Chatmon. Probe B, held while Chatmon is behind.' 16.65 s after
+20:27:00.752Z == C: Chatmon behind, an agent's needs-you alert comes; then you switch to Chatmon
+20:27:00.936Z osascript -e "tell application \"System Events\" to key code 53": exit 0
+20:27:02.092Z osascript -e "tell application \"Finder\" to activate": exit 0
+20:27:05.294Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:27:05.300Z $ python -m chatmon notify needs-you --source claude --message "Probe C, waiting for your approval."
+20:27:06.266Z   exit 0
+20:27:18.267Z C while behind: nothing said (held), as designed
+20:27:18.621Z osascript -e "tell application \"System Events\" to set frontmost of (first application process whose unix id is 3189) to true": exit 0
+20:27:19.840Z frontmost app: unknown (40:108: execution error: Can’t get {"loginwindow", 156} whose frontmost = true. (-1728))
+20:27:39.929Z CASE C: VoiceOver never said it
+20:27:43.227Z $ python -m chatmon quit
+20:27:43.523Z   exit 0
+20:27:44.265Z Chatmon exited: 0
+20:27:44.594Z VoiceOver's last phrase was read 613 times (0 failed); 23 phrases kept
+20:27:44.995Z A1: heard=True spoken='Chatmon. Probe A1, said while Chatmon is in front.'
+20:27:44.996Z A2: heard=False spoken=None
+20:27:44.996Z B: heard=True spoken='Chatmon. Probe B, held while Chatmon is behind.' held_while_behind=True
+20:27:44.996Z C: heard=False spoken=None held_while_behind=True

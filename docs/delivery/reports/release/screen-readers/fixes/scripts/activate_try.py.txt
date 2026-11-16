@@ -1,0 +1,72 @@
+"""One way of bringing a running app forward, tried from a process that isn't an app (as `chatmon ask` from a
+terminal or a launcher is), through AppKit by ctypes.
+
+usage: activate_try.py METHOD PID
+  options        NSRunningApplication activateWithOptions: (all windows, ignoring other apps)
+  from-current   NSRunningApplication activateFromApplication:options:, from this process (macOS 14)
+  workspace      NSWorkspace openApplicationAtURL:configuration:completionHandler:, activates, the app's bundle URL
+  open-a         /usr/bin/open -a <the app's bundle path>
+Prints what it did and the app's bundle (identifier and path).
+"""
+
+import ctypes
+import ctypes.util
+import subprocess
+import sys
+import time
+
+objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library("objc"))
+ctypes.cdll.LoadLibrary("/System/Library/Frameworks/AppKit.framework/AppKit")
+objc.objc_getClass.restype, objc.objc_getClass.argtypes = ctypes.c_void_p, [ctypes.c_char_p]
+objc.sel_registerName.restype, objc.sel_registerName.argtypes = ctypes.c_void_p, [ctypes.c_char_p]
+SEND = ctypes.cast(objc.objc_msgSend, ctypes.c_void_p).value
+
+
+def fn(restype, *argtypes):
+    return ctypes.CFUNCTYPE(restype, ctypes.c_void_p, ctypes.c_void_p, *argtypes)(SEND)
+
+
+def cls(name: str) -> int:
+    return objc.objc_getClass(name.encode())
+
+
+def sel(name: str) -> int:
+    return objc.sel_registerName(name.encode())
+
+
+obj = fn(ctypes.c_void_p)
+text = fn(ctypes.c_char_p)
+
+
+def string(value: int) -> str:
+    return (text(value, sel("UTF8String")) or b"").decode() if value else ""
+
+
+method, pid = sys.argv[1], int(sys.argv[2])
+app = fn(ctypes.c_void_p, ctypes.c_int)(cls("NSRunningApplication"), sel("runningApplicationWithProcessIdentifier:"), pid)
+if not app:
+    print(f"no running application with pid {pid}")
+    sys.exit(2)
+url = obj(app, sel("bundleURL"))
+path = string(obj(url, sel("path"))) if url else ""
+print(f"app {pid}: bundle {string(obj(app, sel('bundleIdentifier')))!r} at {path!r}, "
+      f"activation policy {fn(ctypes.c_long)(app, sel('activationPolicy'))}, active {fn(ctypes.c_bool)(app, sel('isActive'))}")
+
+if method == "options":
+    ok = fn(ctypes.c_bool, ctypes.c_ulong)(app, sel("activateWithOptions:"), 1 | 2)
+    print(f"activateWithOptions: -> {ok}")
+elif method == "from-current":
+    current = obj(cls("NSRunningApplication"), sel("currentApplication"))
+    ok = fn(ctypes.c_bool, ctypes.c_void_p, ctypes.c_ulong)(app, sel("activateFromApplication:options:"), current, 0)
+    print(f"activateFromApplication:options: -> {ok}")
+elif method == "workspace":
+    workspace = obj(cls("NSWorkspace"), sel("sharedWorkspace"))
+    config = obj(cls("NSWorkspaceOpenConfiguration"), sel("configuration"))
+    fn(None, ctypes.c_bool)(config, sel("setActivates:"), True)
+    fn(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)(workspace, sel("openApplicationAtURL:configuration:completionHandler:"), url, config, None)
+    print("openApplicationAtURL:configuration:completionHandler: sent")
+    time.sleep(2)  # the request goes to LaunchServices on its own queue
+elif method == "open-a":
+    r = subprocess.run(["/usr/bin/open", "-a", path], capture_output=True, text=True, timeout=30)
+    print(f"open -a {path}: exit {r.returncode} {r.stdout.strip()} {r.stderr.strip()}")
+print(f"after: active {fn(ctypes.c_bool)(app, sel('isActive'))}")

@@ -1,0 +1,98 @@
+[
+ {
+  "run": "source",
+  "case": "S3-1",
+  "how": "`history` typed, the History menu's All chats…",
+  "focused_element": "AXTextField | Search your chats | value:",
+  "qt_focus_changes": [
+   "QLineEdit '' accessible 'Search your chats' in 'Chats'"
+  ],
+  "keyboard_on_a_label": false,
+  "phrases": [
+   [
+    "22:43:12.758Z",
+    "history"
+   ],
+   [
+    "22:43:13.728Z",
+    "menu (5 items)"
+   ],
+   [
+    "22:43:15.614Z",
+    "New chat"
+   ],
+   [
+    "22:43:16.224Z",
+    "No saved chats yet dimmed"
+   ],
+   [
+    "22:43:17.072Z",
+    "All chats …"
+   ],
+   [
+    "22:43:18.774Z",
+    ""
+   ],
+   [
+    "22:43:18.982Z",
+    "Chats dialog"
+   ],
+   [
+    "22:43:19.732Z",
+    "Chats No saved chats yet."
+   ],
+   [
+    "22:43:23.356Z",
+    "You are currently on a text field. To enter text in this field, type."
+   ]
+  ]
+ },
+ {
+  "run": "source",
+  "case": "S3-2",
+  "how": "`history` typed, the History menu's All chats…",
+  "focused_element": "AXTextField | Search your chats | value:",
+  "qt_focus_changes": [
+   "QLineEdit '' accessible 'Search your chats' in 'Chats'"
+  ],
+  "keyboard_on_a_label": false,
+  "phrases": [
+   [
+    "22:43:36.404Z",
+    "history"
+   ],
+   [
+    "22:43:37.066Z",
+    "menu (5 items)"
+   ],
+   [
+    "22:43:39.115Z",
+    "New chat"
+   ],
+   [
+    "22:43:40.009Z",
+    "No saved chats yet dimmed"
+   ],
+   [
+    "22:43:40.660Z",
+    "All chats …"
+   ],
+   [
+    "22:43:42.260Z",
+    ""
+   ],
+   [
+    "22:43:42.505Z",
+    "Chats dialog"
+   ],
+   [
+    "22:43:43.321Z",
+    "Chats No saved chats yet."
+   ],
+   [
+    "22:43:46.868Z",
+    "You are currently on a text field. To enter text in this field, type."
+   ]
+  ]
+ }
+]

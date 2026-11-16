@@ -1,0 +1,112 @@
+# The workflows' gates at b85ec7e, as ci.yml's lint job runs them, 2026-11-15T21:01:18Z
+
+## actionlint 1.7.12 on Linux (WSL Arch), its release tarball checked against ci.yml's SHA-256, with shellcheck 0.11.0 on each run: script
+/tmp/actionlint-pins/actionlint_1.7.12_linux_amd64.tar.gz: OK
+$ actionlint -version
+1.7.12
+installed by downloading from release page
+built with go1.26.1 compiler for linux/amd64
+$ shellcheck --version
+ShellCheck - shell script analysis tool
+version: 0.11.0
+license: GNU General Public License, version 3
+website: https://www.shellcheck.net
+$ actionlint -verbose -color=never (in /mnt/c/Users/Randy/Coding/chatmon-wt/pins)
+verbose: Linting all workflow files in repository: /mnt/c/Users/Randy/Coding/chatmon-wt/pins
+verbose: Detected project: /mnt/c/Users/Randy/Coding/chatmon-wt/pins
+verbose: Collected 3 YAML files
+verbose: Linting 3 files
+verbose: Linting .github/workflows/pins.yml
+verbose: Using project at /mnt/c/Users/Randy/Coding/chatmon-wt/pins
+verbose: Linting .github/workflows/packages.yml
+verbose: Using project at /mnt/c/Users/Randy/Coding/chatmon-wt/pins
+verbose: verbose: Found 0 parse errors in 0 ms for .github/workflows/pins.yml
+Linting .github/workflows/ci.yml
+verbose: Using project at /mnt/c/Users/Randy/Coding/chatmon-wt/pins
+verbose: Found 0 parse errors in 1 ms for .github/workflows/packages.yml
+verbose: Found 0 parse errors in 1 ms for .github/workflows/ci.yml
+verbose: Rule "pyflakes" was disabled: exec: "pyflakes": executable file not found in $PATH
+verbose: Rule "pyflakes" was disabled: exec: "pyflakes": executable file not found in $PATH
+verbose: Found total 0 errors in 359 ms for .github/workflows/pins.yml
+verbose: Rule "pyflakes" was disabled: exec: "pyflakes": executable file not found in $PATH
+verbose: Found total 0 errors in 410 ms for .github/workflows/packages.yml
+verbose: Found total 0 errors in 482 ms for .github/workflows/ci.yml
+verbose: Found 0 errors in 3 files
+exit 0
+
+## zizmor, offline, regular persona (ci.yml runs it with --format github)
+$ zizmor --version
+zizmor 1.31.1
+$ zizmor --no-online-audits .github
+No findings to report. Good job! (16 suppressed)
+exit 0
+
+## zizmor's pedantic persona on pins.yml, for the record (not what CI runs)
+$ zizmor --no-online-audits --persona=pedantic .github/workflows/pins.yml
+info[anonymous-definition]: workflow or action definition without a name
+  --> .github\workflows\pins.yml:36:3
+   |
+36 |   types:
+   |   ^^^^^ this job
+   |
+   = note: audit confidence → High
+   = tip: use 'name: ...' to give this job a name
+   = help: audit documentation → https://docs.zizmor.sh/audits/#anonymous-definition
+
+info[anonymous-definition]: workflow or action definition without a name
+  --> .github\workflows\pins.yml:62:3
+   |
+62 |   pins:
+   |   ^^^^ this job
+   |
+   = note: audit confidence → High
+   = tip: use 'name: ...' to give this job a name
+   = help: audit documentation → https://docs.zizmor.sh/audits/#anonymous-definition
+
+2 findings: 2 informational, 0 low, 0 medium, 0 high
+exit 11
+
+## The gates bite on pins.yml: three mutated copies in a scratch folder, each must fail
+# template-injection: the step's output inlined into run: instead of passed through env:
+$ zizmor --no-online-audits .github   (in the template-injection copy)
+info[template-injection]: code injection via template expansion
+   --> .github\workflows\pins.yml:111:21
+    |
+101 |         run: |
+    |         --- this run block
+...
+111 |           if [ "${{ steps.pins.outputs.movable }}" = true ]; then
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^ may expand into attacker-controllable code
+    |
+    = note: audit confidence → Low
+    = note: this finding has an auto-fix
+    = help: audit documentation → https://docs.zizmor.sh/audits/#template-injection
+
+3 findings (2 suppressed, 1 unsafe fixes): 1 informational, 0 low, 0 medium, 0 high
+exit 11
+# artipacked: persist-credentials: false taken off the report job's checkout
+$ zizmor --no-online-audits .github   (in the artipacked copy)
+warning[artipacked]: credential persistence through GitHub Actions artifacts
+  --> .github\workflows\pins.yml:73:9
+   |
+73 |       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ does not set persist-credentials: false
+   |
+   = note: audit confidence → Low
+   = note: this finding has an auto-fix
+   = help: audit documentation → https://docs.zizmor.sh/audits/#artipacked
+
+3 findings (2 suppressed, 1 unsafe fixes): 0 informational, 0 low, 1 medium, 0 high
+exit 13
+# shellcheck through actionlint: $body left unquoted
+$ actionlint -color=never .github/workflows/pins.yml   (in the 'unquoted' copy)
+.github/workflows/pins.yml:101:9: shellcheck reported issue in this script: SC2086:info:12:69: Double quote to prevent globbing and word splitting [shellcheck]
+    |
+101 |         run: |
+    |         ^~~~
+exit 1
+
+## .github/dependabot.yml against SchemaStore's Dependabot schema (check-jsonschema's built-in copy), as earlier rounds checked it
+$ uvx --from check-jsonschema==0.39.0 check-jsonschema --builtin-schema vendor.dependabot .github/dependabot.yml
+ok -- validation done
+exit 0

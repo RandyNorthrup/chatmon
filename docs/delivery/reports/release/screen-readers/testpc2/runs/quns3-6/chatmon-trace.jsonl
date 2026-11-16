@@ -1,0 +1,40 @@
+{"t": 1794778189.504, "event": "start", "pid": 19768, "platform": "win32", "python": "3.14.10"}
+{"t": 1794778192.42, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794778192.42, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794778192.436, "event": "reader", "found": null}
+{"t": 1794778195.897, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778195.897, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794778200.903, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778205.897, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778210.899, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778214.676, "event": "exit", "code": 0}
+{"t": 1794778240.812, "event": "start", "pid": 5604, "platform": "win32", "python": "3.14.10"}
+{"t": 1794778241.066, "event": "hypothesis", "stage_inset_px": 1}
+{"t": 1794778243.486, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794778243.486, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794778243.498, "event": "reader", "found": null}
+{"t": 1794778246.973, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778246.974, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794778251.968, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778256.978, "event": "queue-release", "reason": "quiet"}
+{"t": 1794778266.147, "event": "exit", "code": 0}
+{"t": 1794778291.318, "event": "start", "pid": 3284, "platform": "win32", "python": "3.14.10"}
+{"t": 1794778294.067, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794778294.067, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794778294.079, "event": "reader", "found": null}
+{"t": 1794778297.568, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778297.569, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794778302.553, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778307.553, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778312.559, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778316.468, "event": "exit", "code": 0}
+{"t": 1794778341.61, "event": "start", "pid": 13436, "platform": "win32", "python": "3.14.10"}
+{"t": 1794778341.832, "event": "hypothesis", "stage_inset_px": 1}
+{"t": 1794778344.193, "event": "queue-add", "title": "Hi, I'm Chatmon!", "text": "Click me to ask anything.", "background": false, "yours": false, "alert": false, "holds": [], "passes": true}
+{"t": 1794778344.193, "event": "queue-next", "shown": "Hi, I'm Chatmon!", "waiting": [], "holds": [], "showing": "Hi, I'm Chatmon!", "visible": false}
+{"t": 1794778344.205, "event": "reader", "found": null}
+{"t": 1794778347.674, "event": "quiet", "said": "a full-screen app", "state": 2}
+{"t": 1794778347.674, "event": "queue-hold", "reason": "quiet"}
+{"t": 1794778352.667, "event": "quiet", "said": "a full-screen app", "state": 5}
+{"t": 1794778357.681, "event": "queue-release", "reason": "quiet"}
+{"t": 1794778367.444, "event": "exit", "code": 0}

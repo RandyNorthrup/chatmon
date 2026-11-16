@@ -1,0 +1,195 @@
+20:44:32.845Z probe started: Chatmon 0.10.0 from /Users/runner/work/chatmon/chatmon, Python 3.14.10
+20:44:32.845Z $ sw_vers
+20:44:32.863Z   exit 0: ProductName:		macOS | ProductVersion:		26.7.2 | BuildVersion:		25G332
+20:44:32.863Z $ /System/Library/CoreServices/VoiceOver.app/Contents/MacOS/VoiceOverStarter
+20:44:33.226Z   exit 0: ******** Launching VoiceOver from starter application ******** |  | 2026-11-15 20:44:32.890 VoiceOverStarter[3020:12801] VoiceOverDebug: _ScreenReaderStartWithTarget with option 0 | 2026-11-15 20:44:32.897 VoiceOverStarter[3020:12801] VoiceOverDebug: after boostrap_look_up succeeded | 2026-11-15 20:44:32.897 VoiceOverStarter[3020:12801] VoiceOverDebug: calling _SCRStartup returned 0
+20:44:36.236Z VoiceOver answers its AppleScript; last phrase so far: 'missing value'
+20:44:41.943Z frontmost app: Finder 357
+20:44:41.947Z Chatmon started from source through run_chatmon.py (pass shipped, PROBE_SETTLE_MS=0), pid 3153
+20:44:43.980Z VoiceOver's last phrase couldn't be read (124): timed out
+20:44:45.241Z python -m chatmon status: Chatmon is running.
+20:45:05.324Z CASE shipped/G: VoiceOver never said it
+20:45:05.696Z == shipped/A2: Finder in front; the shortcut opens the ask box; `version` typed, Return
+20:45:05.849Z frontmost app: Python 3153
+20:45:05.950Z osascript (Esc): exit 0
+20:45:07.167Z osascript (Finder activate): exit 0
+20:45:10.268Z frontmost app: Finder 357
+20:45:10.392Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:45:13.586Z frontmost app: Python 3153
+20:45:17.795Z Chatmon's focused element: AXStaticText |  | value: Ask Chatmon
+20:45:17.906Z osascript (keystroke version): exit 0
+20:45:19.060Z Chatmon's focused element: AXStaticText |  | value: Ask Chatmon
+20:45:19.431Z osascript (Return): exit 0
+20:45:34.478Z CASE shipped/A2: VoiceOver never said it
+20:45:35.743Z == shipped/B1: behind: `chatmon say`; then Chatmon's shortcut opens the ask box
+20:45:35.901Z frontmost app: Python 3153
+20:45:36.067Z osascript (Esc): exit 0
+20:45:37.246Z osascript (Finder activate): exit 0
+20:45:40.466Z frontmost app: Finder 357
+20:45:40.467Z $ python -m chatmon say "Probe B1, held while Chatmon is behind."
+20:45:40.628Z   exit 0
+20:45:50.950Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:45:53.748Z frontmost app: Python 3153
+20:46:08.773Z CASE shipped/B1: VoiceOver never said it; held while behind: True
+20:46:08.908Z == shipped/B3: behind: `chatmon say`; then System Events makes Chatmon frontmost (no ask box)
+20:46:09.048Z frontmost app: Python 3153
+20:46:09.151Z osascript (Esc): exit 0
+20:46:10.389Z osascript (Finder activate): exit 0
+20:46:13.519Z frontmost app: Finder 357
+20:46:13.525Z $ python -m chatmon say "Probe B3, held while Chatmon is behind."
+20:46:13.805Z   exit 0
+20:46:24.155Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+20:46:26.842Z frontmost app: Python 3153
+20:46:41.878Z CASE shipped/B3: VoiceOver never said it; held while behind: True
+20:46:42.112Z == shipped/C1: behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)
+20:46:42.270Z frontmost app: Python 3153
+20:46:42.499Z osascript (Esc): exit 0
+20:46:43.691Z osascript (Finder activate): exit 0
+20:46:46.849Z frontmost app: Finder 357
+20:46:46.850Z $ python -m chatmon notify needs-you --source claude --message "Probe C1, waiting for your approval."
+20:46:47.244Z   exit 0
+20:46:57.543Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+20:47:00.345Z frontmost app: Python 3153
+20:47:15.491Z CASE shipped/C1: VoiceOver never said it; held while behind: True
+20:47:15.685Z == shipped/C2: behind: an agent's needs-you alert; then Chatmon's shortcut opens the ask box
+20:47:15.853Z frontmost app: Python 3153
+20:47:15.980Z osascript (Esc): exit 0
+20:47:17.173Z osascript (Finder activate): exit 0
+20:47:20.335Z frontmost app: Finder 357
+20:47:20.335Z $ python -m chatmon notify needs-you --source claude --message "Probe C2, waiting for your approval."
+20:47:20.539Z   exit 0
+20:47:30.942Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:47:33.728Z frontmost app: Python 3153
+20:47:48.831Z CASE shipped/C2: VoiceOver never said it; held while behind: True
+20:47:51.095Z $ python -m chatmon quit
+20:47:51.298Z   exit 0
+20:47:51.766Z Chatmon exited: 0
+20:47:51.988Z osascript (Finder activate): exit 0
+20:47:54.010Z Chatmon started from source through run_chatmon.py (pass settle-2500, PROBE_SETTLE_MS=2500), pid 8551
+20:47:56.511Z python -m chatmon status: Chatmon is running.
+20:47:59.197Z CASE settle-2500/G: VoiceOver said "Hi, I'm Chatmon! Click me to ask anything." 5.14 s after
+20:48:02.202Z == settle-2500/B1: HYPOTHESIS: behind: `chatmon say`; then Chatmon's shortcut opens the ask box
+20:48:02.320Z frontmost app: Python 8551
+20:48:02.400Z osascript (Esc): exit 0
+20:48:03.546Z osascript (Finder activate): exit 0
+20:48:06.659Z frontmost app: Finder 357
+20:48:06.659Z $ python -m chatmon say "Probe S25-B1, held while Chatmon is behind."
+20:48:06.740Z   exit 0
+20:48:17.004Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:48:20.012Z frontmost app: Python 8551
+20:48:20.017Z CASE settle-2500/B1: VoiceOver said 'Chatmon. Probe S25-B1, held while Chatmon is behind.' 13.31 s after; held while behind: True
+20:48:20.159Z == settle-2500/B3: HYPOTHESIS: behind: `chatmon say`; then System Events makes Chatmon frontmost (no ask box)
+20:48:20.320Z frontmost app: Python 8551
+20:48:20.453Z osascript (Esc): exit 0
+20:48:21.540Z osascript (Finder activate): exit 0
+20:48:24.700Z frontmost app: Finder 357
+20:48:24.700Z $ python -m chatmon say "Probe S25-B3, held while Chatmon is behind."
+20:48:24.770Z   exit 0
+20:48:35.076Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+20:48:37.822Z frontmost app: Python 8551
+20:48:37.823Z CASE settle-2500/B3: VoiceOver said 'Chatmon. Probe S25-B3, held while Chatmon is behind.' 13.1 s after; held while behind: True
+20:48:37.927Z == settle-2500/C1: HYPOTHESIS: behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)
+20:48:38.039Z frontmost app: Python 8551
+20:48:38.131Z osascript (Esc): exit 0
+20:48:39.216Z osascript (Finder activate): exit 0
+20:48:42.307Z frontmost app: Finder 357
+20:48:42.308Z $ python -m chatmon notify needs-you --source claude --message "Probe S25-C1, waiting for your approval."
+20:48:42.526Z   exit 0
+20:48:52.884Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+20:48:55.649Z frontmost app: Python 8551
+20:48:55.825Z CASE settle-2500/C1: VoiceOver said 'Claude needs you. Probe S25-C1, waiting for your approval. To answer, type “OK” in the chat.' 13.36 s after; held while behind: True
+20:48:55.923Z == settle-2500/C2: HYPOTHESIS: behind: an agent's needs-you alert; then Chatmon's shortcut opens the ask box
+20:48:56.049Z frontmost app: Python 8551
+20:48:56.160Z osascript (Esc): exit 0
+20:48:57.272Z osascript (Finder activate): exit 0
+20:49:00.416Z frontmost app: Finder 357
+20:49:00.416Z $ python -m chatmon notify needs-you --source claude --message "Probe S25-C2, waiting for your approval."
+20:49:00.515Z   exit 0
+20:49:10.949Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:49:13.590Z frontmost app: Python 8551
+20:49:13.766Z CASE settle-2500/C2: VoiceOver said 'Claude needs you. Probe S25-C2, waiting for your approval. To answer, type “OK” in the chat.' 13.32 s after; held while behind: True
+20:49:15.891Z $ python -m chatmon quit
+20:49:16.113Z   exit 0
+20:49:16.434Z Chatmon exited: 0
+20:49:16.563Z osascript (Finder activate): exit 0
+20:49:18.567Z Chatmon started from source through run_chatmon.py (pass settle-4000, PROBE_SETTLE_MS=4000), pid 11036
+20:49:20.551Z python -m chatmon status: Chatmon is running.
+20:49:25.155Z CASE settle-4000/G: VoiceOver said "Hi, I'm Chatmon! Click me to ask anything." 6.48 s after
+20:49:28.230Z == settle-4000/B1: HYPOTHESIS: behind: `chatmon say`; then Chatmon's shortcut opens the ask box
+20:49:28.347Z frontmost app: Python 11036
+20:49:28.440Z osascript (Esc): exit 0
+20:49:29.569Z osascript (Finder activate): exit 0
+20:49:32.766Z frontmost app: Finder 357
+20:49:32.767Z $ python -m chatmon say "Probe S40-B1, held while Chatmon is behind."
+20:49:32.930Z   exit 0
+20:49:43.361Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:49:46.156Z frontmost app: Python 11036
+20:49:47.733Z CASE settle-4000/B1: VoiceOver said 'Chatmon. Probe S40-B1, held while Chatmon is behind.' 14.89 s after; held while behind: True
+20:49:47.839Z == settle-4000/B3: HYPOTHESIS: behind: `chatmon say`; then System Events makes Chatmon frontmost (no ask box)
+20:49:47.973Z frontmost app: Python 11036
+20:49:48.086Z osascript (Esc): exit 0
+20:49:49.346Z osascript (Finder activate): exit 0
+20:49:52.476Z frontmost app: Finder 357
+20:49:52.476Z $ python -m chatmon say "Probe S40-B3, held while Chatmon is behind."
+20:49:52.589Z   exit 0
+20:50:02.958Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+20:50:05.583Z frontmost app: Python 11036
+20:50:07.233Z CASE settle-4000/B3: VoiceOver said 'Chatmon. Probe S40-B3, held while Chatmon is behind.' 14.69 s after; held while behind: True
+20:50:07.335Z == settle-4000/C1: HYPOTHESIS: behind: an agent's needs-you alert; then System Events makes Chatmon frontmost (no ask box)
+20:50:07.452Z frontmost app: Python 11036
+20:50:07.573Z osascript (Esc): exit 0
+20:50:08.692Z osascript (Finder activate): exit 0
+20:50:11.835Z frontmost app: Finder 357
+20:50:11.835Z $ python -m chatmon notify needs-you --source claude --message "Probe S40-C1, waiting for your approval."
+20:50:12.073Z   exit 0
+20:50:22.353Z osascript (System Events: Chatmon frontmost, as Cmd-Tab or the Dock would): exit 0
+20:50:24.960Z frontmost app: Python 11036
+20:50:26.734Z CASE settle-4000/C1: VoiceOver said 'Claude needs you. Probe S40-C1, waiting for your approval. To answer, type “OK” in the chat.' 14.78 s after; held while behind: True
+20:50:26.854Z == settle-4000/C2: HYPOTHESIS: behind: an agent's needs-you alert; then Chatmon's shortcut opens the ask box
+20:50:27.027Z frontmost app: Python 11036
+20:50:27.153Z osascript (Esc): exit 0
+20:50:28.277Z osascript (Finder activate): exit 0
+20:50:31.445Z frontmost app: Finder 357
+20:50:31.445Z $ python -m chatmon notify needs-you --source claude --message "Probe S40-C2, waiting for your approval."
+20:50:31.618Z   exit 0
+20:50:41.876Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:50:44.567Z frontmost app: Python 11036
+20:50:46.233Z CASE settle-4000/C2: VoiceOver said 'Claude needs you. Probe S40-C2, waiting for your approval. To answer, type “OK” in the chat.' 14.69 s after; held while behind: True
+20:50:48.414Z $ python -m chatmon quit
+20:50:48.519Z   exit 0
+20:50:48.672Z Chatmon exited: 0
+20:50:50.768Z VoiceOver's last phrase was read 2126 times (1 failed); 84 phrases kept
+20:50:56.047Z osascript (Finder activate): exit 0
+20:50:56.051Z Chatmon started from source through run_chatmon.py (pass no-voiceover, PROBE_SETTLE_MS=0), pid 14186
+20:50:57.527Z python -m chatmon status: Chatmon is running.
+20:51:05.713Z frontmost app: Python 14186
+20:51:05.786Z osascript (Esc): exit 0
+20:51:06.941Z osascript (Finder activate): exit 0
+20:51:10.117Z frontmost app: Finder 357
+20:51:10.182Z osascript (Cmd+Shift+Space, Chatmon's shortcut): exit 0
+20:51:13.332Z frontmost app: Python 14186
+20:51:13.473Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value:
+20:51:13.538Z osascript (keystroke version): exit 0
+20:51:14.754Z Chatmon's focused element: AXTextArea | Enter to ask · Shift+Enter for a new line · Esc to close · no AI set up yet; reminders and timers still work | value: version
+20:51:14.943Z osascript (Return): exit 0
+20:51:17.113Z CASE no-voiceover/T: typed text landed in Chatmon's focused element: True
+20:51:17.113Z $ python -m chatmon quit
+20:51:17.198Z   exit 0
+20:51:17.315Z Chatmon exited: 0
+20:51:17.322Z shipped/G: heard=False spoken=None
+20:51:17.323Z shipped/A2: heard=False spoken=None
+20:51:17.323Z shipped/B1: heard=False spoken=None held_while_behind=True
+20:51:17.323Z shipped/B3: heard=False spoken=None held_while_behind=True
+20:51:17.323Z shipped/C1: heard=False spoken=None held_while_behind=True
+20:51:17.323Z shipped/C2: heard=False spoken=None held_while_behind=True
+20:51:17.323Z settle-2500/G: heard=True spoken="Hi, I'm Chatmon! Click me to ask anything."
+20:51:17.323Z settle-2500/B1: heard=True spoken='Chatmon. Probe S25-B1, held while Chatmon is behind.' held_while_behind=True
+20:51:17.323Z settle-2500/B3: heard=True spoken='Chatmon. Probe S25-B3, held while Chatmon is behind.' held_while_behind=True
+20:51:17.323Z settle-2500/C1: heard=True spoken='Claude needs you. Probe S25-C1, waiting for your approval. To answer, type “OK” in the chat.' held_while_behind=True
+20:51:17.323Z settle-2500/C2: heard=True spoken='Claude needs you. Probe S25-C2, waiting for your approval. To answer, type “OK” in the chat.' held_while_behind=True
+20:51:17.323Z settle-4000/G: heard=True spoken="Hi, I'm Chatmon! Click me to ask anything."
+20:51:17.323Z settle-4000/B1: heard=True spoken='Chatmon. Probe S40-B1, held while Chatmon is behind.' held_while_behind=True
+20:51:17.323Z settle-4000/B3: heard=True spoken='Chatmon. Probe S40-B3, held while Chatmon is behind.' held_while_behind=True
+20:51:17.323Z settle-4000/C1: heard=True spoken='Claude needs you. Probe S40-C1, waiting for your approval. To answer, type “OK” in the chat.' held_while_behind=True
+20:51:17.323Z settle-4000/C2: heard=True spoken='Claude needs you. Probe S40-C2, waiting for your approval. To answer, type “OK” in the chat.' held_while_behind=True
+20:51:17.323Z no-voiceover/T: heard=None spoken=None

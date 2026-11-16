@@ -214,7 +214,7 @@ still. Overlay menus work from the keyboard. **Settings › Accessibility** has 
 to "until I close them"), sounds and their volume, the shortcut, less movement, the ask box as its own window for
 screen readers, and Magnifier following bubbles (Windows). With a screen reader running, bubbles and answers are
 read out: by Orca 49+ itself; by Narrator, NVDA and JAWS through UI Automation while Chatmon is in front, else a
-notification; by VoiceOver when you come back to Chatmon, or at once in macOS's own voice if you turn that on.
+notification; by VoiceOver a moment after you come back to Chatmon, or at once in macOS's own voice if you turn that on.
 Typing a bubble's button in the chat presses it.
 
 ## Brains: what answers your questions
@@ -530,8 +530,9 @@ keeps the details in the log (the overlay's keyboard focus among them), should e
 The pictures and animations on this page are drawn by Chatmon's own code:
 `python art/tools/readme_media.py` makes them again (it needs `ffmpeg`).
 
-The overlay is tested on Hyprland 0.57; KDE Plasma 6.4 (Wayland) was tested with the window, before the
-overlay. CI runs the tests, including a headless run of the whole app, the overlay against a pretend
+The overlay is tested on Hyprland 0.57, and headless on KWin 6.8 and Hyprland 0.57 with every check it has on
+sway (`tests/test_compositors.py`, where they're installed); KDE Plasma 6.4 (Wayland) was tested with the window,
+before the overlay. CI runs the tests, including a headless run of the whole app, the overlay against a pretend
 compositor and on a real one (a headless sway, with AT-SPI and Orca where the system has them), on Linux (x64 and Arm), Windows and macOS with Python 3.11, 3.14 (what the installers carry) and
 3.15, and on Ubuntu 24.04, Debian 13 and Fedora 44 with their own PyQt6; it also type-checks with mypy for each
 platform and combines the coverage from each OS.
