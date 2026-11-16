@@ -12,7 +12,7 @@ bound paths before and after it was written, and this file is not among them
 ([reports/wave4e/snapshot-before-outcome.txt](reports/wave4e/snapshot-before-outcome.txt),
 [reports/wave4e/snapshot-after-outcome.txt](reports/wave4e/snapshot-after-outcome.txt)).
 
-## Status at 7816159: v0.10.0
+## Status at 56caddd: v0.10.0 (7816159) and two fixes since
 
 `main` at **7816159** is PR #22's merge, on top of PR #18's (65ed989, the delivery at 45a17b3). PR #22 merged three
 branches:
@@ -23,6 +23,15 @@ branches:
 
 main's CI run 43778643147 on 7816159 passed all 19 jobs, each on 7816159 itself
 ([reports/wave5/ci/checkout.txt](reports/wave5/ci/checkout.txt)).
+
+This round's branch, `wave5/plans-release` (PR #24), adds two of the coordinator's commits on 7816159:
+
+- **df3e93c**: `chatmon/layer.py`'s two `QGuiApplication.instance()` calls typed (the mypy finding below), and
+  CONTRIBUTING.md's opt-in table naming `CHATMON_PINS_NETWORK`.
+- **56caddd**: `tests/test_app_smoke.py::test_hide_menu_and_reload` waits for the greeting (the WSL flake below).
+
+PR #24's CI run 43794815103 on 56caddd passed all 19 jobs, after one re-run (below). Its test merge has 56caddd's own
+tree ([reports/wave5b/ci/merge-tree.txt](reports/wave5b/ci/merge-tree.txt)).
 
 **The release.** `v0.10.0` is an annotated tag ("Chatmon 0.10.0") on 7816159. Its Packages run 43778675599 passed all
 ten jobs:
@@ -54,8 +63,8 @@ ran again on 7816159 or was read from CI. That covers:
 - the gate drills, the real sway and Orca runs, the overlay's memory check, the locks, mypy with 6.11's and 6.12.1's
   stubs, the distro drill and the reproducible wheel.
 
-Every check passed except two findings, below: mypy with 6.12.1's stubs, and the WSL suite's flaky tests. Two drills'
-lines had moved with PR #22, and each was re-aimed at the same defect:
+At 7816159 every check passed except two findings, below: mypy with 6.12.1's stubs, and the WSL suite's flaky tests.
+Two drills' lines had moved with PR #22, and each was re-aimed at the same defect:
 
 - **M0-12-ask-sent**, now `-v2`: `chatmon ask` keeps `_send`'s answer.
 - **M3-RC-clipboard**, now `-v3`: `layer.py` sets Qt's clipboard a second way. `-v2`, which took out only the first
@@ -67,9 +76,26 @@ Run again on its own, it went green, red and green.
 M6B's 55 round-two receipts (all stale) were moved, byte for byte, to
 [reports/m6b/history/](reports/m6b/history/README.md), as its 108 oldest were in the final round.
 
-**The finding: mypy with PyQt6 6.12.1's stubs fails on two of PR #22's lines.** On linux, win32 and darwin, in WSL
-and here, mypy 2.4.1 with 6.12.1's stubs finds `chatmon/layer.py:824: error: Need type annotation for "app"
-[var-annotated]`, and `:917` the same
+**Bound again at 56caddd** ([reports/wave5b/](reports/wave5b/)). The two fixes staled seven plans: M0, M3, M6A, M6B,
+M7, M8 and M10 ([reports/wave5b/stale-at-56caddd.md](reports/wave5b/stale-at-56caddd.md)). Each plan's section gained a
+paragraph, and every check of each ran again on 56caddd:
+
+- the suite on Windows (1293 passed, 225 skipped);
+- every drill, on Windows and in WSL, with M3-RC-clipboard-v3 in -v2's place;
+- every gate drill;
+- the real sway and Orca;
+- mypy with both stubs;
+- the how-to's replay;
+- the distro drill;
+- PR #24's CI run.
+
+All of them passed. For the M6A receipts whose files didn't change, the tagged Packages run and Pins run 43778643021
+were read again. M6B's 56 round-three receipts were moved to its history first, for the plan limit. The failed
+receipts of the first binding stay as history.
+
+**The finding, fixed in df3e93c: mypy with PyQt6 6.12.1's stubs failed on two of PR #22's lines.** At 7816159, on
+linux, win32 and darwin, in WSL and here, mypy 2.4.1 with 6.12.1's stubs found
+`chatmon/layer.py:824: error: Need type annotation for "app"  [var-annotated]`, and `:917` the same
 ([reports/m10/wave5/mypy-6121.log](reports/m10/wave5/mypy-6121.log),
 [reports/m6a/wave5/mypy-pyqt6-6.12.1-linux.log](reports/m6a/wave5/mypy-pyqt6-6.12.1-linux.log)).
 
@@ -79,13 +105,22 @@ and here, mypy 2.4.1 with 6.12.1's stubs finds `chatmon/layer.py:824: error: Nee
   covers exactly this ("a value from a static constructor ... is given its type"), and these two lines don't use it.
 - **Why CI is green.** Its types jobs lock 6.11's stubs, and the release's own gates also ran mypy with 6.11's only.
 
-It fails M10-03.A1 (the 6.12.1 half), M10-03.A3 (the how-to's replay finds the same) and M6B-02.A1 (the 6.12 half).
-It also fails M6A-10.A1, because CONTRIBUTING.md says mypy "also passes with the next PyQt6's stubs (6.12.1)".
-That is the same pattern as round three, on another line. This round changes no product code, so those receipts are
-recorded as failing, and the tasks behind them are blocked: T7B (M6A), T4-mypy, T6-phase-b and T7-leftovers (M6B),
-and T3-qt612-types (M10). The fix is two annotations, `app: QCoreApplication | None = QGuiApplication.instance()`.
-Then the 6.12.1 runs, M10's gate drills, the how-to review and M6A's docs review run again, and the three plans
-re-bind.
+At 7816159 it failed:
+
+- M10-03.A1 (the 6.12.1 half) and M10-03.A3 (the how-to's replay found the same);
+- M6B-02.A1 (the 6.12 half);
+- M6A-10.A1, because CONTRIBUTING.md says mypy "also passes with the next PyQt6's stubs (6.12.1)".
+
+That is the same pattern as round three, on another line. Those receipts were recorded as failing, and the tasks behind
+them blocked.
+
+The coordinator's **df3e93c** fixes it with two type annotations,
+`app: QCoreApplication | None = QGuiApplication.instance()`, and no change at run time, so no release is needed for it.
+At 56caddd mypy with 6.12.1's stubs finds no issues on linux, win32 and darwin, in WSL
+([reports/m6a/wave5b/mypy-pyqt6-6.12.1-linux.log](reports/m6a/wave5b/mypy-pyqt6-6.12.1-linux.log)), here
+([reports/m10/wave5b/mypy-6121.log](reports/m10/wave5b/mypy-6121.log)) and in the how-to's replay. M10's five gate drills
+go green, red and green again, and the how-to and docs reviews pass. The blocked tasks are verified again: T7B (M6A),
+T4-mypy, T6-phase-b and T7-leftovers (M6B), and T3-qt612-types (M10).
 
 **M6A's requirement M6A-02 changed, by the owner's decision.** M6A-02 said "Dependabot keeps github-actions and pip
 dependencies up to date". Dependabot's first run on `main` opened #19, #20 and #21. Each locked our
@@ -97,11 +132,11 @@ while something can. On `main`, dispatched run 43778713259 opened #23 (nuitka 4.
 back), and run 43778794994 edited #23 in place, with no second issue. The re-run of M6A-02.A1 fails as written, and is
 recorded as a failed receipt. M6A-02 is superseded by M6A-02B (Dependabot for actions, the pins check for Python),
 with three criteria that all pass, and T7 by T7B
-([reports/m6a/wave5/pins-review.md](reports/m6a/wave5/pins-review.md)). T7B also carries M6A-10.A1, which fails on
-the mypy finding above.
+([reports/m6a/wave5/pins-review.md](reports/m6a/wave5/pins-review.md)). The coordinator confirmed the replacement. T7B
+also carries M6A-10.A1, which passes again since df3e93c.
 
-**The WSL suite's flaky tests, a second finding.** The whole suite in WSL failed twice, each time on different
-tests:
+**The WSL suite's flaky tests, a second finding.** At 7816159 the whole suite in WSL failed twice, each time on
+different tests:
 
 - Beside the Windows runner's drills: 5 failed and 1 errored ([reports/wave5/suite-linux.log](reports/wave5/suite-linux.log)).
   sway's click test timed out at setup, in `shutil.which` over a PATH of `/mnt/c` folders. The hook smoke test
@@ -109,15 +144,32 @@ tests:
 - On a quiet machine: 1 failed, `test_app_smoke.py::test_hide_menu_and_reload`
   ([reports/wave5/suite-linux-quiet.log](reports/wave5/suite-linux-quiet.log)).
 
-Each passed alone, and `tests/test_app_smoke.py` passed five runs in five on its own. In CI the smoke tests
-pass on every leg and the sway test in the sway job; the compositor checks skip there. These are tests whose waits
-are too short for WSL's `/mnt/c` tree, not product behaviour. M3 records both runs as failed receipts and closes on
-its other evidence. Making those waits robust is the coordinator's call.
+Each passed alone, and `tests/test_app_smoke.py` passed five runs in five on its own. In CI the smoke tests pass on
+every leg, and the sway test in the sway job; the compositor checks skip there. These are tests whose waits are too
+short for WSL's `/mnt/c` tree, not product behaviour. M3 keeps both runs as failed receipts.
 
-Every plan was validated at resume and at closure on 7816159
-([reports/wave5/validation-sweep.txt](reports/wave5/validation-sweep.txt)). Ten close. M6A, M6B and M10 stop on the
-mypy finding, and M10 also on P-CI-NEXT-STUBS. No receipt of any plan is stale
-([reports/wave5/stale-after-binding.md](reports/wave5/stale-after-binding.md)).
+**56caddd** fixes the quiet run's failure. The greeting, 1.5 s after start, could land inside
+`test_hide_menu_and_reload`'s one-second spin when the companion started slowly, and add "Recent messages". The test
+now waits for it.
+
+- **The coordinator's drill**, run again here, fails the old body with the start slowed by 0.6 s and passes the new
+  one at 0, 0.6, 1.4 and 2 s, on Windows and in WSL
+  ([reports/wave5b/flaky-hide-menu-drill-windows.log](reports/wave5b/flaky-hide-menu-drill-windows.log),
+  [-wsl.log](reports/wave5b/flaky-hide-menu-drill-wsl.log)).
+- **The whole WSL suite**, retried at 56caddd on a quiet machine: 1391 passed, 127 skipped, exit 0
+  ([reports/wave5b/suite-linux.log](reports/wave5b/suite-linux.log)), now a passing receipt in M3.
+
+**A CI flake on macOS.** PR #24's CI run 43794815103 first failed one test on macOS 3.15:
+`tests/test_app_smoke.py::test_greets_and_reacts_to_agents`, waiting at line 30 for an agent's alert to show after the
+greeting ([reports/wave5b/ci/ci-133061193367-test-macos-latest-3.15.log](reports/wave5b/ci/ci-133061193367-test-macos-latest-3.15.log)).
+56caddd didn't touch that test, and the job's re-run passed. It is another wait that a slow runner can outlast, beside
+the WSL ones: a note for the coordinator.
+
+Every plan was validated at resume and at closure on 56caddd
+([reports/wave5b/validation-sweep.txt](reports/wave5b/validation-sweep.txt); the first binding's, at 7816159, is
+[reports/wave5/validation-sweep.txt](reports/wave5/validation-sweep.txt)). Twelve close; M10 stops only on
+P-CI-NEXT-STUBS, which is not a criterion. No receipt of any plan is stale
+([reports/wave5b/stale-after-binding.md](reports/wave5b/stale-after-binding.md)).
 
 | Milestone | State | What's left, and who |
 |---|---|---|
@@ -125,16 +177,16 @@ mypy finding, and M10 also on P-CI-NEXT-STUBS. No receipt of any plan is stale
 | M1A Security, updates | closed | Nothing. The macOS root drills ran on the owner's MacBook Pro (wave4/mac-drills, wave4/mac-owner). |
 | M1B Brains, stored data | closed | Nothing. |
 | M2 Bubbles, ask box | closed | Nothing. |
-| M3 Stage, overlay | closed | Nothing in its criteria. The whole WSL suite's flaky tests are a note for the coordinator (above). |
+| M3 Stage, overlay | closed | Nothing. |
 | M4A Platform awareness | closed | Nothing. |
 | M4B Hotkey, sound, toasts | closed | Nothing. AC-00C, AC-01D and AC-02F were drilled on the MacBook Pro, and AC-03E on testpc2's desktop. |
 | M5 Reminders, offline, locale | closed | Nothing. |
-| M6A CI and tooling | checkpoint | M6A-10.A1 fails on CONTRIBUTING.md's 6.12.1 sentence (the mypy finding); T7B is blocked on it. Everything else passes. P-RELEASE and P-DEPENDABOT are observed and recorded, and M6A-02 is superseded by M6A-02B. The coordinator: the two annotations in `layer.py`, then the re-runs. |
-| M6B Static analysis, logging | checkpoint | M6B-02.A1's 6.12 half fails (the mypy finding); T4-mypy is blocked, with T6-phase-b and T7-leftovers, which depend on it and whose own receipts pass. The coordinator, as for M6A. |
+| M6A CI and tooling | closed | Nothing. P-RELEASE and P-DEPENDABOT are observed and recorded, and M6A-02 is superseded by M6A-02B, as the coordinator confirmed. |
+| M6B Static analysis, logging | closed | Nothing. |
 | M7 Integration | closed | Nothing. |
 | M8 Translation | closed | Nothing. |
 | M9 Sounds (coordinator) | done | The owner accepted the cues as they are (2026-11-14). |
-| M10 Follow-ups | checkpoint | M10-03.A1 and M10-03.A3 fail (the mypy finding); T3-qt612-types is blocked. The coordinator, as for M6A. One pending operation, not a criterion: **P-CI-NEXT-STUBS**, from 2026-11-28, when PyQt6 6.12.1 can be hash-locked: the `types` job's check against the next stubs (integration note 2), which would catch such a line in CI, the coordinator. |
+| M10 Follow-ups | checkpoint | Every task is verified. One pending operation, not a criterion: **P-CI-NEXT-STUBS**, from 2026-11-28, when PyQt6 6.12.1 can be hash-locked: the `types` job's check against the next stubs (integration note 2), which would have caught layer.py's two lines in CI, the coordinator. |
 | Consolidation | done | v0.10.0 is released. |
 
 ## Before the release, beyond the criteria
@@ -178,14 +230,15 @@ fixes are in 7816159.
     `--strict` repro, `installEventFilter`, `removeEventFilter` and `setParent` taking `Self`, and `setParent`
     losing `| None`.
   - All three were read again ([reports/m10/wave5/stub-report.log](reports/m10/wave5/stub-report.log)).
-- **Plan size.** The validator reads a plan of at most 4 MiB, and every re-binding adds a round of receipts. After this
-  round the largest are M6B (3.45 MB, after moving its round-two receipts out), M8 (3.24 MB) and M7 (2.99 MB). The
-  next full round would take M6B past the limit again, so archive its round-three `W4C-` receipts first. The way out
-  is M6B's: move a plan's oldest stale receipts, byte for byte, to
-  `reports/<id>/history/` with a README (where they were last, why, and each file's SHA-256). Take their ids out of the
-  tasks' evidence lists, and point to the folder from the plan's next section
-  ([reports/m6b/history/README.md](reports/m6b/history/README.md),
+- **Plan size.** The validator reads a plan of at most 4 MiB (4,194,304 bytes), and every re-binding adds a round of
+  receipts. After this round the largest are:
+  - M8, 3.69 MB;
+  - M7, 3.50 MB;
+  - M6B, 3.46 MB, after moving round two's and round three's receipts out (55 and 56).
+
+  The next round that re-binds M8, M7 or M6B would take it to or past the limit. Archive its oldest stale receipts
+  first: M8's original `E-` receipts, M7's `RED-` and `W4-`, M6B's `W4E-`. The way out is M6B's: move a plan's oldest
+  stale or failed receipts, byte for byte, to `reports/<id>/history/` with a README (where they were last, why, and
+  each file's SHA-256). Take their ids out of the tasks' evidence lists, and point to the folder from the plan's next
+  section ([reports/m6b/history/README.md](reports/m6b/history/README.md),
   [reports/wave5/archive_receipts.py](reports/wave5/archive_receipts.py)).
-- **CONTRIBUTING.md's opt-in table** doesn't name `CHATMON_PINS_NETWORK`, the pins check's real-uv test. Its skip
-  reason does, and CI doesn't run it. This is a small doc edit for later. M6A, M8 and M10 bind CONTRIBUTING.md's
-  bytes, and M6B and M10 bind M6A's plan, so the edit means re-binding those four.

@@ -95,6 +95,13 @@ def gates(plan: str) -> int:
 
 
 def extra_paragraphs(plan: str) -> str:
+    if plan == "m6b":
+        return (
+            "**Archived history, a third time.** This binding's 56 receipts would have taken the plan past the 4 MiB limit\n"
+            "again, so round three's 56 `W4C-` receipts (55 stale, 1 failed) were moved out first, byte for byte, to\n"
+            "[reports/m6b/history/w4c-round-three.json](reports/m6b/history/README.md). Nothing else in the ledger changed\n"
+            "with them."
+        )
     if plan == "m3":
         suite = re.findall(r"(\d+ passed, \d+ skipped|\d+ failed, \d+ passed, \d+ skipped(?:, \d+ errors?)?)", text("wave5b/suite-linux.log"))[-1]
         return (
@@ -116,6 +123,8 @@ def section(plan: str) -> str:
     if bad:
         raise SystemExit(f"{plan}: {bad} drills didn't go green, red and green")
     ran = f"{win} Windows drills" + (f" and {linux} Linux ones (in WSL)" if linux else "") + (f", and {gate} gate drills" if gate else "")
+    if (REPORTS / plan / "wave5b" / "distro-drill-results.json").is_file():
+        ran += ", and the distro drill under podman in WSL"
     again = (
         "**Bound again at 56caddd.** The coordinator's two commits on this branch, after this section's first binding:\n\n"
         + CHANGES + "\n"

@@ -1,6 +1,6 @@
 """Validate every plan at resume and closure, as the last round's validation-sweep.txt: python sweep.py OUT.
 
-Each plan is checked with the context.json of its latest round (wave5/ for the nine re-bound in this round; the
+Each plan is checked with the context.json of its latest round (wave5b/ or wave5/ for those re-bound in this round; the
 newest folder that has one for the four that weren't), which must equal the plan's own profile. One line per plan
 and stage: PASS, or FAIL with the validator's finding codes and their locations. The validator's JSON report for
 each is kept in OUT's folder, as validate-sweep.json. Nothing is changed.
@@ -18,7 +18,7 @@ ROOT = Path.cwd()
 PY = "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe"
 V = "C:/Users/Randy/.claude/plugins/cache/high-quality-projects-skill/high-quality-projects-skill/0.7.0/scripts/verify-delivery.py"
 PLANS = ["m0", "m1a", "m1b", "m2", "m3", "m4a", "m4b", "m5", "m6a", "m6b", "m7", "m8", "m10"]
-ORDER = ["wave5", "w4d", "wave4f", "wave4e", "wave4c", "wave4b", "wave4"]
+ORDER = ["wave5b", "wave5", "w4d", "wave4f", "wave4e", "wave4c", "wave4b", "wave4"]
 
 
 def context(plan: str, profile: dict) -> Path:
