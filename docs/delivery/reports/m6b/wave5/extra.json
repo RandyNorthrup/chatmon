@@ -1,0 +1,150 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three), PR #22's changes to the modules and tests T1-ruff to T7-leftovers own, and the M6A and M8 plans it takes as inputs (re-bound in this round first); no conflict or gap; the new code passes ruff and mypy with no new ignore.",
+ "windows_note": "Every criterion's tests ran here; the Linux-only overlay and log-mode tests skip on Windows, and CI's and WSL's receipts add them.",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "drill_acceptance": {},
+ "results_where": {
+  "gate-drills-results.json": "through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again"
+ },
+ "observe_add": [
+  "tests/test_log.py",
+  "tests/test_imports.py",
+  "tests/test_wayland.py"
+ ],
+ "ci": [
+  {
+   "id": "W5-BEH-CI-LINT",
+   "leg": "ubu3.15",
+   "log": "ci-133010594152-lint.log",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A3"
+   ],
+   "no_cilog": true,
+   "method": "main's CI run 43778643147 on 7816159, job lint. It ran ruff check . with pyproject.toml's settings: the eleven families, max-complexity 15, RUF001-003 ignored, S101 allowed only in tests, and no per-file exemption left for the eight hub files. The result was 'All checks passed!', and the job succeeded. ruff is pinned in packaging/requirements-dev.txt, which the job installed with --require-hashes."
+  },
+  {
+   "id": "W5-BEH-CI-TYPES-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-133010594218-types-linux.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "main's CI run 43778643147 on 7816159, job types (linux): mypy --platform linux on [tool.mypy], which has no overrides and no exemption list. It passed with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt), and the job succeeded. That is M6B-02.A1's 6.11 half; its 6.12 half is W5-BEH-WSL-MYPY-6121."
+  },
+  {
+   "id": "W5-BEH-CI-TYPES-WIN32",
+   "leg": "ubu3.15",
+   "log": "ci-133010594268-types-win32.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "main's CI run 43778643147 on 7816159, job types (win32): mypy --platform win32 passed with no module exempt."
+  },
+  {
+   "id": "W5-BEH-CI-TYPES-DARWIN",
+   "leg": "ubu3.15",
+   "log": "ci-133010594142-types-darwin.log",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "no_cilog": true,
+   "method": "main's CI run 43778643147 on 7816159, job types (darwin): mypy --platform darwin passed with no module exempt."
+  },
+  {
+   "id": "W5-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-133010594255-test-ubuntu-24.04-3.15.log",
+   "method": "main's CI run 43778643147 on 7816159, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too."
+  },
+  {
+   "id": "W5-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-133010594239-test-macos-latest-3.14.log",
+   "method": "main's CI run 43778643147 on 7816159, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's change keeps the log tests to themselves on macOS, and they still do. That is integration note 1's macOS run."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W5-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave5/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check on 7816159's files on this workstation (the worktree's HEAD then, b8da74a, named in the log, changes only docs/ after 7816159: git diff 7816159 b8da74a outside docs/ is empty), exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes from today's marked strings, and none of them is a string that couldn't be translated; PR #22 added or changed no marked string."
+  },
+  {
+   "id": "W5-BEH-WSL-MYPY-6121",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5/mypy-pyqt6-6.12.1-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/m4a-venv/bin/python",
+    "-m",
+    "mypy",
+    "--platform",
+    "linux",
+    "--no-incremental",
+    "--cache-dir",
+    "/var/tmp/plans5-mypy-linux"
+   ],
+   "exit_code": 1,
+   "method": "M6B-02.A1's 6.12 half: mypy 2.4.1 with PyQt6 6.12.1's stubs (/var/tmp/m4a-venv in WSL Arch) on 7816159's files, --platform linux; win32 and darwin the same (mypy-pyqt6-6.12.1-win32.log, -darwin.log), and so did M10's run here (../m10/wave5/mypy-6121.log). Two errors each, both in chatmon/layer.py.",
+   "status": "fail",
+   "reason": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again."
+  }
+ ],
+ "pending": [],
+ "next_action": "M6B-02.A1's 6.12 half fails at 7816159: mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again; then T4-mypy can be verified, and T6-phase-b and T7-leftovers, which depend on it and whose own receipts pass, with it, and M6B closed. The 6.11 half and every other criterion pass.",
+ "windows_acceptance": [
+  "M6B-01.A2",
+  "M6B-02.A2",
+  "M6B-03.A1",
+  "M6B-03.A2",
+  "M6B-03.A3",
+  "M6B-03.A4",
+  "M6B-03.A5",
+  "M6B-03.A6",
+  "M6B-LEFT.A1",
+  "M6B-LEFT.A2",
+  "M6B-LEFT.A3",
+  "M6B-LEFT.A4",
+  "M6B-RW.A1"
+ ],
+ "tasks": {
+  "T4-mypy": {
+   "status": "blocked",
+   "blocker": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. That is M6B-02.A1's 6.12 half. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again."
+  },
+  "T6-phase-b": {
+   "status": "blocked",
+   "blocker": "Waits for T4-mypy, which it depends on and which is blocked at 7816159 (mypy with PyQt6 6.12.1's stubs fails on chatmon/layer.py:824 and :917). Its own criteria's receipts all pass at 7816159; it can be verified again once T4-mypy is."
+  },
+  "T7-leftovers": {
+   "status": "blocked",
+   "blocker": "Waits for T6-phase-b, which it depends on and which waits for T4-mypy (mypy with PyQt6 6.12.1's stubs fails on chatmon/layer.py:824 and :917 at 7816159). Its own criteria's receipts all pass at 7816159; it can be verified again once T6-phase-b is."
+  }
+ },
+ "stale_reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M6A and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147"
+}
