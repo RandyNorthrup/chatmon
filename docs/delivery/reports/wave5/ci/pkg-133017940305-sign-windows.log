@@ -1,0 +1,1042 @@
+sign-windows	Set up job	﻿2026-11-16T00:32:53.5321949Z Current runner version: '2.338.2'
+sign-windows	Set up job	2026-11-16T00:32:53.5375040Z ##[group]Runner Image Provisioner
+sign-windows	Set up job	2026-11-16T00:32:53.5375921Z Hosted Compute Agent
+sign-windows	Set up job	2026-11-16T00:32:53.5376505Z Version: 20261103.629
+sign-windows	Set up job	2026-11-16T00:32:53.5377178Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+sign-windows	Set up job	2026-11-16T00:32:53.5377897Z Build Date: 2026-11-03T17:26:59Z
+sign-windows	Set up job	2026-11-16T00:32:53.5378551Z Worker ID: {75a388e1-2acc-4f70-be6a-605b9f49616a}
+sign-windows	Set up job	2026-11-16T00:32:53.5379268Z Region: westcentralus
+sign-windows	Set up job	2026-11-16T00:32:53.5379845Z Cloud: Azure
+sign-windows	Set up job	2026-11-16T00:32:53.5380425Z ##[endgroup]
+sign-windows	Set up job	2026-11-16T00:32:53.5381741Z ##[group]Operating System
+sign-windows	Set up job	2026-11-16T00:32:53.5382926Z Microsoft Windows Server 2025
+sign-windows	Set up job	2026-11-16T00:32:53.5383599Z 10.0.26100
+sign-windows	Set up job	2026-11-16T00:32:53.5384156Z Datacenter
+sign-windows	Set up job	2026-11-16T00:32:53.5384678Z ##[endgroup]
+sign-windows	Set up job	2026-11-16T00:32:53.5385213Z ##[group]Runner Image
+sign-windows	Set up job	2026-11-16T00:32:53.5385782Z Image: windows-2025-vs2026
+sign-windows	Set up job	2026-11-16T00:32:53.5386471Z Version: 20261103.298.1
+sign-windows	Set up job	2026-11-16T00:32:53.5387589Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+sign-windows	Set up job	2026-11-16T00:32:53.5389633Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+sign-windows	Set up job	2026-11-16T00:32:53.5390598Z ##[endgroup]
+sign-windows	Set up job	2026-11-16T00:32:53.5391705Z ##[group]GITHUB_TOKEN Permissions
+sign-windows	Set up job	2026-11-16T00:32:53.5393985Z Contents: read
+sign-windows	Set up job	2026-11-16T00:32:53.5394637Z Metadata: read
+sign-windows	Set up job	2026-11-16T00:32:53.5395247Z ##[endgroup]
+sign-windows	Set up job	2026-11-16T00:32:53.5397364Z Secret source: Actions
+sign-windows	Set up job	2026-11-16T00:32:53.5398358Z Cache mode: write
+sign-windows	Set up job	2026-11-16T00:32:53.5399194Z Prepare workflow directory
+sign-windows	Set up job	2026-11-16T00:32:53.5852434Z Prepare all required actions
+sign-windows	Set up job	2026-11-16T00:32:53.5900791Z Getting action download info
+sign-windows	Set up job	2026-11-16T00:32:53.8671577Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+sign-windows	Set up job	2026-11-16T00:32:54.0039851Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+sign-windows	Set up job	2026-11-16T00:32:54.6187421Z Download action repository 'azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906' (SHA:a641126d1b8aa4d1fa005f4f92df94a3a4c4c906)
+sign-windows	Set up job	2026-11-16T00:32:54.9562426Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+sign-windows	Set up job	2026-11-16T00:32:55.1986690Z Complete job name: sign-windows
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:32:55.3850626Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3852124Z with:
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3852629Z   persist-credentials: false
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3853398Z   sparse-checkout: packaging/windows
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	packaging/icons
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3854244Z   repository: RandyNorthrup/chatmon
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3861152Z   token: ***
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3861634Z   ssh-strict: true
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3862339Z   ssh-user: git
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3862829Z   clean: true
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3863329Z   sparse-checkout-cone-mode: true
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3863984Z   fetch-depth: 1
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3864473Z   fetch-tags: false
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3864986Z   show-progress: true
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3865492Z   lfs: false
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3865928Z   submodules: false
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3866430Z   set-safe-directory: true
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3867024Z   allow-unsafe-pr-checkout: false
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3867893Z env:
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3868351Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.3869001Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.5415541Z Syncing repository: RandyNorthrup/chatmon
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.5417550Z ##[group]Getting Git version info
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.5418332Z Working directory is 'D:\a\chatmon\chatmon'
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:55.6483821Z [command]"C:\Program Files\Git\bin\git.exe" version
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.0447489Z git version 2.56.0.windows.4
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.0502648Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.0520200Z Temporarily overriding HOME='D:\a\_temp\c5c25b8d-1b9a-4e92-af71-af4c89103da6' before making global git config changes
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.0524856Z Adding repository directory to the temporary git global config as a safe directory
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.0530764Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.1235024Z Deleting the contents of 'D:\a\chatmon\chatmon'
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.1240608Z ##[group]Determining repository object format
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.1242972Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.1243940Z ##[group]Initializing the repository
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.1252595Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\chatmon\chatmon
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.2160472Z Initialized empty Git repository in D:/a/chatmon/chatmon/.git/
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.2207895Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/RandyNorthrup/chatmon
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3005760Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3007012Z ##[group]Disabling automatic garbage collection
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3015563Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3392184Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3393840Z ##[group]Setting up auth
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3394811Z Removing SSH command configuration
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3410819Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:56.3785536Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:58.0859566Z Removing HTTP extra header
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:58.0875282Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:58.1250066Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:58.6904819Z Removing includeIf entries pointing to credentials config files
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:58.6915275Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:58.7311939Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.2673654Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.3114642Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git.path D:\a\_temp\git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.3567695Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D:\a\_temp\git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.3939863Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.4310731Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.4678364Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.4678799Z ##[group]Fetching the repository
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:32:59.4690225Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +refs/tags/v0.10.0:refs/tags/v0.10.0
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.8580970Z From https://github.com/RandyNorthrup/chatmon
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.8581862Z  * [new tag]         v0.10.0    -> v0.10.0
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.8642375Z [command]"C:\Program Files\Git\bin\git.exe" tag --list v0.10.0
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9184430Z v0.10.0
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9229573Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/tags/v0.10.0^{commit}
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9632973Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9666927Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9667570Z ##[group]Determining the checkout info
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9668845Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9669954Z ##[group]Setting up sparse checkout
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:00.9678332Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout set packaging/windows packaging/icons
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.0191383Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.0191822Z ##[group]Checking out the ref
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.0200858Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/tags/v0.10.0
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8248297Z Note: switching to 'refs/tags/v0.10.0'.
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8249288Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8249748Z You are in 'detached HEAD' state. You can look around, make experimental
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8251917Z changes and commit them, and you can discard any commits you make in this
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8252571Z state without impacting any branches by switching back to a branch.
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8252938Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8253177Z If you want to create a new branch to retain commits you create, you may
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8253931Z do so (now or later) by using -c with the switch command. Example:
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8254446Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8254578Z   git switch -c <new-branch-name>
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8254803Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8254917Z Or undo this operation with:
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8255118Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8255219Z   git switch -
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8255356Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8255621Z Turn off this advice by setting config variable advice.detachedHead to false
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8256022Z 
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8256317Z HEAD is now at 7816159 Merge pull request #22 from RandyNorthrup/release/0.10.0-fixes
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.8439700Z ##[endgroup]
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.9016974Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.9370163Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.9409998Z ##[group]Removing auth
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.9410434Z Removing SSH command configuration
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.9420086Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:01.9793941Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:02.5122312Z Removing HTTP extra header
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:02.5132505Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:02.5542935Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1141685Z Removing includeIf entries pointing to credentials config files
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1153799Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1549522Z includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1550272Z includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1550917Z includeif.gitdir:/github/workspace/.git.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1551750Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1600087Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1956469Z D:\a\_temp\git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.1999490Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git.path D\:\\a\\_temp\\git\-credentials\-4db98288\-55bf\-4576\-bafc\-6a50feb96277\.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.2388643Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.2736409Z D:\a\_temp\git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.2779032Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-4db98288\-55bf\-4576\-bafc\-6a50feb96277\.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.3165966Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.3521322Z /github/runner_temp/git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.3562667Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-4db98288\-55bf\-4576\-bafc\-6a50feb96277\.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.3936664Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.4270982Z /github/runner_temp/git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.4310193Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-4db98288\-55bf\-4576\-bafc\-6a50feb96277\.config
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:03.4685927Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:04.0026681Z Removing credentials config 'D:\a\_temp\git-credentials-4db98288-55bf-4576-bafc-6a50feb96277.config'
+sign-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:33:04.0039551Z ##[endgroup]
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-11-16T00:33:04.0497943Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0498437Z with:
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0498621Z   name: windows-app
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0498823Z   path: D:\a\_temp\Chatmon
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0499050Z   merge-multiple: false
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0499276Z   repository: RandyNorthrup/chatmon
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0499514Z   run-id: 43778675599
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0499706Z   skip-decompress: false
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0499910Z   digest-mismatch: error
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0500093Z env:
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0500270Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.0500500Z ##[endgroup]
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.2235138Z Downloading single artifact
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.4405807Z Preparing to download the following artifacts:
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.4406697Z - windows-app (ID: 14188252584, Size: 69336319, Expected Digest: sha256:5fd484b14917e5514faf2015362beca694f83ebc5128af907a700f1710bae414)
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.8326668Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-ec65fcff-226e-5f37-b3bb-7672a42866f3/artifacts/0b62829bd771551b0b7c2de8d4a97d05d62152f334f3949b4d75382bf491541f.zip
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:04.8328373Z Starting download of artifact to: D:\a\_temp\Chatmon
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:05.1025580Z (node:4020) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:05.1026836Z (Use `node --trace-deprecation ...` to show where the warning was created)
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:07.3751048Z SHA256 digest of downloaded artifact is 5fd484b14917e5514faf2015362beca694f83ebc5128af907a700f1710bae414
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:07.3752119Z Artifact download completed successfully.
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:07.3752622Z Total of 1 artifact(s) downloaded
+sign-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:33:07.3761291Z Download artifact has finished successfully
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	﻿2026-11-16T00:33:07.4094938Z ##[group]Run gh release download is-6_7_3 --repo jrsoftware/issrc --pattern innosetup-6.7.3.exe --dir $env:RUNNER_TEMP
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4095879Z [36;1mgh release download is-6_7_3 --repo jrsoftware/issrc --pattern innosetup-6.7.3.exe --dir $env:RUNNER_TEMP[0m
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4096480Z [36;1m$setup = Join-Path $env:RUNNER_TEMP innosetup-6.7.3.exe[0m
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4096843Z [36;1m$sig = Get-AuthenticodeSignature $setup[0m
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4097593Z [36;1mif ($sig.Status -ne "Valid" -or $sig.SignerCertificate.Subject -notlike "CN=Pyrsys B.V.*") { throw "Unexpected signature: $($sig.Status) $($sig.SignerCertificate.Subject)" }[0m
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4098581Z [36;1mStart-Process $setup -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/CURRENTUSER", "/SP-" -Wait[0m
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4864510Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4865325Z env:
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4865626Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4870412Z   GH_TOKEN: ***
+sign-windows	Inno Setup 6.7.3, checked to be signed by its maker	2026-11-16T00:33:07.4870723Z ##[endgroup]
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	﻿2026-11-16T00:33:17.0267001Z ##[group]Run Install-Module ArtifactSigning -RequiredVersion 0.1.8 -Repository PSGallery -Scope CurrentUser -Force
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0268044Z [36;1mInstall-Module ArtifactSigning -RequiredVersion 0.1.8 -Repository PSGallery -Scope CurrentUser -Force[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0268834Z [36;1m$module = Get-Module -ListAvailable ArtifactSigning | Where-Object Version -eq 0.1.8[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0269526Z [36;1m$scripts = Get-ChildItem $module.ModuleBase -Recurse -Include *.psm1, *.psd1[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0270150Z [36;1mif (-not $scripts) { throw "No ArtifactSigning 0.1.8 in $($module.ModuleBase)" }[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0270615Z [36;1mforeach ($script in $scripts) {[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0270979Z [36;1m  $sig = Get-AuthenticodeSignature $script.FullName[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0271869Z [36;1m  if ($sig.Status -ne "Valid" -or $sig.SignerCertificate.Subject -notlike "CN=Microsoft Corporation,*") { throw "$($script.Name): $($sig.Status) $($sig.SignerCertificate.Subject)" }[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0272715Z [36;1m}[0m
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0338945Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0339328Z env:
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0339540Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Microsoft's ArtifactSigning module, checked to be signed by Microsoft	2026-11-16T00:33:17.0339801Z ##[endgroup]
+sign-windows	How this job signs	﻿2026-11-16T00:33:37.8664184Z ##[group]Run # signtool, through Microsoft's module, signed in as the Azure CLI is: SHA-256, and timestamped,
+sign-windows	How this job signs	2026-11-16T00:33:37.8665195Z [36;1m# signtool, through Microsoft's module, signed in as the Azure CLI is: SHA-256, and timestamped,[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8665986Z [36;1m# or the signature would end with the certificate. One file (Inno Setup passes each, quoted, as $f),[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8666568Z [36;1m# or -Catalog, a list of them relative to it.[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8667060Z [36;1mSet-Content (Join-Path $env:RUNNER_TEMP "sign.ps1") -Encoding utf8 -Value @'[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8667574Z [36;1mparam([string]$File, [string]$Catalog)[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8667899Z [36;1m$ErrorActionPreference = "Stop"[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8668282Z [36;1mImport-Module ArtifactSigning -RequiredVersion 0.1.8[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8668651Z [36;1m$options = @{ Timeout = 1800 }[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8669193Z [36;1mforeach ($c in "Environment", "WorkloadIdentity", "ManagedIdentity", "SharedTokenCache", "VisualStudio",[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8670152Z [36;1m  "VisualStudioCode", "AzurePowerShell", "AzureDeveloperCli", "InteractiveBrowser") { $options["Exclude${c}Credential"] = $true }[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8671339Z [36;1mif ($Catalog) { $options["FilesCatalog"] = $Catalog } else { $options["Files"] = $File }[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8671841Z [36;1mInvoke-ArtifactSigning @options `[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8672529Z [36;1m  -Endpoint https://wus.codesigning.azure.net/ -CodeSigningAccountName scnetsolutions -CertificateProfileName SAKUtility `[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8674246Z [36;1m  -FileDigest SHA256 -TimestampRfc3161 http://timestamp.acs.microsoft.com -TimestampDigest SHA256 `[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8675012Z [36;1m  -Description Chatmon -DescriptionUrl https://github.com/RandyNorthrup/chatmon[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8675492Z [36;1m'@[0m
+sign-windows	How this job signs	2026-11-16T00:33:37.8743288Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+sign-windows	How this job signs	2026-11-16T00:33:37.8743669Z env:
+sign-windows	How this job signs	2026-11-16T00:33:37.8743884Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	How this job signs	2026-11-16T00:33:37.8744141Z ##[endgroup]
+sign-windows	Sign in to Azure, to sign	﻿2026-11-16T00:33:38.2618268Z ##[group]Run azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2618685Z with:
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2619022Z   client-id: ***
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2619257Z   tenant-id: ***
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2619453Z   allow-no-subscriptions: true
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2619698Z   enable-AzPSSession: false
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2619920Z   environment: azurecloud
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2620153Z   audience: api://AzureADTokenExchange
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2620431Z   auth-type: SERVICE_PRINCIPAL
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2620671Z   mask-client-id: true
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2620859Z env:
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2621042Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.2621269Z ##[endgroup]
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:38.3279026Z Running Azure CLI Login.
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.1131059Z [command]C:\Windows\system32\cmd.exe /D /S /C ""C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" cloud set -n azurecloud"
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.5015050Z Done setting cloud: "azurecloud"
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.7548681Z Federated token details:
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.7549518Z  issuer - https://token.actions.githubusercontent.com
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.7552698Z  subject claim - repo:RandyNorthrup@122551425/chatmon@1441048469:environment:release
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.7553445Z  audience - api://AzureADTokenExchange
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.7554211Z  job_workflow_ref - RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:42.7554900Z Attempting Azure CLI login by using OIDC...
+sign-windows	Sign in to Azure, to sign	2026-11-16T00:33:46.2436559Z Azure CLI login succeeds by using OIDC.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	﻿2026-11-16T00:33:46.2762355Z ##[group]Run $app = Join-Path $env:RUNNER_TEMP "Chatmon"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2763146Z [36;1m$app = Join-Path $env:RUNNER_TEMP "Chatmon"[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2763906Z [36;1m$binaries = Get-ChildItem $app -Recurse -File -Include *.exe, *.dll, *.pyd[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2765015Z [36;1m$unsigned = $binaries | Where-Object { (Get-AuthenticodeSignature $_.FullName).Status -eq "NotSigned" }[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2766535Z [36;1mif ("chatmon.exe", "chatmonw.exe" | Where-Object { "$app\$_" -notin $unsigned.FullName }) { throw "chatmon.exe and chatmonw.exe should come unsigned" }[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2767775Z [36;1m$catalog = Join-Path $env:RUNNER_TEMP "unsigned.txt"[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2768954Z [36;1mSet-Content $catalog -Encoding utf8 -Value ($unsigned | ForEach-Object { [IO.Path]::GetRelativePath($env:RUNNER_TEMP, $_.FullName) })[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2770182Z [36;1mWrite-Host "$($unsigned.Count) of $($binaries.Count) to sign"[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2771222Z [36;1m& pwsh -NoProfile -NonInteractive -File (Join-Path $env:RUNNER_TEMP "sign.ps1") -Catalog $catalog[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2772250Z [36;1mif ($LASTEXITCODE) { throw "Signing failed: $LASTEXITCODE" }[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2772878Z [36;1mforeach ($binary in $binaries) {[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2773481Z [36;1m  $sig = Get-AuthenticodeSignature $binary.FullName[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2774317Z [36;1m  if ($sig.Status -ne "Valid") { throw "$($binary.FullName): $($sig.Status) $($sig.StatusMessage)" }[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2775825Z [36;1m  if ($binary.FullName -in $unsigned.FullName -and ($sig.SignerCertificate.Subject -notmatch "^CN=Randy Northrup(,|$)" -or -not $sig.TimeStamperCertificate)) {[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2777693Z [36;1m    throw "$($binary.FullName): signed by $($sig.SignerCertificate.Subject), timestamp $($sig.TimeStamperCertificate.Subject)"[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2778663Z [36;1m  }[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2779234Z [36;1m}[0m
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2862000Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2862373Z env:
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2862575Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:46.2862829Z ##[endgroup]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:49.4242680Z 10 of 62 to sign
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:49.9970298Z Checking for required dependencies.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:50.0292369Z 	Build tools package installed: False
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:50.0293078Z 	Artifact signing package installed: False
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:50.0294170Z 	Sign CLI package installed: False
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:50.0302921Z 	Installing required dependencies.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:52.0433186Z 		Found existing package source: https://www.nuget.org/api/v2/
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:52.0459420Z 		Installing package: Microsoft.Windows.SDK.BuildTools 10.0.26100.4188
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:54.1662711Z 		Installing package: Microsoft.ArtifactSigning.Client 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:33:55.4065712Z 		Installing package: sign 0.9.1-beta.26227.3
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3228781Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3229860Z Creating metadata file: C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\metadata.json
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3504686Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3505065Z Getting the list of files to be signed.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3520207Z 	No files list was provided.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3533607Z 	Listed files: 0
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3540882Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3541097Z 	No files folder was provided.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3544149Z 	Filtered files: 0
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3545881Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3546165Z 	Getting files from catalog file: D:\a\_temp\unsigned.txt
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3653101Z 	Catalog files: 10
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3655918Z 		D:\a\_temp\Chatmon\psutil\_psutil_windows.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3656485Z 		D:\a\_temp\Chatmon\PyQt6\QtCore.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3657721Z 		D:\a\_temp\Chatmon\PyQt6\QtDBus.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3658252Z 		D:\a\_temp\Chatmon\PyQt6\QtGui.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3659542Z 		D:\a\_temp\Chatmon\PyQt6\QtMultimedia.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3660095Z 		D:\a\_temp\Chatmon\PyQt6\QtNetwork.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3663860Z 		D:\a\_temp\Chatmon\PyQt6\QtWidgets.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3664419Z 		D:\a\_temp\Chatmon\PyQt6\sip.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3664936Z 		D:\a\_temp\Chatmon\chatmon.exe
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3665452Z 		D:\a\_temp\Chatmon\chatmonw.exe
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3665803Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3666032Z Formatting the list of files to be signed.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3777555Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3777859Z Batching the list of files to be signed by SignTool.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3889682Z 	Batched SignTool files: 1
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3890527Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3891022Z Batching the list of files to be signed by SignCli.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3896152Z 	No SignCli files were found to sign.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3904603Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.3904841Z Signing SignTool file batch 1 of 1.
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:03.4088345Z 	Executing signtool.exe: C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.Windows.SDK.BuildTools\Microsoft.Windows.SDK.BuildTools.10.0.26100.4188\bin\10.0.26100.0\x64\signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib "C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\Azure.CodeSigning.Dlib.dll" /dmdf "C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\metadata.json" /d "Chatmon" /du "https://github.com/RandyNorthrup/chatmon" "D:\a\_temp\Chatmon\psutil\_psutil_windows.pyd" "D:\a\_temp\Chatmon\PyQt6\QtCore.pyd" "D:\a\_temp\Chatmon\PyQt6\QtDBus.pyd" "D:\a\_temp\Chatmon\PyQt6\QtGui.pyd" "D:\a\_temp\Chatmon\PyQt6\QtMultimedia.pyd" "D:\a\_temp\Chatmon\PyQt6\QtNetwork.pyd" "D:\a\_temp\Chatmon\PyQt6\QtWidgets.pyd" "D:\a\_temp\Chatmon\PyQt6\sip.pyd" "D:\a\_temp\Chatmon\chatmon.exe" "D:\a\_temp\Chatmon\chatmonw.exe"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:04.9119519Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:04.9120367Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:04.9120571Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.1250583Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.1250869Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6704555Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6705079Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6705689Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6706265Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6706786Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6707227Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:05.6707646Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9868935Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9869375Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9869650Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9869911Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9870171Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9870443Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9870713Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9870966Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9871131Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9871231Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9871329Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9871497Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:07.9882019Z OperationId dcdfaa17-8727-4d3c-9e1d-4ddb8c7555ad: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.1132680Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.1151289Z Signing completed with status 'Succeeded' in 2.4428214s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.1151685Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5332356Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5332911Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5333213Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5333346Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5333527Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5406638Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5407081Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5407666Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5408142Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5408609Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5408961Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5409319Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5411331Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5411774Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5412198Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5412599Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5412997Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5413399Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5413813Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5414184Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5414428Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5414582Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:08.5414677Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:09.1749712Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:09.1750440Z OperationId d09711d0-5bec-4775-92fb-68d12f79db85: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.2780389Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.2781212Z Signing completed with status 'Succeeded' in 1.7373524s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.2781686Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5584909Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5585438Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5585723Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5585849Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5586044Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5602879Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5603337Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5603900Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5604339Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5604616Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5604839Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5605081Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5605326Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5605585Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5605831Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5606065Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5606312Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5606555Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5606820Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5607375Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5607536Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5607619Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:10.5607726Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:11.2050664Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:11.2051539Z OperationId c2a76bc9-368d-49df-b42e-e54dff5cfd30: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.2963500Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.2964327Z Signing completed with status 'Succeeded' in 1.7360577s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.2964942Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5791100Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5791913Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5792252Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5792425Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5792657Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5851488Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5851940Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5852503Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5853040Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5853494Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5853826Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5854249Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5854693Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5855126Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5855551Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5855950Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5856404Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5856859Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5857312Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5857692Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5857960Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5858110Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:12.5858258Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:13.2288481Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:13.2289656Z OperationId dae23568-a284-45e3-9f46-d44f73d15e27: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.3241251Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.3242541Z Signing completed with status 'Succeeded' in 1.7389494s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.3242922Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6085080Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6085578Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6085807Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6085961Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6086226Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6105064Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6105570Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6106187Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6106544Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6106828Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6107066Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6107307Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6107577Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6107822Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6108062Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6108301Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6108541Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6108791Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6109043Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6109279Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6109444Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6109534Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:14.6109620Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:15.2424442Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:15.2425367Z OperationId 8e1a59c9-0587-4228-a3a7-477f030b0fda: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.3345932Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.3346871Z Signing completed with status 'Succeeded' in 1.724064s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.3347469Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6165588Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6166035Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6166642Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6167003Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6167628Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6192704Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6193193Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6193917Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6194559Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6195172Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6195662Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6196177Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6198405Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6198817Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6199118Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6199381Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6199665Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6199933Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6200202Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6200430Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6200591Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6200684Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:16.6200783Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:17.2540358Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:17.2541348Z OperationId 17050908-6973-4fa3-a3b6-2ab5019282cb: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.3473172Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.3474052Z Signing completed with status 'Succeeded' in 1.7280683s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.3474613Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6346170Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6346766Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6347045Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6347186Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6347414Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6463977Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6464445Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6465045Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6465548Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6465977Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6466377Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6466787Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6467237Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6467672Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6468111Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6468553Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6469018Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6469451Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6469914Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6470323Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6470582Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6470720Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:18.6470895Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:19.2765663Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:19.2766920Z OperationId 347fb49e-a856-421c-ab98-9f80fea266ee: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.3740730Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.3741417Z Signing completed with status 'Succeeded' in 1.7275977s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.3741973Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6583681Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6584295Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6584576Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6584697Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6584872Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6595625Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6596091Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6596697Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6597184Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6597662Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6598052Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6598463Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6598895Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6599363Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6599830Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6600249Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6600703Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6601140Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6601602Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6601978Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6602248Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6602384Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:20.6602538Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:21.2895511Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:21.2896521Z OperationId 95fd43c7-8770-4f33-8f9f-3b018f89f380: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.3877716Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.3878416Z Signing completed with status 'Succeeded' in 1.72821s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.3878967Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7029226Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7029783Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7030044Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7030176Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7030374Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7492867Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7493511Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7494172Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7494615Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7495005Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7495339Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7495683Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7496050Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7496403Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7496787Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7497181Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7497511Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7497851Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7498189Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7498499Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7498703Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7498822Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:22.7498935Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:23.3819057Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:23.3819753Z OperationId 2b74243b-2d53-4614-8863-0bd4ace5649e: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.4827589Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.4828313Z Signing completed with status 'Succeeded' in 1.7334536s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.4828826Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.7967014Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.7967516Z Artifact Signing
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.7967775Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.7967878Z Version: 1.0.128
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.7968022Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8423391Z "Metadata": {
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8424531Z   "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8425435Z   "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8426139Z   "CertificateProfileName": "SAKUtility",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8426770Z   "ExcludeCredentials": [
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8427254Z     "EnvironmentCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8427776Z     "WorkloadIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8428367Z     "ManagedIdentityCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8428950Z     "SharedTokenCacheCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8429456Z     "VisualStudioCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8430741Z     "VisualStudioCodeCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8431075Z     "AzurePowerShellCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8431418Z     "AzureDeveloperCliCredential",
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8431764Z     "InteractiveBrowserCredential"
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8432077Z   ]
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8432280Z }
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8432396Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:24.8432518Z Submitting digest for signing...
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:25.4948178Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:25.4949091Z OperationId e5e249d4-cdc9-43f7-8403-2f57d746d20a: InProgress
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.5948827Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.5949411Z Signing completed with status 'Succeeded' in 1.7525454s
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.5949866Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8678491Z Successfully signed: D:\a\_temp\Chatmon\psutil\_psutil_windows.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8680012Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8680612Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\QtCore.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8681089Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8681512Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\QtDBus.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8682009Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8682327Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\QtGui.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8682731Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8683067Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\QtMultimedia.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8683580Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8683911Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\QtNetwork.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8684341Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8684639Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\QtWidgets.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8685147Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8685438Z Successfully signed: D:\a\_temp\Chatmon\PyQt6\sip.pyd
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8686183Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8686477Z Successfully signed: D:\a\_temp\Chatmon\chatmon.exe
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8686921Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8687181Z Successfully signed: D:\a\_temp\Chatmon\chatmonw.exe
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8699976Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8699994Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8700286Z Number of files successfully Signed: 10
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8701720Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8701870Z Number of warnings: 0
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8702065Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8702172Z Number of errors: 0
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8702334Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8811658Z 
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8812344Z Artifact Signing completed successfully
+sign-windows	Sign Chatmon's programs, and each library its maker didn't	2026-11-16T00:34:26.8839523Z Artifact Signing completed successfully
+sign-windows	Build the installer, signing it and its uninstaller	﻿2026-11-16T00:34:28.9599487Z ##[group]Run $sign = Join-Path $env:RUNNER_TEMP "sign.ps1"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9600023Z [36;1m$sign = Join-Path $env:RUNNER_TEMP "sign.ps1"[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9600452Z [36;1mif ($sign.Contains(" ")) { throw "Inno Setup can't be handed $sign" }[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9600978Z [36;1mif ($env:VERSION -notmatch '^\d+\.\d+\.\d+$') { throw "Not a version: $env:VERSION" }[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9601523Z [36;1m$iscc = Join-Path $env:LOCALAPPDATA "Programs\Inno Setup 6\ISCC.exe"[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9602160Z [36;1m& $iscc "/DAppVersion=$env:VERSION" "/DSourceDir=$env:RUNNER_TEMP\Chatmon" "/DOutputDir=$env:RUNNER_TEMP\dist" `[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9603003Z [36;1m  "/DSignWith=artifactsign" "/Sartifactsign=pwsh -NoProfile -NonInteractive -File $sign `$f" packaging\windows\chatmon.iss[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9603699Z [36;1mif ($LASTEXITCODE) { throw "Inno Setup failed: $LASTEXITCODE" }[0m
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9672138Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9672565Z env:
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9672768Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9673013Z   VERSION: 0.10.0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:28.9673207Z ##[endgroup]
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3534485Z Inno Setup 6 Command-Line Compiler
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3535227Z Copyright (C) 1997-2026 Jordan Russell. All rights reserved.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3536006Z Portions Copyright (C) 2000-2026 Martijn Laan. All rights reserved.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3537144Z Portions Copyright (C) 2001-2004 Alex Yackimoff. All rights reserved.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3537868Z https://www.innosetup.com
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3538167Z 
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3735384Z Compiler engine version: Inno Setup 6.7.3
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3735899Z Non-commercial use only
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3736084Z 
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3902277Z Preprocessing
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3905812Z    Reading file: C:\Users\runneradmin\AppData\Local\Programs\Inno Setup 6\ISPPBuiltins.iss
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3943909Z    Line 130: Including file: D:\a\chatmon\chatmon\packaging\windows\path.iss
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3944760Z    Reading file: D:\a\chatmon\chatmon\packaging\windows\path.iss
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3952073Z Parsing [Setup] section, line 23
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3960773Z Parsing [Setup] section, line 24
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3961239Z Parsing [Setup] section, line 25
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3962126Z Parsing [Setup] section, line 26
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3962864Z Parsing [Setup] section, line 27
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3963580Z Parsing [Setup] section, line 28
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3964023Z Parsing [Setup] section, line 29
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3964685Z Parsing [Setup] section, line 30
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3965115Z Parsing [Setup] section, line 31
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3965596Z Parsing [Setup] section, line 32
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3966003Z Parsing [Setup] section, line 33
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3966396Z Parsing [Setup] section, line 34
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3966803Z Parsing [Setup] section, line 35
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3967198Z Parsing [Setup] section, line 36
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3967611Z Parsing [Setup] section, line 37
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3968039Z Parsing [Setup] section, line 38
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3968445Z Parsing [Setup] section, line 39
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3968851Z Parsing [Setup] section, line 40
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3969252Z Parsing [Setup] section, line 41
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3969679Z Parsing [Setup] section, line 42
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3970075Z Parsing [Setup] section, line 43
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3970471Z Parsing [Setup] section, line 44
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3971284Z Parsing [Setup] section, line 45
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3971776Z Parsing [Setup] section, line 46
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3972505Z Parsing [Setup] section, line 47
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3972906Z Parsing [Setup] section, line 48
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3973323Z Parsing [Setup] section, line 49
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3973722Z Parsing [Setup] section, line 50
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3974118Z Parsing [Setup] section, line 51
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3974516Z Parsing [Setup] section, line 52
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3974911Z Parsing [Setup] section, line 54
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3977630Z Parsing [Setup] section, line 55
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3978088Z Creating output directory: D:\a\_temp\dist
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3978558Z Reading file (WizardImageFile)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3978996Z Reading file (WizardSmallImageFile)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.3979449Z Preparing Setup program executable
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.4472885Z    Verification successful
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.4508737Z    Updating icons (Setup.e32)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.4618776Z    Updating version info (Setup.e32)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:29.4641848Z    Running Sign Tool artifactsign: pwsh -NoProfile -NonInteractive -File D:\a\_temp\sign.ps1 "D:\a\_temp\dist\uninst.e32.tmp"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0282575Z    Checking for required dependencies.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0283205Z    	Build tools package installed: True
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0283760Z    	Artifact signing package installed: True
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0284306Z    	Sign CLI package installed: True
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0284718Z    	All required dependencies are installed.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0285783Z    Creating metadata file: C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\metadata.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0799784Z    Getting the list of files to be signed.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0800378Z    	Getting files from list.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0800785Z    	Listed files: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0801158Z    		D:\a\_temp\dist\uninst.e32.tmp
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0801622Z    	No files folder was provided.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0802046Z    	Filtered files: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0802430Z    	No catalog file was provided.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0802840Z    	Catalog files: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.0803226Z    Formatting the list of files to be signed.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.1394922Z    Batching the list of files to be signed by SignTool.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.1395537Z    	Batched SignTool files: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.1396021Z    Batching the list of files to be signed by SignCli.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.1396569Z    	No SignCli files were found to sign.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.1396949Z    Signing SignTool file batch 1 of 1.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.1399731Z    	Executing signtool.exe: C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.Windows.SDK.BuildTools\Microsoft.Windows.SDK.BuildTools.10.0.26100.4188\bin\10.0.26100.0\x64\signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib "C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\Azure.CodeSigning.Dlib.dll" /dmdf "C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\metadata.json" /d "Chatmon" /du "https://github.com/RandyNorthrup/chatmon" "D:\a\_temp\dist\uninst.e32.tmp"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.2424763Z    Artifact Signing
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.2425224Z    Version: 1.0.128
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3497211Z    "Metadata": {
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3498172Z      "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3499050Z      "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3499810Z      "CertificateProfileName": "SAKUtility",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3500481Z      "ExcludeCredentials": [
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3501108Z        "EnvironmentCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3501761Z        "WorkloadIdentityCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3503372Z        "ManagedIdentityCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3503964Z        "SharedTokenCacheCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3504590Z        "VisualStudioCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3505505Z        "VisualStudioCodeCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3506151Z        "AzurePowerShellCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3506797Z        "AzureDeveloperCliCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3507426Z        "InteractiveBrowserCredential"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3508002Z      ]
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3508770Z    }
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:30.3509254Z    Submitting digest for signing...
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:31.3110126Z    OperationId 4a3e5e42-043a-4199-b7c7-790cc07f0e8a: InProgress
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.4676794Z    Signing completed with status 'Succeeded' in 2.1385724s
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8006362Z    Successfully signed: D:\a\_temp\dist\uninst.e32.tmp
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8006864Z    Number of files successfully Signed: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8007222Z    Number of warnings: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8007498Z    Number of errors: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8007790Z    Artifact Signing completed successfully
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8008176Z    Artifact Signing completed successfully
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8446675Z Determining language code pages
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8447117Z Parsing [Languages] section, line 59
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8447585Z    Reading file: C:\Users\runneradmin\AppData\Local\Programs\Inno Setup 6\Default.isl
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8450851Z    Messages in script file
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8451792Z Reading default messages from Default.isl
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8456135Z Parsing [Languages] section, line 59
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8457226Z    Reading file: C:\Users\runneradmin\AppData\Local\Programs\Inno Setup 6\Default.isl
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8460325Z Parsing [LangOptions], [Messages], and [CustomMessages] sections
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8460883Z    Messages in script file
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8462256Z Reading [Code] section
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8463465Z Parsing [Tasks] section, line 62
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8464145Z Parsing [Tasks] section, line 63
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8464584Z Parsing [Tasks] section, line 66
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8464931Z Parsing [Tasks] section, line 71
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8465349Z Parsing [Tasks] section, line 74
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8466014Z Parsing [Icons] section, line 101
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8466466Z Parsing [Icons] section, line 102
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8466938Z Parsing [Registry] section, line 106
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8467885Z Parsing [InstallDelete] section, line 80
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8468564Z Parsing [InstallDelete] section, line 81
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8469063Z Parsing [InstallDelete] section, line 82
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8469558Z Parsing [InstallDelete] section, line 88
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8470005Z Parsing [InstallDelete] section, line 88
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8470455Z Parsing [InstallDelete] section, line 88
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8470816Z Parsing [Run] section, line 109
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8471064Z Parsing [Run] section, line 111
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8471306Z Parsing [Files] section, line 97
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8499328Z Compiling [Code] section
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8553423Z Creating setup files
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8655395Z    Verification successful
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8662795Z    Updating icons (Setup.exe)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:32.8698713Z    Compressing: D:\a\_temp\Chatmon\chatmon.exe
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.0807151Z    Compressing: D:\a\_temp\Chatmon\chatmonw.exe
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.2911488Z    Compressing: D:\a\_temp\Chatmon\libcrypto-3.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3542381Z    Compressing: D:\a\_temp\Chatmon\libffi-8.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3547047Z    Compressing: D:\a\_temp\Chatmon\libssl-3.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3683706Z    Compressing: D:\a\_temp\Chatmon\msvcp140.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3750814Z    Compressing: D:\a\_temp\Chatmon\msvcp140_1.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3755492Z    Compressing: D:\a\_temp\Chatmon\msvcp140_2.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3784328Z    Compressing: D:\a\_temp\Chatmon\pyexpat.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3805861Z    Compressing: D:\a\_temp\Chatmon\python3.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.3814232Z    Compressing: D:\a\_temp\Chatmon\python314.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.4520885Z    Compressing: D:\a\_temp\Chatmon\qt6core.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.5600840Z    Compressing: D:\a\_temp\Chatmon\qt6dbus.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.5679183Z    Compressing: D:\a\_temp\Chatmon\qt6gui.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.6679020Z    Compressing: D:\a\_temp\Chatmon\qt6multimedia.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.6812997Z    Compressing: D:\a\_temp\Chatmon\qt6network.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.6994114Z    Compressing: D:\a\_temp\Chatmon\qt6pdf.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.7471538Z    Compressing: D:\a\_temp\Chatmon\qt6svg.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.7536063Z    Compressing: D:\a\_temp\Chatmon\qt6widgets.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8215306Z    Compressing: D:\a\_temp\Chatmon\select.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8219637Z    Compressing: D:\a\_temp\Chatmon\unicodedata.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8300242Z    Compressing: D:\a\_temp\Chatmon\vcruntime140.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8320523Z    Compressing: D:\a\_temp\Chatmon\vcruntime140_1.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8327212Z    Compressing: D:\a\_temp\Chatmon\winsound.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8331206Z    Compressing: D:\a\_temp\Chatmon\_bz2.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8340934Z    Compressing: D:\a\_temp\Chatmon\_ctypes.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8356613Z    Compressing: D:\a\_temp\Chatmon\_decimal.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8387974Z    Compressing: D:\a\_temp\Chatmon\_elementtree.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8402771Z    Compressing: D:\a\_temp\Chatmon\_hashlib.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8410859Z    Compressing: D:\a\_temp\Chatmon\_lzma.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8428261Z    Compressing: D:\a\_temp\Chatmon\_queue.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8432974Z    Compressing: D:\a\_temp\Chatmon\_socket.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8442697Z    Compressing: D:\a\_temp\Chatmon\_ssl.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8464177Z    Compressing: D:\a\_temp\Chatmon\_uuid.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8468657Z    Compressing: D:\a\_temp\Chatmon\_wmi.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8473974Z    Compressing: D:\a\_temp\Chatmon\_zstd.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8526668Z    Compressing: D:\a\_temp\Chatmon\chatmon\changelog.md
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8530338Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\alert.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8572980Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\beam.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8614040Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\charge.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8663627Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\hop.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8694249Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\idle.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8731021Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\manifest.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8731638Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\peek.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8766866Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\sleep.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8803821Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\talk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8839492Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\think.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8876658Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\turn.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8907185Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\walk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8944846Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\wave.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.8981565Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\alert.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9031610Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\beam.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9075997Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\charge.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9122405Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\hop.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9160543Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\idle.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9202758Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\manifest.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9203614Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\peek.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9252229Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\sleep.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9293867Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\talk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9335850Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\think.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9380087Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\turn.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9428702Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\walk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:33.9493097Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fairy-axolotl\wave.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2656397Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\alert.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2715530Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\beam.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2780978Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\charge.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2841016Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\hop.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2876444Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\idle.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2915312Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\manifest.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2915980Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\peek.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2954262Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\sleep.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.2987776Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\talk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3027018Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\think.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3072687Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\turn.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3114457Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\walk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3169401Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\fire-red-panda\wave.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3209608Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\alert.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3247215Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\beam.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3280020Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\charge.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3325346Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\hop.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3358670Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\idle.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3384759Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\manifest.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3385383Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\peek.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3450192Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\sleep.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3484519Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\talk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3519301Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\think.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3554619Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\turn.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3583068Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\walk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3618168Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\ghost-rabbit\wave.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3652941Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\alert.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3690437Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\beam.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3735109Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\charge.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3785163Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\hop.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3819983Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\idle.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3857520Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\manifest.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3858323Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\peek.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3893201Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\sleep.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3930859Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\talk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.3969285Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\think.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4007027Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\turn.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4047575Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\walk.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4100372Z    Compressing: D:\a\_temp\Chatmon\chatmon\anim\leaf-pangolin\wave.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4138643Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\electric-arcs.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4142724Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\electric-current.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4146418Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\electric-still.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4155185Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\fairy-sparkles.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4156861Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\fairy-still-b.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4159832Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\fairy-still.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4166684Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\fire-embers.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4167538Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\fire-flames.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4229951Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\fire-still.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4237503Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\ghost-mist-a.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4240597Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\ghost-mist-b.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4244192Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\ghost-still.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4253830Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\leaf-crawler.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4262097Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\leaf-still.png
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4276008Z    Compressing: D:\a\_temp\Chatmon\chatmon\bubbles\manifest.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4277594Z    Compressing: D:\a\_temp\Chatmon\chatmon\integrations\claude\.claude-plugin\marketplace.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4278656Z    Compressing: D:\a\_temp\Chatmon\chatmon\integrations\claude\chatmon\.claude-plugin\plugin.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4279907Z    Compressing: D:\a\_temp\Chatmon\chatmon\integrations\claude\chatmon\hooks\hooks.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4280799Z    Compressing: D:\a\_temp\Chatmon\chatmon\locale\chatmon.pot
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4290129Z    Compressing: D:\a\_temp\Chatmon\chatmon\phrases\en.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4291611Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\done.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4298868Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\error.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4305887Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\focus-done.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4317948Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\needs-you.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4327376Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\pop.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4329647Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\reminder.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4344869Z    Compressing: D:\a\_temp\Chatmon\chatmon\sounds\success.wav
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4352565Z    Compressing: D:\a\_temp\Chatmon\psutil\_psutil_windows.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4362705Z    Compressing: D:\a\_temp\Chatmon\PyQt6\QtCore.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4713015Z    Compressing: D:\a\_temp\Chatmon\PyQt6\QtDBus.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4734762Z    Compressing: D:\a\_temp\Chatmon\PyQt6\QtGui.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.4985007Z    Compressing: D:\a\_temp\Chatmon\PyQt6\QtMultimedia.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5033632Z    Compressing: D:\a\_temp\Chatmon\PyQt6\QtNetwork.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5120782Z    Compressing: D:\a\_temp\Chatmon\PyQt6\QtWidgets.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5644520Z    Compressing: D:\a\_temp\Chatmon\PyQt6\sip.pyd
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5658560Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\iconengines\qsvgicon.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5667210Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qgif.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5672977Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qicns.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5679525Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qico.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5685466Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qjpeg.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5747168Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qpdf.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5752320Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qsvg.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5757215Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qtga.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5762330Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qtiff.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5808883Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qwbmp.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5813483Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\imageformats\qwebp.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5872810Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\platforms\qminimal.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5879988Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\platforms\qoffscreen.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5892566Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\platforms\qwindows.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.5995468Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\styles\qmodernwindowsstyle.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.6020894Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\tls\qcertonlybackend.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.6032676Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\tls\qopensslbackend.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:34:59.6066048Z    Compressing: D:\a\_temp\Chatmon\PyQt6\Qt6\plugins\tls\qschannelbackend.dll
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:07.1664655Z    Compressing Setup program executable
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:07.7489278Z    Updating version info (Setup.exe)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:07.7489927Z    Updating manifest (Setup.exe)
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:07.7490876Z    Signing Setup program executable
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:07.7492523Z    Running Sign Tool artifactsign: pwsh -NoProfile -NonInteractive -File D:\a\_temp\sign.ps1 "D:\a\_temp\dist\Chatmon-0.10.0-windows-x64-setup.exe"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4097580Z    Checking for required dependencies.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4611156Z    	Build tools package installed: True
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4611783Z    	Artifact signing package installed: True
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4612322Z    	Sign CLI package installed: True
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4612810Z    	All required dependencies are installed.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4614225Z    Creating metadata file: C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\metadata.json
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4615648Z    Getting the list of files to be signed.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.4616132Z    	Getting files from list.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5130556Z    	Listed files: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5131381Z    		D:\a\_temp\dist\Chatmon-0.10.0-windows-x64-setup.exe
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5131926Z    	No files folder was provided.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5132196Z    	Filtered files: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5132416Z    	No catalog file was provided.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5132662Z    	Catalog files: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5132903Z    Formatting the list of files to be signed.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5133231Z    Batching the list of files to be signed by SignTool.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5133544Z    	Batched SignTool files: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5133814Z    Batching the list of files to be signed by SignCli.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5134142Z    	No SignCli files were found to sign.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5134408Z    Signing SignTool file batch 1 of 1.
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.5648767Z    	Executing signtool.exe: C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.Windows.SDK.BuildTools\Microsoft.Windows.SDK.BuildTools.10.0.26100.4188\bin\10.0.26100.0\x64\signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.acs.microsoft.com /td SHA256 /dlib "C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\Azure.CodeSigning.Dlib.dll" /dmdf "C:\Users\runneradmin\AppData\Local\ArtifactSigning\Microsoft.ArtifactSigning.Client\Microsoft.ArtifactSigning.Client.1.0.128\bin\x64\metadata.json" /d "Chatmon" /du "https://github.com/RandyNorthrup/chatmon" "D:\a\_temp\dist\Chatmon-0.10.0-windows-x64-setup.exe"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.8004672Z    Artifact Signing
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:08.8005131Z    Version: 1.0.128
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0225050Z    "Metadata": {
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0225984Z      "Endpoint": "https://wus.codesigning.azure.net/",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0226812Z      "CodeSigningAccountName": "scnetsolutions",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0228946Z      "CertificateProfileName": "SAKUtility",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0230419Z      "ExcludeCredentials": [
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0231076Z        "EnvironmentCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0233007Z        "WorkloadIdentityCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0233724Z        "ManagedIdentityCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0236031Z        "SharedTokenCacheCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0237508Z        "VisualStudioCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0238320Z        "VisualStudioCodeCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0238773Z        "AzurePowerShellCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0239251Z        "AzureDeveloperCliCredential",
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0239711Z        "InteractiveBrowserCredential"
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0240150Z      ]
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0240403Z    }
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.0240712Z    Submitting digest for signing...
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:09.8567965Z    OperationId c26a24cb-422d-4f21-a938-80573cb456e6: InProgress
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.0057544Z    Signing completed with status 'Succeeded' in 1.9796455s
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3542867Z    Successfully signed: D:\a\_temp\dist\Chatmon-0.10.0-windows-x64-setup.exe
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3543648Z    Number of files successfully Signed: 1
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3544124Z    Number of warnings: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3544498Z    Number of errors: 0
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3544879Z    Artifact Signing completed successfully
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3545374Z    Artifact Signing completed successfully
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3877080Z 
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3880738Z 
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3881307Z Successful compile (42.000 sec). Resulting Setup program filename is:
+sign-windows	Build the installer, signing it and its uninstaller	2026-11-16T00:35:11.3882022Z D:\a\_temp\dist\Chatmon-0.10.0-windows-x64-setup.exe
+sign-windows	The installer is signed by Randy Northrup, and timestamped	﻿2026-11-16T00:35:11.4353479Z ##[group]Run $setup = Get-Item "$env:RUNNER_TEMP\dist\Chatmon-*-windows-x64-setup.exe"
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4354425Z [36;1m$setup = Get-Item "$env:RUNNER_TEMP\dist\Chatmon-*-windows-x64-setup.exe"[0m
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4354915Z [36;1m$sig = Get-AuthenticodeSignature $setup.FullName[0m
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4355634Z [36;1mif ($sig.Status -ne "Valid") { throw "Its signature is $($sig.Status): $($sig.StatusMessage)" }[0m
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4356445Z [36;1mif ($sig.SignerCertificate.Subject -notmatch "^CN=Randy Northrup(,|$)") { throw "Signed by someone else: $($sig.SignerCertificate.Subject)" }[0m
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4357221Z [36;1mif (-not $sig.TimeStamperCertificate) { throw "Its signature has no timestamp" }[0m
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4357961Z [36;1mWrite-Host "$($setup.Name): signed by $($sig.SignerCertificate.Subject), timestamped by $($sig.TimeStamperCertificate.Subject)"[0m
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4428266Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4428653Z env:
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4428850Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:11.4429097Z ##[endgroup]
+sign-windows	The installer is signed by Randy Northrup, and timestamped	2026-11-16T00:35:12.4681187Z Chatmon-0.10.0-windows-x64-setup.exe: signed by CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US, timestamped by CN=Microsoft Public RSA Time Stamping Authority, OU=nShield TSS ESN:7A00-05E0-D947, OU=Microsoft America Operations, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-16T00:35:12.5351983Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5352480Z with:
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5352675Z   name: windows-signed
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5352896Z   path: D:\a\_temp\dist\*.exe
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5353132Z   retention-days: 1
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5353327Z   if-no-files-found: error
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5353553Z   compression-level: 6
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5353752Z   overwrite: false
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5353949Z   include-hidden-files: false
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5354162Z   archive: true
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5354333Z env:
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5354515Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.5354963Z ##[endgroup]
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.7175667Z With the provided path, there will be 1 file uploaded
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.7180936Z Artifact name is valid!
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:12.7182197Z Root directory input is valid!
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:13.0304092Z Uploading artifact: windows-signed.zip
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:13.0345704Z Beginning upload of artifact content to blob storage
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:14.2263936Z Uploaded bytes 8388608
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:14.4812475Z Uploaded bytes 16777216
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:14.5501536Z Uploaded bytes 25165824
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:14.8468879Z Uploaded bytes 33554432
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.0414079Z Uploaded bytes 41943040
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.1772762Z Uploaded bytes 50331648
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.2552680Z Uploaded bytes 50925055
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.3143545Z Finished uploading artifact content to blob storage!
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.3151325Z SHA256 digest of uploaded artifact is efae022cd333095fe44be9ecbd5ef32dba02b5b509cb4ac7c69b1bea30b706f6
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.3153565Z Finalizing artifact upload
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.7574575Z Artifact windows-signed successfully finalized. Artifact ID 14188322820
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.7576254Z Artifact windows-signed has been successfully uploaded! Final size is 50925055 bytes. Artifact ID is 14188322820
+sign-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:35:15.7586041Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43778675599/artifacts/14188322820
+sign-windows	Post Sign in to Azure, to sign	﻿2026-11-16T00:35:15.8049873Z Post job cleanup.
+sign-windows	Post Sign in to Azure, to sign	2026-11-16T00:35:16.0118960Z Clearing azure cli accounts from the local cache.
+sign-windows	Post Sign in to Azure, to sign	2026-11-16T00:35:16.0147497Z [command]C:\Windows\system32\cmd.exe /D /S /C ""C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" account clear"
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:35:19.4108365Z Post job cleanup.
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.6520759Z [command]"C:\Program Files\Git\bin\git.exe" version
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.6956398Z git version 2.56.0.windows.4
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.7041795Z Temporarily overriding HOME='D:\a\_temp\0078e933-0b21-4ba6-903a-a7198c0b4d2a' before making global git config changes
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.7043026Z Adding repository directory to the temporary git global config as a safe directory
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.7054712Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.7498818Z Removing SSH command configuration
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.7511097Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:19.7920569Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:20.3938937Z Removing HTTP extra header
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:20.3953562Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:20.4348431Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:20.9955480Z Removing includeIf entries pointing to credentials config files
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:20.9967910Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+sign-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:21.0345502Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+sign-windows	Complete job	﻿2026-11-16T00:35:21.6559902Z Cleaning up orphan processes

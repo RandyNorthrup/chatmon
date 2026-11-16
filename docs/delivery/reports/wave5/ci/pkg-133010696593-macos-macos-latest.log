@@ -1,0 +1,659 @@
+macos (macos-latest)	Set up job	﻿2026-11-16T00:09:25.6359310Z Current runner version: '2.338.2'
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6393740Z ##[group]Runner Image Provisioner
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6396150Z Hosted Compute Agent
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6397260Z Version: 20261028.624
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6398380Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6399680Z Build Date: 2026-10-28T21:51:42Z
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6400900Z Worker ID: {f71d0cc6-68b5-4fa3-b303-7b65edbfb88d}
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6402160Z Region: westus
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6403090Z Cloud: MacCloud
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6404080Z ##[endgroup]
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6406690Z ##[group]Operating System
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6407340Z macOS
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6407740Z 26.7.2
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6408140Z 25G332
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6408520Z ##[endgroup]
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6408950Z ##[group]Runner Image
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6409370Z Image: macos-26-arm64
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6409780Z Version: 20261102.0473.1
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6410600Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20261102.0473/images/macos/macos-26-arm64-Readme.md
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6411980Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20261102.0473
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6413700Z ##[endgroup]
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6415850Z ##[group]GITHUB_TOKEN Permissions
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6422620Z Contents: read
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6423930Z Metadata: read
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6426110Z ##[endgroup]
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6433610Z Secret source: Actions
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6436180Z Cache mode: write
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.6437800Z Prepare workflow directory
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.7016970Z Prepare all required actions
+macos (macos-latest)	Set up job	2026-11-16T00:09:25.7121040Z Getting action download info
+macos (macos-latest)	Set up job	2026-11-16T00:09:26.1686950Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+macos (macos-latest)	Set up job	2026-11-16T00:09:26.6206510Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+macos (macos-latest)	Set up job	2026-11-16T00:09:27.1658900Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+macos (macos-latest)	Set up job	2026-11-16T00:09:27.4074690Z Complete job name: macos (macos-latest)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:09:27.4947890Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4948830Z with:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4949170Z   persist-credentials: false
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4949550Z   repository: RandyNorthrup/chatmon
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4952890Z   token: ***
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4953230Z   ssh-strict: true
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4953540Z   ssh-user: git
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4955080Z   clean: true
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4956130Z   sparse-checkout-cone-mode: true
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4957200Z   fetch-depth: 1
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4958130Z   fetch-tags: false
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4959030Z   show-progress: true
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4959960Z   lfs: false
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4960810Z   submodules: false
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4961730Z   set-safe-directory: true
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4963000Z   allow-unsafe-pr-checkout: false
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4965270Z env:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4966180Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:27.4967220Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.1699340Z Syncing repository: RandyNorthrup/chatmon
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.1701310Z ##[group]Getting Git version info
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.1702030Z Working directory is '/Users/runner/work/chatmon/chatmon'
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.1703090Z [command]/opt/homebrew/bin/git version
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2504490Z git version 2.56.0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2517120Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2548180Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/778a2ee5-6c27-4246-b83d-898942ba89b7/.gitconfig'
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2549760Z Temporarily overriding HOME='/Users/runner/work/_temp/778a2ee5-6c27-4246-b83d-898942ba89b7' before making global git config changes
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2553530Z Adding repository directory to the temporary git global config as a safe directory
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2556280Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2703660Z Deleting the contents of '/Users/runner/work/chatmon/chatmon'
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2706950Z ##[group]Determining repository object format
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2708420Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2709910Z ##[group]Initializing the repository
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.2717960Z [command]/opt/homebrew/bin/git init /Users/runner/work/chatmon/chatmon
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3061830Z hint: Using 'master' as the name for the initial branch. This default branch name
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3073050Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3075590Z hint: to use in all of your new repositories, which will suppress this warning,
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3079270Z hint: call:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3079830Z hint:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3080350Z hint: 	git config --global init.defaultBranch <name>
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3080910Z hint:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3081590Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3082360Z hint: 'development'. The just-created branch can be renamed via this command:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3082940Z hint:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3083310Z hint: 	git branch -m <name>
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3084960Z hint:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3086680Z hint: Disable this message with "git config set advice.defaultBranchName false"
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3093190Z Initialized empty Git repository in /Users/runner/work/chatmon/chatmon/.git/
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3096280Z [command]/opt/homebrew/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3206420Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3208200Z ##[group]Disabling automatic garbage collection
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3209790Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3302150Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3303860Z ##[group]Setting up auth
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3305000Z Removing SSH command configuration
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3309300Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.3422630Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.4899630Z Removing HTTP extra header
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.4902620Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.4990430Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.6521660Z Removing includeIf entries pointing to credentials config files
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.6555150Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.6601190Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8149830Z [command]/opt/homebrew/bin/git config --file /Users/runner/work/_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8153560Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git.path /Users/runner/work/_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8223620Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path /Users/runner/work/_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8325570Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8402100Z [command]/opt/homebrew/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8488440Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8489650Z ##[group]Fetching the repository
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:28.8490740Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/tags/v0.10.0:refs/tags/v0.10.0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7576600Z From https://github.com/RandyNorthrup/chatmon
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7581120Z  * [new tag]         v0.10.0    -> v0.10.0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7761200Z [command]/opt/homebrew/bin/git tag --list v0.10.0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7821410Z v0.10.0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7834040Z [command]/opt/homebrew/bin/git rev-parse refs/tags/v0.10.0^{commit}
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7976920Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7986870Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7988900Z ##[group]Determining the checkout info
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.7992490Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.8002380Z [command]/opt/homebrew/bin/git sparse-checkout disable
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.8349070Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.8492180Z ##[group]Checking out the ref
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:34.8494640Z [command]/opt/homebrew/bin/git checkout --progress --force refs/tags/v0.10.0
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9331140Z Updating files:  41% (1339/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9400340Z Updating files:  42% (1342/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9450510Z Updating files:  43% (1374/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9518010Z Updating files:  44% (1406/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9562920Z Updating files:  45% (1438/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9635130Z Updating files:  46% (1470/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9721080Z Updating files:  47% (1502/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9800990Z Updating files:  48% (1534/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:35.9918030Z Updating files:  49% (1566/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.0195480Z Updating files:  50% (1597/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.0198810Z Updating files:  51% (1629/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.0495560Z Updating files:  52% (1661/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.0900200Z Updating files:  53% (1693/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.0958980Z Updating files:  54% (1725/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1002850Z Updating files:  55% (1757/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1051870Z Updating files:  56% (1789/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1114580Z Updating files:  57% (1821/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1229260Z Updating files:  58% (1853/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1426200Z Updating files:  59% (1885/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1469990Z Updating files:  60% (1917/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1526210Z Updating files:  61% (1949/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1577760Z Updating files:  62% (1981/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1628810Z Updating files:  63% (2013/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1686650Z Updating files:  64% (2045/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1762430Z Updating files:  65% (2077/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1809340Z Updating files:  66% (2109/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1912330Z Updating files:  67% (2140/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1944390Z Updating files:  68% (2172/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.1994810Z Updating files:  69% (2204/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2036060Z Updating files:  70% (2236/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2076760Z Updating files:  71% (2268/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2118740Z Updating files:  72% (2300/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2170060Z Updating files:  73% (2332/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2221170Z Updating files:  74% (2364/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2318890Z Updating files:  75% (2396/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2395600Z Updating files:  76% (2428/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2467720Z Updating files:  77% (2460/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2509390Z Updating files:  78% (2492/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2578320Z Updating files:  79% (2524/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2633810Z Updating files:  80% (2556/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2656820Z Updating files:  81% (2588/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2698030Z Updating files:  82% (2620/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2741350Z Updating files:  83% (2652/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2782140Z Updating files:  84% (2683/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2842290Z Updating files:  85% (2715/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.2901440Z Updating files:  86% (2747/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3011260Z Updating files:  87% (2779/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3142310Z Updating files:  88% (2811/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3197280Z Updating files:  89% (2843/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3343150Z Updating files:  90% (2875/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3461930Z Updating files:  91% (2907/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3523740Z Updating files:  92% (2939/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3678330Z Updating files:  93% (2971/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.3780000Z Updating files:  94% (3003/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4142330Z Updating files:  95% (3035/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4292650Z Updating files:  96% (3067/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4394140Z Updating files:  97% (3099/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4495300Z Updating files:  98% (3131/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4596020Z Updating files:  99% (3163/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4697600Z Updating files: 100% (3194/3194)
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4798730Z Updating files: 100% (3194/3194), done.
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.4899830Z HEAD is now at 7816159 Merge pull request #22 from RandyNorthrup/release/0.10.0-fixes
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5205880Z ##[endgroup]
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5499210Z [command]/opt/homebrew/bin/git log -1 --format=%H
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5500300Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5621310Z ##[group]Removing auth
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5628530Z Removing SSH command configuration
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5654230Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.5723920Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.7046380Z Removing HTTP extra header
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.7047180Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.7167770Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8803520Z Removing includeIf entries pointing to credentials config files
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8805510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8838580Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8841200Z includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8841980Z includeif.gitdir:/github/workspace/.git.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8842490Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8850700Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8928440Z /Users/runner/work/_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.8948250Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git.path \/Users\/runner\/work\/_temp\/git\-credentials\-b2783cf1\-2011\-471d\-a31f\-81536e9d7c2f\.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9065860Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9146270Z /Users/runner/work/_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9160650Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/Users/runner/work/chatmon/chatmon/.git/worktrees/*.path \/Users\/runner\/work\/_temp\/git\-credentials\-b2783cf1\-2011\-471d\-a31f\-81536e9d7c2f\.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9342740Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9372350Z /github/runner_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9421430Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-b2783cf1\-2011\-471d\-a31f\-81536e9d7c2f\.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9477790Z [command]/opt/homebrew/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9608970Z /github/runner_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9653510Z [command]/opt/homebrew/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-b2783cf1\-2011\-471d\-a31f\-81536e9d7c2f\.config
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:36.9748980Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:37.1183220Z Removing credentials config '/Users/runner/work/_temp/git-credentials-b2783cf1-2011-471d-a31f-81536e9d7c2f.config'
+macos (macos-latest)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:37.1208580Z ##[endgroup]
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T00:09:37.1690260Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1690690Z with:
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1690890Z   python-version: 3.14
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1691090Z   check-latest: false
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1694680Z   token: ***
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1695010Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1695380Z   update-environment: true
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1695600Z   allow-prereleases: false
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1695820Z   freethreaded: false
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1695990Z env:
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1696150Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.1696380Z ##[endgroup]
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.4893800Z ##[group]Installed versions
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.6194070Z Successfully set up CPython (3.14.10)
+macos (macos-latest)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:37.6203640Z ##[endgroup]
+macos (macos-latest)	Date the build by its commit	﻿2026-11-16T00:09:37.6333150Z ##[group]Run echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6333880Z [36;1mecho "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"[0m
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6465280Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6465600Z env:
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6465770Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6466080Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6466520Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6466950Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6467370Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6467770Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Date the build by its commit	2026-11-16T00:09:37.6468670Z ##[endgroup]
+macos (macos-latest)	What the installers are built with, hash-locked	﻿2026-11-16T00:09:37.7063840Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-build.txt
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7064670Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-build.txt[0m
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7065260Z [36;1mpython -m pip install --require-hashes --no-build-isolation -r packaging/requirements.txt[0m
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7131370Z shell: /bin/bash -e {0}
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7132170Z env:
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7132630Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7133550Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7134850Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7136170Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7137310Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7138510Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7139360Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:37.7140060Z ##[endgroup]
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0201860Z Ignoring cffi: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0203660Z Ignoring colorama: markers 'os_name == "nt" or sys_platform == "win32"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0204580Z Ignoring cryptography: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0205600Z Ignoring jeepney: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0206870Z Ignoring pycparser: markers 'implementation_name != "PyPy" and platform_machine != "ppc64le" and platform_machine != "s390x" and platform_python_implementation != "PyPy" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0208170Z Ignoring pywin32-ctypes: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "win32"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.0209220Z Ignoring secretstorage: markers 'platform_machine != "ppc64le" and platform_machine != "s390x" and sys_platform == "linux"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:40.9319980Z Collecting build==1.6.1 (from -r packaging/requirements-build.txt (line 3))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.1009590Z   Downloading build-1.6.1-py3-none-any.whl (31 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.1426830Z Requirement already satisfied: certifi==2026.10.23 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements-build.txt (line 7)) (2026.10.23)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.3630970Z Collecting charset-normalizer==3.5.2 (from -r packaging/requirements-build.txt (line 113))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.3883450Z   Downloading charset_normalizer-3.5.2-cp314-cp314-macosx_10_15_universal2.whl (367 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.4933590Z Collecting docutils==0.23 (from -r packaging/requirements-build.txt (line 354))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.5159200Z   Downloading docutils-0.23-py3-none-any.whl (634 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.5521220Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 634.7/634.7 kB 12.8 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.5823230Z Collecting id==1.6.1 (from -r packaging/requirements-build.txt (line 358))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.6055540Z   Downloading id-1.6.1-py3-none-any.whl (14 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.6412840Z Collecting idna==3.20 (from -r packaging/requirements-build.txt (line 362))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.6643460Z   Downloading idna-3.20-py3-none-any.whl (69 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.7000120Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-build.txt (line 366))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.7264010Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.7634130Z Collecting jaraco-classes==3.4.0 (from -r packaging/requirements-build.txt (line 370))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.7866230Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.8219900Z Collecting jaraco-context==6.1.2 (from -r packaging/requirements-build.txt (line 374))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.8443940Z   Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.8811810Z Collecting jaraco-functools==4.6.0 (from -r packaging/requirements-build.txt (line 378))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.9093620Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.9494370Z Collecting keyring==25.7.0 (from -r packaging/requirements-build.txt (line 388))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:41.9726140Z   Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.0092520Z Collecting markdown-it-py==4.2.0 (from -r packaging/requirements-build.txt (line 392))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.0344500Z   Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.0699630Z Collecting mdurl==0.1.2 (from -r packaging/requirements-build.txt (line 396))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.0934640Z   Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.1323800Z Collecting more-itertools==11.2.1 (from -r packaging/requirements-build.txt (line 400))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.1563060Z   Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.2387960Z Collecting nh3==0.3.7 (from -r packaging/requirements-build.txt (line 406))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.2757500Z   Downloading nh3-0.3.7-cp38-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl (1.5 MB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.3110890Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 40.5 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.3477270Z Collecting packaging==26.3 (from -r packaging/requirements-build.txt (line 435))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.3724910Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.4076120Z Collecting pluggy==1.7.0 (from -r packaging/requirements-build.txt (line 443))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.4318250Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.4697780Z Collecting pygments==2.21.0 (from -r packaging/requirements-build.txt (line 451))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.4958990Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.5089380Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 94.2 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.5398250Z Collecting pyproject-hooks==1.3.3 (from -r packaging/requirements-build.txt (line 458))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.5623570Z   Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.6020080Z Collecting pytest==9.2.0 (from -r packaging/requirements-build.txt (line 462))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.6247880Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.6681780Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-build.txt (line 468))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.6927080Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.7313050Z Collecting readme-renderer==46.0 (from -r packaging/requirements-build.txt (line 476))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.7557280Z   Downloading readme_renderer-46.0-py3-none-any.whl (14 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.8011080Z Collecting requests==2.34.2 (from -r packaging/requirements-build.txt (line 480))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.8269930Z   Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.8647100Z Collecting requests-toolbelt==1.0.0 (from -r packaging/requirements-build.txt (line 486))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.8896580Z   Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.9226350Z Collecting rfc3986==2.0.0 (from -r packaging/requirements-build.txt (line 490))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.9452340Z   Downloading rfc3986-2.0.0-py2.py3-none-any.whl (31 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:42.9915040Z Collecting rich==15.0.0 (from -r packaging/requirements-build.txt (line 494))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.0142860Z   Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.1078270Z Collecting setuptools==84.2.1 (from -r packaging/requirements-build.txt (line 502))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.1346090Z   Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.1453790Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 876.3/876.3 kB 90.7 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.1880380Z Collecting twine==7.0.0 (from -r packaging/requirements-build.txt (line 506))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.2112430Z   Downloading twine-7.0.0-py3-none-any.whl (43 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.2634100Z Collecting urllib3==2.8.0 (from -r packaging/requirements-build.txt (line 510))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.2881940Z   Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.3435630Z Collecting wheel==0.48.0 (from -r packaging/requirements-build.txt (line 517))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.3694870Z   Downloading wheel-0.48.0-py3-none-any.whl (33 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:43.4781150Z Installing collected packages: urllib3, setuptools, rfc3986, pyproject-hooks, pygments, pluggy, packaging, nh3, more-itertools, mdurl, jaraco-context, iniconfig, idna, docutils, charset-normalizer, wheel, requests, readme-renderer, pytest, markdown-it-py, jaraco-functools, jaraco-classes, id, build, rich, requests-toolbelt, pytest-timeout, keyring, twine
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:46.7321670Z 
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:46.7350130Z Successfully installed build-1.6.1 charset-normalizer-3.5.2 docutils-0.23 id-1.6.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 markdown-it-py-4.2.0 mdurl-0.1.2 more-itertools-11.2.1 nh3-0.3.7 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pyproject-hooks-1.3.3 pytest-9.2.0 pytest-timeout-2.4.0 readme-renderer-46.0 requests-2.34.2 requests-toolbelt-1.0.0 rfc3986-2.0.0 rich-15.0.0 setuptools-84.2.1 twine-7.0.0 urllib3-2.8.0 wheel-0.48.0
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:47.7749130Z Ignoring nuitka: markers 'sys_platform == "win32"' don't match your environment
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:47.9015440Z Collecting altgraph==0.17.5 (from -r packaging/requirements.txt (line 3))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:47.9792570Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.0213000Z Collecting macholib==1.16.4 (from -r packaging/requirements.txt (line 9))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.0444510Z   Downloading macholib-1.16.4-py2.py3-none-any.whl (38 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.0600340Z Requirement already satisfied: packaging==26.3 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements.txt (line 16)) (26.3)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.1702350Z Collecting psutil==7.2.2 (from -r packaging/requirements.txt (line 22))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.1927080Z   Downloading psutil-7.2.2-cp36-abi3-macosx_11_0_arm64.whl (129 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.2783550Z Collecting pyinstaller==6.22.3 (from -r packaging/requirements.txt (line 45))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.3002730Z   Downloading pyinstaller-6.22.3-py3-none-macosx_10_13_universal2.whl (1.1 MB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.3610010Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 21.7 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.3989200Z Collecting pyinstaller-hooks-contrib==2026.9 (from -r packaging/requirements.txt (line 59))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.4221030Z   Downloading pyinstaller_hooks_contrib-2026.9-py3-none-any.whl (462 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.4659790Z Collecting pyqt6==6.11.0 (from -r packaging/requirements.txt (line 65))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.4937840Z   Downloading pyqt6-6.11.0-cp310-abi3-macosx_10_14_universal2.whl (12.4 MB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.6844330Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 66.2 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.7467130Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements.txt (line 73))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:48.7717770Z   Downloading pyqt6_qt6-6.11.2-py3-none-macosx_11_0_arm64.whl (64.3 MB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:49.5825670Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.3/64.3 MB 79.2 MB/s  0:00:00
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:49.7048620Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements.txt (line 83))
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:49.7272070Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-macosx_10_15_universal2.whl (113 kB)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:49.7339930Z Requirement already satisfied: setuptools==84.2.1 in /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages (from -r packaging/requirements.txt (line 115)) (84.2.1)
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:49.8983660Z Installing collected packages: pyqt6-qt6, altgraph, pyqt6-sip, pyinstaller-hooks-contrib, psutil, macholib, pyqt6, pyinstaller
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:53.0357540Z 
+macos (macos-latest)	What the installers are built with, hash-locked	2026-11-16T00:09:53.0394260Z Successfully installed altgraph-0.17.5 macholib-1.16.4 psutil-7.2.2 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.9 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0
+macos (macos-latest)	Run python packaging/build.py macos	﻿2026-11-16T00:09:53.1988360Z ##[group]Run python packaging/build.py macos
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.1988800Z [36;1mpython packaging/build.py macos[0m
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2133610Z shell: /bin/bash -e {0}
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2134210Z env:
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2134920Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2135800Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2137080Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2138480Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2139600Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2147240Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2148240Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.2149400Z ##[endgroup]
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.4587260Z + /Library/Frameworks/Python.framework/Versions/3.14/bin/python -m PyInstaller --noconfirm --clean --distpath /Users/runner/work/chatmon/chatmon/build/pyinstaller --workpath /Users/runner/work/chatmon/chatmon/build/pyinstaller-work /Users/runner/work/chatmon/chatmon/packaging/chatmon.spec
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.9375610Z 188 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.9
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.9376560Z 188 INFO: Python: 3.14.10
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.9774790Z 228 INFO: Platform: macOS-26.7.2-arm64-arm-64bit-Mach-O
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.9782790Z 228 INFO: Python environment: /Library/Frameworks/Python.framework/Versions/3.14
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:53.9870100Z 238 INFO: Removing temporary files and cleaning cache in /Users/runner/Library/Application Support/pyinstaller
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0370680Z 288 INFO: Module search paths (PYTHONPATH):
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0372630Z ['/Users/runner/work/chatmon/chatmon',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0377160Z  '/Users/runner/work/chatmon/chatmon',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0377740Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python314.zip',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0378230Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0378870Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/lib-dynload',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0382920Z  '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0383530Z  '/Users/runner/work/chatmon/chatmon/packaging/macos',
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.0384010Z  '/Users/runner/work/chatmon/chatmon']
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2721240Z 523 INFO: Appending 'datas' from .spec
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2753110Z 526 INFO: checking Analysis
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2753920Z 526 INFO: Building Analysis because Analysis-00.toc is non existent
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2754650Z 527 INFO: Looking for Python shared library...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2868120Z 538 INFO: Using Python shared library: /Library/Frameworks/Python.framework/Versions/3.14/Python
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2869570Z 538 INFO: Running Analysis Analysis-00.toc
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2870210Z 538 INFO: Target bytecode optimization level: 0
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2871780Z 538 INFO: Initializing module dependency graph...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.2888320Z 540 INFO: Initializing module graph hook caches...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:54.3020300Z 553 INFO: Analyzing modules for base_library.zip ...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:55.8282100Z 2079 INFO: Processing standard module hook 'hook-encodings.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:56.2293920Z 2480 INFO: Processing standard module hook 'hook-math.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:57.6981220Z 3949 INFO: Processing standard module hook 'hook-difflib.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:57.7092700Z 3960 INFO: Processing standard module hook 'hook-heapq.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:57.8102900Z 4061 INFO: Processing standard module hook 'hook-pickle.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:59.4205460Z 5671 INFO: Caching module dependency graph...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:59.4409290Z 5692 INFO: Analyzing /Users/runner/work/chatmon/chatmon/packaging/macos/entry.py
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:59.6031880Z 5854 INFO: Processing standard module hook 'hook-sysconfig.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:59.6146800Z 5865 INFO: Processing standard module hook 'hook-_osx_support.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:59.6183770Z 5869 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:09:59.8834600Z 6134 INFO: Processing standard module hook 'hook-PyQt6.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:01.1592920Z 7410 INFO: Processing standard module hook 'hook-PyQt6.QtCore.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:02.4086370Z 8658 INFO: Processing standard module hook 'hook-PyQt6.QtGui.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:03.2975550Z 9541 INFO: Processing standard module hook 'hook-PyQt6.QtNetwork.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:04.9110350Z 11162 INFO: Processing standard module hook 'hook-PyQt6.QtWidgets.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:05.2526990Z 11504 INFO: Processing standard module hook 'hook-platform.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:05.2991090Z 11550 INFO: Processing standard module hook 'hook-xml.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:05.3375730Z 11588 INFO: Processing standard module hook 'hook-PyQt6.QtDBus.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:06.3532260Z 12604 INFO: Processing standard module hook 'hook-psutil.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:07.2990530Z 13550 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:07.4751770Z 13719 INFO: Processing standard module hook 'hook-PyQt6.QtMultimedia.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:07.7463690Z 13997 INFO: Processing module hooks (post-graph stage)...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:07.8401070Z 14091 INFO: Performing binary vs. data reclassification (243 entries)
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0559130Z 14307 INFO: Looking for ctypes DLLs
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0726800Z 14323 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/a11y.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0762180Z 14327 WARNING: Library uiautomationcore required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0771870Z 14328 WARNING: Library oleaut32 required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0902830Z 14341 WARNING: Ignoring /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics imported from /Users/runner/work/chatmon/chatmon/chatmon/presence.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0907750Z 14341 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/presence.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0937310Z 14345 WARNING: Library ole32 required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0970900Z 14348 WARNING: Library ole32 required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.0986530Z 14349 WARNING: Library combase required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.1128690Z 14360 WARNING: Ignoring /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.1240010Z 14360 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.1279460Z 14360 WARNING: Ignoring /System/Library/Frameworks/CoreFoundation.framework/CoreFoundation imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.1335210Z 14360 WARNING: Ignoring /System/Library/Frameworks/Foundation.framework/Foundation imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.1340600Z 14360 WARNING: Ignoring /System/Library/Frameworks/ServiceManagement.framework/ServiceManagement imported from /Users/runner/work/chatmon/chatmon/chatmon/macnative.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.2094150Z 14460 WARNING: Library shell32 required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.2194760Z 14461 WARNING: Library ole32 required via ctypes not found
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.2296250Z 14464 WARNING: Ignoring /System/Library/Frameworks/AppKit.framework/AppKit imported from /Users/runner/work/chatmon/chatmon/chatmon/sound.py - only basenames are supported with ctypes imports!
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3171870Z 14551 INFO: Analyzing run-time hooks ...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3173070Z 14553 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3234340Z 14555 INFO: Including run-time hook 'pyi_rth_pyqt6.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3239770Z 14556 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/pre_find_module_path'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3257800Z 14560 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3361060Z 14567 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/hooks/rthooks'
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3417380Z 14581 INFO: Creating base_library.zip...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.3494700Z 14600 INFO: Looking for dynamic libraries
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.8415660Z 15092 INFO: Warnings written to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/warn-chatmon.txt
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:08.8537960Z 15105 INFO: Graph cross-reference written to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/xref-chatmon.html
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.1413860Z 15392 INFO: checking PYZ
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.1420150Z 15393 INFO: Building PYZ because PYZ-00.toc is non existent
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.1421160Z 15393 INFO: Building PYZ (ZlibArchive) /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/PYZ-00.pyz
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5191200Z 15770 INFO: Building PYZ (ZlibArchive) /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/PYZ-00.pyz completed successfully.
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5277620Z 15775 INFO: EXE target arch: arm64
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5279340Z 15775 INFO: Code signing identity: None
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5280830Z 15778 INFO: checking PKG
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5281420Z 15778 INFO: Building PKG because PKG-00.toc is non existent
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5282140Z 15778 INFO: Building PKG (CArchive) Chatmon.pkg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5474340Z 15798 INFO: Building PKG (CArchive) Chatmon.pkg completed successfully.
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5496590Z 15800 INFO: Bootloader /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-packages/PyInstaller/bootloader/Darwin-64bit/runw
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5497500Z 15800 INFO: checking EXE
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5497990Z 15800 INFO: Building EXE because EXE-00.toc is non existent
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5499440Z 15800 INFO: Building EXE from EXE-00.toc
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5500190Z 15801 INFO: Copying bootloader EXE to /Users/runner/work/chatmon/chatmon/build/pyinstaller-work/chatmon/Chatmon
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:09.5529980Z 15804 INFO: Converting EXE to target arch (arm64)
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3002060Z 17550 INFO: Removing signature(s) from EXE
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3291920Z 17580 INFO: Modifying Mach-O image UUID(s) in EXE
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3358990Z 17587 INFO: Appending PKG archive to EXE
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3376840Z 17589 INFO: Fixing EXE headers for code signing
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3482810Z 17599 INFO: Re-signing the EXE
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3746870Z 17625 INFO: Building EXE from EXE-00.toc completed successfully.
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3782250Z 17629 INFO: checking COLLECT
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3783810Z 17629 INFO: Building COLLECT because COLLECT-00.toc is non existent
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:11.3785220Z 17629 INFO: Building COLLECT COLLECT-00.toc
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:19.6772010Z 25928 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:19.6815430Z 25932 INFO: checking BUNDLE
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:19.6816730Z 25933 INFO: Building BUNDLE because BUNDLE-00.toc is non existent
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:19.6818160Z 25933 INFO: Building BUNDLE BUNDLE-00.toc
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:23.6603230Z 29911 INFO: Signing the BUNDLE...
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:23.9887100Z 30239 INFO: Building BUNDLE BUNDLE-00.toc completed successfully.
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:23.9964580Z 30247 INFO: Build complete! The results are available in: /Users/runner/work/chatmon/chatmon/build/pyinstaller
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:24.1753660Z + codesign --force --deep --sign - /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:24.2258610Z /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app: replacing existing signature
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:24.5687200Z + ditto /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app /Users/runner/work/chatmon/chatmon/build/macos/root/Applications/Chatmon.app
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:24.8356880Z + pkgbuild --analyze --root /Users/runner/work/chatmon/chatmon/build/macos/root /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:25.0763810Z pkgbuild: Inferring bundle components from contents of /Users/runner/work/chatmon/chatmon/build/macos/root
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:25.0768760Z pkgbuild: Writing new component property list to /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:25.0773030Z + plutil -replace 0.BundleIsRelocatable -bool NO /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:25.1016280Z + plutil -replace 0.BundleOverwriteAction -string upgrade /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:25.1128070Z + pkgbuild --root /Users/runner/work/chatmon/chatmon/build/macos/root --component-plist /Users/runner/work/chatmon/chatmon/build/macos/component.plist --identifier io.github.randynorthrup.chatmon --version 0.10.0 --ownership recommended --install-location / --scripts /Users/runner/work/chatmon/chatmon/build/macos/scripts /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8853860Z pkgbuild: Reading components from /Users/runner/work/chatmon/chatmon/build/macos/component.plist
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8866310Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtGui.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8876410Z pkgbuild: Adding component at Applications/Chatmon.app
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8885440Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtMultimedia.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8891910Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtSvg.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8894900Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtPdf.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8897350Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtCore.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8906910Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtConcurrent.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8923110Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtDBus.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8925210Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtWidgets.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8926410Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/PyQt6/Qt6/lib/QtNetwork.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8927630Z pkgbuild: Adding component at Applications/Chatmon.app/Contents/Frameworks/Python.framework
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8928600Z pkgbuild: Adding top-level postinstall script
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8929520Z pkgbuild: Wrote package to /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:30.8930450Z + productbuild --synthesize --package /Users/runner/work/chatmon/chatmon/build/macos/Chatmon.pkg /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:31.0068760Z productbuild: Wrote synthesized distribution to /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:31.0104100Z + productbuild --distribution /Users/runner/work/chatmon/chatmon/build/macos/distribution.xml --package-path /Users/runner/work/chatmon/chatmon/build/macos /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.pkg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:31.2223880Z productbuild: Wrote product to /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.pkg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:31.2236970Z + ditto /Users/runner/work/chatmon/chatmon/build/pyinstaller/Chatmon.app /Users/runner/work/chatmon/chatmon/build/macos/dmg/Chatmon.app
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:31.4781100Z + hdiutil create -volname Chatmon -srcfolder /Users/runner/work/chatmon/chatmon/build/macos/dmg -ov -format UDZO /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.dmg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:50.0561280Z created: /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.dmg
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:50.0633560Z /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.pkg  62 MB
+macos (macos-latest)	Run python packaging/build.py macos	2026-11-16T00:10:50.0635140Z /Users/runner/work/chatmon/chatmon/dist/Chatmon-0.10.0-macos-arm64.dmg  67 MB
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	﻿2026-11-16T00:10:50.1069890Z ##[group]Run arch=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1070720Z [36;1march=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo intel)[0m
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1071440Z [36;1mtag=$(gh api "repos/$GITHUB_REPOSITORY/releases" --jq "[.[] | select((.draft | not) and any(.assets[]; .name | endswith(\"-macos-$arch.pkg\")))][0].tag_name")[0m
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1072300Z [36;1mgh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "*-macos-$arch.pkg" --dir "$RUNNER_TEMP/last"[0m
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1072910Z [36;1msudo installer -pkg "$RUNNER_TEMP"/last/*.pkg -target /[0m
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1374700Z shell: /bin/bash -e {0}
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1375040Z env:
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1375250Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1376320Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1377600Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1378100Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1378750Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1379170Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1379580Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1383150Z   GH_TOKEN: ***
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:50.1383420Z ##[endgroup]
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:55.2138330Z installer: Package name is Chatmon
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:55.2159960Z installer: Installing at base path /
+macos (macos-latest)	The last release's .pkg, for this one to upgrade	2026-11-16T00:10:55.2160920Z installer: The install was successful.
+macos (macos-latest)	Install this .pkg over it, run it	﻿2026-11-16T00:10:55.2480640Z ##[group]Run sudo installer -pkg dist/Chatmon-*.pkg -target /
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2514490Z [36;1msudo installer -pkg dist/Chatmon-*.pkg -target /[0m
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2523680Z [36;1mtest -x /usr/local/bin/chatmon[0m
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2524500Z [36;1mpython packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/Chatmon --version "$(python packaging/build.py version)"[0m
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2584240Z shell: /bin/bash -e {0}
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2584530Z env:
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2584900Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2586260Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2587770Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2589120Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2590200Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2591400Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2592480Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:55.2593200Z ##[endgroup]
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:57.8648420Z installer: Package name is Chatmon
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:57.8750320Z installer: Upgrading at base path /
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:10:57.8874800Z installer: The upgrade was successful.
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:11:01.1308350Z /usr/local/bin/chatmon --version: 0.10.0
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:11:01.1309920Z it answered
+macos (macos-latest)	Install this .pkg over it, run it	2026-11-16T00:11:01.1311220Z it quit when asked: all good
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	﻿2026-11-16T00:11:01.1602700Z ##[group]Run app=/Applications/Chatmon.app
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1603180Z [36;1mapp=/Applications/Chatmon.app[0m
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1603630Z [36;1mtest -x "$app/Contents/Resources/install-update"[0m
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1604140Z [36;1m[ "$(stat -f %u "$app")" = 0 ] || { echo "Chatmon.app belongs to uid $(stat -f %u "$app"), not root"; exit 1; }[0m
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1604710Z [36;1mstatus=0[0m
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1605180Z [36;1m"$app/Contents/MacOS/Chatmon" verify-update macos missing.pkg missing.txt missing.sig || status=$?[0m
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1605920Z [36;1m[ "$status" = 3 ] || { echo "verify-update exited $status on files that aren't there, not 3 (refused)"; exit 1; }[0m
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1672390Z shell: /bin/bash -e {0}
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1673780Z env:
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1680940Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1683450Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1686430Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1690630Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1691510Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1692500Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1693280Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.1694860Z ##[endgroup]
+macos (macos-latest)	Root's side of updating is in the app, the app is root's, and its check refuses what it can't read	2026-11-16T00:11:01.4477640Z The update wasn't installed: couldn't read missing.txt (No such file or directory).
+macos (macos-latest)	The .dmg holds the app	﻿2026-11-16T00:11:01.4634940Z ##[group]Run mount=$(mktemp -d)
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4636350Z [36;1mmount=$(mktemp -d)[0m
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4640850Z [36;1mhdiutil attach -nobrowse -readonly -mountpoint "$mount" dist/Chatmon-*.dmg[0m
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4642260Z [36;1mtest -x "$mount/Chatmon.app/Contents/MacOS/Chatmon" && test -L "$mount/Applications"[0m
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4642740Z [36;1mhdiutil detach "$mount"[0m
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4702810Z shell: /bin/bash -e {0}
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4703760Z env:
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4704310Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4705500Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4706920Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4708270Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4709340Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4710510Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4719730Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.4720500Z ##[endgroup]
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:01.6299560Z Checksumming Protective Master Boot Record (MBR : 0)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0611910Z Protective Master Boot Record (MBR :: verified   CRC32 $0B79AD45
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0717140Z Checksumming GPT Header (Primary GPT Header : 1)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0729400Z  GPT Header (Primary GPT Header : 1): verified   CRC32 $67F1A60A
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0749570Z Checksumming GPT Partition Data (Primary GPT Table : 2)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0753160Z GPT Partition Data (Primary GPT Tabl: verified   CRC32 $14E5B976
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0754620Z Checksumming  (Apple_Free : 3)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0755730Z                     (Apple_Free : 3): verified   CRC32 $00000000
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.0756970Z Checksumming disk image (Apple_APFS : 4)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.3974300Z          disk image (Apple_APFS : 4): verified   CRC32 $2AB013FD
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:02.3977000Z Checksumming  (Apple_Free : 5)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.0724160Z                     (Apple_Free : 5): verified   CRC32 $00000000
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.0725080Z Checksumming GPT Partition Data (Backup GPT Table : 6)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.0731210Z GPT Partition Data (Backup GPT Table: verified   CRC32 $14E5B976
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.0733200Z Checksumming GPT Header (Backup GPT Header : 7)…
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.0737890Z   GPT Header (Backup GPT Header : 7): verified   CRC32 $A99F18E8
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.0758980Z verified   CRC32 $CB39374F
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.3130880Z /dev/disk7          	GUID_partition_scheme          	
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.3241830Z /dev/disk7s1        	Apple_APFS                     	
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.3345200Z /dev/disk8          	EF57347C-0000-11AA-AA11-0030654	
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.3480910Z /dev/disk8s1        	41504653-0000-11AA-AA11-0030654	/private/var/folders/h5/t85nd63d71x27_8gl5gw3l_w0000gn/T/tmp.s2E7vufMPu
+macos (macos-latest)	The .dmg holds the app	2026-11-16T00:11:03.4660190Z "disk7" ejected.
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-16T00:11:03.5353150Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5354040Z with:
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5354210Z   name: package-macos-macos-latest
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5354420Z   path: dist/*.pkg
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	dist/*.dmg
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5354620Z   if-no-files-found: error
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5354820Z   compression-level: 6
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5355000Z   overwrite: false
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5355180Z   include-hidden-files: false
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5355420Z   archive: true
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5355570Z env:
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5355720Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5356040Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5356470Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.14.10/arm64/lib/pkgconfig
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5356920Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5357370Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5357810Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.14.10/arm64
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5358150Z   SOURCE_DATE_EPOCH: 1794787737
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:03.5358340Z ##[endgroup]
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:04.0959720Z With the provided path, there will be 2 files uploaded
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:04.0960460Z Artifact name is valid!
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:04.0960870Z Root directory input is valid!
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:04.5479340Z Uploading artifact: package-macos-macos-latest.zip
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:04.5510560Z Beginning upload of artifact content to blob storage
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:06.0127620Z Uploaded bytes 8388608
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:06.2692620Z Uploaded bytes 16777216
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:06.7157040Z Uploaded bytes 25165824
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:07.0855950Z Uploaded bytes 33554432
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:07.2667180Z Uploaded bytes 41943040
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:07.4025380Z Uploaded bytes 50331648
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:07.7704110Z Uploaded bytes 58720256
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:08.0831220Z Uploaded bytes 67108864
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:08.3947440Z Uploaded bytes 75497472
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:08.8209880Z Uploaded bytes 83886080
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:09.1902810Z Uploaded bytes 92274688
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:09.3998550Z Uploaded bytes 100663296
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:09.7869140Z Uploaded bytes 109051904
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.1635020Z Uploaded bytes 117440512
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.5434160Z Uploaded bytes 125829120
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.8128910Z Uploaded bytes 134217728
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.8834930Z Uploaded bytes 134417357
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.9581540Z Finished uploading artifact content to blob storage!
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.9585380Z SHA256 digest of uploaded artifact is 58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:10.9588130Z Finalizing artifact upload
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:11.5085200Z Artifact package-macos-macos-latest successfully finalized. Artifact ID 14187362899
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:11.5086420Z Artifact package-macos-macos-latest has been successfully uploaded! Final size is 134417357 bytes. Artifact ID is 14187362899
+macos (macos-latest)	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:11:11.5111170Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43778675599/artifacts/14187362899
+macos (macos-latest)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T00:11:11.5423530Z Post job cleanup.
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:11:11.7810620Z Post job cleanup.
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:11.9321970Z [command]/opt/homebrew/bin/git version
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0173260Z git version 2.56.0
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0203770Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/e52e5009-9728-4dca-ab84-171baf7eeba4/.gitconfig'
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0216030Z Temporarily overriding HOME='/Users/runner/work/_temp/e52e5009-9728-4dca-ab84-171baf7eeba4' before making global git config changes
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0218310Z Adding repository directory to the temporary git global config as a safe directory
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0220360Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/chatmon/chatmon
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0358360Z Removing SSH command configuration
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0363460Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.0442770Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.1969500Z Removing HTTP extra header
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.1975410Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.2067510Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.3133380Z Removing includeIf entries pointing to credentials config files
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.3137450Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+macos (macos-latest)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:11:12.3226890Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+macos (macos-latest)	Complete job	﻿2026-11-16T00:11:12.4357500Z Cleaning up orphan processes

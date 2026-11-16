@@ -1,0 +1,10 @@
+# Which commit CI run 43778643147 tested (read-only: the saved job logs, git), 2026-11-16T00:29:27Z
+# The run is main's push run for PR #22's merge (event push, headSha in ci-43778643147.json). Each job's checkout fetched that commit as origin/main and checked it out, so its tree is 7816159's own, with no test merge.
+$ grep -l "+781615935a49a3dc48a1b7ab015d8ae01b1fd531:refs/remotes/origin/main" ci-1*.log | wc -l
+19
+$ ls ci-1*.log | wc -l
+19
+$ python -c (headSha, event, conclusion and each job conclusion from ci-43778643147.json)
+781615935a49a3dc48a1b7ab015d8ae01b1fd531 push main success 19 of 19 jobs success
+$ git rev-parse HEAD   (this worktree)
+781615935a49a3dc48a1b7ab015d8ae01b1fd531

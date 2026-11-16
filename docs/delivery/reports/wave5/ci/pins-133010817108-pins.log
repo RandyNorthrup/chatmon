@@ -1,0 +1,283 @@
+pins	Set up job	﻿2026-11-16T00:09:48.5717247Z Current runner version: '2.338.2'
+pins	Set up job	2026-11-16T00:09:48.5734241Z ##[group]Runner Image Provisioner
+pins	Set up job	2026-11-16T00:09:48.5734985Z Hosted Compute Agent
+pins	Set up job	2026-11-16T00:09:48.5735452Z Version: 20261103.629
+pins	Set up job	2026-11-16T00:09:48.5735900Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+pins	Set up job	2026-11-16T00:09:48.5736407Z Build Date: 2026-11-03T17:26:59Z
+pins	Set up job	2026-11-16T00:09:48.5736904Z Worker ID: {1b80f502-38a6-4d3f-8074-95cde73bf3d4}
+pins	Set up job	2026-11-16T00:09:48.5737409Z Region: us-west-2
+pins	Set up job	2026-11-16T00:09:48.5737793Z Cloud: AWS
+pins	Set up job	2026-11-16T00:09:48.5738453Z ##[endgroup]
+pins	Set up job	2026-11-16T00:09:48.5739404Z ##[group]Operating System
+pins	Set up job	2026-11-16T00:09:48.5739885Z Ubuntu
+pins	Set up job	2026-11-16T00:09:48.5740261Z 24.04.5
+pins	Set up job	2026-11-16T00:09:48.5740614Z LTS
+pins	Set up job	2026-11-16T00:09:48.5740979Z ##[endgroup]
+pins	Set up job	2026-11-16T00:09:48.5741358Z ##[group]Runner Image
+pins	Set up job	2026-11-16T00:09:48.5741778Z Image: ubuntu-24.04
+pins	Set up job	2026-11-16T00:09:48.5742184Z Version: 20261111.127.1
+pins	Set up job	2026-11-16T00:09:48.5742915Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+pins	Set up job	2026-11-16T00:09:48.5744156Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+pins	Set up job	2026-11-16T00:09:48.5744839Z ##[endgroup]
+pins	Set up job	2026-11-16T00:09:48.5745731Z ##[group]GITHUB_TOKEN Permissions
+pins	Set up job	2026-11-16T00:09:48.5747225Z Contents: read
+pins	Set up job	2026-11-16T00:09:48.5747634Z Issues: write
+pins	Set up job	2026-11-16T00:09:48.5748453Z Metadata: read
+pins	Set up job	2026-11-16T00:09:48.5748943Z ##[endgroup]
+pins	Set up job	2026-11-16T00:09:48.5750536Z Secret source: Actions
+pins	Set up job	2026-11-16T00:09:48.5751166Z Cache mode: write
+pins	Set up job	2026-11-16T00:09:48.5751685Z Prepare workflow directory
+pins	Set up job	2026-11-16T00:09:48.6010599Z Prepare all required actions
+pins	Set up job	2026-11-16T00:09:48.6046590Z Getting action download info
+pins	Set up job	2026-11-16T00:09:48.9295829Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+pins	Set up job	2026-11-16T00:09:50.4269819Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+pins	Set up job	2026-11-16T00:09:50.6217107Z Complete job name: pins
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:09:50.6804536Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6805399Z with:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6805806Z   persist-credentials: false
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6806336Z   repository: RandyNorthrup/chatmon
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6810080Z   token: ***
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6810601Z   ssh-strict: true
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6811029Z   ssh-user: git
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6811422Z   clean: true
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6811866Z   sparse-checkout-cone-mode: true
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6812346Z   fetch-depth: 1
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6812773Z   fetch-tags: false
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6813198Z   show-progress: true
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6813620Z   lfs: false
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6814054Z   submodules: false
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6814479Z   set-safe-directory: true
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6814968Z   allow-unsafe-pr-checkout: false
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6815609Z env:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6816016Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:50.6816536Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:52.8385825Z Syncing repository: RandyNorthrup/chatmon
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:52.8387170Z ##[group]Getting Git version info
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:52.8387589Z Working directory is '/home/runner/work/chatmon/chatmon'
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:52.8388449Z [command]/usr/bin/git version
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.1857230Z git version 2.56.1
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.1869776Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.1875957Z Temporarily overriding HOME='/home/runner/work/_temp/de6ce9d5-189d-4ce6-8c3f-f4d427042fad' before making global git config changes
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.1876590Z Adding repository directory to the temporary git global config as a safe directory
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.1879902Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.2292438Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.2294299Z ##[group]Determining repository object format
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.2294980Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.2295645Z ##[group]Initializing the repository
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.2297990Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3339375Z hint: Using 'master' as the name for the initial branch. This default branch name
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3340096Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3340652Z hint: to use in all of your new repositories, which will suppress this warning,
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3340976Z hint: call:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3341210Z hint:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3341486Z hint: 	git config --global init.defaultBranch <name>
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3341772Z hint:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3342151Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3342620Z hint: 'development'. The just-created branch can be renamed via this command:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3342969Z hint:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3343187Z hint: 	git branch -m <name>
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3343447Z hint:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3343758Z hint: Disable this message with "git config set advice.defaultBranchName false"
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3349303Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3355981Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3395434Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3396071Z ##[group]Disabling automatic garbage collection
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3398156Z [command]/usr/bin/git config --local gc.auto 0
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3416725Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3417262Z ##[group]Setting up auth
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3417582Z Removing SSH command configuration
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3421042Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.3446053Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7265341Z Removing HTTP extra header
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7268797Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7289474Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7429107Z Removing includeIf entries pointing to credentials config files
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7433035Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7458921Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7603051Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7626612Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7645862Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7665219Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7684038Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7700867Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7701254Z ##[group]Fetching the repository
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:53.7705369Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +781615935a49a3dc48a1b7ab015d8ae01b1fd531:refs/remotes/origin/main
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0001709Z From https://github.com/RandyNorthrup/chatmon
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0003488Z  * [new ref]         781615935a49a3dc48a1b7ab015d8ae01b1fd531 -> origin/main
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0009379Z [command]/usr/bin/git branch --list --remote origin/main
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0044976Z   origin/main
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0060315Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0076385Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0079129Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0079490Z ##[group]Determining the checkout info
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0081128Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0084363Z [command]/usr/bin/git sparse-checkout disable
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0140457Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0159453Z ##[group]Checking out the ref
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.0162123Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7425662Z Switched to a new branch 'main'
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7434805Z branch 'main' set up to track 'origin/main'.
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7453069Z ##[endgroup]
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7494750Z [command]/usr/bin/git log -1 --format=%H
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7501770Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7509615Z ##[group]Removing auth
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7510545Z Removing SSH command configuration
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7511136Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7530966Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7677528Z Removing HTTP extra header
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7679928Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7699283Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7840876Z Removing includeIf entries pointing to credentials config files
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7843556Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7870308Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7870894Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7871412Z includeif.gitdir:/github/workspace/.git.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7871889Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7875796Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7890745Z /home/runner/work/_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7897649Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-aad6652b\-dd65\-40d8\-812e\-31bb3620e9fe\.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7921443Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7936067Z /home/runner/work/_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7942119Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-aad6652b\-dd65\-40d8\-812e\-31bb3620e9fe\.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7966494Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7983145Z /github/runner_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.7992562Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-aad6652b\-dd65\-40d8\-812e\-31bb3620e9fe\.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.8009352Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.8024159Z /github/runner_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.8029254Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-aad6652b\-dd65\-40d8\-812e\-31bb3620e9fe\.config
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.8050040Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.8193718Z Removing credentials config '/home/runner/work/_temp/git-credentials-aad6652b-dd65-40d8-812e-31bb3620e9fe.config'
+pins	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:57.8197871Z ##[endgroup]
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T00:09:57.8406511Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8406858Z with:
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8407064Z   python-version: 3.14
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8407310Z   check-latest: false
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8409457Z   token: ***
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8409779Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8410118Z   update-environment: true
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8410348Z   allow-prereleases: false
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8410603Z   freethreaded: false
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8410803Z env:
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8410998Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.8411255Z ##[endgroup]
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.9239464Z ##[group]Installed versions
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.9820616Z Successfully set up CPython (3.14.10)
+pins	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:09:57.9821162Z ##[endgroup]
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	﻿2026-11-16T00:09:57.9889625Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-pins.txt
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:57.9890251Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-pins.txt[0m
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2865664Z shell: /usr/bin/bash -e {0}
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2865948Z env:
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2866236Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2866536Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2866911Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2867289Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2867652Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2868295Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2868698Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:09:58.2868973Z ##[endgroup]
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:10:02.3659482Z Collecting uv==0.13.6 (from -r packaging/requirements-pins.txt (line 3))
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:10:02.4225406Z   Downloading uv-0.13.6-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:10:02.7581499Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 55.7 MB/s  0:00:00
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:10:02.9866783Z Installing collected packages: uv
+pins	Run python -m pip install --require-hashes -r packaging/requirements-pins.txt	2026-11-16T00:10:03.1595921Z Successfully installed uv-0.13.6
+pins	What each lock would move to	﻿2026-11-16T00:10:03.2177940Z ##[group]Run status=0
+pins	What each lock would move to	2026-11-16T00:10:03.2178734Z [36;1mstatus=0[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2179105Z [36;1mpython packaging/pins.py --report "$RUNNER_TEMP/pins.md" || status=$?[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2179466Z [36;1mcase "$status" in[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2179717Z [36;1m  0) echo "movable=false" >> "$GITHUB_OUTPUT" ;;[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2180034Z [36;1m  3) echo "movable=true" >> "$GITHUB_OUTPUT" ;;[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2180331Z [36;1m  *) exit "$status" ;;[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2180563Z [36;1mesac[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2180820Z [36;1mcat "$RUNNER_TEMP/pins.md" >> "$GITHUB_STEP_SUMMARY"[0m
+pins	What each lock would move to	2026-11-16T00:10:03.2206384Z shell: /usr/bin/bash -e {0}
+pins	What each lock would move to	2026-11-16T00:10:03.2206627Z env:
+pins	What each lock would move to	2026-11-16T00:10:03.2206906Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+pins	What each lock would move to	2026-11-16T00:10:03.2207210Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	What each lock would move to	2026-11-16T00:10:03.2207698Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+pins	What each lock would move to	2026-11-16T00:10:03.2208212Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	What each lock would move to	2026-11-16T00:10:03.2208645Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	What each lock would move to	2026-11-16T00:10:03.2208965Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	What each lock would move to	2026-11-16T00:10:03.2209285Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+pins	What each lock would move to	2026-11-16T00:10:03.2209577Z ##[endgroup]
+pins	What each lock would move to	2026-11-16T00:10:05.8092033Z # Python pins ready to move
+pins	What each lock would move to	2026-11-16T00:10:05.8092489Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8093067Z uv 0.13.6 locked each list in packaging/ again with every pin set free (its environment marker kept), taking only releases uploaded before 2026-11-02T00:10:00Z, 14 days back. This is what would change.
+pins	What each lock would move to	2026-11-16T00:10:05.8093552Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8093695Z ## Pins
+pins	What each lock would move to	2026-11-16T00:10:05.8093792Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8093937Z | Package | Now | Proposed | Locks | Pinned in |
+pins	What each lock would move to	2026-11-16T00:10:05.8094248Z | --- | --- | --- | --- | --- |
+pins	What each lock would move to	2026-11-16T00:10:05.8094567Z | nuitka | 4.3.1 | 4.3.4 | requirements.txt | requirements.in |
+pins	What each lock would move to	2026-11-16T00:10:05.8094786Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8094877Z ## Held back
+pins	What each lock would move to	2026-11-16T00:10:05.8095016Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8095432Z - PyQt6 6.12.0 is skipped: its own QtDBus.pyi has a syntax error that stops mypy before it reads anything, so every types job would fail; 6.12.1 fixes it (docs/delivery/m10-followups.md).
+pins	What each lock would move to	2026-11-16T00:10:05.8096023Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8096136Z ## Moving them
+pins	What each lock would move to	2026-11-16T00:10:05.8096250Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8096427Z Run this from the repository's root, then review the diff and commit it:
+pins	What each lock would move to	2026-11-16T00:10:05.8096660Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8096730Z ```sh
+pins	What each lock would move to	2026-11-16T00:10:05.8096996Z python packaging/pins.py --apply --cutoff 2026-11-02T00:10:00Z
+pins	What each lock would move to	2026-11-16T00:10:05.8097299Z ```
+pins	What each lock would move to	2026-11-16T00:10:05.8097457Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8097888Z That moves each pin above in packaging/requirements*.in (and pyproject.toml's dev extra), then locks each list again in packaging/ with the command at the top of its .txt, the cutoff set:
+pins	What each lock would move to	2026-11-16T00:10:05.8098554Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8098653Z ```sh
+pins	What each lock would move to	2026-11-16T00:10:05.8098839Z cd packaging
+pins	What each lock would move to	2026-11-16T00:10:05.8099286Z uv pip compile requirements.in -o requirements.txt --universal --python-version 3.14 --generate-hashes --exclude-newer 2026-11-02T00:10:00Z
+pins	What each lock would move to	2026-11-16T00:10:05.8099748Z ```
+pins	What each lock would move to	2026-11-16T00:10:05.8099856Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8100169Z Run by hand after moving the pins, these commands move only what the new pins need; --apply first hands uv the versions above, so it locks exactly this report.
+pins	What each lock would move to	2026-11-16T00:10:05.8100588Z 
+pins	What each lock would move to	2026-11-16T00:10:05.8100899Z _packaging/pins.py wrote this; .github/workflows/pins.yml runs it every week and keeps one issue with its report while something can move._
+pins	The issue that says so	﻿2026-11-16T00:10:05.8255087Z ##[group]Run number=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 200 --json number,title,author \
+pins	The issue that says so	2026-11-16T00:10:05.8255763Z [36;1mnumber=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 200 --json number,title,author \[0m
+pins	The issue that says so	2026-11-16T00:10:05.8256395Z [36;1m  --jq '[.[] | select(.title == env.TITLE and (.author.login == "app/github-actions" or .author.login == "github-actions"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8256891Z [36;1m        or .author.login == "github-actions[bot]"))][0].number // empty')[0m
+pins	The issue that says so	2026-11-16T00:10:05.8257312Z [36;1mrun="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8257651Z [36;1mbody="$RUNNER_TEMP/body.md"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8257981Z [36;1m{ cat "$RUNNER_TEMP/pins.md"; printf '\nFrom [this run](%s).\n' "$run"; } > "$body"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8259113Z [36;1mif [ "$(wc -c < "$body")" -gt 60000 ]; then  # an issue's body holds 65,536 characters[0m
+pins	The issue that says so	2026-11-16T00:10:05.8259658Z [36;1m  { head -c 60000 "$RUNNER_TEMP/pins.md"; printf '\n\nCut short: the whole report is in the summary of [this run](%s).\n' "$run"; } > "$body"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8260191Z [36;1mfi[0m
+pins	The issue that says so	2026-11-16T00:10:05.8260404Z [36;1mif [ "$MOVABLE" = true ]; then[0m
+pins	The issue that says so	2026-11-16T00:10:05.8260773Z [36;1m  if [ -n "$number" ]; then[0m
+pins	The issue that says so	2026-11-16T00:10:05.8261088Z [36;1m    gh issue edit "$number" --repo "$GITHUB_REPOSITORY" --body-file "$body"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8261400Z [36;1m  else[0m
+pins	The issue that says so	2026-11-16T00:10:05.8261730Z [36;1m    gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file "$body"[0m
+pins	The issue that says so	2026-11-16T00:10:05.8262072Z [36;1m  fi[0m
+pins	The issue that says so	2026-11-16T00:10:05.8262389Z [36;1melif [ -n "$number" ]; then[0m
+pins	The issue that says so	2026-11-16T00:10:05.8262894Z [36;1m  gh issue close "$number" --repo "$GITHUB_REPOSITORY" --comment "Nothing left to move: every lock holds the newest releases at least two weeks old ([run]($run))."[0m
+pins	The issue that says so	2026-11-16T00:10:05.8263389Z [36;1mfi[0m
+pins	The issue that says so	2026-11-16T00:10:05.8288712Z shell: /usr/bin/bash -e {0}
+pins	The issue that says so	2026-11-16T00:10:05.8289273Z env:
+pins	The issue that says so	2026-11-16T00:10:05.8289497Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+pins	The issue that says so	2026-11-16T00:10:05.8289789Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	The issue that says so	2026-11-16T00:10:05.8290214Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+pins	The issue that says so	2026-11-16T00:10:05.8290571Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	The issue that says so	2026-11-16T00:10:05.8290900Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	The issue that says so	2026-11-16T00:10:05.8291218Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+pins	The issue that says so	2026-11-16T00:10:05.8291534Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+pins	The issue that says so	2026-11-16T00:10:05.8294012Z   GH_TOKEN: ***
+pins	The issue that says so	2026-11-16T00:10:05.8294262Z   MOVABLE: true
+pins	The issue that says so	2026-11-16T00:10:05.8294486Z   TITLE: Python pins ready to move
+pins	The issue that says so	2026-11-16T00:10:05.8294720Z ##[endgroup]
+pins	The issue that says so	2026-11-16T00:10:10.2071684Z https://github.com/RandyNorthrup/chatmon/issues/23
+pins	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T00:10:10.2161263Z Post job cleanup.
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:10:10.3079863Z Post job cleanup.
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3684110Z [command]/usr/bin/git version
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3710572Z git version 2.56.1
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3733582Z Temporarily overriding HOME='/home/runner/work/_temp/e3c3ecf0-fa74-400c-913e-f94f51cf22df' before making global git config changes
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3734508Z Adding repository directory to the temporary git global config as a safe directory
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3737070Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3759129Z Removing SSH command configuration
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3763527Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3787257Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3935435Z Removing HTTP extra header
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3939148Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.3961568Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.4105770Z Removing includeIf entries pointing to credentials config files
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.4110347Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+pins	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:10:10.4132775Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+pins	Complete job	﻿2026-11-16T00:10:10.4388955Z Cleaning up orphan processes

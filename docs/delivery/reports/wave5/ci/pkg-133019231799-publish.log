@@ -1,0 +1,275 @@
+publish	Set up job	﻿2026-11-16T00:37:01.4764409Z Current runner version: '2.338.2'
+publish	Set up job	2026-11-16T00:37:01.4785051Z ##[group]Runner Image Provisioner
+publish	Set up job	2026-11-16T00:37:01.4785771Z Hosted Compute Agent
+publish	Set up job	2026-11-16T00:37:01.4786390Z Version: 20261103.629
+publish	Set up job	2026-11-16T00:37:01.4786944Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+publish	Set up job	2026-11-16T00:37:01.4787805Z Build Date: 2026-11-03T17:26:59Z
+publish	Set up job	2026-11-16T00:37:01.4788452Z Worker ID: {3f6b7e19-34a6-4437-b8bf-f8689a977940}
+publish	Set up job	2026-11-16T00:37:01.4789062Z Region: westus2
+publish	Set up job	2026-11-16T00:37:01.4789574Z Cloud: Azure
+publish	Set up job	2026-11-16T00:37:01.4790095Z ##[endgroup]
+publish	Set up job	2026-11-16T00:37:01.4791468Z ##[group]Operating System
+publish	Set up job	2026-11-16T00:37:01.4792062Z Ubuntu
+publish	Set up job	2026-11-16T00:37:01.4792528Z 24.04.5
+publish	Set up job	2026-11-16T00:37:01.4793043Z LTS
+publish	Set up job	2026-11-16T00:37:01.4793507Z ##[endgroup]
+publish	Set up job	2026-11-16T00:37:01.4793980Z ##[group]Runner Image
+publish	Set up job	2026-11-16T00:37:01.4794580Z Image: ubuntu-24.04
+publish	Set up job	2026-11-16T00:37:01.4795076Z Version: 20261111.370.1
+publish	Set up job	2026-11-16T00:37:01.4796009Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+publish	Set up job	2026-11-16T00:37:01.4797990Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+publish	Set up job	2026-11-16T00:37:01.4798920Z ##[endgroup]
+publish	Set up job	2026-11-16T00:37:01.4799878Z ##[group]GITHUB_TOKEN Permissions
+publish	Set up job	2026-11-16T00:37:01.4801660Z Contents: write
+publish	Set up job	2026-11-16T00:37:01.4802201Z Metadata: read
+publish	Set up job	2026-11-16T00:37:01.4802817Z ##[endgroup]
+publish	Set up job	2026-11-16T00:37:01.4804502Z Secret source: Actions
+publish	Set up job	2026-11-16T00:37:01.4805351Z Cache mode: write
+publish	Set up job	2026-11-16T00:37:01.4806135Z Prepare workflow directory
+publish	Set up job	2026-11-16T00:37:01.5105223Z Prepare all required actions
+publish	Set up job	2026-11-16T00:37:01.5142890Z Getting action download info
+publish	Set up job	2026-11-16T00:37:01.8560939Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+publish	Set up job	2026-11-16T00:37:01.9939492Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+publish	Set up job	2026-11-16T00:37:02.3061117Z Complete job name: publish
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:37:02.3725034Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3725964Z with:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3726371Z   persist-credentials: false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3727172Z   sparse-checkout: /packaging/build.py
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	/chatmon/__init__.py
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	/chatmon/changelog.py
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	/chatmon/changelog.md
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3728184Z   sparse-checkout-cone-mode: false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3728690Z   repository: RandyNorthrup/chatmon
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3731992Z   token: ***
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3732380Z   ssh-strict: true
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3732771Z   ssh-user: git
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3733148Z   clean: true
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3733523Z   fetch-depth: 1
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3733908Z   fetch-tags: false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3734308Z   show-progress: true
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3734704Z   lfs: false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3735088Z   submodules: false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3735483Z   set-safe-directory: true
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3735932Z   allow-unsafe-pr-checkout: false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3736578Z env:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3736962Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.3737575Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5772245Z Syncing repository: RandyNorthrup/chatmon
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5774116Z ##[group]Getting Git version info
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5774780Z Working directory is '/home/runner/work/chatmon/chatmon'
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5775671Z [command]/usr/bin/git version
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5897808Z git version 2.56.1
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5912732Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5921084Z Temporarily overriding HOME='/home/runner/work/_temp/5d65bd79-3605-407a-821d-4ff60b364d0b' before making global git config changes
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5923150Z Adding repository directory to the temporary git global config as a safe directory
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.5925674Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6757070Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6760737Z ##[group]Determining repository object format
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6762518Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6763552Z ##[group]Initializing the repository
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6766867Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6840872Z hint: Using 'master' as the name for the initial branch. This default branch name
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6842030Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6842845Z hint: to use in all of your new repositories, which will suppress this warning,
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6843469Z hint: call:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6843836Z hint:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6844303Z hint: 	git config --global init.defaultBranch <name>
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6844840Z hint:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6845471Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6846680Z hint: 'development'. The just-created branch can be renamed via this command:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6847311Z hint:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6847909Z hint: 	git branch -m <name>
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6848373Z hint:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6848930Z hint: Disable this message with "git config set advice.defaultBranchName false"
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6849811Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6854380Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6897366Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6898722Z ##[group]Disabling automatic garbage collection
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6899654Z [command]/usr/bin/git config --local gc.auto 0
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6926816Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6927882Z ##[group]Setting up auth
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6928455Z Removing SSH command configuration
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6931218Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.6960580Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7302162Z Removing HTTP extra header
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7307054Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7336235Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7524213Z Removing includeIf entries pointing to credentials config files
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7528050Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7561288Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7755100Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7785860Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7815119Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7843191Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7870973Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7895861Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7896552Z ##[group]Fetching the repository
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:02.7900977Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +refs/tags/v0.10.0:refs/tags/v0.10.0
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5651444Z From https://github.com/RandyNorthrup/chatmon
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5653034Z  * [new tag]         v0.10.0    -> v0.10.0
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5659740Z [command]/usr/bin/git tag --list v0.10.0
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5687866Z v0.10.0
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5694978Z [command]/usr/bin/git rev-parse refs/tags/v0.10.0^{commit}
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5716260Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5720557Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5721467Z ##[group]Determining the checkout info
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5722515Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5723670Z ##[group]Setting up sparse checkout
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5724600Z [command]/usr/bin/git config core.sparseCheckout true
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5752914Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5772793Z .git/info/sparse-checkout
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5779041Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5780580Z ##[group]Checking out the ref
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:03.5782326Z [command]/usr/bin/git checkout --progress --force refs/tags/v0.10.0
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0835338Z Note: switching to 'refs/tags/v0.10.0'.
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0836531Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0837692Z You are in 'detached HEAD' state. You can look around, make experimental
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0840176Z changes and commit them, and you can discard any commits you make in this
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0842701Z state without impacting any branches by switching back to a branch.
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0843989Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0844942Z If you want to create a new branch to retain commits you create, you may
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0847126Z do so (now or later) by using -c with the switch command. Example:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0848615Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0849239Z   git switch -c <new-branch-name>
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0850166Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0850773Z Or undo this operation with:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0851643Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0852269Z   git switch -
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0853352Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0854440Z Turn off this advice by setting config variable advice.detachedHead to false
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0855787Z 
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0856592Z HEAD is now at 7816159 Merge pull request #22 from RandyNorthrup/release/0.10.0-fixes
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0917671Z ##[endgroup]
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0953894Z [command]/usr/bin/git log -1 --format=%H
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0976273Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0987280Z ##[group]Removing auth
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0988542Z Removing SSH command configuration
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.0997232Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1018418Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1214375Z Removing HTTP extra header
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1218319Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1247674Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1439329Z Removing includeIf entries pointing to credentials config files
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1441932Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1469084Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1471352Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1473511Z includeif.gitdir:/github/workspace/.git.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1475140Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1478787Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1497567Z /home/runner/work/_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1513478Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-e111f0f3\-0d48\-4ddb\-b1e2\-ffb622fce18e\.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1544411Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1565168Z /home/runner/work/_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1575186Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-e111f0f3\-0d48\-4ddb\-b1e2\-ffb622fce18e\.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1603372Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1623513Z /github/runner_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1631243Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-e111f0f3\-0d48\-4ddb\-b1e2\-ffb622fce18e\.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1660472Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1680266Z /github/runner_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1689335Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-e111f0f3\-0d48\-4ddb\-b1e2\-ffb622fce18e\.config
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1719303Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1922936Z Removing credentials config '/home/runner/work/_temp/git-credentials-e111f0f3-0d48-4ddb-b1e2-ffb622fce18e.config'
+publish	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:04.1930185Z ##[endgroup]
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-11-16T00:37:04.2194630Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2196051Z with:
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2196775Z   pattern: package-*
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2197690Z   path: dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2198461Z   merge-multiple: true
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2199326Z   repository: RandyNorthrup/chatmon
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2200267Z   run-id: 43778675599
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2201068Z   skip-decompress: false
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2201924Z   digest-mismatch: error
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2202752Z env:
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2203485Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.2204412Z ##[endgroup]
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5956150Z Found 8 artifact(s)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5957235Z Filtering artifacts by pattern 'package-*'
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5972385Z Preparing to download the following artifacts:
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5973654Z - package-windows (ID: 14188371673, Size: 50925055, Expected Digest: sha256:8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5975278Z - package-checksums (ID: 14188122394, Size: 803, Expected Digest: sha256:edac6092d1b1aead63fa057a58e3ac194f91cc87e45f1c20c4d06bec50bbb710)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5976831Z - package-linux (ID: 14187456743, Size: 54243308, Expected Digest: sha256:ce2666c837e6fa008b048456b4e392a31b0cadd94495a139751b9b28228cebbd)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5978573Z - package-macos-macos-latest (ID: 14187362899, Size: 134417357, Expected Digest: sha256:58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5980313Z - package-macos-macos-15-intel (ID: 14187347932, Size: 145165742, Expected Digest: sha256:1c9b2c5344ce0982909dcfd64113bea18bda6cd9fbe9337c85f6eb48ba729170)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:04.5981562Z - package-python (ID: 14186969382, Size: 54041901, Expected Digest: sha256:6adbd2b8e2a107b80370b917a362043aa7f23c6a0af0c076e8b70276447c914e)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0818525Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-43b1f0cb-afd2-552d-8bb1-61f9b07187b7/artifacts/e9e6d9dd72b8e04c71cdfdb05483a0906ce5d1d478fd780be47b51c5ce80b362.zip
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0820240Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0831277Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-eb6a5b25-01b9-5130-b7cc-d5cb935e3a78/artifacts/b5e727d4dd1e0b5d7360230e18380e9bf39d475a9ce90139208ae9b57a5f02bf.zip
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0832994Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0846805Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-fc184724-c0e7-55dc-b2b4-771ffcc234c1/artifacts/938767022c28829126526ccacf848e23b0b48ca932ef930529a1852cbcd463a2.zip
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0848700Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0868302Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-e3f05e08-dc1c-54d2-b580-37f55c8ccba8/artifacts/73deba440d19b5e94e9f97061ab5f9562e1c9fc9957d3bc7656999b3c1cf18cb.zip
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0870157Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0873917Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-183c7327-f25a-55bc-9270-d6fd2e7f6149/artifacts/579b24c85e199630ff00713849bf5adf51a66a22f2590148f513601cea5b9f46.zip
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0875594Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0893629Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-6a115ee9-da82-54e4-bb89-cd809f74fc30/artifacts/4aa44b95f6f28a25606c69a226b73b5083cd20032366648f24a086995f206ecd.zip
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.0894902Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.3678878Z (node:2223) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.3680244Z (Use `node --trace-deprecation ...` to show where the warning was created)
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.3777211Z SHA256 digest of downloaded artifact is edac6092d1b1aead63fa057a58e3ac194f91cc87e45f1c20c4d06bec50bbb710
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:05.3778180Z Artifact download completed successfully.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:07.7307283Z SHA256 digest of downloaded artifact is 6adbd2b8e2a107b80370b917a362043aa7f23c6a0af0c076e8b70276447c914e
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:07.7308265Z Artifact download completed successfully.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:07.8000295Z SHA256 digest of downloaded artifact is ce2666c837e6fa008b048456b4e392a31b0cadd94495a139751b9b28228cebbd
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:07.8001420Z Artifact download completed successfully.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:07.8495783Z SHA256 digest of downloaded artifact is 8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:07.8496343Z Artifact download completed successfully.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:09.8301275Z SHA256 digest of downloaded artifact is 1c9b2c5344ce0982909dcfd64113bea18bda6cd9fbe9337c85f6eb48ba729170
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:09.8301842Z Artifact download completed successfully.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:11.9295921Z SHA256 digest of downloaded artifact is 58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:11.9296736Z Artifact download completed successfully.
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:11.9297193Z Total of 6 artifact(s) downloaded
+publish	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:37:11.9301670Z Download artifact has finished successfully
+publish	Draft the release with every file, then publish it	﻿2026-11-16T00:37:11.9437853Z ##[group]Run version=$(python3 packaging/build.py version)
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9438598Z [36;1mversion=$(python3 packaging/build.py version)[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9439046Z [36;1m[ "$TAG" = "v$version" ] || { echo "Tag $TAG, but chatmon/__init__.py says $version"; exit 1; }[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9439527Z [36;1mpython3 packaging/build.py notes "$version" > "$RUNNER_TEMP/notes.md"[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9439870Z [36;1mls -l dist[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9440162Z [36;1mtest -s dist/SHA256SUMS.txt && test -s dist/SHA256SUMS.txt.sig[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9440684Z [36;1mif draft=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>/dev/null); then[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9441276Z [36;1m  # An earlier run stopped part way: finish its draft. A published release is never changed.[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9441737Z [36;1m  [ "$draft" = true ] || { echo "$TAG is already published"; exit 1; }[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9442150Z [36;1m  gh release upload "$TAG" dist/* --clobber --repo "$GITHUB_REPOSITORY"[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9442531Z [36;1melse[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9443004Z [36;1m  gh release create "$TAG" dist/* --draft --verify-tag --title "Chatmon $version" --notes-file "$RUNNER_TEMP/notes.md" --repo "$GITHUB_REPOSITORY"[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9443502Z [36;1mfi[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9443908Z [36;1mattached=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '[.assets[].name] | sort | join(" ")')[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9444494Z [36;1mexpected=$(find dist -maxdepth 1 -type f -printf '%f\n' | LC_ALL=C sort | paste -sd ' ' -)[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9445042Z [36;1m[ "$attached" = "$expected" ] || { echo "The draft holds: $attached"; echo "It should hold: $expected"; exit 1; }[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9445539Z [36;1mgh release edit "$TAG" --draft=false --repo "$GITHUB_REPOSITORY"[0m
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9466457Z shell: /usr/bin/bash -e {0}
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9466706Z env:
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9466912Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9469228Z   GH_TOKEN: ***
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9469446Z   TAG: v0.10.0
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:11.9469637Z ##[endgroup]
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0265296Z total 433740
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0265822Z -rw-r--r-- 1 runner runner 71137110 Nov 16 00:37 Chatmon-0.10.0-macos-arm64.dmg
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0266535Z -rw-r--r-- 1 runner runner 65788271 Nov 16 00:37 Chatmon-0.10.0-macos-arm64.pkg
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0267178Z -rw-r--r-- 1 runner runner 76615884 Nov 16 00:37 Chatmon-0.10.0-macos-intel.dmg
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0268041Z -rw-r--r-- 1 runner runner 70782176 Nov 16 00:37 Chatmon-0.10.0-macos-intel.pkg
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0268687Z -rw-r--r-- 1 runner runner 51432000 Nov 16 00:37 Chatmon-0.10.0-windows-x64-setup.exe
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0269087Z -rw-r--r-- 1 runner runner      862 Nov 16 00:37 SHA256SUMS.txt
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0269448Z -rw-r--r-- 1 runner runner       64 Nov 16 00:37 SHA256SUMS.txt.sig
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0269822Z -rw-r--r-- 1 runner runner 27227118 Nov 16 00:37 chatmon-0.10.0-1.noarch.rpm
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0270272Z -rw-r--r-- 1 runner runner 26862689 Nov 16 00:37 chatmon-0.10.0-py3-none-any.whl
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0270686Z -rw-r--r-- 1 runner runner 27172224 Nov 16 00:37 chatmon-0.10.0.tar.gz
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:12.0271061Z -rw-r--r-- 1 runner runner 27104212 Nov 16 00:37 chatmon_0.10.0-1_all.deb
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:21.9049058Z https://github.com/RandyNorthrup/chatmon/releases/tag/untagged-a984ddbfa35313d8ab75
+publish	Draft the release with every file, then publish it	2026-11-16T00:37:23.4774807Z https://github.com/RandyNorthrup/chatmon/releases/tag/v0.10.0
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:37:23.5221539Z Post job cleanup.
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.5899492Z [command]/usr/bin/git version
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.5938803Z git version 2.56.1
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.5964461Z Temporarily overriding HOME='/home/runner/work/_temp/ff39e5d5-e652-4443-b86f-c3eec5650c4c' before making global git config changes
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.5965443Z Adding repository directory to the temporary git global config as a safe directory
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.5968813Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.5995226Z Removing SSH command configuration
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6000232Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6031158Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6228281Z Removing HTTP extra header
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6232239Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6261211Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6450767Z Removing includeIf entries pointing to credentials config files
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6455231Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+publish	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:37:23.6481272Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+publish	Complete job	﻿2026-11-16T00:37:23.6846238Z Cleaning up orphan processes

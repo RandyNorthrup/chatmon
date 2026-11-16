@@ -9,6 +9,7 @@ BINDINGS.json (one per plan, kept beside its reports as the record of what was b
      "rules": {"docs/delivery/ROADMAP.md": "<new revision>"},   work.rules revisions, by path
      "inputs_add": ["docs/delivery/reports/wave4/cilog.py"],     more work.inputs
      "task_changes_add": {"T-M0-13": [{"path": "chatmon/log.py", "action": "modify"}]},
+     "ledger_edits": {...},                                      optional, see apply_edits (the plans round for v0.10.0)
      "stale_reason": "why an earlier passing receipt no longer counts",
      "receipts": [ {...}, ... ],                                 new receipts, see below
      "tasks": {"T-X": {"status": "implemented", "blocker": null}},   overrides of the computed status
@@ -65,6 +66,28 @@ def split(text: str) -> tuple[str, dict, str]:
 
 def join(prose: str, ledger: dict, tail: str) -> str:
     return prose + FENCE + json.dumps(ledger, indent=2, ensure_ascii=False) + LF + tail
+
+
+def apply_edits(ledger: dict, edits: dict) -> None:
+    """A changed requirement, recorded as the delivery contract asks: the old records kept, each superseded one naming
+    its replacement. `edits` is {"requirements_add": [...], "acceptance_add": [...], "tasks_add": [...],
+    "supersede": {"requirements": {old: new}, "tasks": {old: new}}, "scope_revision": n}; new records are whole ledger
+    records, appended. A superseded task's status becomes "superseded" and its blocker null; its evidence stays as
+    history. scope_revision is the work's audit label (the validator leaves it out of every fingerprint)."""
+    if edits.get("scope_revision"):
+        ledger["work"]["scope_revision"] = edits["scope_revision"]
+    for key, field in (("requirements_add", "requirements"), ("acceptance_add", "acceptance"), ("tasks_add", "tasks")):
+        known = {record["id"] for record in ledger[field]}
+        for record in edits.get(key, []):
+            if record["id"] not in known:
+                ledger[field].append(record)
+    supersede = edits.get("supersede", {})
+    for field in ("requirements", "tasks"):
+        for record in ledger[field]:
+            if record["id"] in supersede.get(field, {}):
+                record["superseded_by"] = supersede[field][record["id"]]
+                if field == "tasks":
+                    record["status"], record["blocker"] = "superseded", None
 
 
 def red_block(results: Path, drill: str) -> tuple[list[str], dict]:
@@ -137,6 +160,7 @@ def main() -> int:
     for path in config.get("inputs_add", []):
         if path not in ledger["work"]["inputs"]:
             ledger["work"]["inputs"].append(path)
+    apply_edits(ledger, config.get("ledger_edits", {}))
     tasks = {task["id"]: task for task in ledger["tasks"]}
     for task_id, changes in config.get("task_changes_add", {}).items():
         for change in changes:
