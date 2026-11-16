@@ -1,0 +1,344 @@
+types (win32)	Set up job	﻿2026-11-16T02:53:26.1956538Z Current runner version: '2.338.2'
+types (win32)	Set up job	2026-11-16T02:53:26.1985502Z ##[group]Runner Image Provisioner
+types (win32)	Set up job	2026-11-16T02:53:26.1986504Z Hosted Compute Agent
+types (win32)	Set up job	2026-11-16T02:53:26.1987158Z Version: 20261103.629
+types (win32)	Set up job	2026-11-16T02:53:26.1987793Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+types (win32)	Set up job	2026-11-16T02:53:26.1988585Z Build Date: 2026-11-03T17:26:59Z
+types (win32)	Set up job	2026-11-16T02:53:26.1989280Z Worker ID: {aa94656d-48f7-4cf8-830f-adf3873157e2}
+types (win32)	Set up job	2026-11-16T02:53:26.1989983Z Region: canadacentral
+types (win32)	Set up job	2026-11-16T02:53:26.1990651Z Cloud: Azure
+types (win32)	Set up job	2026-11-16T02:53:26.1991194Z ##[endgroup]
+types (win32)	Set up job	2026-11-16T02:53:26.1993083Z ##[group]Operating System
+types (win32)	Set up job	2026-11-16T02:53:26.1993764Z Ubuntu
+types (win32)	Set up job	2026-11-16T02:53:26.1994309Z 24.04.5
+types (win32)	Set up job	2026-11-16T02:53:26.1994914Z LTS
+types (win32)	Set up job	2026-11-16T02:53:26.1995431Z ##[endgroup]
+types (win32)	Set up job	2026-11-16T02:53:26.1996002Z ##[group]Runner Image
+types (win32)	Set up job	2026-11-16T02:53:26.1996632Z Image: ubuntu-24.04
+types (win32)	Set up job	2026-11-16T02:53:26.1997196Z Version: 20261111.370.1
+types (win32)	Set up job	2026-11-16T02:53:26.1998325Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+types (win32)	Set up job	2026-11-16T02:53:26.2000153Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+types (win32)	Set up job	2026-11-16T02:53:26.2001140Z ##[endgroup]
+types (win32)	Set up job	2026-11-16T02:53:26.2002758Z ##[group]GITHUB_TOKEN Permissions
+types (win32)	Set up job	2026-11-16T02:53:26.2004683Z Contents: read
+types (win32)	Set up job	2026-11-16T02:53:26.2005323Z Metadata: read
+types (win32)	Set up job	2026-11-16T02:53:26.2006000Z ##[endgroup]
+types (win32)	Set up job	2026-11-16T02:53:26.2008143Z Secret source: Actions
+types (win32)	Set up job	2026-11-16T02:53:26.2009250Z Cache mode: write
+types (win32)	Set up job	2026-11-16T02:53:26.2009998Z Prepare workflow directory
+types (win32)	Set up job	2026-11-16T02:53:26.2456483Z Prepare all required actions
+types (win32)	Set up job	2026-11-16T02:53:26.2510852Z Getting action download info
+types (win32)	Set up job	2026-11-16T02:53:26.5105849Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+types (win32)	Set up job	2026-11-16T02:53:26.6171884Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+types (win32)	Set up job	2026-11-16T02:53:26.7993150Z Complete job name: types (win32)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T02:53:26.8850624Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8851967Z with:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8852444Z   persist-credentials: false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8852991Z   sparse-checkout: /*
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8853574Z   sparse-checkout-cone-mode: false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8854144Z   repository: RandyNorthrup/chatmon
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8857933Z   token: ***
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8858374Z   ssh-strict: true
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8858815Z   ssh-user: git
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8859242Z   clean: true
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8859663Z   fetch-depth: 1
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8860100Z   fetch-tags: false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8860551Z   show-progress: true
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8861003Z   lfs: false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8861575Z   submodules: false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8862033Z   set-safe-directory: true
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8862548Z   allow-unsafe-pr-checkout: false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8863323Z env:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8863771Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:26.8864321Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1555154Z Syncing repository: RandyNorthrup/chatmon
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1557152Z ##[group]Getting Git version info
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1557957Z Working directory is '/home/runner/work/chatmon/chatmon'
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1559078Z [command]/usr/bin/git version
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1639710Z git version 2.56.1
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1660154Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1673534Z Temporarily overriding HOME='/home/runner/work/_temp/49996214-b97c-4379-ab42-f7e2b4f2734f' before making global git config changes
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1676498Z Adding repository directory to the temporary git global config as a safe directory
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1678971Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1728704Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1734030Z ##[group]Determining repository object format
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1736610Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1738178Z ##[group]Initializing the repository
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1740812Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1849358Z hint: Using 'master' as the name for the initial branch. This default branch name
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1851689Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1853084Z hint: to use in all of your new repositories, which will suppress this warning,
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1854228Z hint: call:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1854683Z hint:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1855325Z hint: 	git config --global init.defaultBranch <name>
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1856557Z hint:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1858013Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1859662Z hint: 'development'. The just-created branch can be renamed via this command:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1860573Z hint:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1861636Z hint: 	git branch -m <name>
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1862650Z hint:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1863942Z hint: Disable this message with "git config set advice.defaultBranchName false"
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1865153Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1869781Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1971250Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1972821Z ##[group]Disabling automatic garbage collection
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.1974380Z [command]/usr/bin/git config --local gc.auto 0
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2006830Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2008322Z ##[group]Setting up auth
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2009043Z Removing SSH command configuration
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2013194Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2049049Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2434041Z Removing HTTP extra header
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2440017Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2480278Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2746033Z Removing includeIf entries pointing to credentials config files
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2749289Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.2789300Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3028282Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3066393Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3101883Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3134520Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3169348Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3200773Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3202734Z ##[group]Fetching the repository
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3207094Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +42ff6907e7bc9de5005394ad8d875fcd27e79aff:refs/remotes/pull/24/merge
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6379513Z From https://github.com/RandyNorthrup/chatmon
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6380722Z  * [new ref]         42ff6907e7bc9de5005394ad8d875fcd27e79aff -> pull/24/merge
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6385397Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6387004Z ##[group]Determining the checkout info
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6389011Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6390587Z ##[group]Setting up sparse checkout
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6392668Z [command]/usr/bin/git config core.sparseCheckout true
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6430038Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6454569Z .git/info/sparse-checkout
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6482524Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6483861Z ##[group]Checking out the ref
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.6485255Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/24/merge
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6604592Z Updating files:  57% (182/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6612351Z Updating files:  58% (185/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6654113Z Updating files:  59% (188/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6655841Z Updating files:  60% (191/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6658004Z Updating files:  61% (194/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6659471Z Updating files:  62% (198/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6662106Z Updating files:  63% (201/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6665359Z Updating files:  64% (204/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6668604Z Updating files:  65% (207/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6673342Z Updating files:  66% (210/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6676241Z Updating files:  67% (214/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6678909Z Updating files:  68% (217/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6682948Z Updating files:  69% (220/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6685493Z Updating files:  70% (223/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6687106Z Updating files:  71% (226/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6689628Z Updating files:  72% (229/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6691229Z Updating files:  73% (233/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6695027Z Updating files:  74% (236/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6698215Z Updating files:  75% (239/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6705035Z Updating files:  76% (242/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6708193Z Updating files:  77% (245/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6712115Z Updating files:  78% (249/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6716170Z Updating files:  79% (252/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6718889Z Updating files:  80% (255/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6722231Z Updating files:  81% (258/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6725186Z Updating files:  82% (261/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6728917Z Updating files:  83% (264/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6731739Z Updating files:  84% (268/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6734111Z Updating files:  85% (271/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6736131Z Updating files:  86% (274/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6738883Z Updating files:  87% (277/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6742936Z Updating files:  88% (280/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6746546Z Updating files:  89% (284/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6749155Z Updating files:  90% (287/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6752130Z Updating files:  91% (290/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6754877Z Updating files:  92% (293/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6757871Z Updating files:  93% (296/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6760723Z Updating files:  94% (299/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6764155Z Updating files:  95% (303/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6770209Z Updating files:  96% (306/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6774125Z Updating files:  97% (309/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6776653Z Updating files:  98% (312/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6778483Z Updating files:  99% (315/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6779326Z Updating files: 100% (318/318)
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6779840Z Updating files: 100% (318/318), done.
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6812061Z Note: switching to 'refs/remotes/pull/24/merge'.
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6812620Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6812983Z You are in 'detached HEAD' state. You can look around, make experimental
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6813752Z changes and commit them, and you can discard any commits you make in this
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6814811Z state without impacting any branches by switching back to a branch.
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6815236Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6815847Z If you want to create a new branch to retain commits you create, you may
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6816583Z do so (now or later) by using -c with the switch command. Example:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6817006Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6817235Z   git switch -c <new-branch-name>
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6817544Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6817763Z Or undo this operation with:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6818055Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6818251Z   git switch -
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6818496Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6818863Z Turn off this advice by setting config variable advice.detachedHead to false
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6819338Z 
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6819871Z HEAD is now at 42ff690 Merge 56caddd66b69420e073e9a7d2c5ec40eabb5840b into 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6831774Z ##[endgroup]
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6881565Z [command]/usr/bin/git log -1 --format=%H
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6908556Z 42ff6907e7bc9de5005394ad8d875fcd27e79aff
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6919071Z ##[group]Removing auth
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6919655Z Removing SSH command configuration
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6923030Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.6955338Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7194006Z Removing HTTP extra header
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7197955Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7240425Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7474753Z Removing includeIf entries pointing to credentials config files
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7478362Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7507537Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7508933Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7510102Z includeif.gitdir:/github/workspace/.git.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7511011Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7517559Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7542775Z /home/runner/work/_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7553091Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-d30c8de2\-5ae3\-46cf\-8317\-f8d215051a04\.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7591214Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7615656Z /home/runner/work/_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7711901Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-d30c8de2\-5ae3\-46cf\-8317\-f8d215051a04\.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7715438Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7717055Z /github/runner_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7720387Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-d30c8de2\-5ae3\-46cf\-8317\-f8d215051a04\.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7734307Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7759212Z /github/runner_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7768522Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-d30c8de2\-5ae3\-46cf\-8317\-f8d215051a04\.config
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7805189Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8037680Z Removing credentials config '/home/runner/work/_temp/git-credentials-d30c8de2-5ae3-46cf-8317-f8d215051a04.config'
+types (win32)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8047205Z ##[endgroup]
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T02:53:28.8356263Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8356962Z with:
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8357389Z   python-version: 3.14
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8357838Z   check-latest: false
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8360748Z   token: ***
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8361509Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8362188Z   update-environment: true
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8362667Z   allow-prereleases: false
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8363151Z   freethreaded: false
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8363580Z env:
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8363996Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.8364473Z ##[endgroup]
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.9547021Z ##[group]Installed versions
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.9632444Z Successfully set up CPython (3.14.10)
+types (win32)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:28.9633950Z ##[endgroup]
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	﻿2026-11-16T02:53:28.9778440Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-dev.txt
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9779463Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-dev.txt[0m
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9815689Z shell: /usr/bin/bash -e {0}
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9816206Z env:
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9816650Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9817231Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9817945Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9818641Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9819294Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9819928Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9820580Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:28.9821148Z ##[endgroup]
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:31.3540275Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:31.3542034Z Ignoring comtypes: markers 'sys_platform == "win32"' don't match your environment
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:31.4820498Z Collecting ast-serialize==0.13.1 (from -r packaging/requirements-dev.txt (line 3))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:31.6609459Z   Downloading ast_serialize-0.13.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:31.8498649Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 12.7 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.2844342Z Collecting coverage==7.17.0 (from -r packaging/requirements-dev.txt (line 70))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.3415007Z   Downloading coverage-7.17.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.6951601Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-dev.txt (line 191))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.7452958Z   Downloading hypothesis-6.170.14-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.7650860Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 58.6 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.7819538Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-dev.txt (line 276))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.8586773Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:32.9931070Z Collecting librt==0.16.0 (from -r packaging/requirements-dev.txt (line 280))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.0342573Z   Downloading librt-0.16.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (523 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.1483030Z Collecting mypy==2.4.1 (from -r packaging/requirements-dev.txt (line 419))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.1938479Z   Downloading mypy-2.4.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (15.4 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.6051266Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.4/15.4 MB 37.1 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.6349702Z Collecting mypy-extensions==1.1.0 (from -r packaging/requirements-dev.txt (line 473))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.6753955Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.6912897Z Collecting packaging==26.3 (from -r packaging/requirements-dev.txt (line 477))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.7359407Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.7511004Z Collecting pathspec==1.1.1 (from -r packaging/requirements-dev.txt (line 481))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.7919438Z   Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.8069816Z Collecting pluggy==1.7.0 (from -r packaging/requirements-dev.txt (line 485))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.8476082Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.9190126Z Collecting psutil==7.2.2 (from -r packaging/requirements-dev.txt (line 489))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.9622809Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.9872601Z Collecting pygments==2.21.0 (from -r packaging/requirements-dev.txt (line 512))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.0830978Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.1211731Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 60.6 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.1408060Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-dev.txt (line 516))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.1916709Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.2922921Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 82.5 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.3224041Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-dev.txt (line 524))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.3650032Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.9369555Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 54.7 MB/s  0:00:01
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.0374030Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-dev.txt (line 534))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.0933734Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.1270658Z Collecting pytest==9.2.0 (from -r packaging/requirements-dev.txt (line 566))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.1685826Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.1868091Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-dev.txt (line 572))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.2275495Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.5819614Z Collecting ruff==0.17.3 (from -r packaging/requirements-dev.txt (line 576))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.6251168Z   Downloading ruff-0.17.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.6 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.7182673Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 113.6 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.7411082Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-dev.txt (line 596))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.7824581Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.8005146Z Collecting typing-extensions==4.16.0 (from -r packaging/requirements-dev.txt (line 600))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.8407041Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.8538866Z Collecting tzdata==2026.6 (from -r packaging/requirements-dev.txt (line 604))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.8954785Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.9588276Z Collecting zizmor==1.31.1 (from -r packaging/requirements-dev.txt (line 608))
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:37.0004673Z   Downloading zizmor-1.31.1-py3-none-manylinux_2_28_x86_64.whl (9.6 MB)
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:37.0332897Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.6/9.6 MB 304.7 MB/s  0:00:00
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:37.3950882Z Installing collected packages: sortedcontainers, pyqt6-qt6, zizmor, tzdata, typing-extensions, ruff, pyqt6-sip, pygments, psutil, pluggy, pathspec, packaging, mypy-extensions, librt, iniconfig, hypothesis, coverage, ast-serialize, pytest, pyqt6, mypy, pytest-timeout
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:43.3861174Z 
+types (win32)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:43.3889628Z Successfully installed ast-serialize-0.13.1 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 librt-0.16.0 mypy-2.4.1 mypy-extensions-1.1.0 packaging-26.3 pathspec-1.1.1 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 ruff-0.17.3 sortedcontainers-2.4.0 typing-extensions-4.16.0 tzdata-2026.6 zizmor-1.31.1
+types (win32)	Run mypy --platform "$PLATFORM"	﻿2026-11-16T02:53:43.5496620Z ##[group]Run mypy --platform "$PLATFORM"
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5496991Z [36;1mmypy --platform "$PLATFORM"[0m
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5517620Z shell: /usr/bin/bash -e {0}
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5517876Z env:
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5518083Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5518432Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5518874Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5519330Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5519714Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5520098Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5520490Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5520824Z   PLATFORM: win32
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:43.5521029Z ##[endgroup]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6676139Z chatmon/bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6678382Z chatmon/bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6680596Z chatmon/bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6683130Z chatmon/bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6684681Z chatmon/bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6686070Z chatmon/bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6687426Z chatmon/bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6688558Z chatmon/bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6689677Z chatmon/bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6690794Z chatmon/bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6692160Z chatmon/bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6693369Z chatmon/bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6694489Z chatmon/bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6695618Z chatmon/bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6697042Z chatmon/bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.6698182Z chatmon/bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (win32)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:49.1001697Z Success: no issues found in 70 source files
+types (win32)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T02:53:49.1313626Z Post job cleanup.
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T02:53:49.2659971Z Post job cleanup.
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3532083Z [command]/usr/bin/git version
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3573032Z git version 2.56.1
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3610340Z Temporarily overriding HOME='/home/runner/work/_temp/65f96080-68ea-4c16-8dbb-9dc5a8884d61' before making global git config changes
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3611879Z Adding repository directory to the temporary git global config as a safe directory
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3616015Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3651737Z Removing SSH command configuration
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3658417Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3700399Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3943400Z Removing HTTP extra header
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3950254Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3987881Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.4227413Z Removing includeIf entries pointing to credentials config files
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.4234904Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (win32)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.4285711Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (win32)	Complete job	﻿2026-11-16T02:53:49.4723199Z Cleaning up orphan processes

@@ -3,7 +3,7 @@ validator's 4 MiB plan limit, as reports/m6b/history/README.md describes the fir
 
 usage: python archive_receipts.py PLAN PREFIX OUT.json [--apply]
 
-Every receipt whose id starts with PREFIX must be stale (history only, the current evidence for nothing). Each is
+Every receipt whose id starts with PREFIX must be history, stale or fail (the current evidence for nothing). Each is
 written to OUT.json exactly as it stands in the ledger: the same text, with the ledger's own indentation, in a JSON
 array. They leave the ledger's evidence and every task's evidence list, and nothing else changes: no other receipt,
 requirement, criterion, task field or checkpoint. Without --apply the candidate is checked and written to
@@ -36,8 +36,8 @@ def main() -> int:
     if text[start:end] != json.dumps(ledger, indent=2, ensure_ascii=False):
         raise SystemExit("the ledger isn't in bind.py's form")
     moving = [r for r in ledger["evidence"] if r["id"].startswith(prefix)]
-    if not moving or any(r["status"] != "stale" for r in moving):
-        raise SystemExit(f"{len(moving)} receipts start with {prefix}; every one must be stale")
+    if not moving or any(r["status"] not in ("stale", "fail") for r in moving):
+        raise SystemExit(f"{len(moving)} receipts start with {prefix}; every one must be history (stale or fail)")
     pieces = [textwrap.indent(json.dumps(r, indent=2, ensure_ascii=False), "    ") for r in moving]
     for piece in pieces:
         if piece not in text:
