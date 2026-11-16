@@ -1,0 +1,701 @@
+{
+ "plan": "docs/delivery/m2-bubbles-askbox.md",
+ "section": "docs/delivery/reports/m2/wave5/section.md",
+ "rules": {},
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "task_changes_add": {},
+ "ledger_edits": {},
+ "stale_reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599",
+ "receipts": [
+  {
+   "id": "W5-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "AC-M2-01",
+    "AC-M2-02",
+    "AC-M2-03",
+    "AC-M2-04",
+    "AC-M2-05",
+    "AC-M2-06",
+    "AC-M2-07",
+    "AC-M2-08",
+    "AC-M2-09",
+    "AC-M2-10",
+    "AC-M2-11",
+    "AC-M2-12",
+    "AC-M2-13",
+    "AC-M2-14",
+    "AC-M2-15",
+    "AC-M2-16",
+    "AC-M2-17",
+    "AC-M2-18",
+    "AC-M2-19",
+    "AC-M2-20"
+   ],
+   "artifact": "docs/delivery/reports/m2/wave5/readiness.md",
+   "method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): R-M2-01 to R-M2-20 re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and PR #22's change to chatmon/bubble.py and tests/test_ask_box.py (the ask box's title hands the keyboard to its field, for screen readers); no conflict or gap."
+  },
+  {
+   "id": "W5-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M2-01",
+    "AC-M2-02",
+    "AC-M2-03",
+    "AC-M2-04",
+    "AC-M2-05",
+    "AC-M2-06",
+    "AC-M2-07",
+    "AC-M2-08",
+    "AC-M2-09",
+    "AC-M2-10",
+    "AC-M2-11",
+    "AC-M2-12",
+    "AC-M2-13",
+    "AC-M2-14",
+    "AC-M2-15",
+    "AC-M2-16",
+    "AC-M2-17",
+    "AC-M2-18",
+    "AC-M2-19",
+    "AC-M2-20"
+   ],
+   "artifact": "docs/delivery/reports/wave5/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 7816159's source on this Windows 11 workstation (offscreen Qt, the shared venv, BelowNormal priority, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1293 passed, 225 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M2-01",
+    "AC-M2-02",
+    "AC-M2-03",
+    "AC-M2-04",
+    "AC-M2-05",
+    "AC-M2-06",
+    "AC-M2-07",
+    "AC-M2-08",
+    "AC-M2-09",
+    "AC-M2-10",
+    "AC-M2-11",
+    "AC-M2-12",
+    "AC-M2-13",
+    "AC-M2-14",
+    "AC-M2-15",
+    "AC-M2-16",
+    "AC-M2-17",
+    "AC-M2-18",
+    "AC-M2-19",
+    "AC-M2-20"
+   ],
+   "artifact": "docs/delivery/reports/m2/ci/ci-133010594255-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594255",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job test (ubuntu-24.04, 3.15). Every test in M2's six test files passed: tests/test_ask_box.py, test_bubble_safety.py, test_bubble_styles.py, test_contrast.py, test_rich_text.py and test_speech_bubble.py, 159 tests in all with none skipped (test_ask_box.py's new test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field among them). The same was true on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers on their own Qt, and on every Windows leg. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M2-01",
+    "AC-M2-02",
+    "AC-M2-03",
+    "AC-M2-04",
+    "AC-M2-05",
+    "AC-M2-06",
+    "AC-M2-07",
+    "AC-M2-08",
+    "AC-M2-09",
+    "AC-M2-10",
+    "AC-M2-11",
+    "AC-M2-12",
+    "AC-M2-13",
+    "AC-M2-14",
+    "AC-M2-15",
+    "AC-M2-16",
+    "AC-M2-17",
+    "AC-M2-18",
+    "AC-M2-19",
+    "AC-M2-20"
+   ],
+   "artifact": "docs/delivery/reports/m2/ci/ci-133010594239-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594239",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job test (macos-latest, 3.14). Every test in M2's six test files passed (159, none skipped), as on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-01-empty-image",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-01"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-01-empty-image",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-01-empty-image through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-01-html",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-01"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-01-html",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-01-html through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-01-images-left",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-01"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-01-images-left",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-01-images-left through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-01-loads",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-01"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-01-loads",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-01-loads through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-01-title-markup",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-01"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-01-title-markup",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-01-title-markup through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-02-headings",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-02"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-02-headings",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-02-headings through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-02-no-panel",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-02"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-02-no-panel",
+   "artifact": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "method": "Red drill M2-02-no-panel through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. The artifact is the harness's results record, whose observed line names the failing test; the red run's output tail in drills.log begins after that line. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-02-no-wrap",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-02"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-02-no-wrap",
+   "artifact": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "method": "Red drill M2-02-no-wrap through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. The artifact is the harness's results record, whose observed line names the failing test; the red run's output tail in drills.log begins after that line. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-03-no-cap",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-03"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-03-no-cap",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-03-no-cap through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-03-one-row",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-03"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-03-one-row",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-03-one-row through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-04-one-line",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-04"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-04-one-line",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-04-one-line through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-05-link-colour",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-05"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-05-link-colour",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-05-link-colour through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-05-palette",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-05"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-05-palette",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-05-palette through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-05-readable",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-05"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-05-readable",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-05-readable through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-06-buttons",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-06"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-06-buttons",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-06-buttons through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-06-field",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-06"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-06-field",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-06-field through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-07-box-width",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-07"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-07-box-width",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-07-box-width through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-07-desktop-font",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-07"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-07-desktop-font",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-07-desktop-font through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-07-fixed-width",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-07"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-07-fixed-width",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-07-fixed-width through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-08-fixed-clock",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-08"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-08-fixed-clock",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-08-fixed-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-08-hover-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-08"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-08-hover-ignored",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-08-hover-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-09-any-scheme",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-09"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-09-any-scheme",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-09-any-scheme through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-09-not-a-link",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-09"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-09-not-a-link",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-09-not-a-link through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-10-at-the-end",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-10"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-10-at-the-end",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-10-at-the-end through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-11-no-room",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-11"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-11-no-room",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-11-no-room through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-12-no-new-line",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-12"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-12-no-new-line",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-12-no-new-line through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-12-paste-joined",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-12"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-12-paste-joined",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-12-paste-joined through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-12-qt-selection",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-12"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-12-qt-selection",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-12-qt-selection through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-13-box-keeps-drawing",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-13"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-13-box-keeps-drawing",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-13-box-keeps-drawing through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-13-hover-wake",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-13"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-13-hover-wake",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-13-hover-wake through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-13-never-settles",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-13"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-13-never-settles",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-13-never-settles through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-13-power-saving",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-13"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-13-power-saving",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-13-power-saving through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-14-whole-box",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-14"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-14-whole-box",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-14-whole-box through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-15-band-off-by-one",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-15"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-15-band-off-by-one",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-15-band-off-by-one through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-15-border-per-notch",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-15"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-15-border-per-notch",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-15-border-per-notch through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-15-upper-every-time",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-15"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-15-upper-every-time",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-15-upper-every-time through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-16-forged",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-16"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-16-forged",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-16-forged through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-16-no-copy",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-16"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-16-no-copy",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-16-no-copy through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-17-block-comment",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-17"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-17-block-comment",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-17-block-comment through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-17-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-17"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-17-contrast",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-17-contrast through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-17-keywords",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-17"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-17-keywords",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-17-keywords through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-18-no-clock",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-18"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-18-no-clock",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-18-no-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-18-no-partial",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-18"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-18-no-partial",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-18-no-partial through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-18-no-stop",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-18"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-18-no-stop",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-18-no-stop through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-19-motion-ignored",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-19"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-19-motion-ignored",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-19-motion-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-19-no-fade-in",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-19"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-19-no-fade-in",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-19-no-fade-in through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-19-no-ghost",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-19"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-19-no-ghost",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-19-no-ghost through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-20-fairy-link",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-20"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-20-fairy-link",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-20-fairy-link through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M2-20-selected-text",
+   "kind": "red",
+   "acceptance": [
+    "AC-M2-20"
+   ],
+   "results": "docs/delivery/reports/m2/wave5/drills-results.json",
+   "drill": "M2-20-selected-text",
+   "artifact": "docs/delivery/reports/m2/wave5/drills.log",
+   "method": "Red drill M2-20-selected-text through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M2 on 7816159.",
+ "source_revision": "781615935a49a3dc48a1b7ab015d8ae01b1fd531"
+}

@@ -226,6 +226,22 @@ again ([wave4c/readiness.md](reports/m2/wave4c/readiness.md)).
 **Receipts.** Round two's W4B- receipts are now stale history, with their hashes untouched. The W4C- receipts replace
 them. M2 is closed on 3586a0d.
 
+## Reconciliation, the plans round for v0.10.0 (2026-11-15)
+
+This round re-bound the plan at **7816159**, v0.10.0's commit: `main` with PR #22 merged (the KDE and Hyprland
+overlay fixes, the screen-reader fixes and the Dependabot replacement). 52 of its 53 passing receipts went stale, on `chatmon/bubble.py`, `tests/test_ask_box.py` ([reports/wave5/stale-at-7816159.md](reports/wave5/stale-at-7816159.md)). Writing this section into the
+plan changes its prose, which every receipt's scope includes, so the others went stale with it: every check
+was run again on 7816159 or read from main's CI run of it.
+
+**What was re-run.** The whole suite on Windows ([wave5/suite-windows.log](reports/wave5/suite-windows.log): 1293 passed, 225 skipped),
+then 49 Windows drills. Every one went green, red and green again. main's CI run 43778643147 on 7816159 (all 19 jobs green; each
+checked out 7816159 itself: [reports/wave5/ci/checkout.txt](reports/wave5/ci/checkout.txt)) was read again
+([reports/m2/ci/observed-7816159.txt](reports/m2/ci/observed-7816159.txt)). The requirements were
+reviewed again ([wave5/readiness.md](reports/m2/wave5/readiness.md)).
+
+**Receipts.** The stale ones are kept as history, with their hashes untouched; the W5- receipts replace
+them. M2 is closed on 7816159.
+
 ```quality-ledger
 {
   "schema_version": 1,
@@ -740,7 +756,16 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-01-html",
         "W4C-RED-M2-01-images-left",
         "W4C-RED-M2-01-loads",
-        "W4C-RED-M2-01-title-markup"
+        "W4C-RED-M2-01-title-markup",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-01-empty-image",
+        "W5-RED-M2-01-html",
+        "W5-RED-M2-01-images-left",
+        "W5-RED-M2-01-loads",
+        "W5-RED-M2-01-title-markup"
       ],
       "blocker": null,
       "superseded_by": null
@@ -803,7 +828,16 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-05-palette",
         "W4C-RED-M2-05-readable",
         "W4C-RED-M2-20-fairy-link",
-        "W4C-RED-M2-20-selected-text"
+        "W4C-RED-M2-20-selected-text",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-05-link-colour",
+        "W5-RED-M2-05-palette",
+        "W5-RED-M2-05-readable",
+        "W5-RED-M2-20-fairy-link",
+        "W5-RED-M2-20-selected-text"
       ],
       "blocker": null,
       "superseded_by": null
@@ -875,7 +909,17 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-02-no-wrap",
         "W4C-RED-M2-17-block-comment",
         "W4C-RED-M2-17-contrast",
-        "W4C-RED-M2-17-keywords"
+        "W4C-RED-M2-17-keywords",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-02-headings",
+        "W5-RED-M2-02-no-panel",
+        "W5-RED-M2-02-no-wrap",
+        "W5-RED-M2-17-block-comment",
+        "W5-RED-M2-17-contrast",
+        "W5-RED-M2-17-keywords"
       ],
       "blocker": null,
       "superseded_by": null
@@ -945,7 +989,18 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-08-fixed-clock",
         "W4C-RED-M2-08-hover-ignored",
         "W4C-RED-M2-09-any-scheme",
-        "W4C-RED-M2-09-not-a-link"
+        "W4C-RED-M2-09-not-a-link",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-03-no-cap",
+        "W5-RED-M2-03-one-row",
+        "W5-RED-M2-04-one-line",
+        "W5-RED-M2-08-fixed-clock",
+        "W5-RED-M2-08-hover-ignored",
+        "W5-RED-M2-09-any-scheme",
+        "W5-RED-M2-09-not-a-link"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1017,7 +1072,18 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-11-no-room",
         "W4C-RED-M2-12-no-new-line",
         "W4C-RED-M2-12-paste-joined",
-        "W4C-RED-M2-12-qt-selection"
+        "W4C-RED-M2-12-qt-selection",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-06-buttons",
+        "W5-RED-M2-06-field",
+        "W5-RED-M2-10-at-the-end",
+        "W5-RED-M2-11-no-room",
+        "W5-RED-M2-12-no-new-line",
+        "W5-RED-M2-12-paste-joined",
+        "W5-RED-M2-12-qt-selection"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1089,7 +1155,19 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-18-no-stop",
         "W4C-RED-M2-19-motion-ignored",
         "W4C-RED-M2-19-no-fade-in",
-        "W4C-RED-M2-19-no-ghost"
+        "W4C-RED-M2-19-no-ghost",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-16-forged",
+        "W5-RED-M2-16-no-copy",
+        "W5-RED-M2-18-no-clock",
+        "W5-RED-M2-18-no-partial",
+        "W5-RED-M2-18-no-stop",
+        "W5-RED-M2-19-motion-ignored",
+        "W5-RED-M2-19-no-fade-in",
+        "W5-RED-M2-19-no-ghost"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1144,7 +1222,14 @@ them. M2 is closed on 3586a0d.
         "W4C-BEH-CI-MACOS",
         "W4C-RED-M2-07-box-width",
         "W4C-RED-M2-07-desktop-font",
-        "W4C-RED-M2-07-fixed-width"
+        "W4C-RED-M2-07-fixed-width",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-07-box-width",
+        "W5-RED-M2-07-desktop-font",
+        "W5-RED-M2-07-fixed-width"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1221,7 +1306,19 @@ them. M2 is closed on 3586a0d.
         "W4C-RED-M2-14-whole-box",
         "W4C-RED-M2-15-band-off-by-one",
         "W4C-RED-M2-15-border-per-notch",
-        "W4C-RED-M2-15-upper-every-time"
+        "W4C-RED-M2-15-upper-every-time",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-CI-LINUX",
+        "W5-BEH-CI-MACOS",
+        "W5-RED-M2-13-box-keeps-drawing",
+        "W5-RED-M2-13-hover-wake",
+        "W5-RED-M2-13-never-settles",
+        "W5-RED-M2-13-power-saving",
+        "W5-RED-M2-14-whole-box",
+        "W5-RED-M2-15-band-off-by-one",
+        "W5-RED-M2-15-border-per-notch",
+        "W5-RED-M2-15-upper-every-time"
       ],
       "blocker": null,
       "superseded_by": null
@@ -19206,7 +19303,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-20"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Requirements review, round three, at 3586a0d (readiness.md): R-M2-01 to R-M2-20 re-read against ASSESSMENT.md, the amended ROADMAP.md and pyproject.toml as they are now; no conflict or gap; M2-11's old drill text gone (the plan's other drills cover its criterion).",
       "environment": {
@@ -19251,7 +19348,7 @@ them. M2 is closed on 3586a0d.
       ],
       "scope_sha256": "69697add9fda79bdb53d370343c10e60699549e606ce48dc85c9632ad6bc0c32",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: scope-stale)"
     },
     {
       "id": "W4C-BEH-WINDOWS",
@@ -19278,7 +19375,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-20"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19374,7 +19471,7 @@ them. M2 is closed on 3586a0d.
       ],
       "scope_sha256": "69697add9fda79bdb53d370343c10e60699549e606ce48dc85c9632ad6bc0c32",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-BEH-CI-LINUX",
@@ -19401,7 +19498,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-20"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -19500,7 +19597,7 @@ them. M2 is closed on 3586a0d.
       ],
       "scope_sha256": "69697add9fda79bdb53d370343c10e60699549e606ce48dc85c9632ad6bc0c32",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-BEH-CI-MACOS",
@@ -19527,7 +19624,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-20"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -19626,7 +19723,7 @@ them. M2 is closed on 3586a0d.
       ],
       "scope_sha256": "69697add9fda79bdb53d370343c10e60699549e606ce48dc85c9632ad6bc0c32",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-01-empty-image",
@@ -19634,7 +19731,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-01"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19724,7 +19821,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-01-html",
@@ -19732,7 +19829,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-01"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19822,7 +19919,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-01-images-left",
@@ -19830,7 +19927,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-01"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19920,7 +20017,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-01-loads",
@@ -19928,7 +20025,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-01"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20018,7 +20115,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-01-title-markup",
@@ -20026,7 +20123,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-01"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20116,7 +20213,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-02-headings",
@@ -20124,7 +20221,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-02"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20230,7 +20327,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-02-no-panel",
@@ -20238,7 +20335,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-02"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20344,7 +20441,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-02-no-wrap",
@@ -20352,7 +20449,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-02"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20458,7 +20555,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-03-no-cap",
@@ -20466,7 +20563,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-03"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20568,7 +20665,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-03-one-row",
@@ -20576,7 +20673,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-03"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20678,7 +20775,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-04-one-line",
@@ -20686,7 +20783,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-04"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20788,7 +20885,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-05-link-colour",
@@ -20796,7 +20893,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-05"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -20894,7 +20991,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-05-palette",
@@ -20902,7 +20999,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-05"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21000,7 +21097,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-05-readable",
@@ -21008,7 +21105,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-05"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21106,7 +21203,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-06-buttons",
@@ -21114,7 +21211,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-06"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21224,7 +21321,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-06-field",
@@ -21232,7 +21329,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-06"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21342,7 +21439,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-07-box-width",
@@ -21350,7 +21447,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-07"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21464,7 +21561,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-07-desktop-font",
@@ -21472,7 +21569,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-07"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21586,7 +21683,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-07-fixed-width",
@@ -21594,7 +21691,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-07"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21708,7 +21805,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-08-fixed-clock",
@@ -21716,7 +21813,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-08"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21818,7 +21915,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-08-hover-ignored",
@@ -21826,7 +21923,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-08"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -21928,7 +22025,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-09-any-scheme",
@@ -21936,7 +22033,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-09"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22038,7 +22135,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-09-not-a-link",
@@ -22046,7 +22143,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-09"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22148,7 +22245,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-10-at-the-end",
@@ -22156,7 +22253,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-10"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22266,7 +22363,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-11-no-room",
@@ -22274,7 +22371,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-11"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22384,7 +22481,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-12-no-new-line",
@@ -22392,7 +22489,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-12"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22502,7 +22599,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-12-paste-joined",
@@ -22510,7 +22607,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-12"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22620,7 +22717,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-12-qt-selection",
@@ -22628,7 +22725,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-12"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22738,7 +22835,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-13-box-keeps-drawing",
@@ -22746,7 +22843,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-13"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22868,7 +22965,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-13-hover-wake",
@@ -22876,7 +22973,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-13"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -22998,7 +23095,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-13-never-settles",
@@ -23006,7 +23103,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-13"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23128,7 +23225,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-13-power-saving",
@@ -23136,7 +23233,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-13"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23258,7 +23355,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-14-whole-box",
@@ -23266,7 +23363,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-14"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23388,7 +23485,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-15-band-off-by-one",
@@ -23396,7 +23493,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-15"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23518,7 +23615,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-15-border-per-notch",
@@ -23526,7 +23623,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-15"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23648,7 +23745,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-15-upper-every-time",
@@ -23656,7 +23753,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-15"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23778,7 +23875,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-16-forged",
@@ -23786,7 +23883,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-16"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -23896,7 +23993,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-16-no-copy",
@@ -23904,7 +24001,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-16"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24014,7 +24111,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-17-block-comment",
@@ -24022,7 +24119,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-17"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24128,7 +24225,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-17-contrast",
@@ -24136,7 +24233,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-17"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24242,7 +24339,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-17-keywords",
@@ -24250,7 +24347,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-17"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24356,7 +24453,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-18-no-clock",
@@ -24364,7 +24461,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-18"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24474,7 +24571,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-18-no-partial",
@@ -24482,7 +24579,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-18"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24592,7 +24689,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-18-no-stop",
@@ -24600,7 +24697,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-18"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24710,7 +24807,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-19-motion-ignored",
@@ -24718,7 +24815,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-19"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24828,7 +24925,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-19-no-fade-in",
@@ -24836,7 +24933,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-19"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -24946,7 +25043,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-19-no-ghost",
@@ -24954,7 +25051,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-19"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -25064,7 +25161,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-20-fairy-link",
@@ -25072,7 +25169,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-20"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -25170,7 +25267,7 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4C-RED-M2-20-selected-text",
@@ -25178,7 +25275,7 @@ them. M2 is closed on 3586a0d.
         "AC-M2-20"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -25276,15 +25373,6112 @@ them. M2 is closed on 3586a0d.
           }
         ]
       },
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, or this round's section changed the plan's prose, which every receipt's scope includes. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 or v0.10.0's Packages run 43778675599 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-READY",
+      "acceptance": [
+        "AC-M2-01",
+        "AC-M2-02",
+        "AC-M2-03",
+        "AC-M2-04",
+        "AC-M2-05",
+        "AC-M2-06",
+        "AC-M2-07",
+        "AC-M2-08",
+        "AC-M2-09",
+        "AC-M2-10",
+        "AC-M2-11",
+        "AC-M2-12",
+        "AC-M2-13",
+        "AC-M2-14",
+        "AC-M2-15",
+        "AC-M2-16",
+        "AC-M2-17",
+        "AC-M2-18",
+        "AC-M2-19",
+        "AC-M2-20"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): R-M2-01 to R-M2-20 re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and PR #22's change to chatmon/bubble.py and tests/test_ask_box.py (the ask box's title hands the keyboard to its field, for screen readers); no conflict or gap.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/readiness.md",
+        "sha256": "5c2c61e408220483dba98a47054c3743893728774685bd575e614913dc8466ef"
+      },
+      "inputs": [
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        }
+      ],
+      "scope_sha256": "ca9fb13d1e2c1d2ad0426ba1b96b532ca1320b275a080de8399e280a68a63049",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5-BEH-WINDOWS",
+      "acceptance": [
+        "AC-M2-01",
+        "AC-M2-02",
+        "AC-M2-03",
+        "AC-M2-04",
+        "AC-M2-05",
+        "AC-M2-06",
+        "AC-M2-07",
+        "AC-M2-08",
+        "AC-M2-09",
+        "AC-M2-10",
+        "AC-M2-11",
+        "AC-M2-12",
+        "AC-M2-13",
+        "AC-M2-14",
+        "AC-M2-15",
+        "AC-M2-16",
+        "AC-M2-17",
+        "AC-M2-18",
+        "AC-M2-19",
+        "AC-M2-20"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on 7816159's source on this Windows 11 workstation (offscreen Qt, the shared venv, BelowNormal priority, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1293 passed, 225 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave5/suite-windows.log",
+        "sha256": "82fb582848ff57a364bdc162246ed12af855a73e83196d122d858fe9707090d0"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "ca9fb13d1e2c1d2ad0426ba1b96b532ca1320b275a080de8399e280a68a63049",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5-BEH-CI-LINUX",
+      "acceptance": [
+        "AC-M2-01",
+        "AC-M2-02",
+        "AC-M2-03",
+        "AC-M2-04",
+        "AC-M2-05",
+        "AC-M2-06",
+        "AC-M2-07",
+        "AC-M2-08",
+        "AC-M2-09",
+        "AC-M2-10",
+        "AC-M2-11",
+        "AC-M2-12",
+        "AC-M2-13",
+        "AC-M2-14",
+        "AC-M2-15",
+        "AC-M2-16",
+        "AC-M2-17",
+        "AC-M2-18",
+        "AC-M2-19",
+        "AC-M2-20"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43778643147",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133010594255",
+        "--log"
+      ],
+      "method": "main's CI run 43778643147 on 7816159, job test (ubuntu-24.04, 3.15). Every test in M2's six test files passed: tests/test_ask_box.py, test_bubble_safety.py, test_bubble_styles.py, test_contrast.py, test_rich_text.py and test_speech_bubble.py, 159 tests in all with none skipped (test_ask_box.py's new test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field among them). The same was true on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers on their own Qt, and on every Windows leg. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/ci/ci-133010594255-test-ubuntu-24.04-3.15.log",
+        "sha256": "309700330cfdf23a7fc458fb169fdf12695978d93268a3a2bb5dc9cc95ef7f9d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "ca9fb13d1e2c1d2ad0426ba1b96b532ca1320b275a080de8399e280a68a63049",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5-BEH-CI-MACOS",
+      "acceptance": [
+        "AC-M2-01",
+        "AC-M2-02",
+        "AC-M2-03",
+        "AC-M2-04",
+        "AC-M2-05",
+        "AC-M2-06",
+        "AC-M2-07",
+        "AC-M2-08",
+        "AC-M2-09",
+        "AC-M2-10",
+        "AC-M2-11",
+        "AC-M2-12",
+        "AC-M2-13",
+        "AC-M2-14",
+        "AC-M2-15",
+        "AC-M2-16",
+        "AC-M2-17",
+        "AC-M2-18",
+        "AC-M2-19",
+        "AC-M2-20"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43778643147",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133010594239",
+        "--log"
+      ],
+      "method": "main's CI run 43778643147 on 7816159, job test (macos-latest, 3.14). Every test in M2's six test files passed (159, none skipped), as on the 3.11 and 3.15 legs. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/ci/ci-133010594239-test-macos-latest-3.14.log",
+        "sha256": "89829560af75092a6d57b62b5facf737bba200ff49a1289793b95c32c65bda51"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "ca9fb13d1e2c1d2ad0426ba1b96b532ca1320b275a080de8399e280a68a63049",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-01-empty-image",
+      "acceptance": [
+        "AC-M2-01"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_safety.py"
+      ],
+      "method": "Red drill M2-01-empty-image through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        }
+      ],
+      "scope_sha256": "a9d543cc5a8ef923c256df75911dcb5acdcd3f052634fb53b33af3d99615a97e",
+      "red": {
+        "mutation": "M2-01-empty-image: in chatmon/richtext.py, '        return blank' became '        return b\"\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "itself",
+        "observed_diagnostic": "# Qt keeps a picture it read itself (when a request came back empty) as the document's resource. (Asking",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "d95948d6d2a91e2bdaa5b14e253fda6ee23b81261d312469399ad3dd1e7fa853"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-01-html",
+      "acceptance": [
+        "AC-M2-01"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_safety.py"
+      ],
+      "method": "Red drill M2-01-html through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        }
+      ],
+      "scope_sha256": "a9d543cc5a8ef923c256df75911dcb5acdcd3f052634fb53b33af3d99615a97e",
+      "red": {
+        "mutation": "M2-01-html: in chatmon/richtext.py, 'MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub | QTextDocument.MarkdownFeature.MarkdownNoHTML' became 'MARKDOWN = QTextDocument.MarkdownFeature.MarkdownDialectGitHub'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "HTML was read",
+        "observed_diagnostic": ">       assert '<img src=\"' in shown and \"background-image\" in shown, \"HTML was read: it doesn't show as the text it is\"",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "5f9981cfa76353c6b38bd527765055c8fd218c9a72e1d6a64106f9d098e5f72c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-01-images-left",
+      "acceptance": [
+        "AC-M2-01"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_safety.py"
+      ],
+      "method": "Red drill M2-01-images-left through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        }
+      ],
+      "scope_sha256": "a9d543cc5a8ef923c256df75911dcb5acdcd3f052634fb53b33af3d99615a97e",
+      "red": {
+        "mutation": "M2-01-images-left: in chatmon/richtext.py, '    without_images(doc)' became '    pass  # the images left in'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "an image was left in",
+        "observed_diagnostic": ">       assert images(doc) == 0, \"an image was left in, for the screen to look for its @2x file\"",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "140245cea6b474bc3c57ef81148404e74cdc11d811077245a66c3eb9ca7ecf07"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-01-loads",
+      "acceptance": [
+        "AC-M2-01"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_safety.py"
+      ],
+      "method": "Red drill M2-01-loads through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        }
+      ],
+      "scope_sha256": "a9d543cc5a8ef923c256df75911dcb5acdcd3f052634fb53b33af3d99615a97e",
+      "red": {
+        "mutation": "M2-01-loads: in chatmon/richtext.py, '        return nothing(kind)' became '        return super().loadResource(kind, url)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "a picture's bytes were read",
+        "observed_diagnostic": ">       assert leaked == [], f\"a picture's bytes were read for {leaked}\"",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "fef85a7f4f225173b6b15e9b74120c90d58c5194c1006e7ab45946e2fe49018c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-01-title-markup",
+      "acceptance": [
+        "AC-M2-01"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_safety.py::test_a_title_hint_or_attachment_name_is_shown_as_text"
+      ],
+      "method": "Red drill M2-01-title-markup through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        }
+      ],
+      "scope_sha256": "a9d543cc5a8ef923c256df75911dcb5acdcd3f052634fb53b33af3d99615a97e",
+      "red": {
+        "mutation": "M2-01-title-markup: in chatmon/bubble.py, 'self.title.setTextFormat(Qt.TextFormat.PlainText)' became 'self.title.setTextFormat(Qt.TextFormat.AutoText)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "magenta_pixels",
+        "observed_diagnostic": ">           assert magenta_pixels(box.grab().toImage()) == 0",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4454bd06c013b84cdbe04815022368514c712be19a42722c43ca0d5b7eec1aa8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-02-headings",
+      "acceptance": [
+        "AC-M2-02"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_rich_text.py"
+      ],
+      "method": "Red drill M2-02-headings through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "ab3ccf15ea84b7803630fcef634287d5fffb33a2329ca1c4fe6378920ffb331b",
+      "red": {
+        "mutation": "M2-02-headings: in chatmon/richtext.py, 'HEADING_MOST = 1  #' became 'HEADING_MOST = 3  #'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_headings_stay_near_the_texts_size",
+        "observed_diagnostic": "___________________ test_headings_stay_near_the_texts_size ____________________",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "b001776cc55a0e1ce915ffcb24800645c8ab19ac122aeb68dcf5e133c48ed73d"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-02-no-panel",
+      "acceptance": [
+        "AC-M2-02"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_rich_text.py"
+      ],
+      "method": "Red drill M2-02-no-panel through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. The artifact is the harness's results record, whose observed line names the failing test; the red run's output tail in drills.log begins after that line. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills-results.json",
+        "sha256": "85960e127df75e9c1fda675bb2ac574c0f8e41160227b4bdb62540d151ba2ee6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "ab3ccf15ea84b7803630fcef634287d5fffb33a2329ca1c4fe6378920ffb331b",
+      "red": {
+        "mutation": "M2-02-no-panel: in chatmon/richtext.py, '    panel.setBackground(look.code_fill)' became '    pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_code_wraps_on_a_tinted_panel_in_a_speech_bubble",
+        "observed_diagnostic": "_______ test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[electric] ________",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "1155f8aec6c1741aa94522e69fdd8a3e88441dc370d9798043da37a58fd0fbff"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-02-no-wrap",
+      "acceptance": [
+        "AC-M2-02"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_rich_text.py"
+      ],
+      "method": "Red drill M2-02-no-wrap through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. The artifact is the harness's results record, whose observed line names the failing test; the red run's output tail in drills.log begins after that line. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills-results.json",
+        "sha256": "85960e127df75e9c1fda675bb2ac574c0f8e41160227b4bdb62540d151ba2ee6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "ab3ccf15ea84b7803630fcef634287d5fffb33a2329ca1c4fe6378920ffb331b",
+      "red": {
+        "mutation": "M2-02-no-wrap: in chatmon/richtext.py, '    code.setNonBreakableLines(False)' became '    code.setNonBreakableLines(True)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_code_wraps_on_a_tinted_panel_in_a_speech_bubble",
+        "observed_diagnostic": "_______ test_code_wraps_on_a_tinted_panel_in_a_speech_bubble[electric] ________",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "9e877fddb5d86e2a47ad23c740b48d38dc09e005d51565eca4d27c9fe12e6b16"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-03-no-cap",
+      "acceptance": [
+        "AC-M2-03"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-03-no-cap through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-03-no-cap: in chatmon/bubble.py, '        if has_text and 6 + text_h + (12 + rows_h if buttons else 0) > room:' became '        if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_long_message_is_capped_and_more_has_the_rest",
+        "observed_diagnostic": "________ test_a_long_message_is_capped_and_more_has_the_rest[electric] ________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "ad5e9099c378d917d1fcc749bd08d8443798018d74c0f0ed4489e6b6d92acdd0"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-03-one-row",
+      "acceptance": [
+        "AC-M2-03"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-03-one-row through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-03-one-row: in chatmon/bubble.py, '            if rows[-1] and used + self.BUTTON_GAP + b.rect.width() > inner:' became '            if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_buttons_wrap_onto_rows_inside_the_bubble",
+        "observed_diagnostic": "___________ test_buttons_wrap_onto_rows_inside_the_bubble[electric] ___________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d3dc3a16acdc974ac6ae0c3faab88bb579339f0d85c374e3264d895b4ed30da"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-04-one-line",
+      "acceptance": [
+        "AC-M2-04"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-04-one-line through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-04-one-line: in chatmon/bubble.py, '        self._title_lines = text_lines(self.title, title_font, inner - self.CLOSE_W, self.TITLE_LINES)' became '        self._title_lines = [self.title]'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button",
+        "observed_diagnostic": "_ test_a_long_title_stays_inside_the_bubble_and_clear_of_the_close_button[electric] _",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "047d1d65679445939d3483c64b5d8b1c43f0fb5f68757877b6f1624ea8c58bd8"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-05-link-colour",
+      "acceptance": [
+        "AC-M2-05"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_contrast.py"
+      ],
+      "method": "Red drill M2-05-link-colour through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        }
+      ],
+      "scope_sha256": "95c648ab5e1f1557563e35924900b3e008bcad18afb6d8dde12fdab7306d10d2",
+      "red": {
+        "mutation": "M2-05-link-colour: in chatmon/richtext.py, '    _merge(doc, _spans(doc, lambda b, f: f.isAnchor()), look)' became '    pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_links_in_answers_wear_the_styles_colour_not_the_apps",
+        "observed_diagnostic": "_____ test_links_in_answers_wear_the_styles_colour_not_the_apps[electric] _____",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "effef156a04832163afd69957af2eb7293f6f144adcf5a9f5593b51040036395"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-05-palette",
+      "acceptance": [
+        "AC-M2-05"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_contrast.py"
+      ],
+      "method": "Red drill M2-05-palette through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        }
+      ],
+      "scope_sha256": "95c648ab5e1f1557563e35924900b3e008bcad18afb6d8dde12fdab7306d10d2",
+      "red": {
+        "mutation": "M2-05-palette: in chatmon/styles.py, '    highlight = readable(role(QPalette.ColorRole.Highlight), fill, OUTLINE_CONTRAST)' became '    highlight = readable(QColor(PLAIN_ACCENT), fill, OUTLINE_CONTRAST)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_plain_style_wears_a_high_contrast_theme_as_it_is",
+        "observed_diagnostic": "_ test_the_plain_style_wears_a_high_contrast_theme_as_it_is[windows high contrast black] _",
+        "before": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "66eb873b5fb68606e83a0d2e5d5032eac27133790bf17c7ecdaa08086c248481"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-05-readable",
+      "acceptance": [
+        "AC-M2-05"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_contrast.py"
+      ],
+      "method": "Red drill M2-05-readable through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        }
+      ],
+      "scope_sha256": "95c648ab5e1f1557563e35924900b3e008bcad18afb6d8dde12fdab7306d10d2",
+      "red": {
+        "mutation": "M2-05-readable: in chatmon/styles.py, '    if contrast(fg, bg) >= ratio:' became '    if True:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_plain_style_reads_whatever_the_palette[faint]",
+        "observed_diagnostic": "___________ test_the_plain_style_reads_whatever_the_palette[faint] ____________",
+        "before": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "ea1791b8894b5e26030b6d1bbd859ceaec7178411db26a8241878898beecb224"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-06-buttons",
+      "acceptance": [
+        "AC-M2-06"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-06-buttons through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-06-buttons: in chatmon/bubble.py, '            QToolButton:focus {{ border: 2px solid {focus}; }}' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "shows its focus",
+        "observed_diagnostic": ">           assert ring(box, control, focus) == 4, f\"{what} shows its focus ({name})\"",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "32ec0477dfac5b5bafd2d478e57bd88dd538a2b13ad180d94299d7c1358be5ce"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-06-field",
+      "acceptance": [
+        "AC-M2-06"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-06-field through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-06-field: in chatmon/bubble.py, 'QTextEdit#entry:focus {{ border: 2px solid {focus}; padding: 3px 5px; }}' became 'QTextEdit#entry:focus {{ border: 1px solid {focus}; padding: 4px 6px; }}'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "field shows its focus",
+        "observed_diagnostic": "E           AssertionError: field shows its focus (electric)",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "125927c69462ac99c67da8a2d63f33390db1366294fe7c65cf3916a20e26cf8b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-07-box-width",
+      "acceptance": [
+        "AC-M2-07"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-07-box-width through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "01d339f353ffc1e26cb11adfc2f7fed0313cc484592d6a8e28645cfc9590021b",
+      "red": {
+        "mutation": "M2-07-box-width: in chatmon/bubble.py, '        width = width_for(self.WIDTH, self._body_font()) * (self.EXPANDED_WIDTH if self.expanded else 1.0)' became '        width = self.WIDTH * (self.EXPANDED_WIDTH if self.expanded else 1.0)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_text_size_setting_grows_the_box_and_its_text",
+        "observed_diagnostic": "____________ test_the_text_size_setting_grows_the_box_and_its_text ____________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "3ccf60f346c722da2b6a82b12fc26ecef332276cd80605c178c0757a3063a66f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-07-desktop-font",
+      "acceptance": [
+        "AC-M2-07"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-07-desktop-font through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "01d339f353ffc1e26cb11adfc2f7fed0313cc484592d6a8e28645cfc9590021b",
+      "red": {
+        "mutation": "M2-07-desktop-font: in chatmon/bubble.py, '    grow = desktop / BODY_POINTS if desktop > BODY_POINTS else 1.0' became '    grow = 1.0'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_text_follows_a_larger_desktop_font",
+        "observed_diagnostic": "___________________ test_text_follows_a_larger_desktop_font ___________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "a257ae6687ffefe1071cd1ddb7e5ef8507572169cd7ab6dfc8094edb42da0221"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-07-fixed-width",
+      "acceptance": [
+        "AC-M2-07"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-07-fixed-width through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "01d339f353ffc1e26cb11adfc2f7fed0313cc484592d6a8e28645cfc9590021b",
+      "red": {
+        "mutation": "M2-07-fixed-width: in chatmon/bubble.py, '        return min(room, width_for(self.MAX_WIDTH, body))' became '        return min(room, self.MAX_WIDTH)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_text_size_setting_scales_text_and_widths",
+        "observed_diagnostic": "______________ test_the_text_size_setting_scales_text_and_widths ______________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "9590d4c7791fd2967c13b5251a9ad14c962a994f00e376adff9f81eefe9266d9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-08-fixed-clock",
+      "acceptance": [
+        "AC-M2-08"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-08-fixed-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-08-fixed-clock: in chatmon/bubble.py, '        return max(asked, self.least + self.per_word * words) * max(0.25, self.factor)' became '        return asked * max(0.25, self.factor)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_bubble_stays_long_enough_to_read",
+        "observed_diagnostic": "___________________ test_a_bubble_stays_long_enough_to_read ___________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "5c84b9c085e1831d63b4549c1c6222e0ccaf4377601647b33956e5636ebfa04b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-08-hover-ignored",
+      "acceptance": [
+        "AC-M2-08"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-08-hover-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-08-hover-ignored: in chatmon/bubble.py, '        if self._expires is not None and not self._hovered and now >= self._expires:' became '        if self._expires is not None and now >= self._expires:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was",
+        "observed_diagnostic": "_______ test_a_hovered_bubble_waits_and_then_goes_on_from_where_it_was ________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "e06049d5bdf54d0aabf95fac90499ebc4cb20486da23fdfd0527ac5e95e8845e"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-09-any-scheme",
+      "acceptance": [
+        "AC-M2-09"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-09-any-scheme through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-09-any-scheme: in chatmon/bubble.py, '        return url if url is not None and url.scheme() in SAFE_SCHEMES else None' became '        return url'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_links_in_a_bubble_can_be_clicked_but_only_safe_ones",
+        "observed_diagnostic": "__________ test_links_in_a_bubble_can_be_clicked_but_only_safe_ones ___________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "5b4ce495baacef6984782e21a2ecb37a89a7537e4366c8dcf56e2501c61b877e"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-09-not-a-link",
+      "acceptance": [
+        "AC-M2-09"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_speech_bubble.py"
+      ],
+      "method": "Red drill M2-09-not-a-link through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "30a457cac5719210817bd48b3c502684f78e227a4aacc5fccabcea252a15223c",
+      "red": {
+        "mutation": "M2-09-not-a-link: in chatmon/bubble.py, '            return \"link\"' became '            return \"body\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_links_in_a_bubble_can_be_clicked_but_only_safe_ones",
+        "observed_diagnostic": "__________ test_links_in_a_bubble_can_be_clicked_but_only_safe_ones ___________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "b7c30a5f73d2dec22d5531ee7f9a1dc73e060547a8b3d27fc4861ea299280a27"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-10-at-the-end",
+      "acceptance": [
+        "AC-M2-10"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-10-at-the-end through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-10-at-the-end: in chatmon/bubble.py, '            bar.setValue(min(bar.maximum(), int(top)))' became '            bar.setValue(bar.maximum())'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_long_answer_opens_at_the_start_of_the_newest_exchange",
+        "observed_diagnostic": "________ test_a_long_answer_opens_at_the_start_of_the_newest_exchange _________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "b3a0b53e6b0a944ed6d4270d895f5f40a4e1ba08a85a4665c4cabc66cf6c15be"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-11-no-room",
+      "acceptance": [
+        "AC-M2-11"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-11-no-room through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-11-no-room: in chatmon/bubble.py, '        return room if self.expanded else min(' became '        return min('",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_box_can_be_made_bigger_and_back",
+        "observed_diagnostic": "__________________ test_the_box_can_be_made_bigger_and_back ___________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "5e23e42fabac8b1e2e0d75ee8f709f7dfeb4bbd3cb6314424a648b1460d295dc"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-12-no-new-line",
+      "acceptance": [
+        "AC-M2-12"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-12-no-new-line through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-12-no-new-line: in chatmon/bubble.py, '            if self.multiline and event.modifiers() & Qt.KeyboardModifier.ShiftModifier:' became '            if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_shift_enter_adds_a_line_and_enter_sends_it_all",
+        "observed_diagnostic": "_____________ test_shift_enter_adds_a_line_and_enter_sends_it_all _____________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "16b5a96093a8fd2f264686f40433ad25d33afb17bdf524d8934795a43ec478c1"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-12-paste-joined",
+      "acceptance": [
+        "AC-M2-12"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-12-paste-joined through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-12-paste-joined: in chatmon/bubble.py, '        return text if self.multiline else \" \".join(text.splitlines())' became '        return \" \".join(text.splitlines())'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_short_paste_keeps_its_line_breaks",
+        "observed_diagnostic": "__________________ test_a_short_paste_keeps_its_line_breaks ___________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "38ad4f2474f51786094dbd323390ea1dc3fbcb2ddff2cdb74d4c251d150afc60"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-12-qt-selection",
+      "acceptance": [
+        "AC-M2-12"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-12-qt-selection through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "d22200f5a9178ea760b312f98dfbb8228ad175076f38617a6075433e77a38445",
+      "red": {
+        "mutation": "M2-12-qt-selection: in chatmon/bubble.py, '        if query == Qt.InputMethodQuery.ImCurrentSelection:' became '        if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_field_keeps_the_calls_the_app_and_overlay_use",
+        "observed_diagnostic": "___________ test_the_field_keeps_the_calls_the_app_and_overlay_use ____________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "e6bc1c5634bfc693bc4306596522ff9696808f4faebce0b0061335ac98b53346"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-13-box-keeps-drawing",
+      "acceptance": [
+        "AC-M2-13"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-13-box-keeps-drawing through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-13-box-keeps-drawing: in chatmon/bubble.py, '            self._frames.stop()  # that was the still picture: nothing more to draw' became '            pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_ask_box_settles_and_wakes",
+        "observed_diagnostic": "_____________________ test_the_ask_box_settles_and_wakes ______________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "704bd8e0db20af73a6a07ac45e5deee4c6883aae7ef98605ede5e9b3bcd31ae6"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-13-hover-wake",
+      "acceptance": [
+        "AC-M2-13"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-13-hover-wake through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-13-hover-wake: in chatmon/bubble.py, '            self._effects.wake(now, self._period)' became '            pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "pointed at, it moves again",
+        "observed_diagnostic": ">       assert message.anim_key(end + 1.1) != -1, \"pointed at, it moves again\"",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "dce384dc1f97183a5a71af57ae2e9604f8c505949c30fb8247e93e2387ca83fe"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-13-never-settles",
+      "acceptance": [
+        "AC-M2-13"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-13-never-settles through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-13-never-settles: in chatmon/bubble.py, '        return min(rise, 1 - _smooth((age - run) / EFFECTS_SETTLE))' became '        return rise'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_speech_bubbles_effects_settle_and_come_back",
+        "observed_diagnostic": "________ test_a_speech_bubbles_effects_settle_and_come_back[electric] _________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "3c3a18afbc671356382dc73157e69762b931f5c16997d006c70cb048d5c53273"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-13-power-saving",
+      "acceptance": [
+        "AC-M2-13"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-13-power-saving through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-13-power-saving: in chatmon/bubble.py, '        if not (self._visible and self.animate and self.art is not None and self.art.layers) or self.power_saving:' became '        if not (self._visible and self.animate and self.art is not None and self.art.layers):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "power saving: the still picture",
+        "observed_diagnostic": ">       assert message.anim_key(end + 100.6) == -1, \"power saving: the still picture\"",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "70fc4b872c73524fe2204c243e8ce54baea5bfaa3d34c617beaa1ab1bfb7abcb"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-14-whole-box",
+      "acceptance": [
+        "AC-M2-14"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-14-whole-box through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-14-whole-box: in chatmon/bubble.py, '        self.update(self._ring())' became '        self.update()'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "nothing inside it is drawn again",
+        "observed_diagnostic": ">       assert paints.children == 0, \"nothing inside it is drawn again\"",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "bdd6725df705f9dfcab64851c06659997219262662969c54a43fda5787cd1867"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-15-band-off-by-one",
+      "acceptance": [
+        "AC-M2-15"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-15-band-off-by-one through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-15-band-off-by-one: in chatmon/bubbleart.py, '        p.translate(0, -first / ratio)' became '        p.translate(0, -first / ratio + 1)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is",
+        "observed_diagnostic": "_ test_the_still_kept_in_two_parts_is_the_whole_picture_wherever_the_notch_is[1.0-electric] _",
+        "before": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "85eba2520576bdfd28372f4ef7a8e945255e97848319686b5fb704e9e940dffd"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-15-border-per-notch",
+      "acceptance": [
+        "AC-M2-15"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-15-border-per-notch through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-15-border-per-notch: in chatmon/bubbleart.py, '        if key not in self._rims:' became '        if True:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "one border for the size",
+        "observed_diagnostic": ">       assert len(rims) == 1, \"one border for the size, whatever the notch\"",
+        "before": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "b43e9784ba1f9395bc3f5ec20e6aec7bc5ef7418e20ea88360d9b50d38af737f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-15-upper-every-time",
+      "acceptance": [
+        "AC-M2-15"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_bubble_styles.py"
+      ],
+      "method": "Red drill M2-15-upper-every-time through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/bubbleart.py",
+          "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_bubble_styles.py",
+          "sha256": "73d6b54cc763a883e4d7354780d1619e7da6d0889958f9a074fc6e004c54adad"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        },
+        {
+          "path": "tests/test_speech_bubble.py",
+          "sha256": "5241a3074126a46dc196c3c4e96a9d35b363a708bb5953f24b100b05bbd9ada4"
+        }
+      ],
+      "scope_sha256": "f1fdda44fd594ea2cb82aec9f8f0798c1823ffab520bdd4509db6755246b0399",
+      "red": {
+        "mutation": "M2-15-upper-every-time: in chatmon/bubbleart.py, '        upper = self._cache.get((tag, tw, th, ratio))' became '        upper = None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "is composed once per size",
+        "observed_diagnostic": ">       assert uppers <= 2, f\"{name}: the picture above the band is composed once per size and art ({uppers} times)\"",
+        "before": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "b4dfa553e2d46097d402c50e315580afc5a14ce978c991125942c9edfde36838"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubbleart.py",
+            "sha256": "220b715fd1111a1393d465073adf72f753c9da01289ed9d880b3b654790077c3"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-16-forged",
+      "acceptance": [
+        "AC-M2-16"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-16-forged through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-16-forged: in chatmon/richtext.py, '    return int(n) if given == token and n.isdigit() else None' became '    return int(n) if n.isdigit() else None'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_copy_link_written_by_an_answer_copies_nothing",
+        "observed_diagnostic": "____________ test_a_copy_link_written_by_an_answer_copies_nothing _____________",
+        "before": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "098aa88fc141c65c2ed95d2d73b319f6279d6480c6b5efeda9bdeed4d23e948b"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/richtext.py",
+            "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-16-no-copy",
+      "acceptance": [
+        "AC-M2-16"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-16-no-copy through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-16-no-copy: in chatmon/bubble.py, '            self.copy_requested.emit(texts[n])' became '            pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_each_answer_and_code_block_can_be_copied",
+        "observed_diagnostic": "________________ test_each_answer_and_code_block_can_be_copied ________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "1c99bfd62c7bd9f43b33e218bf2ba8812e32fed6319f7c18622a48a03e44d577"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-17-block-comment",
+      "acceptance": [
+        "AC-M2-17"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_rich_text.py"
+      ],
+      "method": "Red drill M2-17-block-comment through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "ab3ccf15ea84b7803630fcef634287d5fffb33a2329ca1c4fe6378920ffb331b",
+      "red": {
+        "mutation": "M2-17-block-comment: in chatmon/highlight.py, 'self.setCurrentBlockState(INSIDE_COMMENT)' became 'self.setCurrentBlockState(0)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_a_block_comment_carries_on_to_the_next_lines",
+        "observed_diagnostic": "______________ test_a_block_comment_carries_on_to_the_next_lines ______________",
+        "before": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "0ea07770608d6d67c2ae99bb0ff37e2e2acfd2e3784d2195c0504756090f753a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-17-contrast",
+      "acceptance": [
+        "AC-M2-17"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_rich_text.py"
+      ],
+      "method": "Red drill M2-17-contrast through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "ab3ccf15ea84b7803630fcef634287d5fffb33a2329ca1c4fe6378920ffb331b",
+      "red": {
+        "mutation": "M2-17-contrast: in chatmon/highlight.py, 'styles.readable(styles.blend(c.body, panel, 150), panel))' became 'styles.blend(c.body, panel, 60))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_code_colours_read_on_the_code_panel_and_stand_apart",
+        "observed_diagnostic": "_____ test_code_colours_read_on_the_code_panel_and_stand_apart[electric] ______",
+        "before": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "7b9e47ac66d3cac17c391018f276e7ec09271f31f41ec5e435fec7fd682ee281"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-17-keywords",
+      "acceptance": [
+        "AC-M2-17"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_rich_text.py"
+      ],
+      "method": "Red drill M2-17-keywords through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "ab3ccf15ea84b7803630fcef634287d5fffb33a2329ca1c4fe6378920ffb331b",
+      "red": {
+        "mutation": "M2-17-keywords: in chatmon/highlight.py, '                if word.group() in keywords:' became '                if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_python_keywords_strings_numbers_and_comments_are_coloured",
+        "observed_diagnostic": "_______ test_python_keywords_strings_numbers_and_comments_are_coloured ________",
+        "before": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "902845f114cc51377e4bbb9cdbf7d5bbb68302ba8b3a7b2f2ba1aa817ed29d75"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/highlight.py",
+            "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-18-no-clock",
+      "acceptance": [
+        "AC-M2-18"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-18-no-clock through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-18-no-clock: in chatmon/bubble.py, '                self._busy_clock.start()' became '                pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "it counts each second",
+        "observed_diagnostic": ">       assert box.busy_label.text() == \"Claude is answering… 13 s\", \"it counts each second\"",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "bfa376b64b798ee28389d9a8c7090f181a1688e21d575e9c5efbe3e34852f07c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-18-no-partial",
+      "acceptance": [
+        "AC-M2-18"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-18-no-partial through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-18-no-partial: in chatmon/bubble.py, '        self._partial += text' became '        pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it",
+        "observed_diagnostic": "_______ test_streamed_text_shows_as_it_comes_and_the_answer_replaces_it _______",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "71b669a112bd8284bc71f6da6ffed67069f484f0fad889318effd1202b945830"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-18-no-stop",
+      "acceptance": [
+        "AC-M2-18"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-18-no-stop through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-18-no-stop: in chatmon/bubble.py, '        self.stop_button.clicked.connect(self.stop_requested.emit)' became '        pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped",
+        "observed_diagnostic": "_____ test_an_answer_on_its_way_shows_who_and_how_long_and_can_be_stopped _____",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "aef398e3f043aa22048edae59a2177eb7fb04955d4072f2a3f325bfed4000765"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-19-motion-ignored",
+      "acceptance": [
+        "AC-M2-19"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-19-motion-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-19-motion-ignored: in chatmon/bubble.py, '        return not self.reduced_motion and not self.stage_draws_art' became '        return not self.stage_draws_art'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_with_reduced_motion_it_comes_and_goes_at_once",
+        "observed_diagnostic": "_____________ test_with_reduced_motion_it_comes_and_goes_at_once ______________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "8e30b90dfb7ad56c63fbc30810d7dfec5772d7638c1e15b1276330cd1b01d22f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-19-no-fade-in",
+      "acceptance": [
+        "AC-M2-19"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-19-no-fade-in through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-19-no-fade-in: in chatmon/bubble.py, '            self._fade_in.start()' became '            pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_fades_in_and_out",
+        "observed_diagnostic": "__________________________ test_it_fades_in_and_out ___________________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "6e148fea5a563abd66acb9e4642a99f004531ff87c9646cfa66d5deb1441a089"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-19-no-ghost",
+      "acceptance": [
+        "AC-M2-19"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_ask_box.py"
+      ],
+      "method": "Red drill M2-19-no-ghost through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/highlight.py",
+          "sha256": "2cc084d73950a9080b53b9c57eba574bf0b5fcc64f28950da08d2e6b099bf7d8"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_ask_box.py",
+          "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        },
+        {
+          "path": "tests/test_rich_text.py",
+          "sha256": "5fc84ecd46cfae2eb6a9b548ffdef628688df3a32ef16561729ad9f0d2f6aac6"
+        }
+      ],
+      "scope_sha256": "0d14e4990f339ac5440989aa3fdd7ac0bb315d2bf9b1eda2d62c72421c439caa",
+      "red": {
+        "mutation": "M2-19-no-ghost: in chatmon/bubble.py, '                _Ghost(self.grab(), self.geometry(), self.windowOpacity(), self.FADE_MS)' became '                pass'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_it_fades_in_and_out",
+        "observed_diagnostic": "__________________________ test_it_fades_in_and_out ___________________________",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "d3c510e882983cb4912ef6697d0d189b765f44000feed835e0569c46fbd62857"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-20-fairy-link",
+      "acceptance": [
+        "AC-M2-20"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_contrast.py"
+      ],
+      "method": "Red drill M2-20-fairy-link through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        }
+      ],
+      "scope_sha256": "95c648ab5e1f1557563e35924900b3e008bcad18afb6d8dde12fdab7306d10d2",
+      "red": {
+        "mutation": "M2-20-fairy-link: in chatmon/styles.py, 'fill=\"#fad7e3\", link=\"#9c2f5b\"' became 'fill=\"#fad7e3\", link=\"#d4658f\"'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "fairy links",
+        "observed_diagnostic": "E       AssertionError: fairy links: 2.62",
+        "before": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "6f56faedb6c0f348475e8641a247223200bc27ccca27479c3d047ff1a639ba9f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/styles.py",
+            "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5-RED-M2-20-selected-text",
+      "acceptance": [
+        "AC-M2-20"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_contrast.py"
+      ],
+      "method": "Red drill M2-20-selected-text through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pyqt6": "6.11.0",
+          "pytest": "9.2.0",
+          "ruff": "0.17.4"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m2/wave5/drills.log",
+        "sha256": "c3f770a14a9d56a2361c6fc29879b1837e2f9080e9d4884d83a0f7f3356a003d"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/richtext.py",
+          "sha256": "206cdf66ad05abfaa5ed5350d6a22fb838a7f8224436c5ecda82fb9d16a0ac7b"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "3a13b443c64668c279e709665365e5e234d65a78b90f9ebfac725f17d4ef3e7d"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_bubble_safety.py",
+          "sha256": "2905883a0ebcdc21ae5b5c074655c7b27de4f023be24bc774a317da4afc414ae"
+        },
+        {
+          "path": "tests/test_contrast.py",
+          "sha256": "9dd68b5c2bf717cfb459d323d7093f8e97383b9fe0aca7a2819ade3d0800e1d5"
+        }
+      ],
+      "scope_sha256": "95c648ab5e1f1557563e35924900b3e008bcad18afb6d8dde12fdab7306d10d2",
+      "red": {
+        "mutation": "M2-20-selected-text: in chatmon/bubble.py, ' selection-color: {c.selection_text.name()};' became ''",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_selected_text_in_the_ask_box_wears_the_selection_colours",
+        "observed_diagnostic": "___ test_selected_text_in_the_ask_box_wears_the_selection_colours[electric] ___",
+        "before": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "b37c725cb63a0953140282628ba3063595e70054c3e850f3070f879d75459a3f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/bubble.py",
+            "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "scope_sha256": "69697add9fda79bdb53d370343c10e60699549e606ce48dc85c9632ad6bc0c32",
+    "scope_sha256": "ca9fb13d1e2c1d2ad0426ba1b96b532ca1320b275a080de8399e280a68a63049",
     "inputs": [
       {
         "path": "chatmon/bubble.py",
-        "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
       },
       {
         "path": "chatmon/bubbleart.py",
@@ -25328,7 +31522,7 @@ them. M2 is closed on 3586a0d.
       },
       {
         "path": "tests/test_ask_box.py",
-        "sha256": "5dc85feb87a480416ae862efa0097bd34a58467dd0d8b12f396b14be86fda378"
+        "sha256": "c6ce1ac7dbea09cbf1f9760684221efc89cd853cfc73ac74cc6739e49d199de3"
       },
       {
         "path": "tests/test_bubble_safety.py",
@@ -25371,8 +31565,8 @@ them. M2 is closed on 3586a0d.
       "T-M2-08"
     ],
     "pending_operations": [],
-    "next_action": "None in M2 on 3586a0d.",
-    "source_revision": "3586a0dc20ead1774a0fb4fe6d3253579d6c3e8b"
+    "next_action": "None in M2 on 7816159.",
+    "source_revision": "781615935a49a3dc48a1b7ab015d8ae01b1fd531"
   }
 }
 ```
