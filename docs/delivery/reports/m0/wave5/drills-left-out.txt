@@ -1,0 +1,5 @@
+docs/delivery/reports/m0/wave4e/drill-spec.json: 22 drills kept in docs/delivery/reports/m0/wave5/drill-spec.json, 1 re-aimed
+  M0-12-ask-sent -> M0-12-ask-sent-v2: chatmon/cli.py's ask() now keeps _send's answer (`sent = _send(...)`) to make Chatmon the active app on macOS once the box is open (212db99); the v2 drill sends the same wrong message type from the new line
+docs/delivery/reports/m0/wave4e/drill-spec-new.json: 8 drills kept in docs/delivery/reports/m0/wave5/drill-spec-new.json, 0 re-aimed
+docs/delivery/reports/m0/wave4e/drill-spec-new2.json: 2 drills kept in docs/delivery/reports/m0/wave5/drill-spec-new2.json, 0 re-aimed
+docs/delivery/reports/m0/wave4e/drill-spec-linux.json: 2 drills kept in docs/delivery/reports/m0/wave5/drill-spec-linux.json, 0 re-aimed

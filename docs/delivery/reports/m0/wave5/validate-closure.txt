@@ -1,0 +1,5 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m0-app-core.md --stage closure --context docs/delivery/reports/m0/wave5/context.json
+PASS: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+Structural and recorded-evidence checks; semantic review remains required.
+exit 0

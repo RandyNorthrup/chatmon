@@ -1,0 +1,67 @@
+red drills from docs\delivery\reports\m0\wave5\drill-spec-new2.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-_imu6emm
+copied 318 files
+
+=== drill W4-M0-05-language-table-ignored (M0-05.A2) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_commands.py::test_another_languages_phrases_join_english_which_stays
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_another_languages_phrases_join_english_which_stays ___________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8742/test_another_languages_phrases0')
+
+    def test_another_languages_phrases_join_english_which_stays(tmp_path):
+        shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+        (tmp_path / "fr.json").write_text(json.dumps({"commands": {"help": ["aide", "Qu'est-ce que tu sais faire ?"], "hide": ["help"], "no such command": ["bonjour"]}}),
+                                          encoding="utf-8")
+        table = Table(offline.load_phrases("fr", tmp_path))
+>       assert table.find("aide") == "help" and table.find("qu'est-ce que tu sais faire") == "help"
+E       AssertionError: assert (None == 'help')
+E        +  where None = find('aide')
+E        +    where find = <chatmon.commands.Table object at 0x000002C1E4D57770>.find
+
+tests\test_commands.py:59: AssertionError
+1 failed in 0.53s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+
+=== drill W4-M0-05-english-loses (M0-05.A2) on chatmon/offline.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_commands.py::test_another_languages_phrases_join_english_which_stays
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.50s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_another_languages_phrases_join_english_which_stays ___________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8745/test_another_languages_phrases0')
+
+    def test_another_languages_phrases_join_english_which_stays(tmp_path):
+        shutil.copy(offline.PHRASES / "en.json", tmp_path / "en.json")
+        (tmp_path / "fr.json").write_text(json.dumps({"commands": {"help": ["aide", "Qu'est-ce que tu sais faire ?"], "hide": ["help"], "no such command": ["bonjour"]}}),
+                                          encoding="utf-8")
+        table = Table(offline.load_phrases("fr", tmp_path))
+        assert table.find("aide") == "help" and table.find("qu'est-ce que tu sais faire") == "help"
+>       assert table.find("help") == "help"  # English wins where they share a phrase
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'hide' == 'help'
+E         
+E         - help
+E         + hide
+
+tests\test_commands.py:60: AssertionError
+1 failed in 0.73s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+
+=== summary
+PASS W4-M0-05-language-table-ignored
+PASS W4-M0-05-english-loses

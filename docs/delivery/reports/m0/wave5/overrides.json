@@ -1,0 +1,46 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): M0-01 to M0-13 and M0-CLI re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and PR #22's changes to chatmon/cli.py and tests/test_cli.py (chatmon ask asks macOS to make Chatmon the active app once the box is open); no conflict or gap; M0-12-ask-sent re-aimed at the line that now sends the message.",
+ "next_action": "None in M0 on 7816159.",
+ "drill_acceptance": {
+  "W4-M0-01-priority": [
+   "M0-01.A1"
+  ],
+  "W4-M0-04-appearance": [
+   "M0-04.A1",
+   "M0-04.A2"
+  ],
+  "W4-M0-04-reload-under-help": [
+   "M0-04.A3"
+  ],
+  "W4-M0-05-hide-not-kept": [
+   "M0-05.A1"
+  ],
+  "W4-M0-09-password-read-out": [
+   "M0-09.A1"
+  ],
+  "W4-M0-12-come-forward": [
+   "M0-12.A2"
+  ],
+  "W4-M0-03-light-limit": [
+   "M0-03.A3"
+  ],
+  "W4-M0-13-log-left-at-the-umask": [
+   "M0-13.A1"
+  ],
+  "W4-M0-13-log-followed-through-a-link": [
+   "M0-13.A1"
+  ],
+  "W4-M0-05-language-table-ignored": [
+   "M0-05.A2"
+  ],
+  "W4-M0-05-english-loses": [
+   "M0-05.A2"
+  ],
+  "W4-M0-03-light-copies-v2": [
+   "M0-03.A3"
+  ],
+  "M0-12-ask-sent-v2": [
+   "M0-12.A1"
+  ]
+ }
+}
