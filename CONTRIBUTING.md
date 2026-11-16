@@ -44,6 +44,7 @@ A few tests are left out unless asked for, because they touch something outside 
 | `CHATMON_TEST_CLIPBOARD=1` | Windows' paste tests, which put things on your clipboard |
 | `CHATMON_TEST_WINDOWS_UPDATE=1` | the test that asks Windows Update itself, which can take minutes |
 | `CHATMON_GNOME_SESSION=1` | GNOME's own answers, from a real Mutter: `tests/gnome-session.sh` runs it in a container |
+| `CHATMON_PINS_NETWORK=1` | `packaging/pins.py` with the real uv against PyPI, as the weekly Pins workflow runs it |
 
 More checks, as CI runs them:
 

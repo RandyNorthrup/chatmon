@@ -38,7 +38,7 @@ import os
 import sys
 
 from PyQt6 import sip
-from PyQt6.QtCore import QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer
+from PyQt6.QtCore import QCoreApplication, QObject, QPointF, QRect, QSocketNotifier, Qt, QTimer
 from PyQt6.QtGui import QGuiApplication, QImage, QPainter, QRegion, QScreen, QWindow
 
 from . import wayland, xkb
@@ -821,7 +821,7 @@ class LayerSurface(QObject):
     def _watch_qt_focus(self) -> Callable[[QWindow | None], None] | None:
         """Hear when one of Qt's windows gets the keyboard, holding this surface only weakly: a late signal, after
         the surface closed or went, does nothing. Returns the slot, for close() to disconnect."""
-        app = QGuiApplication.instance()
+        app: QCoreApplication | None = QGuiApplication.instance()  # typed: PyQt6 6.12.1's stubs give instance() an unbound Self
         if not isinstance(app, QGuiApplication):  # always one: the stage needs Qt's GUI
             return None
         me = weakref.ref(self)
@@ -914,7 +914,7 @@ class LayerSurface(QObject):
         self._present_timer.stop()
         self._trim_timer.stop()
         self._kept_timer.stop()
-        app = QGuiApplication.instance()
+        app: QCoreApplication | None = QGuiApplication.instance()
         if self._focus_watch is not None and isinstance(app, QGuiApplication):
             try:
                 app.focusWindowChanged.disconnect(self._focus_watch)
