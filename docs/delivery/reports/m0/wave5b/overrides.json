@@ -1,0 +1,4 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed; CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; no conflict or gap.",
+ "next_action": "None in M0 on 56caddd."
+}
