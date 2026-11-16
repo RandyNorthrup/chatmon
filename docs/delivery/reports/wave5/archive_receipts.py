@@ -33,13 +33,15 @@ def main() -> int:
     start = text.index(FENCE) + len(FENCE)
     end = text.index("\n```", start)
     ledger = json.loads(text[start:end])
-    assert text[start:end] == json.dumps(ledger, indent=2, ensure_ascii=False), "the ledger isn't in bind.py's form"
+    if text[start:end] != json.dumps(ledger, indent=2, ensure_ascii=False):
+        raise SystemExit("the ledger isn't in bind.py's form")
     moving = [r for r in ledger["evidence"] if r["id"].startswith(prefix)]
     if not moving or any(r["status"] != "stale" for r in moving):
         raise SystemExit(f"{len(moving)} receipts start with {prefix}; every one must be stale")
     pieces = [textwrap.indent(json.dumps(r, indent=2, ensure_ascii=False), "    ") for r in moving]
     for piece in pieces:
-        assert piece in text, "a receipt's text isn't in the plan verbatim"
+        if piece not in text:
+            raise SystemExit("a receipt's text isn't in the plan verbatim")
     ids = {r["id"] for r in moving}
     ledger["evidence"] = [r for r in ledger["evidence"] if r["id"] not in ids]
     for task in ledger["tasks"]:
@@ -59,9 +61,9 @@ def main() -> int:
     cand = ROOT / "docs/delivery/reports/wave4/candidates" / plan.name
     cand.parent.mkdir(parents=True, exist_ok=True)
     cand.write_bytes(candidate)
-    done = subprocess.run([sys.executable, str(SCRIPTS / "update-delivery.py"), "--root", ".", "--plan", plan.relative_to(ROOT).as_posix(),
-                           "--candidate", cand.relative_to(ROOT).as_posix(), "--expected-sha256", hashlib.sha256(original).hexdigest()],
-                          capture_output=True, text=True, cwd=ROOT)
+    command = [sys.executable, str(SCRIPTS / "update-delivery.py"), "--root", ".", "--plan", plan.relative_to(ROOT).as_posix(),
+               "--candidate", cand.relative_to(ROOT).as_posix(), "--expected-sha256", hashlib.sha256(original).hexdigest()]
+    done = subprocess.run(command, capture_output=True, text=True, cwd=ROOT)  # noqa: S603 - the skill's own writer, fixed
     print(done.stdout.strip() or done.stderr.strip())
     if done.returncode == 0:
         cand.unlink()

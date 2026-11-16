@@ -39,9 +39,9 @@ def main() -> int:
         profile = json.loads(re.search(r"```quality-ledger\n(.*?)\n```", text, re.S).group(1))["work"]["environment"]
         ctx = context(plan, profile)
         for stage in ("resume", "closure"):
-            done = subprocess.run([PY, V, "--root", ".", "--plan", slug.relative_to(ROOT).as_posix(), "--stage", stage,
-                                   "--context", ctx.relative_to(ROOT).as_posix(), "--format", "json"],
-                                  capture_output=True, text=True, cwd=ROOT)
+            command = [PY, V, "--root", ".", "--plan", slug.relative_to(ROOT).as_posix(), "--stage", stage,
+                       "--context", ctx.relative_to(ROOT).as_posix(), "--format", "json"]
+            done = subprocess.run(command, capture_output=True, text=True, cwd=ROOT)  # noqa: S603 - the skill's own validator, fixed
             report = json.loads(done.stdout)
             reports[f"{plan} {stage}"] = {"context": ctx.relative_to(ROOT).as_posix(), "exit": done.returncode, "report": report}
             findings = report.get("findings", [])
