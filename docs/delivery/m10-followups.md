@@ -270,6 +270,85 @@ results. The W4E- receipts are kept as stale history.
 **Receipts.** The stale ones are kept as history, with their hashes untouched; the W4F- receipts replace
 them.
 
+## Reconciliation, the plans round for v0.10.0 (2026-11-15)
+
+This round re-bound the plan at **7816159**, v0.10.0's commit: `main` with PR #22 merged (the KDE and Hyprland
+overlay fixes, the screen-reader fixes and the Dependabot replacement). 26 of its 26 passing receipts went stale, on `CONTRIBUTING.md`, `chatmon/a11y.py`, `chatmon/bubble.py`, `chatmon/macnative.py`, `tests/test_platform_events.py`, `tests/test_requirements.py` ([reports/wave5/stale-at-7816159.md](reports/wave5/stale-at-7816159.md)). Writing this section into the
+plan changes its prose, which every receipt's scope includes, so the others went stale with it: every check
+was run again on 7816159 or read from main's CI run of it.
+
+**What was re-run.** The whole suite on Windows ([wave5/suite-windows.log](reports/wave5/suite-windows.log): 1293 passed, 225 skipped),
+then 10 Windows drills, and 5 gate drills. All but 4 went green, red and green again; those couldn't run (below). main's CI run 43778643147 on 7816159 (all 19 jobs green; each
+checked out 7816159 itself: [reports/wave5/ci/checkout.txt](reports/wave5/ci/checkout.txt)) was read again
+([reports/m10/ci/observed-7816159.txt](reports/m10/ci/observed-7816159.txt)). The requirements were
+reviewed again ([wave5/readiness.md](reports/m10/wave5/readiness.md)).
+
+**M10-03.A1 and M10-03.A3 fail on two new lines.** mypy with PyQt6 6.11's stubs finds no issues on linux, win32
+and darwin ([wave5/mypy-611.log](reports/m10/wave5/mypy-611.log)). With 6.12.1's it finds two on each
+([wave5/mypy-6121.log](reports/m10/wave5/mypy-6121.log)): `chatmon/layer.py:824: error: Need type annotation for
+"app"  [var-annotated]`, and `:917` the same. Both are `app = QGuiApplication.instance()` in PR #22's KWin and
+Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static `instance()` as returning `Self`, the case of
+CONTRIBUTING.md's second workaround, and these lines don't have it. CI is green because its types jobs lock
+6.11's stubs; P-CI-NEXT-STUBS is the check that would catch this. The four gate drills on 6.12.1's stubs
+couldn't run, since their first step, mypy green with those stubs, fails; the fifth, on 6.11's, went green, red
+and green ([wave5/gate-drills.log](reports/m10/wave5/gate-drills.log)).
+The how-to's replay in WSL finds the same two errors ([wave5/howto-review.md](reports/m10/wave5/howto-review.md)).
+This round changes no product code, so these receipts are recorded as failing and T3-qt612-types is blocked.
+Next: the coordinator gives `app` its type on both lines
+(`app: QCoreApplication | None = QGuiApplication.instance()`); then the 6.12.1 runs, the gate drills and the
+how-to review run again. Everything else passed: the locks (locked again, byte for byte the committed ones),
+the UI Automation test in the CI-shaped venv and its red drill, and the nine drills
+([wave5/locks.log](reports/m10/wave5/locks.log), [wave5/uia-ci-venv.log](reports/m10/wave5/uia-ci-venv.log)).
+
+**Note 4, the upstream report: posted.** Others had reported the core of it on the PyQt mailing list: Veronica
+Berglyd Olsen on 2026-11-14 (pyright: `pyqtSignal`'s required `arguments`, and `typing.Self` for a parent,
+https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046574.html) and Dragan A. on 2026-11-15
+(`typing.Self` throughout, .../046578.html). On the owner's instruction the coordinator posted the follow-up from
+the owner's subscription on 2026-11-16, archived at
+https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046579.html. It adds mypy 2.4.1 `--strict`'s
+repro (four errors on 6.12.1, none on 6.11.0): `installEventFilter`, `removeEventFilter` and `setParent` taking
+`Self`, `setParent` losing `| None`, and the static methods that return `Self`. All three pages were read again
+here ([wave5/stub-report.log](reports/m10/wave5/stub-report.log), no addresses kept). It is reported, and waits
+on Riverbank's fix.
+
+**What remains, outside the criteria.** From 2026-11-28, when 6.12.1 can be hash-locked, the `types` job's check
+against the next stubs (P-CI-NEXT-STUBS, integration note 2): the coordinator. The pins check proposes 6.12.1
+from that day too ([reports/m6a/pins/skip-check.log](reports/m6a/pins/skip-check.log)). Note 4's report needs
+nothing more from us; Riverbank's fix to the stubs is theirs.
+
+**Bound again at 56caddd.** The coordinator's two commits on this branch, after this section's first binding:
+
+- **df3e93c** (the coordinator's): `chatmon/layer.py`'s two `app = QGuiApplication.instance()` lines are
+  `app: QCoreApplication | None = QGuiApplication.instance()`, CONTRIBUTING.md's second workaround for 6.12.1's
+  stubs, with no change at run time; CONTRIBUTING.md's opt-in table names `CHATMON_PINS_NETWORK=1`.
+- **56caddd** (the coordinator's): `tests/test_app_smoke.py::test_hide_menu_and_reload` waits for the greeting
+  before it hides the chatmon, and expects the "Recent messages" entry the greeting adds. The greeting could land
+  inside the test's one-second spin when the companion was slow to start: the WSL failure of this round's first
+  binding. The coordinator's drill ([reports/wave5/flaky-hide-menu/drill.py.txt](reports/wave5/flaky-hide-menu/drill.py.txt)),
+  run again here, fails the old body with the start slowed by 0.6 s and passes the new one at 0, 0.6, 1.4 and 2 s
+  ([reports/wave5b/flaky-hide-menu-drill-windows.log](reports/wave5b/flaky-hide-menu-drill-windows.log), and in WSL
+  [reports/wave5b/flaky-hide-menu-drill-wsl.log](reports/wave5b/flaky-hide-menu-drill-wsl.log)).
+
+df3e93c changed CONTRIBUTING.md, which T3-qt612-types owns, and it binds the M4A, M6A, M6B and M8 plans, so its receipts went stale ([reports/wave5b/stale-at-56caddd.md](reports/wave5b/stale-at-56caddd.md)),
+and this paragraph changes the plan's prose, which every receipt's scope includes. Every check ran again on
+56caddd: the whole suite on Windows ([reports/wave5b/suite-windows.log](reports/wave5b/suite-windows.log): 1293 passed, 225 skipped), then 10 Windows drills, and 5 gate drills, every one green, red and green again. PR #24's CI run
+43794815103 on 56caddd (all 19 jobs green; its test merge has 56caddd's own tree:
+[reports/wave5b/ci/merge-tree.txt](reports/wave5b/ci/merge-tree.txt)) was read again
+([reports/m10/ci/observed-56caddd.txt](reports/m10/ci/observed-56caddd.txt)), and the requirements were
+reviewed again ([wave5b/readiness.md](reports/m10/wave5b/readiness.md)).
+
+**M10-03.A1 and M10-03.A3 pass now.** With df3e93c:
+
+- mypy with PyQt6 6.12.1's stubs finds no issues on linux, win32 and darwin
+  ([wave5b/mypy-6121.log](reports/m10/wave5b/mypy-6121.log)), as with 6.11's ([wave5b/mypy-611.log](reports/m10/wave5b/mypy-611.log));
+- the five gate drills went green, red and green again ([wave5b/gate-drills.log](reports/m10/wave5b/gate-drills.log));
+- the how-to's replay in WSL finds nothing ([wave5b/howto-review.md](reports/m10/wave5b/howto-review.md)).
+
+T3-qt612-types is verified. The failed receipts at 7816159 stay as history.
+
+**Receipts.** The stale ones are kept as history, with their hashes untouched, and so are the failed ones;
+the W5B- receipts replace them. M10 stops only on P-CI-NEXT-STUBS, from 2026-11-28, not a criterion.
+
 ```quality-ledger
 {
   "schema_version": 1,
@@ -498,7 +577,23 @@ them.
         "W4F-BEH-CI-WINDOWS",
         "W4F-RED-M10-01-announcement-not-important",
         "W4F-RED-M10-01-comtypes-left-out-of-the-dev-lock",
-        "W4F-RED-M10-01-comtypes-on-every-platform"
+        "W4F-RED-M10-01-comtypes-on-every-platform",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-LOCKS",
+        "W5-BEH-UIA-CI-VENV",
+        "W5-BEH-CI-WINDOWS",
+        "W5-RED-M10-01-announcement-not-important",
+        "W5-RED-M10-01-comtypes-left-out-of-the-dev-lock",
+        "W5-RED-M10-01-comtypes-on-every-platform",
+        "W5B-READY",
+        "W5B-BEH-WINDOWS",
+        "W5B-BEH-LOCKS",
+        "W5B-BEH-UIA-CI-VENV",
+        "W5B-BEH-CI-WINDOWS",
+        "W5B-RED-M10-01-announcement-not-important",
+        "W5B-RED-M10-01-comtypes-left-out-of-the-dev-lock",
+        "W5B-RED-M10-01-comtypes-on-every-platform"
       ],
       "blocker": null,
       "superseded_by": null
@@ -566,7 +661,23 @@ them.
         "W4F-RED-M10-02-frozen-app-folder-never-looked-in",
         "W4F-RED-M10-02-nuitka-left-without-them",
         "W4F-RED-M10-02-pyinstaller-keeps-every-language",
-        "W4F-RED-M10-02-translator-only-asks-qt"
+        "W4F-RED-M10-02-translator-only-asks-qt",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-RED-M10-02-app-folder-before-qts",
+        "W5-RED-M10-02-english-carries-qts-english",
+        "W5-RED-M10-02-frozen-app-folder-never-looked-in",
+        "W5-RED-M10-02-nuitka-left-without-them",
+        "W5-RED-M10-02-pyinstaller-keeps-every-language",
+        "W5-RED-M10-02-translator-only-asks-qt",
+        "W5B-READY",
+        "W5B-BEH-WINDOWS",
+        "W5B-RED-M10-02-app-folder-before-qts",
+        "W5B-RED-M10-02-english-carries-qts-english",
+        "W5B-RED-M10-02-frozen-app-folder-never-looked-in",
+        "W5B-RED-M10-02-nuitka-left-without-them",
+        "W5B-RED-M10-02-pyinstaller-keeps-every-language",
+        "W5B-RED-M10-02-translator-only-asks-qt"
       ],
       "blocker": null,
       "superseded_by": null
@@ -715,7 +826,35 @@ them.
         "W4F-RED-constructor-untyped",
         "W4F-RED-null-image-unchecked",
         "W4F-RED-parent-unignored",
-        "W4F-RED-signal-from-qtcore"
+        "W4F-RED-signal-from-qtcore",
+        "W5-READY",
+        "W5-BEH-WINDOWS",
+        "W5-BEH-MYPY-611",
+        "W5-BEH-MYPY-6121",
+        "W5-MAN-HOWTO",
+        "W5-RED-signal-from-qtcore",
+        "W5-RED-parent-unignored",
+        "W5-RED-constructor-untyped",
+        "W5-RED-null-image-unchecked",
+        "W5-BEH-CI-TYPES-LINUX",
+        "W5-BEH-CI-TYPES-WIN32",
+        "W5-BEH-CI-TYPES-DARWIN",
+        "W5-RED-M10-03-alias-not-pyqts-signal",
+        "W5-RED-alias-mistyped",
+        "W5B-READY",
+        "W5B-BEH-WINDOWS",
+        "W5B-BEH-MYPY-611",
+        "W5B-BEH-MYPY-6121",
+        "W5B-MAN-HOWTO",
+        "W5B-BEH-CI-TYPES-LINUX",
+        "W5B-BEH-CI-TYPES-WIN32",
+        "W5B-BEH-CI-TYPES-DARWIN",
+        "W5B-RED-M10-03-alias-not-pyqts-signal",
+        "W5B-RED-alias-mistyped",
+        "W5B-RED-constructor-untyped",
+        "W5B-RED-null-image-unchecked",
+        "W5B-RED-parent-unignored",
+        "W5B-RED-signal-from-qtcore"
       ],
       "blocker": null,
       "superseded_by": null
@@ -16655,7 +16794,7 @@ them.
         "M10-03.A3"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Requirements review, final round (after M6A's section), at 45a17b3 (readiness.md): M10-01 to M10-03 re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and the M6B plan it takes as an input (re-bound in this round first); no conflict or gap; the line round three found failing carries the plan's own workaround; note 2's CI entry is the coordinator's from 2026-11-28, note 4's report the owner's.",
       "environment": {
@@ -16744,7 +16883,7 @@ them.
       ],
       "scope_sha256": "18468a70866715bc7b0923ba266d001b2fa8498e13755eb4d64631ad0c58a5c8",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-WINDOWS",
@@ -16755,7 +16894,7 @@ them.
         "M10-03.A2"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -16967,7 +17106,7 @@ them.
       ],
       "scope_sha256": "18468a70866715bc7b0923ba266d001b2fa8498e13755eb4d64631ad0c58a5c8",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-LOCKS",
@@ -16975,7 +17114,7 @@ them.
         "M10-01.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Program Files/Git/usr/bin/bash.exe",
         "docs/delivery/reports/wave4f/run-locks.sh"
@@ -17083,7 +17222,7 @@ them.
       ],
       "scope_sha256": "c817bb7cfa57afbfa2ca83583c587d3dab5eef8a5b4765c63ad4b433b1c87d9e",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-UIA-CI-VENV",
@@ -17091,7 +17230,7 @@ them.
         "M10-01.A2"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
         "-m",
@@ -17205,7 +17344,7 @@ them.
       ],
       "scope_sha256": "c817bb7cfa57afbfa2ca83583c587d3dab5eef8a5b4765c63ad4b433b1c87d9e",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-MYPY-611",
@@ -17213,7 +17352,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "docs/delivery/reports/m10/mypy_runs.py",
@@ -17387,7 +17526,7 @@ them.
       ],
       "scope_sha256": "0d146fcaf56bd0e962e0b03057de2843069e1e84a8a41670fb55aabcec8b329a",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-MYPY-6121",
@@ -17395,7 +17534,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "docs/delivery/reports/m10/mypy_runs.py",
@@ -17569,7 +17708,7 @@ them.
       ],
       "scope_sha256": "0d146fcaf56bd0e962e0b03057de2843069e1e84a8a41670fb55aabcec8b329a",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-MAN-HOWTO",
@@ -17577,7 +17716,7 @@ them.
         "M10-03.A3"
       ],
       "kind": "manual",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Review of CONTRIBUTING.md's how-to for the next stubs and of the integration note's CI entry, line by line, against 45a17b3 and the commands run there (howto-review.md): mypy_runs.py with the 6.12.1 venv here, and CONTRIBUTING.md's five commands replayed as written in WSL Arch on a copy of 45a17b3's tracked files (howto-replay.log). The sentence that mypy also passes with 6.12.1's stubs, false at 45a17b3, is true again.",
       "environment": {
@@ -17746,7 +17885,7 @@ them.
       ],
       "scope_sha256": "0d146fcaf56bd0e962e0b03057de2843069e1e84a8a41670fb55aabcec8b329a",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-CI-WINDOWS",
@@ -17755,7 +17894,7 @@ them.
         "M10-01.A2"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -17870,7 +18009,7 @@ them.
       ],
       "scope_sha256": "c817bb7cfa57afbfa2ca83583c587d3dab5eef8a5b4765c63ad4b433b1c87d9e",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-CI-TYPES-LINUX",
@@ -17878,7 +18017,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -18057,7 +18196,7 @@ them.
       ],
       "scope_sha256": "0d146fcaf56bd0e962e0b03057de2843069e1e84a8a41670fb55aabcec8b329a",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-CI-TYPES-WIN32",
@@ -18065,7 +18204,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -18244,7 +18383,7 @@ them.
       ],
       "scope_sha256": "0d146fcaf56bd0e962e0b03057de2843069e1e84a8a41670fb55aabcec8b329a",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-BEH-CI-TYPES-DARWIN",
@@ -18252,7 +18391,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "gh",
         "run",
@@ -18431,7 +18570,7 @@ them.
       ],
       "scope_sha256": "0d146fcaf56bd0e962e0b03057de2843069e1e84a8a41670fb55aabcec8b329a",
       "red": null,
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-01-announcement-not-important",
@@ -18439,7 +18578,7 @@ them.
         "M10-01.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
         "-m",
@@ -18577,7 +18716,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-01-comtypes-left-out-of-the-dev-lock",
@@ -18585,7 +18724,7 @@ them.
         "M10-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18724,7 +18863,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-01-comtypes-on-every-platform",
@@ -18732,7 +18871,7 @@ them.
         "M10-01.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -18870,7 +19009,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-02-app-folder-before-qts",
@@ -18878,7 +19017,7 @@ them.
         "M10-02.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19020,7 +19159,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-02-english-carries-qts-english",
@@ -19028,7 +19167,7 @@ them.
         "M10-02.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19170,7 +19309,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-02-frozen-app-folder-never-looked-in",
@@ -19178,7 +19317,7 @@ them.
         "M10-02.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19320,7 +19459,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-02-nuitka-left-without-them",
@@ -19328,7 +19467,7 @@ them.
         "M10-02.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19470,7 +19609,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-02-pyinstaller-keeps-every-language",
@@ -19478,7 +19617,7 @@ them.
         "M10-02.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19620,7 +19759,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-02-translator-only-asks-qt",
@@ -19628,7 +19767,7 @@ them.
         "M10-02.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19770,7 +19909,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-M10-03-alias-not-pyqts-signal",
@@ -19778,7 +19917,7 @@ them.
         "M10-03.A2"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
         "-m",
@@ -19980,7 +20119,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-alias-mistyped",
@@ -19988,7 +20127,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -20189,7 +20328,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-constructor-untyped",
@@ -20197,7 +20336,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
         "-m",
@@ -20398,7 +20537,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-null-image-unchecked",
@@ -20406,7 +20545,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
         "-m",
@@ -20607,7 +20746,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-parent-unignored",
@@ -20615,7 +20754,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
         "-m",
@@ -20816,7 +20955,7 @@ them.
           }
         ]
       },
-      "reason": null
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
     },
     {
       "id": "W4F-RED-signal-from-qtcore",
@@ -20824,7 +20963,7 @@ them.
         "M10-03.A1"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
         "-m",
@@ -21025,19 +21164,8687 @@ them.
           }
         ]
       },
+      "reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M4A, M6A, M6B and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-READY",
+      "acceptance": [
+        "M10-01.A1",
+        "M10-01.A2",
+        "M10-02.A1",
+        "M10-02.A2",
+        "M10-03.A1",
+        "M10-03.A2",
+        "M10-03.A3"
+      ],
+      "kind": "readiness",
+      "status": "stale",
+      "command": [],
+      "method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): M10-01 to M10-03 re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three), PR #22's changes to the files T1-comtypes and T3-qt612-types own, and the M4A, M6A, M6B and M8 plans it takes as inputs (re-bound in this round first); no conflict or gap; note 2's CI entry is the coordinator's from 2026-11-28; note 4's upstream report is posted (stub-report.log).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/readiness.md",
+        "sha256": "d582a88f3792c312e6e8f36c286c208bcba69230437ccc8409f9dd195f86cc25"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f9bc4a623f259e784ffe83de5cc6a054576203470d730b0cd56e859f3d78e863",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-WINDOWS",
+      "acceptance": [
+        "M10-01.A1",
+        "M10-02.A1",
+        "M10-02.A2",
+        "M10-03.A2"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on 7816159's source on this Windows 11 workstation (offscreen Qt, the shared venv, BelowNormal priority, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1293 passed, 225 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. tests/test_requirements.py (M10-01.A1), tests/test_packaging.py and tests/test_i18n.py (M10-02.A1 and A2) and every signal test (M10-03.A2) are among them, as in the plan's E-suite and E-qt-translations. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave5/suite-windows.log",
+        "sha256": "82fb582848ff57a364bdc162246ed12af855a73e83196d122d858fe9707090d0"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f9bc4a623f259e784ffe83de5cc6a054576203470d730b0cd56e859f3d78e863",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-LOCKS",
+      "acceptance": [
+        "M10-01.A1"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "C:/Program Files/Git/usr/bin/bash.exe",
+        "docs/delivery/reports/wave5/run-locks.sh"
+      ],
+      "method": "The plan's E-locks again on 7816159: uv 0.12.7 locked requirements-test.in and requirements-dev.in again in a scratch copy of packaging/ with the command the locks' headers record (--exclude-newer 2026-10-31), and both came out byte for byte the committed locks; the five files are unchanged since 45a17b3 (PR #22 added requirements-pins.in and .txt beside them); then tests/test_requirements.py, which checks the new pins lock too, passed, exit 0 (locks.log, sections 1-3).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/locks.log",
+        "sha256": "8f9d0a0912f7607f183e0b30865843f338fba968d4e3b00e084dc98a19c77b61"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1fdc95b846daa3bf789bee59f26706d9b835dd600d162e0c74a215139eb8724a",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-UIA-CI-VENV",
+      "acceptance": [
+        "M10-01.A2"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-rs",
+        "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+      ],
+      "method": "The plan's E-uia-ci-venv again on 7816159: in the venv made from packaging/requirements-test.txt with --require-hashes (%TEMP%/m10-ci-test, comtypes 1.4.17, as CI's Windows legs), the UI Automation end-to-end test ran, not skipped, and passed: a client in another process heard the announcement.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/uia-ci-venv.log",
+        "sha256": "0b39a32db3cf269317edc3c4ed79db20fa0758808516f1a12c3f55bf0f83cd85"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1fdc95b846daa3bf789bee59f26706d9b835dd600d162e0c74a215139eb8724a",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-MYPY-611",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "docs/delivery/reports/m10/mypy_runs.py",
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "docs/delivery/reports/m10/wave5/mypy-611.log"
+      ],
+      "method": "mypy 2.4.1 --platform linux, win32 and darwin on 7816159's tree with the shared venv's PyQt6 6.11 stubs (M10's mypy_runs.py): no issues in 70 files on each, no module exempted.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/mypy-611.log",
+        "sha256": "9963922fcaa0fc80746ff6e13ba9275af3193b67ad2e43a6dd56d0c7d13eabc1"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-MYPY-6121",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "fail",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "docs/delivery/reports/m10/mypy_runs.py",
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "docs/delivery/reports/m10/wave5/mypy-6121.log"
+      ],
+      "method": "mypy 2.4.1 --platform linux, win32 and darwin on 7816159's tree with the throwaway venv's PyQt6 6.12.1 stubs (%TEMP%/m10-qt6121), through M10's mypy_runs.py: two errors on each platform, both in chatmon/layer.py. With 6.11's stubs the same tree passes (W5-BEH-MYPY-611).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 1,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/mypy-6121.log",
+        "sha256": "92271f0aecf284644e4fe230da9abbe3838a9f00fcd05590ea453aa6d72b02d3"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again, with M10's wave5/gate_drills.py and the how-to review."
+    },
+    {
+      "id": "W5-MAN-HOWTO",
+      "acceptance": [
+        "M10-03.A3"
+      ],
+      "kind": "manual",
+      "status": "fail",
+      "command": [],
+      "method": "Review of CONTRIBUTING.md's how-to for the next stubs and of the integration note's CI entry, line by line, against 7816159 and the commands run there (howto-review.md): mypy_runs.py with the 6.12.1 venv here, and CONTRIBUTING.md's five commands replayed as written in WSL Arch on a copy of 7816159's tracked files (howto-replay.log). The how-to is unchanged since 45a17b3 (PR #22 changed only CONTRIBUTING.md's Dependencies section) and its commands work as written; what they find is two errors.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/howto-review.md",
+        "sha256": "71fe89bdcf5da5810e74e51a646adb6de882ae5ca7563792adf2f9d7d198ca6c"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "CONTRIBUTING.md's 'It also passes with the next PyQt6's stubs (6.12.1)' is false at 7816159: mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. The how-to's replay exits 1 on them. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again, and howto-review.md is done again."
+    },
+    {
+      "id": "W5-RED-signal-from-qtcore",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "fail",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Gate drill signal-from-qtcore through wave5/gate_drills.py with PyQt6 6.12.1's stubs: a signal declared from PyQt6.QtCore, in chatmon/hotkey.py, which must fail mypy naming the stub's error.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 1,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/gate-drills.log",
+        "sha256": "d140e28492c613c7c01abd1da4187e6e24e00e14a3c0a80616d49de4e3b0af57"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Not run: the drill's first step, mypy green on a copy of 7816159's chatmon/ and pyproject.toml with PyQt6 6.12.1's stubs, failed (chatmon/layer.py:824 and :917: Need type annotation for \"app\"), so there was nothing to turn red. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again, with this drill."
+    },
+    {
+      "id": "W5-RED-parent-unignored",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "fail",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Gate drill parent-unignored through wave5/gate_drills.py with PyQt6 6.12.1's stubs: the parent's ignore taken out, in chatmon/updates.py, which must fail mypy naming the stub's error.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 1,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/gate-drills.log",
+        "sha256": "d140e28492c613c7c01abd1da4187e6e24e00e14a3c0a80616d49de4e3b0af57"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Not run: the drill's first step, mypy green on a copy of 7816159's chatmon/ and pyproject.toml with PyQt6 6.12.1's stubs, failed (chatmon/layer.py:824 and :917: Need type annotation for \"app\"), so there was nothing to turn red. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again, with this drill."
+    },
+    {
+      "id": "W5-RED-constructor-untyped",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "fail",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Gate drill constructor-untyped through wave5/gate_drills.py with PyQt6 6.12.1's stubs: the session bus left untyped, in chatmon/a11y.py, which must fail mypy naming the stub's error.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 1,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/gate-drills.log",
+        "sha256": "d140e28492c613c7c01abd1da4187e6e24e00e14a3c0a80616d49de4e3b0af57"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Not run: the drill's first step, mypy green on a copy of 7816159's chatmon/ and pyproject.toml with PyQt6 6.12.1's stubs, failed (chatmon/layer.py:824 and :917: Need type annotation for \"app\"), so there was nothing to turn red. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again, with this drill."
+    },
+    {
+      "id": "W5-RED-null-image-unchecked",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "fail",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Gate drill null-image-unchecked through wave5/gate_drills.py with PyQt6 6.12.1's stubs: the null-image check gone, in chatmon/sprites.py, which must fail mypy naming the stub's error.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 1,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/gate-drills.log",
+        "sha256": "d140e28492c613c7c01abd1da4187e6e24e00e14a3c0a80616d49de4e3b0af57"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Not run: the drill's first step, mypy green on a copy of 7816159's chatmon/ and pyproject.toml with PyQt6 6.12.1's stubs, failed (chatmon/layer.py:824 and :917: Need type annotation for \"app\"), so there was nothing to turn red. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again, with this drill."
+    },
+    {
+      "id": "W5-BEH-CI-WINDOWS",
+      "acceptance": [
+        "M10-01.A1",
+        "M10-01.A2"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43778643147",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133010594285",
+        "--log"
+      ],
+      "method": "main's CI run 43778643147 on 7816159, job test (windows-latest, 3.14), which installs packaging/requirements-test.txt with --require-hashes (comtypes 1.4.17 for Windows): tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement ran, not skipped, and passed, as on the 3.11 and 3.15 legs; M4A's note is answered in CI. tests/test_requirements.py's lock tests passed on every leg. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133010594285-test-windows-latest-3.14.log",
+        "sha256": "5ca16d4312cd544bb180a69df6706a080c09b4c6916f91794186841f6e19b225"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1fdc95b846daa3bf789bee59f26706d9b835dd600d162e0c74a215139eb8724a",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-CI-TYPES-LINUX",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43778643147",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133010594218",
+        "--log"
+      ],
+      "method": "main's CI run 43778643147 on 7816159, job types (linux): mypy --platform linux with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W5-BEH-MYPY-6121, here. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133010594218-types-linux.log",
+        "sha256": "37e9e18642eb301d0125ee9d255b7a82b938bade08f8ae7cc46f738a45425f6c"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-CI-TYPES-WIN32",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43778643147",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133010594268",
+        "--log"
+      ],
+      "method": "main's CI run 43778643147 on 7816159, job types (win32): mypy --platform win32 with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W5-BEH-MYPY-6121, here. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133010594268-types-win32.log",
+        "sha256": "89338ffafb60862370e5240a108d91d60e77996f9830dbcd55c9cf136c1d5ad8"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-BEH-CI-TYPES-DARWIN",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "stale",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43778643147",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133010594142",
+        "--log"
+      ],
+      "method": "main's CI run 43778643147 on 7816159, job types (darwin): mypy --platform darwin with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W5-BEH-MYPY-6121, here. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133010594142-types-darwin.log",
+        "sha256": "346e1388d48335f6299776c28bd479fef71d6fb2661d100076e9322c23f27a50"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": null,
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-01-announcement-not-important",
+      "acceptance": [
+        "M10-01.A2"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+      ],
+      "method": "Red drill M10-01-announcement-not-important through tests/drills/run.py --python with the CI-shaped venv (m10-ci-test: packaging/requirements-test.txt installed with --require-hashes, comtypes 1.4.17) on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills-ci-venv.log",
+        "sha256": "42e22b510200c3a50ed3fdfb897f09c35a67d1284e13101144b996c18b3cef01"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1fdc95b846daa3bf789bee59f26706d9b835dd600d162e0c74a215139eb8724a",
+      "red": {
+        "mutation": "M10-01-announcement-not-important: in chatmon/winuia.py, 'IMPORTANT_ALL if important else ALL, words, activity)' became 'ALL if important else ALL, words, activity)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "'processing': 2",
+        "observed_diagnostic": "E       AssertionError: [{'kind': 4, 'processing': 2, 'words': 'Reminder. Stretch your legs.', 'activity': 'chatmon.announcement'}]",
+        "before": [
+          {
+            "path": "chatmon/winuia.py",
+            "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/winuia.py",
+            "sha256": "39cbb762d1133ff8571b0b79e9b53856841e4153b46dde4b1032075314eaf835"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/winuia.py",
+            "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-01-comtypes-left-out-of-the-dev-lock",
+      "acceptance": [
+        "M10-01.A1"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client",
+        "tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names"
+      ],
+      "method": "Red drill M10-01-comtypes-left-out-of-the-dev-lock through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1fdc95b846daa3bf789bee59f26706d9b835dd600d162e0c74a215139eb8724a",
+      "red": {
+        "mutation": "M10-01-comtypes-left-out-of-the-dev-lock: in packaging/requirements-dev.txt, \"comtypes==1.4.17 ; sys_platform == 'win32' \\\\\" became \"comtypez==1.4.17 ; sys_platform == 'win32' \\\\\"",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "requirements-dev.txt doesn't lock comtypes",
+        "observed_diagnostic": "E           AssertionError: requirements-dev.txt doesn't lock comtypes",
+        "before": [
+          {
+            "path": "packaging/requirements-dev.txt",
+            "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/requirements-dev.txt",
+            "sha256": "175f9524053c95f13d54ca20991379d6a5e578b95b6d3b990bb48675856edaea"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/requirements-dev.txt",
+            "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-01-comtypes-on-every-platform",
+      "acceptance": [
+        "M10-01.A1"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client"
+      ],
+      "method": "Red drill M10-01-comtypes-on-every-platform through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1fdc95b846daa3bf789bee59f26706d9b835dd600d162e0c74a215139eb8724a",
+      "red": {
+        "mutation": "M10-01-comtypes-on-every-platform: in packaging/requirements-test.txt, \"comtypes==1.4.17 ; sys_platform == 'win32' \\\\\" became 'comtypes==1.4.17 \\\\'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone",
+        "observed_diagnostic": "E           AssertionError: requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone: comtypes==1.4.17",
+        "before": [
+          {
+            "path": "packaging/requirements-test.txt",
+            "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/requirements-test.txt",
+            "sha256": "751fb1f89357494005610a336325ba5e0cdbf208cce6e3cb0f6050deeba63226"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/requirements-test.txt",
+            "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-02-app-folder-before-qts",
+      "acceptance": [
+        "M10-02.A2"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "method": "Red drill M10-02-app-folder-before-qts through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "043f599d12350334b34c601bff23bd47859382024bb5e8e6ba584098f1a036fe",
+      "red": {
+        "mutation": "M10-02-app-folder-before-qts: in chatmon/i18n.py, '        folders.append(str(_APP_FOLDER / QT_FROZEN))' became '        folders.insert(0, str(_APP_FOLDER / QT_FROZEN))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Qt's own folder first",
+        "observed_diagnostic": ">       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], \"Qt's own folder first\"",
+        "before": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "7c5ffe671dd119f528abc21eb2a32a356940b7c7d83372aeaacb4e947c2b5577"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-02-english-carries-qts-english",
+      "acceptance": [
+        "M10-02.A1"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "method": "Red drill M10-02-english-carries-qts-english through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "043f599d12350334b34c601bff23bd47859382024bb5e8e6ba584098f1a036fe",
+      "red": {
+        "mutation": "M10-02-english-carries-qts-english: in packaging/build.py, '    for code in i18n.available(LOCALE)[1:]:' became '    for code in i18n.available(LOCALE):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "English alone: Qt's own language",
+        "observed_diagnostic": ">       assert build.qt_translations() == [], \"English alone: Qt's own language\"",
+        "before": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "5ca85c2ac70891b38351223ac5805b67b97c677796accab8e008aa6e6b25aa73"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-02-frozen-app-folder-never-looked-in",
+      "acceptance": [
+        "M10-02.A2"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "method": "Red drill M10-02-frozen-app-folder-never-looked-in through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "043f599d12350334b34c601bff23bd47859382024bb5e8e6ba584098f1a036fe",
+      "red": {
+        "mutation": "M10-02-frozen-app-folder-never-looked-in: in chatmon/i18n.py, '    if paths.frozen():' became '    if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Qt's own folder first",
+        "observed_diagnostic": ">       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], \"Qt's own folder first\"",
+        "before": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "a6c721f525eac4c2ad7d7a122d86f20ec979cd9f65e71ca00b7a800edfcdc028"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-02-nuitka-left-without-them",
+      "acceptance": [
+        "M10-02.A1"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "method": "Red drill M10-02-nuitka-left-without-them through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "043f599d12350334b34c601bff23bd47859382024bb5e8e6ba584098f1a036fe",
+      "red": {
+        "mutation": "M10-02-nuitka-left-without-them: in packaging/build.py, '\"--noinclude-qt-translations\", *nuitka_qt_translations(),' became '\"--noinclude-qt-translations\",'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "AssertionError: assert [] == ['--include-d",
+        "observed_diagnostic": "E       AssertionError: assert [] == ['--include-d...ase_pt_BR.qm']",
+        "before": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "82ede71fa4ae96eb9ffea0c8542eb2e6baf9ffd3c2fd67aca98946aec2c9430b"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-02-pyinstaller-keeps-every-language",
+      "acceptance": [
+        "M10-02.A1"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "method": "Red drill M10-02-pyinstaller-keeps-every-language through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "043f599d12350334b34c601bff23bd47859382024bb5e8e6ba584098f1a036fe",
+      "red": {
+        "mutation": "M10-02-pyinstaller-keeps-every-language: in packaging/build.py, '    kept = [d for d in datas if not (Path(d[0]).parent == i18n.QT_FROZEN and Path(d[0]).suffix == \".qm\")]' became '    kept = list(datas)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "none of Qt's translations, and everything else kept",
+        "observed_diagnostic": ">       assert build.pyinstaller_datas(hooked + own) == own, \"none of Qt's translations, and everything else kept\"",
+        "before": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "29378fc43a5ef4afcc479ae5533de29f861aa23af541badef9d1b60da4a26f66"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-02-translator-only-asks-qt",
+      "acceptance": [
+        "M10-02.A2"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "method": "Red drill M10-02-translator-only-asks-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "043f599d12350334b34c601bff23bd47859382024bb5e8e6ba584098f1a036fe",
+      "red": {
+        "mutation": "M10-02-translator-only-asks-qt: in chatmon/i18n.py, '    translator = qt_translator(qtcore, code, qt_folders(qtcore))' became '    translator = qt_translator(qtcore, code, [_qt_library_folder(qtcore)])'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "assert 'Cancel' == 'Abbrechen'",
+        "observed_diagnostic": "E       AssertionError: assert 'Cancel' == 'Abbrechen'",
+        "before": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "c7c43d10366a2c4fe2e8eeb505e451671c98af007d953a451d7e32539848217c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-M10-03-alias-not-pyqts-signal",
+      "acceptance": [
+        "M10-03.A2"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+      ],
+      "method": "Red drill M10-03-alias-not-pyqts-signal through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/drills.log",
+        "sha256": "bc2ee81cd757c967c6fef31d6c8a6da2dd32f5d3f8d006bb3e6837a630368305"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": {
+        "mutation": "M10-03-alias-not-pyqts-signal: in chatmon/qtsignal.py, '= QtCore.pyqtSignal' became '= lambda *types, **named: QtCore.pyqtSignal()'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_each_workspace_notification_is_its_own_signal",
+        "observed_diagnostic": "_____________ test_each_workspace_notification_is_its_own_signal ______________",
+        "before": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "24ddab68965c23c232333bead93acddf23d5887716f93418a095604ff14e9293"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5-RED-alias-mistyped",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "stale",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill alias-mistyped through wave5/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave5/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5/gate-drills.log",
+        "sha256": "d140e28492c613c7c01abd1da4187e6e24e00e14a3c0a80616d49de4e3b0af57"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "9d34acac5b3097195c18846db49f073022c1fc75da801106731ba199b45c2d96"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c4f07b0c25375e23faedf9de503a35ff9a0bab015cd9bd68e55d5d83585dbdb6"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "ab459115b3dbdd6111a6529eae25e8c9b75e76fb9be8c0f89865730087909a48"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "96d6028d07ad121db29d6b2236575d48fdffdfeb9b267d676c59153b0c19dedc"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "e033420a83216133054fa995a274f15cbb7dbe4d4d3be2d2a7d99c7614e69cb7",
+      "red": {
+        "mutation": "alias-mistyped: in chatmon/qtsignal.py, '= QtCore.pyqtSignal' became '= QtCore.pyqtSlot'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Incompatible types in assignment",
+        "observed_diagnostic": "chatmon\\qtsignal.py:15: error: Incompatible types in assignment (expression has type \"def pyqtSlot(*types: Any, name: str | None = ..., result: str | None = ...) -> Callable[[FuncT], FuncT]\", variable has type \"Callable[..., pyqtSignal]\")  [assignment]",
+        "before": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "704e3d0da9eef6f21940603196403dc04548e941ca0bfc31a046a21813741665"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ]
+      },
+      "reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103 (the validator's findings: inputs-stale, scope-stale)"
+    },
+    {
+      "id": "W5B-READY",
+      "acceptance": [
+        "M10-01.A1",
+        "M10-01.A2",
+        "M10-02.A1",
+        "M10-02.A2",
+        "M10-03.A1",
+        "M10-03.A2",
+        "M10-03.A3"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed; CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; df3e93c gives layer.py's two lines the second workaround, so M10-03.A1 and A3 can pass; the M4A, M6A, M6B and M8 plans it takes as inputs were re-bound first; note 2's CI entry is the coordinator's from 2026-11-28; note 4's upstream report is posted (wave5/stub-report.log).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/readiness.md",
+        "sha256": "0e03437e808cd49146e804b8c6d11c5c72c1ccb79f911c1c52648a9735e5e636"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f89d86ad0853311d2af94fd61bde7b75288282e305f5728609443011fd18a748",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-WINDOWS",
+      "acceptance": [
+        "M10-01.A1",
+        "M10-02.A1",
+        "M10-02.A2",
+        "M10-03.A2"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider"
+      ],
+      "method": "The whole suite on 56caddd's source on this Windows 11 workstation (offscreen Qt, the shared venv, BelowNormal priority, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1293 passed, 225 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. tests/test_requirements.py (M10-01.A1), tests/test_packaging.py and tests/test_i18n.py (M10-02.A1 and A2) and every signal test (M10-03.A2) are among them, as in the plan's E-suite and E-qt-translations. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/wave5b/suite-windows.log",
+        "sha256": "c1a6caa23bb50b301a8d403212a9054dd55446a660554f87776205a7168cdf8a"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f89d86ad0853311d2af94fd61bde7b75288282e305f5728609443011fd18a748",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-LOCKS",
+      "acceptance": [
+        "M10-01.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Program Files/Git/usr/bin/bash.exe",
+        "docs/delivery/reports/wave5b/run-locks.sh"
+      ],
+      "method": "The plan's E-locks again on 56caddd: uv 0.12.7 locked requirements-test.in and requirements-dev.in again in a scratch copy of packaging/ with the command the locks' headers record (--exclude-newer 2026-10-31), and both came out byte for byte the committed locks; the five files are unchanged since 45a17b3 (PR #22 added requirements-pins.in and .txt beside them); then tests/test_requirements.py, which checks the new pins lock too, passed, exit 0 (locks.log, sections 1-3).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/locks.log",
+        "sha256": "f6681147afe3a866b56f1204db8eadfb93b6f4b3f2a05a078f1182b36cdf9af0"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f226fbae0e1340b17364898ac92104ea1846beae40ef0fd6be1b446df3a20b99",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-UIA-CI-VENV",
+      "acceptance": [
+        "M10-01.A2"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-rs",
+        "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+      ],
+      "method": "The plan's E-uia-ci-venv again on 56caddd: in the venv made from packaging/requirements-test.txt with --require-hashes (%TEMP%/m10-ci-test, comtypes 1.4.17, as CI's Windows legs), the UI Automation end-to-end test ran, not skipped, and passed: a client in another process heard the announcement.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/uia-ci-venv.log",
+        "sha256": "ee53b90bb4a7be1bb4ca9ab45ac5835eb3e1827c1d95068fc0caae066f7e07d6"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f226fbae0e1340b17364898ac92104ea1846beae40ef0fd6be1b446df3a20b99",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-MYPY-611",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "docs/delivery/reports/m10/mypy_runs.py",
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "docs/delivery/reports/m10/wave5b/mypy-611.log"
+      ],
+      "method": "mypy 2.4.1 --platform linux, win32 and darwin on 56caddd's tree with the shared venv's PyQt6 6.11 stubs (M10's mypy_runs.py): no issues in 70 files on each, no module exempted.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/mypy-611.log",
+        "sha256": "9963922fcaa0fc80746ff6e13ba9275af3193b67ad2e43a6dd56d0c7d13eabc1"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-MYPY-6121",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "docs/delivery/reports/m10/mypy_runs.py",
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "docs/delivery/reports/m10/wave5b/mypy-6121.log"
+      ],
+      "method": "mypy 2.4.1 --platform linux, win32 and darwin on 56caddd's tree with the throwaway venv's PyQt6 6.12.1 stubs (%TEMP%/m10-qt6121), through M10's mypy_runs.py: 'Success: no issues found in 70 source files' on each, layer.py's two lines included now that df3e93c gave them their type (W5-BEH-MYPY-6121, the failed run at 7816159, is kept as history). No module exempted.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/mypy-6121.log",
+        "sha256": "a8f1db09f8d9279640264d5513586642518b96fc24aaa346f847466aade4c8a7"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-MAN-HOWTO",
+      "acceptance": [
+        "M10-03.A3"
+      ],
+      "kind": "manual",
+      "status": "pass",
+      "command": [],
+      "method": "Review of CONTRIBUTING.md's how-to for the next stubs and of the integration note's CI entry, line by line, against 56caddd and the commands run there (howto-review.md): mypy_runs.py with the 6.12.1 venv here, and CONTRIBUTING.md's five commands replayed as written in WSL Arch on a copy of 56caddd's tracked files (howto-replay.log): mypy finds no issues in 70 files on each platform. The sentence that mypy also passes with 6.12.1's stubs, false at 7816159 on layer.py's two lines (W5-MAN-HOWTO, kept as history), is true again.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/howto-review.md",
+        "sha256": "b9e42732f0894e7dec85c8c726bbb9c446a37d6fa0ff6957101163f67600e0f2"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-CI-WINDOWS",
+      "acceptance": [
+        "M10-01.A1",
+        "M10-01.A2"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43794815103",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133061193481",
+        "--log"
+      ],
+      "method": "PR #24's CI run 43794815103 on 56caddd, job test (windows-latest, 3.14), which installs packaging/requirements-test.txt with --require-hashes (comtypes 1.4.17 for Windows): tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement ran, not skipped, and passed, as on the 3.11 and 3.15 legs; M4A's note is answered in CI. tests/test_requirements.py's lock tests passed on every leg. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 56caddd's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-56caddd.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133061193481-test-windows-latest-3.14.log",
+        "sha256": "005241eb33ca86f41d24ac400032a18aa4d9adc37ecd396485fc8e1abddc4261"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f226fbae0e1340b17364898ac92104ea1846beae40ef0fd6be1b446df3a20b99",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-CI-TYPES-LINUX",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43794815103",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133061193311",
+        "--log"
+      ],
+      "method": "PR #24's CI run 43794815103 on 56caddd, job types (linux): mypy --platform linux with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W5B-BEH-MYPY-6121, here. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133061193311-types-linux.log",
+        "sha256": "d1712130f6ac84b15b6b1b5afeae4046571deaf4d5153855db56330d1ee05e13"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-CI-TYPES-WIN32",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43794815103",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133061193472",
+        "--log"
+      ],
+      "method": "PR #24's CI run 43794815103 on 56caddd, job types (win32): mypy --platform win32 with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W5B-BEH-MYPY-6121, here. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133061193472-types-win32.log",
+        "sha256": "620b07d8884975e205ff5b6d91a150a67a653e3a2d07e4336d65f2658c5d06af"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-BEH-CI-TYPES-DARWIN",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "43794815103",
+        "--repo",
+        "RandyNorthrup/chatmon",
+        "--job",
+        "133061193440",
+        "--log"
+      ],
+      "method": "PR #24's CI run 43794815103 on 56caddd, job types (darwin): mypy --platform darwin with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt, installed with --require-hashes) said 'Success: no issues found in 70 source files', and the job succeeded. [tool.mypy] has no overrides and no exemption list. M10-03.A1's 6.11 half, on CI; the 6.12.1 half is W5B-BEH-MYPY-6121, here. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/ci/ci-133061193440-types-darwin.log",
+        "sha256": "e8691d48d9a3fa6f575dc1cd288ca1d7654cde82bcc1bba01c76a29a4f84038f"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-01-announcement-not-important",
+      "acceptance": [
+        "M10-01.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement"
+      ],
+      "method": "Red drill M10-01-announcement-not-important through tests/drills/run.py --python with the CI-shaped venv (m10-ci-test: packaging/requirements-test.txt installed with --require-hashes, comtypes 1.4.17) on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills-ci-venv.log",
+        "sha256": "f641231097d6382866bc9fcde9dfaffb23d37d6fddf596aaafb17edebae7493e"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f226fbae0e1340b17364898ac92104ea1846beae40ef0fd6be1b446df3a20b99",
+      "red": {
+        "mutation": "M10-01-announcement-not-important: in chatmon/winuia.py, 'IMPORTANT_ALL if important else ALL, words, activity)' became 'ALL if important else ALL, words, activity)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "'processing': 2",
+        "observed_diagnostic": "E       AssertionError: [{'kind': 4, 'processing': 2, 'words': 'Reminder. Stretch your legs.', 'activity': 'chatmon.announcement'}]",
+        "before": [
+          {
+            "path": "chatmon/winuia.py",
+            "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/winuia.py",
+            "sha256": "39cbb762d1133ff8571b0b79e9b53856841e4153b46dde4b1032075314eaf835"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/winuia.py",
+            "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-01-comtypes-left-out-of-the-dev-lock",
+      "acceptance": [
+        "M10-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client",
+        "tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names"
+      ],
+      "method": "Red drill M10-01-comtypes-left-out-of-the-dev-lock through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f226fbae0e1340b17364898ac92104ea1846beae40ef0fd6be1b446df3a20b99",
+      "red": {
+        "mutation": "M10-01-comtypes-left-out-of-the-dev-lock: in packaging/requirements-dev.txt, \"comtypes==1.4.17 ; sys_platform == 'win32' \\\\\" became \"comtypez==1.4.17 ; sys_platform == 'win32' \\\\\"",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "requirements-dev.txt doesn't lock comtypes",
+        "observed_diagnostic": "E           AssertionError: requirements-dev.txt doesn't lock comtypes",
+        "before": [
+          {
+            "path": "packaging/requirements-dev.txt",
+            "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/requirements-dev.txt",
+            "sha256": "175f9524053c95f13d54ca20991379d6a5e578b95b6d3b990bb48675856edaea"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/requirements-dev.txt",
+            "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-01-comtypes-on-every-platform",
+      "acceptance": [
+        "M10-01.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client"
+      ],
+      "method": "Red drill M10-01-comtypes-on-every-platform through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements-dev.txt",
+          "sha256": "b86886c4f5f4e8998ea2d2d8e3e611dddd41ab1d45c747bf93ae032e5c6adb07"
+        },
+        {
+          "path": "packaging/requirements-test.in",
+          "sha256": "2e5ee19900964cfa23a30c32bd2edbd56f323f670e93bdb4f0f1ab1728261ed5"
+        },
+        {
+          "path": "packaging/requirements-test.txt",
+          "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/test_requirements.py",
+          "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "f226fbae0e1340b17364898ac92104ea1846beae40ef0fd6be1b446df3a20b99",
+      "red": {
+        "mutation": "M10-01-comtypes-on-every-platform: in packaging/requirements-test.txt, \"comtypes==1.4.17 ; sys_platform == 'win32' \\\\\" became 'comtypes==1.4.17 \\\\'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone",
+        "observed_diagnostic": "E           AssertionError: requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone: comtypes==1.4.17",
+        "before": [
+          {
+            "path": "packaging/requirements-test.txt",
+            "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/requirements-test.txt",
+            "sha256": "751fb1f89357494005610a336325ba5e0cdbf208cce6e3cb0f6050deeba63226"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/requirements-test.txt",
+            "sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-02-app-folder-before-qts",
+      "acceptance": [
+        "M10-02.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "method": "Red drill M10-02-app-folder-before-qts through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1bf3b957649be6f0dcf62dac868158fc30839844086ee293c014032a02b7c739",
+      "red": {
+        "mutation": "M10-02-app-folder-before-qts: in chatmon/i18n.py, '        folders.append(str(_APP_FOLDER / QT_FROZEN))' became '        folders.insert(0, str(_APP_FOLDER / QT_FROZEN))'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Qt's own folder first",
+        "observed_diagnostic": ">       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], \"Qt's own folder first\"",
+        "before": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "7c5ffe671dd119f528abc21eb2a32a356940b7c7d83372aeaacb4e947c2b5577"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-02-english-carries-qts-english",
+      "acceptance": [
+        "M10-02.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "method": "Red drill M10-02-english-carries-qts-english through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1bf3b957649be6f0dcf62dac868158fc30839844086ee293c014032a02b7c739",
+      "red": {
+        "mutation": "M10-02-english-carries-qts-english: in packaging/build.py, '    for code in i18n.available(LOCALE)[1:]:' became '    for code in i18n.available(LOCALE):'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "English alone: Qt's own language",
+        "observed_diagnostic": ">       assert build.qt_translations() == [], \"English alone: Qt's own language\"",
+        "before": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "5ca85c2ac70891b38351223ac5805b67b97c677796accab8e008aa6e6b25aa73"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-02-frozen-app-folder-never-looked-in",
+      "acceptance": [
+        "M10-02.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "method": "Red drill M10-02-frozen-app-folder-never-looked-in through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1bf3b957649be6f0dcf62dac868158fc30839844086ee293c014032a02b7c739",
+      "red": {
+        "mutation": "M10-02-frozen-app-folder-never-looked-in: in chatmon/i18n.py, '    if paths.frozen():' became '    if False:'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Qt's own folder first",
+        "observed_diagnostic": ">       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], \"Qt's own folder first\"",
+        "before": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "a6c721f525eac4c2ad7d7a122d86f20ec979cd9f65e71ca00b7a800edfcdc028"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-02-nuitka-left-without-them",
+      "acceptance": [
+        "M10-02.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "method": "Red drill M10-02-nuitka-left-without-them through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1bf3b957649be6f0dcf62dac868158fc30839844086ee293c014032a02b7c739",
+      "red": {
+        "mutation": "M10-02-nuitka-left-without-them: in packaging/build.py, '\"--noinclude-qt-translations\", *nuitka_qt_translations(),' became '\"--noinclude-qt-translations\",'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "AssertionError: assert [] == ['--include-d",
+        "observed_diagnostic": "E       AssertionError: assert [] == ['--include-d...ase_pt_BR.qm']",
+        "before": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "82ede71fa4ae96eb9ffea0c8542eb2e6baf9ffd3c2fd67aca98946aec2c9430b"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-02-pyinstaller-keeps-every-language",
+      "acceptance": [
+        "M10-02.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other"
+      ],
+      "method": "Red drill M10-02-pyinstaller-keeps-every-language through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1bf3b957649be6f0dcf62dac868158fc30839844086ee293c014032a02b7c739",
+      "red": {
+        "mutation": "M10-02-pyinstaller-keeps-every-language: in packaging/build.py, '    kept = [d for d in datas if not (Path(d[0]).parent == i18n.QT_FROZEN and Path(d[0]).suffix == \".qm\")]' became '    kept = list(datas)'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "none of Qt's translations, and everything else kept",
+        "observed_diagnostic": ">       assert build.pyinstaller_datas(hooked + own) == own, \"none of Qt's translations, and everything else kept\"",
+        "before": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "29378fc43a5ef4afcc479ae5533de29f861aa23af541badef9d1b60da4a26f66"
+          }
+        ],
+        "after": [
+          {
+            "path": "packaging/build.py",
+            "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-02-translator-only-asks-qt",
+      "acceptance": [
+        "M10-02.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder"
+      ],
+      "method": "Red drill M10-02-translator-only-asks-qt through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "chatmon/i18n.py",
+          "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/build.py",
+          "sha256": "c27e872fde954f9e9d57e142157d5400371049f09334f57e067b1c41588d01ef"
+        },
+        {
+          "path": "packaging/chatmon.spec",
+          "sha256": "0e5a8d05d49a2be6ca16fe333f2f6e0f2a0dc11db70d1a22b84ebfafb3d61afb"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_i18n.py",
+          "sha256": "4d340c2aa6c3165e315ce83d10d52e5e40f1e3d30b9ba13e3dcc5176b58ed3f7"
+        },
+        {
+          "path": "tests/test_packaging.py",
+          "sha256": "1e61439d4b2b29340d55b520c12601854ece39955a901832fcaf837726b94be1"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "1bf3b957649be6f0dcf62dac868158fc30839844086ee293c014032a02b7c739",
+      "red": {
+        "mutation": "M10-02-translator-only-asks-qt: in chatmon/i18n.py, '    translator = qt_translator(qtcore, code, qt_folders(qtcore))' became '    translator = qt_translator(qtcore, code, [_qt_library_folder(qtcore)])'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "assert 'Cancel' == 'Abbrechen'",
+        "observed_diagnostic": "E       AssertionError: assert 'Cancel' == 'Abbrechen'",
+        "before": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "c7c43d10366a2c4fe2e8eeb505e451671c98af007d953a451d7e32539848217c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/i18n.py",
+            "sha256": "d5bae28c42f81a9c5c0771c983ded3aa6e667e60b28210201cbb42fc85b12a05"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-M10-03-alias-not-pyqts-signal",
+      "acceptance": [
+        "M10-03.A2"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal"
+      ],
+      "method": "Red drill M10-03-alias-not-pyqts-signal through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/drills.log",
+        "sha256": "63ff5ebb1f8ead7bc3a68431729770cea77d2ccc538a18909b3649e76842945c"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": {
+        "mutation": "M10-03-alias-not-pyqts-signal: in chatmon/qtsignal.py, '= QtCore.pyqtSignal' became '= lambda *types, **named: QtCore.pyqtSignal()'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_each_workspace_notification_is_its_own_signal",
+        "observed_diagnostic": "_____________ test_each_workspace_notification_is_its_own_signal ______________",
+        "before": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "24ddab68965c23c232333bead93acddf23d5887716f93418a095604ff14e9293"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-alias-mistyped",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill alias-mistyped through wave5b/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave5b/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/gate-drills.log",
+        "sha256": "5c009f5e026f2451b283f876d4d187779191d186b261ba78c7f0e10d511bb2ee"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": {
+        "mutation": "alias-mistyped: in chatmon/qtsignal.py, '= QtCore.pyqtSignal' became '= QtCore.pyqtSlot'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Incompatible types in assignment",
+        "observed_diagnostic": "chatmon\\qtsignal.py:15: error: Incompatible types in assignment (expression has type \"def pyqtSlot(*types: Any, name: str | None = ..., result: str | None = ...) -> Callable[[FuncT], FuncT]\", variable has type \"Callable[..., pyqtSignal]\")  [assignment]",
+        "before": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "704e3d0da9eef6f21940603196403dc04548e941ca0bfc31a046a21813741665"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/qtsignal.py",
+            "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-constructor-untyped",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill constructor-untyped through wave5b/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave5b/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/gate-drills.log",
+        "sha256": "5c009f5e026f2451b283f876d4d187779191d186b261ba78c7f0e10d511bb2ee"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": {
+        "mutation": "constructor-untyped: in chatmon/a11y.py, 'bus: QDBusConnection = QDBusConnection.sessionBus()' became 'bus = QDBusConnection.sessionBus()'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Need type annotation for \"bus\"",
+        "observed_diagnostic": "chatmon\\a11y.py:138: error: Need type annotation for \"bus\"  [var-annotated]",
+        "before": [
+          {
+            "path": "chatmon/a11y.py",
+            "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/a11y.py",
+            "sha256": "22159745ada3c99f0569dba7ab1d4d36f8a0335823e034283734d9677a8d2787"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/a11y.py",
+            "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-null-image-unchecked",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill null-image-unchecked through wave5b/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave5b/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/gate-drills.log",
+        "sha256": "5c009f5e026f2451b283f876d4d187779191d186b261ba78c7f0e10d511bb2ee"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": {
+        "mutation": "null-image-unchecked: in chatmon/sprites.py, '    if bits is None:  # a null image: no rows' became '    if False:  # a null image: no rows'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Item \"None\" of \"voidptr | None\" has no attribute \"asstring\"",
+        "observed_diagnostic": "chatmon\\sprites.py:74: error: Item \"None\" of \"voidptr | None\" has no attribute \"asstring\"  [union-attr]",
+        "before": [
+          {
+            "path": "chatmon/sprites.py",
+            "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/sprites.py",
+            "sha256": "afe492ccc65b4ff07d23b028fc59abbf6951ee243bdb9d4932ae34e66e5fef89"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/sprites.py",
+            "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-parent-unignored",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill parent-unignored through wave5b/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave5b/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/gate-drills.log",
+        "sha256": "5c009f5e026f2451b283f876d4d187779191d186b261ba78c7f0e10d511bb2ee"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": {
+        "mutation": "parent-unignored: in chatmon/updates.py, '        super().__init__(parent)  # type: ignore[arg-type]' became '        super().__init__(parent)  # noqa: drill'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Argument 1 to \"__init__\" of \"QObject\" has incompatible type",
+        "observed_diagnostic": "chatmon\\updates.py:366: error: Argument 1 to \"__init__\" of \"QObject\" has incompatible type \"QObject | None\"; expected \"Updater\"  [arg-type]",
+        "before": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "229c91999c894cec2e2331d356d659de5cfb7189358c9bc86772b008acc5ba6f"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/updates.py",
+            "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "W5B-RED-signal-from-qtcore",
+      "acceptance": [
+        "M10-03.A1"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe",
+        "-m",
+        "mypy",
+        "--platform",
+        "linux",
+        "--no-incremental"
+      ],
+      "method": "Red drill signal-from-qtcore through wave5b/gate_drills.py (M10's gate_drills.py, copied so its logs land in wave5b/, and changed only to skip wayland-files-qt6121.diff, which the tree already has) on this Windows workstation: mypy --platform linux green on a temporary copy of chatmon/ and pyproject.toml with the stubs named (the m10-qt6121 venv's PyQt6 6.12.1, or the shared venv's 6.11), the change made and mypy failing with the stub's error, the file's bytes put back and mypy green again, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting).",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10",
+          "pytest": "9.2.0",
+          "PyQt6": "6.11.0",
+          "Qt": "6.11.2",
+          "PyQt6-next": "6.12.1",
+          "ruff": "0.17.4",
+          "mypy": "2.4.1",
+          "uv": "0.12.7"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/m10/wave5b/gate-drills.log",
+        "sha256": "5c009f5e026f2451b283f876d4d187779191d186b261ba78c7f0e10d511bb2ee"
+      },
+      "inputs": [
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
+        },
+        {
+          "path": "chatmon/a11y.py",
+          "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01"
+        },
+        {
+          "path": "chatmon/brains.py",
+          "sha256": "692d07f766f1be00f14cefc482636319b53ed477af0c79b3b59c38fa40a3e9bb"
+        },
+        {
+          "path": "chatmon/bubble.py",
+          "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
+        },
+        {
+          "path": "chatmon/chatswin.py",
+          "sha256": "e119d7d8772212fc35321d0d1417329408df7e6f9fc4bc4dc39079b722f7f744"
+        },
+        {
+          "path": "chatmon/hotkey.py",
+          "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+        },
+        {
+          "path": "chatmon/keychain.py",
+          "sha256": "819485d891d4a8db5bad6d4250bd8a573b56702d54e0ee150f23eaaf507887f1"
+        },
+        {
+          "path": "chatmon/linuxsession.py",
+          "sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771"
+        },
+        {
+          "path": "chatmon/macnative.py",
+          "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "48efdadacaee45b8e56cf9663ab6b39d2e7abcb16328382d42980d6b1518bd77"
+        },
+        {
+          "path": "chatmon/packagekit.py",
+          "sha256": "e1b2f1995f5f86efc4ea35157e1beb97709d592c6ced7bd829d7936d0607cc4d"
+        },
+        {
+          "path": "chatmon/portal.py",
+          "sha256": "445d1c6a6c7d7eb550563028697d361ab14efe740b29a3cf9f1360f6d50e518e"
+        },
+        {
+          "path": "chatmon/presence.py",
+          "sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1"
+        },
+        {
+          "path": "chatmon/qtsignal.py",
+          "sha256": "aa4984a544701256262fd1078688508cd87f725b8107cc0bfb01b03cf21a5cbf"
+        },
+        {
+          "path": "chatmon/settingswin.py",
+          "sha256": "4725b21e43efd9d655bde8b0b9c7bcbd4613d3e33710405c72898cd72a6fa04e"
+        },
+        {
+          "path": "chatmon/sound.py",
+          "sha256": "17a6ab897fd5ebdbc742babaea5af1f7798ecdefc224d83912a76ca0fb5141be"
+        },
+        {
+          "path": "chatmon/sprites.py",
+          "sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe"
+        },
+        {
+          "path": "chatmon/updates.py",
+          "sha256": "a619e20d407d185b1b93dacf0f3bc89758a9a5ae8f89ebc5773099427771ea57"
+        },
+        {
+          "path": "chatmon/wintoast.py",
+          "sha256": "e5e57cfee148a3a084e533f7c4fd893166cf52769aceba9d72c9fe265e5bda6c"
+        },
+        {
+          "path": "chatmon/winuia.py",
+          "sha256": "defe0f2a11de381e1289ef02bbe73107393425414afb9fd7a987a3e7ca59e655"
+        },
+        {
+          "path": "docs/delivery/ASSESSMENT.md",
+          "sha256": "3f50d961e313923c81d920fbd8e9caee3de8766db57c6db97dd1b75a83d22049"
+        },
+        {
+          "path": "docs/delivery/ROADMAP.md",
+          "sha256": "707da3b7b9fa99f4c09083bc0acbd866abcb7c06b61d4007ba5cdc1cbe2a39a7"
+        },
+        {
+          "path": "docs/delivery/m4a-platform-awareness.md",
+          "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
+        },
+        {
+          "path": "docs/delivery/m6a-ci-tooling.md",
+          "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
+        },
+        {
+          "path": "docs/delivery/m6b-static-analysis-logging.md",
+          "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
+        },
+        {
+          "path": "docs/delivery/m8-translation.md",
+          "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
+        },
+        {
+          "path": "docs/delivery/reports/wave4/cilog.py",
+          "sha256": "277c48f700e6c2dbd4d7f9023215d5ec3c01e1cfb48d6c5ec5a13123dd93ab2b"
+        },
+        {
+          "path": "packaging/requirements-build.txt",
+          "sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878"
+        },
+        {
+          "path": "packaging/requirements-dev.in",
+          "sha256": "18704975ac44d668322416d822cb60b9e73a86f7d54086ff57460cc052577603"
+        },
+        {
+          "path": "packaging/requirements.txt",
+          "sha256": "4efc7ab88dca615a4bf7046924db20e701af1bd7924bf38205f7648a0ed312b2"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3"
+        },
+        {
+          "path": "tests/conftest.py",
+          "sha256": "21f00681f57c439daf6eae23a37b69cd8b0837774f1c61ea861177c85cae028f"
+        },
+        {
+          "path": "tests/drills/run.py",
+          "sha256": "2909484227b450f48269dd8b703e7da1051dc6ed07088cb30235f4b28594a5cc"
+        },
+        {
+          "path": "tests/test_platform_events.py",
+          "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
+        },
+        {
+          "path": "tests/uia_client.py",
+          "sha256": "1ff003977e00e4946cb6d5f5edd57d5cd30c7df00b4cfc20bfe7c1633c4d0815"
+        }
+      ],
+      "scope_sha256": "90cccd2900ec25fdd84a61b1b46caadea02e037f9a0d248fb4d2dfd6a15aa066",
+      "red": {
+        "mutation": "signal-from-qtcore: in chatmon/hotkey.py, 'from .qtsignal import pyqtSignal' became 'from PyQt6.QtCore import pyqtSignal'",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "Missing named argument \"arguments\" for \"pyqtSignal\"",
+        "observed_diagnostic": "chatmon\\hotkey.py:460: error: Missing named argument \"arguments\" for \"pyqtSignal\"  [call-arg]",
+        "before": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "bfa007a26fde775d7be3c5f4d0e006d5655a651d43b6a86625704e3beb918838"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/hotkey.py",
+            "sha256": "cc78173770fead03f3d0ed4f006bd49bfddf1f33b73e98b57be1678978e9cfb7"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "scope_sha256": "18468a70866715bc7b0923ba266d001b2fa8498e13755eb4d64631ad0c58a5c8",
+    "scope_sha256": "f89d86ad0853311d2af94fd61bde7b75288282e305f5728609443011fd18a748",
     "inputs": [
       {
         "path": "CONTRIBUTING.md",
-        "sha256": "1f7c6d84755fadc007d43edb37d8a196ea947201c82039bfa5bdc3d7fee179b2"
+        "sha256": "a9a6592ca25adc713b3a29167adbf53447940a217962c68f293583b327dd6e2c"
       },
       {
         "path": "chatmon/a11y.py",
-        "sha256": "a5690a38a849c2554d260a02ddb03975ccbd259ccdcf72a2fe16e4befd12e84e"
+        "sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4"
       },
       {
         "path": "chatmon/app.py",
@@ -21049,7 +29856,7 @@ them.
       },
       {
         "path": "chatmon/bubble.py",
-        "sha256": "b79f4eb992691fc86dbb5d9b9a87cf905c642604b99ed02d2b0c5d1ac01b0ceb"
+        "sha256": "4d72b173e1af4f2cfa71da8fbcac9b52fe9b321aa8d6b02abb6f50c752a78805"
       },
       {
         "path": "chatmon/chatswin.py",
@@ -21073,7 +29880,7 @@ them.
       },
       {
         "path": "chatmon/macnative.py",
-        "sha256": "790d6605ca98fdd010628dee2a7c51f82ffcc0afed26203c487c7b4055ad7c29"
+        "sha256": "e481f7b676b997721637516edbf29d316c6fd3f2ef914a2e6bd0112c8faa679a"
       },
       {
         "path": "chatmon/menus.py",
@@ -21129,19 +29936,19 @@ them.
       },
       {
         "path": "docs/delivery/m4a-platform-awareness.md",
-        "sha256": "fde5d08ba60712148b05bcc094749b708ecff8751f73a6e030463986aae9b8bf"
+        "sha256": "6fcea9c905e893ba90171598d61619d88ae8964bad41f2f0a259ab4055b54967"
       },
       {
         "path": "docs/delivery/m6a-ci-tooling.md",
-        "sha256": "6e0bf5e4b20a9f8016e472e77020095cdb595b675dc1c61d0556b1094b0f5df6"
+        "sha256": "c6c0fa0f69a0a1142a0f10dc976e7a25094010c642471477025f3a1f9275f168"
       },
       {
         "path": "docs/delivery/m6b-static-analysis-logging.md",
-        "sha256": "12eb7bb6ce662033684c7fab179701320b24d7fde2ddaa2303cb491b388a9d97"
+        "sha256": "370b80f181fd276c09a8bd8fad333b434fa64d530c9cee2a9ae30d3b14782619"
       },
       {
         "path": "docs/delivery/m8-translation.md",
-        "sha256": "50fb2cb5b1dae87dfa0c94ffbbc33fc96e2f2582e5797a46569b57e08b425b2e"
+        "sha256": "57c8c5110d2b03f4bc221acd6681b3adf8a76091106e73031c5174835544ca5c"
       },
       {
         "path": "docs/delivery/reports/wave4/cilog.py",
@@ -21201,11 +30008,11 @@ them.
       },
       {
         "path": "tests/test_platform_events.py",
-        "sha256": "28ce93db3c84b3114f280679d728c19b3c3fff00e87218e9632432b46a5d2bf2"
+        "sha256": "e3fe869b5d334cf4d02788705c76d911a437379ff64e1b77805cbf649be6090f"
       },
       {
         "path": "tests/test_requirements.py",
-        "sha256": "0be1e397090e56c2e8b7aa9b9a27b7522deaaa10ac0ffcf6d654f61728f78281"
+        "sha256": "95454c99ca394718e0a2364b16a5151c33ac4b3d53da30d7aaf55fc2d811c3be"
       },
       {
         "path": "tests/uia_client.py",
@@ -21237,8 +30044,8 @@ them.
         "next_action": "From 2026-11-28 (the coordinator): packaging/requirements-types-next.in with PyQt6==6.12.1, psutil==7.2.2 and mypy==2.4.1, locked with the documented command; tests/test_requirements.py taught about it; the types job's stubs axis, as the integration note gives it."
       }
     ],
-    "next_action": "None in M10's criteria on 45a17b3. From 2026-11-28, the coordinator: the types job's check against PyQt6 6.12.1's stubs (P-CI-NEXT-STUBS, integration note 2). The owner: the upstream report on PyQt6's stubs (note 4), which needs the owner's PyQt mailing-list account.",
-    "source_revision": "45a17b37fb25590a62fe3391379f7c8d2870da29"
+    "next_action": "None in M10's criteria on 56caddd. From 2026-11-28, the coordinator: the types job's check against PyQt6 6.12.1's stubs (P-CI-NEXT-STUBS, integration note 2), which would catch a line like layer.py's in CI. Note 4's upstream report is posted (https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046579.html, 2026-11-16, after 046574 and 046578 by others) and waits on Riverbank's fix to the stubs.",
+    "source_revision": "56caddd66b69420e073e9a7d2c5ec40eabb5840b"
   }
 }
 ```

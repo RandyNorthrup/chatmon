@@ -1,0 +1,26 @@
+# GitHub repository settings, observed 2026-11-16T00:42:50Z with read-only gh api calls (the plans round for v0.10.0, 7816159)
+$ gh api repos/RandyNorthrup/chatmon --jq {default_branch, security_and_analysis}
+{"default_branch":"main","security_and_analysis":{"dependabot_security_updates":{"status":"enabled"},"secret_scanning":{"status":"enabled"},"secret_scanning_non_provider_patterns":{"status":"disabled"},"secret_scanning_push_protection":{"status":"enabled"},"secret_scanning_validity_checks":{"status":"disabled"}}}
+
+$ gh api repos/RandyNorthrup/chatmon/vulnerability-alerts -i   (204: Dependabot alerts on)
+HTTP/2.0 204 No Content
+
+$ gh api repos/RandyNorthrup/chatmon/private-vulnerability-reporting
+{"enabled":true}
+$ gh api repos/RandyNorthrup/chatmon/branches/main/protection --jq {required_status_checks: .required_status_checks.contexts, count: (.required_status_checks.contexts|length)}
+{"count":19,"required_status_checks":["coverage","distro (debian:trixie)","distro (fedora:44)","distro (ubuntu:24.04)","gnome","lint","test (macos-latest, 3.11)","test (macos-latest, 3.14)","test (macos-latest, 3.15)","test (ubuntu-24.04, 3.11)","test (ubuntu-24.04, 3.15)","test (ubuntu-24.04-arm, 3.14)","test (windows-latest, 3.11)","test (windows-latest, 3.14)","test (windows-latest, 3.15)","types (darwin)","types (linux)","types (win32)","sway"]}
+
+$ gh api repos/RandyNorthrup/chatmon/contents/.github/dependabot.yml?ref=main --jq {path, sha, size}
+{"path":".github/dependabot.yml","sha":"fe4b6fd7577d667b77e55e88060ff72e62c87df0","size":1206}
+
+$ gh api repos/RandyNorthrup/chatmon/contents/.github/workflows/pins.yml?ref=main --jq {path, sha, size}
+{"path":".github/workflows/pins.yml","sha":"3f7e1fb332388c02000841828530057a40ee8e04","size":5750}
+
+$ gh api repos/RandyNorthrup/chatmon/tags?per_page=3 --jq .[].name
+v0.10.0
+v0.9.2
+v0.9.1
+
+$ gh pr view 22 --repo RandyNorthrup/chatmon --json state,mergeCommit,baseRefName,mergedAt --jq {state, mergeCommit: .mergeCommit.oid, baseRefName, mergedAt}
+{"baseRefName":"main","mergeCommit":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","mergedAt":"2026-11-16T00:08:57Z","state":"MERGED"}
+

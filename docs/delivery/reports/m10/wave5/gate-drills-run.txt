@@ -1,0 +1,7 @@
+
+=== summary
+FAIL signal-from-qtcore: mypy isn't green on the copy
+FAIL parent-unignored: mypy isn't green on the copy
+FAIL constructor-untyped: mypy isn't green on the copy
+FAIL null-image-unchecked: mypy isn't green on the copy
+PASS alias-mistyped

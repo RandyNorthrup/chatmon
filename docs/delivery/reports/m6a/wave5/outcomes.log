@@ -1,0 +1,154 @@
+# M6A's pending operations at 7816159, observed 2026-11-16T00:39:47Z from this workstation (gh version 2.87.3 (2026-02-23))
+
+## P-RELEASE
+
+$ git ls-remote --tags origin refs/tags/v0.10.0 refs/tags/v0.10.0^{}
+867810480df7abf59eb6520aa58b810c4a875199	refs/tags/v0.10.0
+781615935a49a3dc48a1b7ab015d8ae01b1fd531	refs/tags/v0.10.0^{}
+# exit 0
+
+$ gh api repos/RandyNorthrup/chatmon/git/refs/tags/v0.10.0 --jq {ref, object}
+{"object":{"sha":"867810480df7abf59eb6520aa58b810c4a875199","type":"tag","url":"https://api.github.com/repos/RandyNorthrup/chatmon/git/tags/867810480df7abf59eb6520aa58b810c4a875199"},"ref":"refs/tags/v0.10.0"}
+# exit 0
+
+$ gh api repos/RandyNorthrup/chatmon/git/tags/867810480df7abf59eb6520aa58b810c4a875199 --jq {tag, message, object, tagger: .tagger.name}
+{"message":"Chatmon 0.10.0\n","object":{"sha":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","type":"commit","url":"https://api.github.com/repos/RandyNorthrup/chatmon/git/commits/781615935a49a3dc48a1b7ab015d8ae01b1fd531"},"tag":"v0.10.0","tagger":"Randy Northrup"}
+# exit 0
+
+$ gh run view 43778675599 --repo RandyNorthrup/chatmon --json event,headBranch,headSha,status,conclusion,createdAt,updatedAt,jobs --jq {event, headBranch, headSha, status, conclusion, createdAt, updatedAt, jobs: [.jobs[] | "\(.name): \(.conclusion)"]}
+{"conclusion":"success","createdAt":"2026-11-16T00:09:20Z","event":"push","headBranch":"v0.10.0","headSha":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","jobs":["macos (macos-15-intel): success","windows: success","linux: success","python: success","macos (macos-latest): success","sign-windows: success","test-signed-windows: success","checksums: success","attest: success","publish: success"],"status":"completed","updatedAt":"2026-11-16T00:37:26Z"}
+# exit 0
+
+$ gh release view v0.10.0 --repo RandyNorthrup/chatmon --json tagName,name,isDraft,isPrerelease,createdAt,publishedAt,url,assets --jq {tagName, name, isDraft, isPrerelease, createdAt, publishedAt, url, assets: [.assets[] | "\(.name) \(.size) \(.state)"]}
+{"assets":["chatmon-0.10.0-1.noarch.rpm 27227118 uploaded","Chatmon-0.10.0-macos-arm64.dmg 71137110 uploaded","Chatmon-0.10.0-macos-arm64.pkg 65788271 uploaded","Chatmon-0.10.0-macos-intel.dmg 76615884 uploaded","Chatmon-0.10.0-macos-intel.pkg 70782176 uploaded","chatmon-0.10.0-py3-none-any.whl 26862689 uploaded","Chatmon-0.10.0-windows-x64-setup.exe 51432000 uploaded","chatmon-0.10.0.tar.gz 27172224 uploaded","chatmon_0.10.0-1_all.deb 27104212 uploaded","SHA256SUMS.txt 862 uploaded","SHA256SUMS.txt.sig 64 uploaded"],"createdAt":"2026-11-16T00:09:14Z","isDraft":false,"isPrerelease":false,"name":"Chatmon 0.10.0","publishedAt":"2026-11-16T00:37:23Z","tagName":"v0.10.0","url":"https://github.com/RandyNorthrup/chatmon/releases/tag/v0.10.0"}
+# exit 0
+
+$ gh api repos/RandyNorthrup/chatmon/releases/tags/v0.10.0 --jq {draft, prerelease, target_commitish, immutable, body_starts: .body[0:200]}
+{"body_starts":"## New\n- **Answers appear as they're written**, with who is answering, the seconds so far, and **Stop**. Closing the ask box no longer throws an answer away: it finishes, stays in the chat, and a bubb","draft":false,"immutable":false,"prerelease":false,"target_commitish":"main"}
+# exit 0
+
+$ gh api repos/RandyNorthrup/chatmon/releases?per_page=5 --jq [.[] | "\(.tag_name) draft=\(.draft) published=\(.published_at)"]
+["v0.10.0 draft=false published=2026-11-16T00:37:23Z","v0.9.2 draft=false published=2026-11-13T16:05:18Z","v0.9.1 draft=false published=2026-11-13T02:34:17Z","v0.9.0 draft=false published=2026-11-12T23:38:42Z","v0.8.0 draft=false published=2026-11-12T06:31:28Z"]
+# exit 0
+
+$ gh release download v0.10.0 --repo RandyNorthrup/chatmon --dir C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0
+# exit 0
+
+$ sha256sum (each downloaded file)
+fd9694e2c8b866a242099151bc9963a6aabb877ca8688a815f348384fb0b6c12 *Chatmon-0.10.0-macos-arm64.dmg
+f4c8602eea34c7a4b4b4437d100ff43e87eead4e029f67b9abf3dd3eebebbb57 *Chatmon-0.10.0-macos-arm64.pkg
+dcc50f1a08b890bba65d474caefd1c939c8b27d1def55628c3d0a4aac9ceb910 *Chatmon-0.10.0-macos-intel.dmg
+92b4815ba7b93788064f7aec4754f3cef4ab595c61c4af858f75a3df5fc8fb4e *Chatmon-0.10.0-macos-intel.pkg
+9414f8cb4cf6b65471993e9b8907503dcad412c04c9161d2ac4eab37402405f5 *Chatmon-0.10.0-windows-x64-setup.exe
+4fa387e807db42a13a667425d9daeb19485805196d27ad4df0d653abe01f0dde *SHA256SUMS.txt
+d68576a0ca74fa562cf8eff4b88a57f7220b3d4208d211699c0d731f8e25aac0 *SHA256SUMS.txt.sig
+7eed2ed884514ce9ee13eadbeb010eddbd1633ca6e80ddd8c13e2082ff117e48 *chatmon-0.10.0-1.noarch.rpm
+27e5f9e7c275b0f6aace4d12509fb36ec640225c8d9ade2fdd04cc778c0720c5 *chatmon-0.10.0-py3-none-any.whl
+f555056e395153818be2b01bf59b413ebb74e1235d485de9057b580dadd0f5e1 *chatmon-0.10.0.tar.gz
+b2a330cb585117fe287400979c1c2a8e97dfb26174f3a4ef823bba1c5d70dbb0 *chatmon_0.10.0-1_all.deb
+
+$ (cd release folder) sha256sum -c SHA256SUMS.txt
+Chatmon-0.10.0-macos-arm64.dmg: OK
+Chatmon-0.10.0-macos-arm64.pkg: OK
+Chatmon-0.10.0-macos-intel.dmg: OK
+Chatmon-0.10.0-macos-intel.pkg: OK
+Chatmon-0.10.0-windows-x64-setup.exe: OK
+chatmon-0.10.0-1.noarch.rpm: OK
+chatmon-0.10.0-py3-none-any.whl: OK
+chatmon-0.10.0.tar.gz: OK
+chatmon_0.10.0-1_all.deb: OK
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/Chatmon-0.10.0-macos-arm64.dmg --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/Chatmon-0.10.0-macos-arm64.pkg --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/Chatmon-0.10.0-macos-intel.dmg --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/Chatmon-0.10.0-macos-intel.pkg --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/Chatmon-0.10.0-windows-x64-setup.exe --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/SHA256SUMS.txt --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/SHA256SUMS.txt.sig --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/chatmon-0.10.0-1.noarch.rpm --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/chatmon-0.10.0-py3-none-any.whl --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/chatmon-0.10.0.tar.gz --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+$ gh attestation verify C:/Users/Randy/AppData/Local/Temp/claude/7c6ca09538d30e43/c556eb9f-f3e9-4bef-aa5d-6224074a51c8/scratchpad/release-v0.10.0/chatmon_0.10.0-1_all.deb --repo RandyNorthrup/chatmon --format json --jq [.[] | {predicateType: .verificationResult.statement.predicateType, subject: [.verificationResult.statement.subject[] | .name], workflow: .verificationResult.signature.certificate.buildSignerURI, sourceRef: .verificationResult.signature.certificate.sourceRepositoryRef, sourceDigest: .verificationResult.signature.certificate.sourceRepositoryDigest}]
+[{"predicateType":"https://slsa.dev/provenance/v1","sourceDigest":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","sourceRef":"refs/tags/v0.10.0","subject":["Chatmon-0.10.0-macos-arm64.dmg","Chatmon-0.10.0-macos-arm64.pkg","Chatmon-0.10.0-macos-intel.dmg","Chatmon-0.10.0-macos-intel.pkg","Chatmon-0.10.0-windows-x64-setup.exe","SHA256SUMS.txt","SHA256SUMS.txt.sig","chatmon-0.10.0-1.noarch.rpm","chatmon-0.10.0-py3-none-any.whl","chatmon-0.10.0.tar.gz","chatmon_0.10.0-1_all.deb"],"workflow":"https://github.com/RandyNorthrup/chatmon/.github/workflows/packages.yml@refs/tags/v0.10.0"}]
+# exit 0
+
+## P-DEPENDABOT
+
+$ gh api repos/RandyNorthrup/chatmon/contents/.github/dependabot.yml?ref=main --jq {path, sha, size}
+{"path":".github/dependabot.yml","sha":"fe4b6fd7577d667b77e55e88060ff72e62c87df0","size":1206}
+# exit 0
+
+$ gh run list --repo RandyNorthrup/chatmon --workflow Dependabot Updates --limit 6 --json databaseId,event,headSha,conclusion,createdAt --jq [.[] | "\(.databaseId) \(.event) \(.headSha[0:7]) \(.conclusion) \(.createdAt)"]
+["43778648374 dynamic 7816159 success 2026-11-16T00:09:03Z","43756648889 dynamic 65ed989 success 2026-11-15T20:11:30Z","43756648665 dynamic 65ed989 success 2026-11-15T20:11:30Z","43756648621 dynamic 65ed989 success 2026-11-15T20:11:30Z"]
+# exit 0
+
+$ gh pr view 19 --repo RandyNorthrup/chatmon --json number,title,state,author,createdAt,closedAt,mergedAt,headRefName,files,comments --jq {number, title, state, author: .author.login, createdAt, closedAt, mergedAt, headRefName, files: [.files[].path], comments: [.comments[] | {author: .author.login, createdAt, body}]}
+{"author":"app/dependabot","closedAt":"2026-11-15T20:16:23Z","comments":[{"author":"RandyNorthrup","body":"Closing. PyQt6 6.12.0 is skipped on purpose: its own `QtDBus.pyi` has a syntax error that stops mypy, and `.github/dependabot.yml` ignores it for `/packaging`. This PR came from the `/` entry, which has no such ignore and also edits `packaging/*.in`. It moves the `.in` pins without locking the `.txt` files again, so `tests/test_requirements.py` would fail. Python pins move by hand, with `uv pip compile --universal` as CONTRIBUTING.md describes. A fix to the Dependabot config follows.","createdAt":"2026-11-15T20:16:23Z"},{"author":"dependabot","body":"This pull request was built based on a group rule. Closing it will not ignore any of these versions in future pull requests.\n\nTo ignore these dependencies, configure [ignore rules](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore) in dependabot.yml","createdAt":"2026-11-15T20:16:26Z"}],"createdAt":"2026-11-15T20:12:35Z","files":["packaging/requirements-test.in","packaging/requirements.in","pyproject.toml"],"headRefName":"dependabot/pip/qt-1f2d81b459","mergedAt":null,"number":19,"state":"CLOSED","title":"Bump the qt group with 2 updates"}
+# exit 0
+
+$ gh pr view 20 --repo RandyNorthrup/chatmon --json number,title,state,author,createdAt,closedAt,mergedAt,headRefName,files,comments --jq {number, title, state, author: .author.login, createdAt, closedAt, mergedAt, headRefName, files: [.files[].path], comments: [.comments[] | {author: .author.login, createdAt, body}]}
+{"author":"app/dependabot","closedAt":"2026-11-15T20:16:27Z","comments":[{"author":"RandyNorthrup","body":"Closing. Dependabot locks `packaging/requirements.txt` again with pip-compile, but the file is a `uv pip compile --universal` lock. This version drops the macOS-only build dependencies (pyinstaller, pyinstaller-hooks-contrib, altgraph, macholib, packaging, setuptools) and nuitka's Windows-only marker, so the macOS build would break. #20 and #21 are the same change, opened twice by two config entries. Python pins move by hand, with the uv command at the top of each `.txt` (CONTRIBUTING.md, Dependencies). A fix to the Dependabot config follows.","createdAt":"2026-11-15T20:16:26Z"},{"author":"dependabot","body":"OK, I won't notify you again about this release, but will get in touch when a new version is available. If you'd rather skip all updates until the next major or minor version, let me know by commenting `@dependabot ignore this major version` or `@dependabot ignore this minor version`. You can also ignore all major, minor, or patch releases for a dependency by adding an [`ignore` condition](https://docs.github.com/en/code-security/supply-chain-security/configuration-options-for-dependency-updates#ignore) with the desired `update_types` to your config file.\n\nIf you change your mind, just re-open this PR and I'll resolve any conflicts on it.","createdAt":"2026-11-15T20:16:30Z"}],"createdAt":"2026-11-15T20:12:51Z","files":["packaging/requirements.in","packaging/requirements.txt"],"headRefName":"dependabot/pip/nuitka-4.3.4","mergedAt":null,"number":20,"state":"CLOSED","title":"Bump nuitka from 4.3.1 to 4.3.4"}
+# exit 0
+
+$ gh pr view 21 --repo RandyNorthrup/chatmon --json number,title,state,author,createdAt,closedAt,mergedAt,headRefName,files,comments --jq {number, title, state, author: .author.login, createdAt, closedAt, mergedAt, headRefName, files: [.files[].path], comments: [.comments[] | {author: .author.login, createdAt, body}]}
+{"author":"app/dependabot","closedAt":"2026-11-15T20:16:29Z","comments":[{"author":"RandyNorthrup","body":"Closing. Dependabot locks `packaging/requirements.txt` again with pip-compile, but the file is a `uv pip compile --universal` lock. This version drops the macOS-only build dependencies (pyinstaller, pyinstaller-hooks-contrib, altgraph, macholib, packaging, setuptools) and nuitka's Windows-only marker, so the macOS build would break. #20 and #21 are the same change, opened twice by two config entries. Python pins move by hand, with the uv command at the top of each `.txt` (CONTRIBUTING.md, Dependencies). A fix to the Dependabot config follows.","createdAt":"2026-11-15T20:16:29Z"},{"author":"dependabot","body":"OK, I won't notify you again about this release, but will get in touch when a new version is available. If you'd rather skip all updates until the next major or minor version, let me know by commenting `@dependabot ignore this major version` or `@dependabot ignore this minor version`. You can also ignore all major, minor, or patch releases for a dependency by adding an [`ignore` condition](https://docs.github.com/en/code-security/supply-chain-security/configuration-options-for-dependency-updates#ignore) with the desired `update_types` to your config file.\n\nIf you change your mind, just re-open this PR and I'll resolve any conflicts on it.","createdAt":"2026-11-15T20:16:32Z"}],"createdAt":"2026-11-15T20:12:51Z","files":["packaging/requirements.in","packaging/requirements.txt"],"headRefName":"dependabot/pip/packaging/nuitka-4.3.4","mergedAt":null,"number":21,"state":"CLOSED","title":"Bump nuitka from 4.3.1 to 4.3.4 in /packaging"}
+# exit 0
+
+$ gh run view 43778643021 --repo RandyNorthrup/chatmon --json workflowName,event,headBranch,headSha,status,conclusion,createdAt,jobs --jq {workflowName, event, headBranch, headSha, status, conclusion, createdAt, jobs: [.jobs[] | "\(.name): \(.conclusion)"]}
+{"conclusion":"success","createdAt":"2026-11-16T00:09:00Z","event":"push","headBranch":"main","headSha":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","jobs":["types: success","pins: skipped"],"status":"completed","workflowName":"Pins"}
+# exit 0
+
+$ gh run view 43778713259 --repo RandyNorthrup/chatmon --json workflowName,event,headBranch,headSha,status,conclusion,createdAt,jobs --jq {workflowName, event, headBranch, headSha, status, conclusion, createdAt, jobs: [.jobs[] | "\(.name): \(.conclusion)"]}
+{"conclusion":"success","createdAt":"2026-11-16T00:09:43Z","event":"workflow_dispatch","headBranch":"main","headSha":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","jobs":["pins: success","types: skipped"],"status":"completed","workflowName":"Pins"}
+# exit 0
+
+$ gh run view 43778794994 --repo RandyNorthrup/chatmon --json workflowName,event,headBranch,headSha,status,conclusion,createdAt,jobs --jq {workflowName, event, headBranch, headSha, status, conclusion, createdAt, jobs: [.jobs[] | "\(.name): \(.conclusion)"]}
+{"conclusion":"success","createdAt":"2026-11-16T00:10:29Z","event":"workflow_dispatch","headBranch":"main","headSha":"781615935a49a3dc48a1b7ab015d8ae01b1fd531","jobs":["pins: success","types: skipped"],"status":"completed","workflowName":"Pins"}
+# exit 0
+
+$ gh issue view 23 --repo RandyNorthrup/chatmon --json number,title,state,author,createdAt,updatedAt,closedAt,body,comments --jq {number, title, state, author: .author.login, createdAt, updatedAt, closedAt, comments: (.comments | length), body}
+{"author":"app/github-actions","body":"# Python pins ready to move\n\nuv 0.13.6 locked each list in packaging/ again with every pin set free (its environment marker kept), taking only releases uploaded before 2026-11-02T00:10:00Z, 14 days back. This is what would change.\n\n## Pins\n\n| Package | Now | Proposed | Locks | Pinned in |\n| --- | --- | --- | --- | --- |\n| nuitka | 4.3.1 | 4.3.4 | requirements.txt | requirements.in |\n\n## Held back\n\n- PyQt6 6.12.0 is skipped: its own QtDBus.pyi has a syntax error that stops mypy before it reads anything, so every types job would fail; 6.12.1 fixes it (docs/delivery/m10-followups.md).\n\n## Moving them\n\nRun this from the repository's root, then review the diff and commit it:\n\n```sh\npython packaging/pins.py --apply --cutoff 2026-11-02T00:10:00Z\n```\n\nThat moves each pin above in packaging/requirements*.in (and pyproject.toml's dev extra), then locks each list again in packaging/ with the command at the top of its .txt, the cutoff set:\n\n```sh\ncd packaging\nuv pip compile requirements.in -o requirements.txt --universal --python-version 3.14 --generate-hashes --exclude-newer 2026-11-02T00:10:00Z\n```\n\nRun by hand after moving the pins, these commands move only what the new pins need; --apply first hands uv the versions above, so it locks exactly this report.\n\n_packaging/pins.py wrote this; .github/workflows/pins.yml runs it every week and keeps one issue with its report while something can move._\n\nFrom [this run](https://github.com/RandyNorthrup/chatmon/actions/runs/43778794994).\n","closedAt":null,"comments":0,"createdAt":"2026-11-16T00:10:09Z","number":23,"state":"OPEN","title":"Python pins ready to move","updatedAt":"2026-11-16T00:11:03Z"}
+# exit 0
+
+$ gh api graphql -f query=query { repository(owner: "RandyNorthrup", name: "chatmon") { issue(number: 23) { createdAt lastEditedAt editor { login } userContentEdits(first: 10) { totalCount nodes { createdAt editor { login } } } } } }
+{"data":{"repository":{"issue":{"createdAt":"2026-11-16T00:10:09Z","lastEditedAt":"2026-11-16T00:11:03Z","editor":{"login":"github-actions"},"userContentEdits":{"totalCount":2,"nodes":[{"createdAt":"2026-11-16T00:11:03Z","editor":{"login":"github-actions"}},{"createdAt":"2026-11-16T00:11:03Z","editor":{"login":"github-actions"}}]}}}}}# exit 0
+
+$ gh issue list --repo RandyNorthrup/chatmon --state all --search Python pins ready to move in:title --json number,title,state,author,createdAt --jq [.[] | "#\(.number) \(.state) \(.author.login) \(.createdAt) \(.title)"]
+["#23 OPEN app/github-actions 2026-11-16T00:10:09Z Python pins ready to move"]
+# exit 0
+
+$ gh pr list --repo RandyNorthrup/chatmon --author app/dependabot --state all --json number,title,state,createdAt,headRefName --jq [.[] | "#\(.number) \(.state) \(.createdAt) \(.headRefName) \(.title)"]
+["#20 CLOSED 2026-11-15T20:12:51Z dependabot/pip/nuitka-4.3.4 Bump nuitka from 4.3.1 to 4.3.4","#21 CLOSED 2026-11-15T20:12:51Z dependabot/pip/packaging/nuitka-4.3.4 Bump nuitka from 4.3.1 to 4.3.4 in /packaging","#19 CLOSED 2026-11-15T20:12:35Z dependabot/pip/qt-1f2d81b459 Bump the qt group with 2 updates"]
+# exit 0
+

@@ -1,0 +1,33 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): R-M2-01 to R-M2-20 re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and PR #22's change to chatmon/bubble.py and tests/test_ask_box.py (the ask box's title hands the keyboard to its field, for screen readers); no conflict or gap.",
+ "windows_note": "",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {},
+ "observe_add": [
+  "tests/test_ask_box.py",
+  "tests/test_bubble_safety.py",
+  "tests/test_bubble_styles.py",
+  "tests/test_contrast.py",
+  "tests/test_rich_text.py",
+  "tests/test_speech_bubble.py"
+ ],
+ "ci": [
+  {
+   "id": "W5-BEH-CI-LINUX",
+   "leg": "ubu3.15",
+   "log": "ci-133010594255-test-ubuntu-24.04-3.15.log",
+   "method": "main's CI run 43778643147 on 7816159, job test (ubuntu-24.04, 3.15). Every test in M2's six test files passed: tests/test_ask_box.py, test_bubble_safety.py, test_bubble_styles.py, test_contrast.py, test_rich_text.py and test_speech_bubble.py, 159 tests in all with none skipped (test_ask_box.py's new test_a_screen_reader_on_the_title_leaves_the_keyboard_in_the_field among them). The same was true on ubuntu 3.11, ubuntu-24.04-arm 3.14 and the ubuntu:24.04, debian:trixie and fedora:44 containers on their own Qt, and on every Windows leg."
+  },
+  {
+   "id": "W5-BEH-CI-MACOS",
+   "leg": "mac3.14",
+   "log": "ci-133010594239-test-macos-latest-3.14.log",
+   "method": "main's CI run 43778643147 on 7816159, job test (macos-latest, 3.14). Every test in M2's six test files passed (159, none skipped), as on the 3.11 and 3.15 legs."
+  }
+ ],
+ "receipts": [],
+ "pending": [],
+ "next_action": "None in M2 on 7816159."
+}

@@ -1,0 +1,7 @@
+docs/delivery/reports/m3/wave4e/drill-spec-r3.json: 27 drills kept in docs/delivery/reports/m3/wave5/drill-spec-r3.json, 0 re-aimed
+docs/delivery/reports/m3/wave4e/drill-spec-wayland.json: 3 drills kept in docs/delivery/reports/m3/wave5/drill-spec-wayland.json, 0 re-aimed
+docs/delivery/reports/m3/wave4e/drill-spec-linux-r3.json: 5 drills kept in docs/delivery/reports/m3/wave5/drill-spec-linux-r3.json, 0 re-aimed
+docs/delivery/reports/m3/wave4e/drill-spec-wayland-linux.json: 9 drills kept in docs/delivery/reports/m3/wave5/drill-spec-wayland-linux.json, 1 re-aimed
+  M3-RC-clipboard -> M3-RC-clipboard-v2: chatmon/layer.py now has a second `board.setText(text)`, in _qt_window_focused (the KWin clipboard fix), so the old text occurs twice; the v2 drill takes out the same line in copy(), found by the comment that follows it
+docs/delivery/reports/m3/wave5/drill-spec-wayland-linux.json, run in WSL: M3-RC-clipboard-v2 went green and turned tests/test_wayland.py's clipboard test red, but not tests/test_sway.py's (its mutated run passed that test). PR #22's KWin fix puts the overlay's copy on Qt's clipboard a second way, once one of Qt's windows has the keyboard (_qt_window_focused), so on sway Chatmon's own window still pastes it. The drill isn't bound.
+docs/delivery/reports/m3/wave5/drill-spec-wayland-linux-v3.json: M3-RC-clipboard-v3 takes out both board.setText(text) lines (copy() and _qt_window_focused, count 2), the whole of "Qt's clipboard is set too", for the same two tests.

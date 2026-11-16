@@ -1,0 +1,2 @@
+docs/delivery/reports/m3/wave5/drill-spec-wayland-linux.json: copied to wave5b/ without M3-RC-clipboard-v2 (it left the real sway's clipboard test green: wave5/drills-left-out.txt), with M3-RC-clipboard-v3 (wave5/drill-spec-wayland-linux-v3.json) in its place
+every other spec of M0, M3, M6A, M6B, M7, M8 and M10: copied from wave5/ byte for byte, every drill kept

@@ -1,0 +1,38 @@
+collections 1518 tests collected in 11.43s
+suite-windows.log 1293 passed, 225 skipped in 285.05s (0:04:45) # exit 0 00:28:10-00:32:57
+docs/delivery/reports/m6a/wave5/drill-spec.json exit 0 00:32:57-00:33:20 6 pass 0 fail
+docs/delivery/reports/m6a/wave5/drill-spec-pins.json exit 0 00:33:20-00:34:54 9 pass 0 fail
+docs/delivery/reports/m0/wave5/drill-spec.json exit 0 00:34:54-00:39:29 22 pass 0 fail
+docs/delivery/reports/m0/wave5/drill-spec-new.json exit 0 00:39:29-00:40:37 8 pass 0 fail
+docs/delivery/reports/m0/wave5/drill-spec-new2.json exit 0 00:40:38-00:40:47 2 pass 0 fail
+docs/delivery/reports/m2/wave5/drill-spec.json exit 0 00:40:47-00:51:04 49 pass 0 fail
+docs/delivery/reports/m3/wave5/drill-spec-r3.json exit 0 00:51:05-00:54:28 27 pass 0 fail
+docs/delivery/reports/m3/wave5/drill-spec-wayland.json exit 0 00:54:28-00:54:53 3 pass 0 fail
+docs/delivery/reports/m4a/wave5/w4-drill-spec.json exit 1 00:54:53-01:08:07 29 pass 1 fail
+docs/delivery/reports/m4a/wave5/w4-drill-spec.json --only AC-03-sleep-wake (rerun after the first run's crash in pytest's summary hook) PASS AC-03-sleep-wake
+docs/delivery/reports/m4a/wave5/readers-drill-spec.json exit 0 01:08:07-01:08:45 10 pass 0 fail
+docs/delivery/reports/m6b/wave5/drill-spec.json exit 0 01:08:45-01:15:29 21 pass 0 fail
+docs/delivery/reports/m6b/wave5/drill-spec-b.json exit 0 01:15:29-01:18:27 9 pass 0 fail
+docs/delivery/reports/m7/wave5/drill-spec.json exit 0 01:18:27-01:34:15 70 pass 0 fail
+docs/delivery/reports/m7/wave5/drill-spec-new.json exit 0 01:34:15-01:35:02 3 pass 0 fail
+docs/delivery/reports/m7/wave5/drill-spec-v3.json exit 0 01:35:02-01:35:26 2 pass 0 fail
+docs/delivery/reports/m8/wave5/drill-spec.json exit 0 01:35:26-01:37:50 23 pass 0 fail
+docs/delivery/reports/m8/wave5/drill-spec-b.json exit 0 01:37:50-01:40:49 14 pass 0 fail
+docs/delivery/reports/m8/wave5/drill-spec-c.json exit 0 01:40:49-01:41:20 4 pass 0 fail
+docs/delivery/reports/m8/wave5/drill-spec-english.json exit 0 01:41:20-01:41:29 2 pass 0 fail
+docs/delivery/reports/m10/wave5/drill-spec.json exit 0 01:41:29-01:42:19 9 pass 0 fail
+docs/delivery/reports/m10/wave5/drill-spec-ci-venv.json exit 0 01:42:20-01:42:50 1 pass 0 fail
+m6a gate drills exit 0 01:42:56-01:46:33
+m6b gate drills exit 0 01:46:33-01:48:28
+m10 gate drills exit 1 01:48:28-01:48:30
+m10 mypy 6.11 exit 0
+m10 mypy 6.12.1 exit 1
+uia-ci-venv exit 0
+m10 locks done
+m6a sde exit 0
+m6a winupdate 2 of 2 exit 0
+m6a dependabot 2 of 2 exit 0
+m10 gate drills (again, the patch step fixed in wave5/gate_drills.py) exit 0 01:49:54-01:51:15
+m6a pins tests 4 of 4 exit 0
+template exit 0
+DONE

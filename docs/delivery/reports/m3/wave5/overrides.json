@@ -1,0 +1,98 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): M3-01 to M3-15, M3-M2 and M3-RC (scope revision 3) re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three) and PR #22's KDE and Hyprland overlay fixes and NonRudeHWND mark in the files ten tasks own; no conflict or gap; M3-RC-clipboard re-aimed at both of the copy's lines (-v3).",
+ "next_action": "None in M3 on 7816159: sway is one of main's 19 required checks, and the release's compositor round ran the same checks headless on KWin and Hyprland (reports/release/compositors/). Owners named in the Integration notes keep theirs (speaking the drawn penguin menu's items to a screen reader).",
+ "drill_acceptance": {
+  "M3-RC-clipboard-v2": [
+   "AC-M3-RC-sway"
+  ],
+  "M3-RC-clipboard-v3": [
+   "AC-M3-RC-sway"
+  ]
+ },
+ "ci": {
+  "W5-BEH-CI-SWAY": {
+   "method": "main's CI run 43778643147 on 7816159, job sway (one of main's 19 required checks): a headless sway 1.9 of the tests' own on ubuntu-24.04, with CHATMON_SWAY=1 making a missing piece a failure, ran tests/test_sway.py and tests/test_wayland.py: 54 passed, 3 skipped. The overlay mapped as a layer surface sway draws and keeps out of its windows; clicks, the keyboard, the penguin's menu, the clipboard, full-screen windows, a screen going and drags all worked; buffers were the size of what is shown at 3840x2160 scale 2 and 2560x1440 scale 1.5; with a screen reader the ask box was a window sway floats, centres and focuses, and AT-SPI's registry found its field, buttons and conversation. PR #22's five new layer tests (the KWin keyboard and clipboard fixes, on the pretend compositor) passed among them. The three skips say why: wlr-protocols isn't installed (the virtual pointer's opcode check), and Orca isn't installed (the two real-Orca tests, which ran in WSL: W5-BEH-WSL-SWAY)."
+  }
+ },
+ "receipts": {
+  "W5-BEH-WSL-SUITE": {
+   "artifact": "docs/delivery/reports/wave5/suite-linux-quiet.log",
+   "status": "fail",
+   "exit_code": 1,
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "method": "The whole suite in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1, UPower 1.91.5 on the system bus, KWin 6.8.2 and Hyprland 0.57.0 installed, so tests/test_compositors.py runs; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11) on 7816159's files, through docs/delivery/reports/wave5/run-wsl-rerun.sh under nice 10, with a CHATMON_INSTANCE of its own and nothing else running on the machine: 1 failed, 1390 passed, 127 skipped. Its first run, beside the Windows runner's drills, is W5-BEH-WSL-SUITE-LOADED.",
+   "reason": "One test failed: tests/test_app_smoke.py::test_hide_menu_and_reload, whose app menu had a 'Recent messages' entry it doesn't expect (a bubble shown before the test hid the chatmon). The first run failed six others instead (W5-BEH-WSL-SUITE-LOADED). Each passed alone (wave5/suite-linux-failures-rerun.log, 6 of 6), and tests/test_app_smoke.py passed five runs in five on its own (wave5/smoke-wsl-5-runs.log, 97 passed each). In main's CI run 43778643147 the two smoke tests passed on all twelve test legs (and in the distro drill's two green runs), and the sway click test in the sway job; the compositor checks skip in CI, where KWin and Hyprland aren't installed. So the whole WSL suite has timing-sensitive smoke and compositor tests that fail now and then on WSL's /mnt/c tree; none is M3 behaviour, and M3's criteria are carried by W5-BEH-WSL-M3, W5-BEH-WSL-SWAY, the Windows suite, CI and the drills, which all pass. Next: the coordinator may make those tests' waits robust on a slow tree (reported, not changed here); then the whole WSL suite runs again."
+  },
+  "W5-BEH-WSL-SUITE-LOADED": {
+   "id": "W5-BEH-WSL-SUITE-LOADED",
+   "kind": "behavior",
+   "status": "fail",
+   "exit_code": 1,
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-04-buffers",
+    "AC-M3-04-content",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/wave5/suite-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "method": "The whole suite in WSL on 7816159's files, through docs/delivery/reports/wave5/run-wsl.sh under nice 10, while the Windows runner's drills ran on the same machine: 5 failed, 1385 passed, 127 skipped, 1 error.",
+   "reason": "Five tests failed and one errored at setup: tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else (setup: the probe said nothing in 30 s, its stack in shutil.which over a PATH of /mnt/c folders), tests/test_app_smoke.py::test_a_hook_reaches_it (the greeting still up when the hook's bubble came), and four of tests/test_compositors.py (KWin: the clipboard read empty in Chatmon's own window, and Orca's words included 'Ask Sparky'; Hyprland: a probe said nothing in 30 s, and the box wasn't yet an active window). Each passed alone with nothing else running (wave5/suite-linux-failures-rerun.log, 6 of 6). Next: as W5-BEH-WSL-SUITE."
+  },
+  "W5-BEH-WSL-M3": {
+   "method": "M3's own test files in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1; /var/tmp/plans-venv, PyQt6 6.11) on 7816159's files, through docs/delivery/reports/wave5/run-wsl.sh: every file any of M3's drills runs a test of, the real-compositor and real-Orca tests of tests/test_sway.py among them. 151 passed, 6 skipped (tests/test_clickthrough.py's Windows-only tests, PR #22's two NonRudeHWND tests among them, each with its reason), exit 0. The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere)."
+  },
+  "W5-BEH-WSL-SWAY": {
+   "method": "tests/test_sway.py and tests/test_wayland.py on their own in WSL, verbose, on 7816159's files with the real sway 1.12, at-spi2-core 2.62.1 and Orca 51.1: 57 passed, none skipped, every real-compositor test by name, the two real-Orca tests among them (the ask box as a window announced and echoing typing; drawn on the overlay, neither announced nor echoed)."
+  },
+  "W5-BEH-MEMORY": {
+   "method": "M3's memory.py on 7816159's files: a headless sway at 3840x2160 and scale 2 with a window under the overlay, the overlay's buffers read inside Chatmon at each moment: at every moment at most two buffers, sized to what is shown (384x384, 640x640, 896x768, 896x1088), 1.1 to 7.4 MB, against fb19cb9's one or two full-output 3840x2160 buffers (31.6 to 63.3 MB) in M3's memory-before--window.json. With nothing showing, 5 s on, the overlay held 2 640x640 buffers (3.1 MB) and drew 7 frames in 2 s; that is within M3-04's at most two buffers sized to what is shown. The fb19cb9 side of the comparison is M3's own memory-before--window.json, whose code (revision 2's) hasn't changed."
+  }
+ }
+}

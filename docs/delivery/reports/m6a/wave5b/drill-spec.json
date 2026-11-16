@@ -1,0 +1,85 @@
+{
+  "drills": [
+    {
+      "id": "M6A-08-glob",
+      "requirement": "M6A-08",
+      "file": "pyproject.toml",
+      "find": "\"bubbles/manifest.json\",",
+      "replace": "",
+      "test": [
+        "tests/test_package_data.py::test_every_tracked_file_of_chatmon_ships"
+      ],
+      "expect": [
+        "bubbles/manifest.json",
+        "no package-data glob in pyproject.toml takes these"
+      ]
+    },
+    {
+      "id": "M6A-01-warnings",
+      "requirement": "M6A-01",
+      "file": "chatmon/changelog.py",
+      "find": "    key = version_key(version)",
+      "replace": "    __import__(\"warnings\").warn(\"an old way to call find\", DeprecationWarning, stacklevel=2)\n    key = version_key(version)",
+      "test": [
+        "tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release"
+      ],
+      "expect": [
+        "DeprecationWarning: an old way to call find"
+      ]
+    },
+    {
+      "id": "M6A-05-qt",
+      "requirement": "M6A-05",
+      "file": "packaging/requirements-test.txt",
+      "find": "pyqt6==6.11.0 \\",
+      "replace": "pyqt6==6.12.0 \\",
+      "test": [
+        "tests/test_requirements.py::test_a_package_in_more_than_one_lock_is_the_same_version_in_each"
+      ],
+      "expect": [
+        "locked at different versions",
+        "'pyqt6': {"
+      ]
+    },
+    {
+      "id": "M6A-06-hash",
+      "requirement": "M6A-06",
+      "file": "packaging/requirements-build.txt",
+      "find": "wheel==0.48.0 \\",
+      "replace": "wheel==0.48.0  # \\",
+      "test": [
+        "tests/test_requirements.py::test_every_locked_requirement_is_pinned_and_hashed"
+      ],
+      "expect": [
+        "requirements-build.txt has no hash for ['wheel']"
+      ]
+    },
+    {
+      "id": "M6A-06-stale",
+      "requirement": "M6A-06",
+      "file": "packaging/requirements-build.txt",
+      "find": "setuptools==84.2.1 \\",
+      "replace": "setuptools==84.2.0 \\",
+      "test": [
+        "tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names"
+      ],
+      "expect": [
+        "requirements-build.txt doesn't lock these at the versions requirements-build.in pins",
+        "'setuptools': '84.2.1'"
+      ]
+    },
+    {
+      "id": "M6A-10-dev",
+      "requirement": "M6A-10",
+      "file": "pyproject.toml",
+      "find": "\"ruff==0.17.3\",",
+      "replace": "\"ruff==0.17.4\",",
+      "test": [
+        "tests/test_requirements.py::test_the_dev_extra_pins_what_ci_runs"
+      ],
+      "expect": [
+        "dev extra: ruff==0.17.4, but CI runs ruff==0.17.3"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+gnome	Set up job	﻿2026-11-16T00:09:05.5055876Z Current runner version: '2.338.2'
+gnome	Set up job	2026-11-16T00:09:05.5073404Z ##[group]Runner Image Provisioner
+gnome	Set up job	2026-11-16T00:09:05.5074210Z Hosted Compute Agent
+gnome	Set up job	2026-11-16T00:09:05.5074650Z Version: 20261103.629
+gnome	Set up job	2026-11-16T00:09:05.5075221Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+gnome	Set up job	2026-11-16T00:09:05.5075788Z Build Date: 2026-11-03T17:26:59Z
+gnome	Set up job	2026-11-16T00:09:05.5076300Z Worker ID: {e612441d-bb7a-4458-860f-aa1130a1e385}
+gnome	Set up job	2026-11-16T00:09:05.5076862Z Region: us-west-2
+gnome	Set up job	2026-11-16T00:09:05.5077259Z Cloud: AWS
+gnome	Set up job	2026-11-16T00:09:05.5077626Z ##[endgroup]
+gnome	Set up job	2026-11-16T00:09:05.5078569Z ##[group]Operating System
+gnome	Set up job	2026-11-16T00:09:05.5079015Z Ubuntu
+gnome	Set up job	2026-11-16T00:09:05.5079401Z 24.04.5
+gnome	Set up job	2026-11-16T00:09:05.5079768Z LTS
+gnome	Set up job	2026-11-16T00:09:05.5080151Z ##[endgroup]
+gnome	Set up job	2026-11-16T00:09:05.5080559Z ##[group]Runner Image
+gnome	Set up job	2026-11-16T00:09:05.5080994Z Image: ubuntu-24.04
+gnome	Set up job	2026-11-16T00:09:05.5081416Z Version: 20261111.127.1
+gnome	Set up job	2026-11-16T00:09:05.5082284Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+gnome	Set up job	2026-11-16T00:09:05.5083868Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+gnome	Set up job	2026-11-16T00:09:05.5084626Z ##[endgroup]
+gnome	Set up job	2026-11-16T00:09:05.5085508Z ##[group]GITHUB_TOKEN Permissions
+gnome	Set up job	2026-11-16T00:09:05.5087091Z Contents: read
+gnome	Set up job	2026-11-16T00:09:05.5087506Z Metadata: read
+gnome	Set up job	2026-11-16T00:09:05.5087915Z ##[endgroup]
+gnome	Set up job	2026-11-16T00:09:05.5089355Z Secret source: Actions
+gnome	Set up job	2026-11-16T00:09:05.5090058Z Cache mode: write
+gnome	Set up job	2026-11-16T00:09:05.5090544Z Prepare workflow directory
+gnome	Set up job	2026-11-16T00:09:05.5369360Z Prepare all required actions
+gnome	Set up job	2026-11-16T00:09:05.5405577Z Getting action download info
+gnome	Set up job	2026-11-16T00:09:05.8956323Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+gnome	Set up job	2026-11-16T00:09:08.0860583Z Complete job name: gnome
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:09:08.1580863Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1582435Z with:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1583491Z   persist-credentials: false
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1584432Z   sparse-checkout: /*
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1585473Z   sparse-checkout-cone-mode: false
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1586493Z   repository: RandyNorthrup/chatmon
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1593143Z   token: ***
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1593981Z   ssh-strict: true
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1594773Z   ssh-user: git
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1595567Z   clean: true
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1596310Z   fetch-depth: 1
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1597078Z   fetch-tags: false
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1597875Z   show-progress: true
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1598689Z   lfs: false
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1599455Z   submodules: false
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1600240Z   set-safe-directory: true
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1601122Z   allow-unsafe-pr-checkout: false
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1602327Z env:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1603267Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:08.1604229Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.6348085Z Syncing repository: RandyNorthrup/chatmon
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.6349463Z ##[group]Getting Git version info
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.6349914Z Working directory is '/home/runner/work/chatmon/chatmon'
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.6350430Z [command]/usr/bin/git version
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9077153Z git version 2.56.1
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9090557Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9098453Z Temporarily overriding HOME='/home/runner/work/_temp/34b3868e-3ba3-4d58-8640-a411a97b4254' before making global git config changes
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9099479Z Adding repository directory to the temporary git global config as a safe directory
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9102247Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9149238Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9151357Z ##[group]Determining repository object format
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9152401Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9153132Z ##[group]Initializing the repository
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9155965Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9933275Z hint: Using 'master' as the name for the initial branch. This default branch name
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9934283Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9934931Z hint: to use in all of your new repositories, which will suppress this warning,
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9935328Z hint: call:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9935578Z hint:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9935916Z hint: 	git config --global init.defaultBranch <name>
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9936244Z hint:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9936586Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9937065Z hint: 'development'. The just-created branch can be renamed via this command:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9937445Z hint:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9937714Z hint: 	git branch -m <name>
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9938003Z hint:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9938386Z hint: Disable this message with "git config set advice.defaultBranchName false"
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9940142Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9947944Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9990736Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9991441Z ##[group]Disabling automatic garbage collection
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:10.9993997Z [command]/usr/bin/git config --local gc.auto 0
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.0014984Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.0015641Z ##[group]Setting up auth
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.0016052Z Removing SSH command configuration
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.0018683Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.0048602Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.3911835Z Removing HTTP extra header
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.3917464Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.3945675Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4090523Z Removing includeIf entries pointing to credentials config files
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4094927Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4116532Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4261604Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4288103Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4307116Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4354269Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4367916Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4394567Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4395078Z ##[group]Fetching the repository
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.4395708Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +781615935a49a3dc48a1b7ab015d8ae01b1fd531:refs/remotes/origin/main
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9295758Z From https://github.com/RandyNorthrup/chatmon
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9296588Z  * [new ref]         781615935a49a3dc48a1b7ab015d8ae01b1fd531 -> origin/main
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9303537Z [command]/usr/bin/git branch --list --remote origin/main
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9337156Z   origin/main
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9365961Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9366455Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9367585Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9368054Z ##[group]Determining the checkout info
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9368603Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9369130Z ##[group]Setting up sparse checkout
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9369571Z [command]/usr/bin/git config core.sparseCheckout true
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9391557Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9407457Z .git/info/sparse-checkout
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9412448Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9413345Z ##[group]Checking out the ref
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:11.9416319Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9515390Z Updating files:   9% (29/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9533149Z Updating files:  10% (32/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9548565Z Updating files:  11% (35/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9555957Z Updating files:  12% (39/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9568938Z Updating files:  13% (42/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9580866Z Updating files:  14% (45/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9591685Z Updating files:  15% (48/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9609452Z Updating files:  16% (51/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9626827Z Updating files:  17% (55/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9637523Z Updating files:  18% (58/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9647801Z Updating files:  19% (61/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9659580Z Updating files:  20% (64/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9666030Z Updating files:  21% (67/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9682594Z Updating files:  22% (70/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9694290Z Updating files:  23% (74/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9704499Z Updating files:  24% (77/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9713817Z Updating files:  25% (80/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9726190Z Updating files:  26% (83/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9728427Z Updating files:  27% (86/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9735221Z Updating files:  28% (90/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9738392Z Updating files:  29% (93/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9741052Z Updating files:  30% (96/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9765605Z Updating files:  31% (99/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9767792Z Updating files:  32% (102/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9774374Z Updating files:  33% (105/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9777246Z Updating files:  34% (109/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9778719Z Updating files:  35% (112/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9780162Z Updating files:  36% (115/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9781632Z Updating files:  37% (118/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9785248Z Updating files:  38% (121/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9786793Z Updating files:  39% (125/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9791124Z Updating files:  40% (128/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9794858Z Updating files:  41% (131/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9797398Z Updating files:  42% (134/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9799646Z Updating files:  43% (137/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9804165Z Updating files:  44% (140/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9806113Z Updating files:  45% (144/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9808238Z Updating files:  46% (147/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9811224Z Updating files:  47% (150/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9817048Z Updating files:  48% (153/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9830746Z Updating files:  49% (156/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9843771Z Updating files:  50% (159/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9846089Z Updating files:  51% (163/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9848500Z Updating files:  52% (166/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9849907Z Updating files:  53% (169/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9851805Z Updating files:  54% (172/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9854867Z Updating files:  55% (175/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9857215Z Updating files:  56% (179/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9858324Z Updating files:  57% (182/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9866273Z Updating files:  58% (185/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9910235Z Updating files:  59% (188/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9910817Z Updating files:  60% (191/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9911293Z Updating files:  61% (194/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9911628Z Updating files:  62% (198/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9912217Z Updating files:  63% (201/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9913986Z Updating files:  64% (204/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9916809Z Updating files:  65% (207/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9920169Z Updating files:  66% (210/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9922005Z Updating files:  67% (214/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9923699Z Updating files:  68% (217/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9925954Z Updating files:  69% (220/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9927023Z Updating files:  70% (223/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9927683Z Updating files:  71% (226/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9929156Z Updating files:  72% (229/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9932265Z Updating files:  73% (233/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9932687Z Updating files:  74% (236/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9934710Z Updating files:  75% (239/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9939664Z Updating files:  76% (242/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9941173Z Updating files:  77% (245/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9944252Z Updating files:  78% (249/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9946416Z Updating files:  79% (252/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9947794Z Updating files:  80% (255/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9950068Z Updating files:  81% (258/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9951933Z Updating files:  82% (261/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9954877Z Updating files:  83% (264/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9956299Z Updating files:  84% (268/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9957353Z Updating files:  85% (271/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9958374Z Updating files:  86% (274/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9960655Z Updating files:  87% (277/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9963382Z Updating files:  88% (280/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9965599Z Updating files:  89% (284/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9967276Z Updating files:  90% (287/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9969047Z Updating files:  91% (290/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9970660Z Updating files:  92% (293/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9972396Z Updating files:  93% (296/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9974240Z Updating files:  94% (299/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9976033Z Updating files:  95% (303/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9981022Z Updating files:  96% (306/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9983373Z Updating files:  97% (309/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9985121Z Updating files:  98% (312/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9986200Z Updating files:  99% (315/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9986569Z Updating files: 100% (318/318)
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:12.9986930Z Updating files: 100% (318/318), done.
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0023807Z Switched to a new branch 'main'
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0031052Z branch 'main' set up to track 'origin/main'.
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0038508Z ##[endgroup]
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0088081Z [command]/usr/bin/git log -1 --format=%H
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0107918Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0116817Z ##[group]Removing auth
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0117160Z Removing SSH command configuration
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0117645Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0139700Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0300565Z Removing HTTP extra header
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0303279Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0325353Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0470565Z Removing includeIf entries pointing to credentials config files
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0473293Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0493089Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0493701Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0494484Z includeif.gitdir:/github/workspace/.git.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0494938Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0498641Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0513864Z /home/runner/work/_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0520257Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-31ade634\-16c1\-42ba\-a8e5\-e511a2837c42\.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0541583Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0556116Z /home/runner/work/_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0565929Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-31ade634\-16c1\-42ba\-a8e5\-e511a2837c42\.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0588299Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0603804Z /github/runner_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0608779Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-31ade634\-16c1\-42ba\-a8e5\-e511a2837c42\.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0629438Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0644348Z /github/runner_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0648877Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-31ade634\-16c1\-42ba\-a8e5\-e511a2837c42\.config
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0671199Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0821972Z Removing credentials config '/home/runner/work/_temp/git-credentials-31ade634-16c1-42ba-a8e5-e511a2837c42.config'
+gnome	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:13.0828037Z ##[endgroup]
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	﻿2026-11-16T00:09:13.1006671Z ##[group]Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:13.1007294Z [36;1mdocker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh[0m
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:13.5898238Z shell: /usr/bin/bash -e {0}
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:13.5898588Z env:
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:13.5899005Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:13.5899264Z ##[endgroup]
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:15.2642957Z Unable to find image 'ubuntu:24.04' locally
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:16.1111338Z 24.04: Pulling from library/ubuntu
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:16.3480995Z 26538842dfbf: Pulling fs layer
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:16.6978915Z 26538842dfbf: Download complete
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:17.2981346Z 26538842dfbf: Pull complete
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:17.3028013Z Digest: sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:17.3038694Z Status: Downloaded newer image for ubuntu:24.04
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:33.6390298Z debconf: delaying package configuration, since apt-utils is not installed
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:42.3829401Z mutter 46.2
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:43.5831046Z QProcess: Destroyed while process ("gsettings") is still running.
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:43.5831983Z QProcess: Destroyed while process ("gsettings") is still running.
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:43.5870088Z ..                                                                       [100%]
+gnome	Run docker run --rm -v "$PWD:/src:ro" ubuntu:24.04 sh /src/tests/gnome-session.sh	2026-11-16T00:09:43.5870587Z 2 passed, 25 deselected in 0.08s
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:09:44.4202468Z Post job cleanup.
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4824730Z [command]/usr/bin/git version
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4854613Z git version 2.56.1
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4877844Z Temporarily overriding HOME='/home/runner/work/_temp/ad1404d1-5091-4231-855a-32dea4422aaa' before making global git config changes
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4879254Z Adding repository directory to the temporary git global config as a safe directory
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4881699Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4904988Z Removing SSH command configuration
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4909472Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.4932432Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.5083204Z Removing HTTP extra header
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.5086515Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.5107955Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.5254625Z Removing includeIf entries pointing to credentials config files
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.5258746Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+gnome	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:09:44.5281847Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+gnome	Complete job	﻿2026-11-16T00:09:44.5539976Z Cleaning up orphan processes

@@ -1,0 +1,72 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 56caddd's files; nice 10; load 0.73 0.77 0.63; CHATMON_INSTANCE=plans5b-wsl-11-299133
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v /var/tmp/plans5b-flaky/test_flaky_hide_menu_drill.py --rootdir .
+============================= test session starts ==============================
+platform linux -- Python 3.14.9, pytest-9.2.0, pluggy-1.7.0 -- /var/tmp/plans-venv/bin/python
+hypothesis profile 'default'
+rootdir: /mnt/c/Users/Randy/Coding/chatmon-wt/measure
+plugins: hypothesis-6.170.14, timeout-2.4.0
+collecting ... collected 5 items
+
+::test_old_body_slow_start FAILED                                        [ 20%]
+::test_new_body[0.0] PASSED                                              [ 40%]
+::test_new_body[0.6] PASSED                                              [ 60%]
+::test_new_body[1.4] PASSED                                              [ 80%]
+::test_new_body[2.0] PASSED                                              [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_old_body_slow_start ___________________________
+
+companion = <chatmon.app.Companion object at 0x7e30699d5130>
+
+    def test_old_body_slow_start(companion):
+        c = companion
+        spin(SLOW_START)
+        c.set_hidden(True)
+        spin(1.0)
+        c.set_hidden(False)
+        c.menus.fill()
+>       assert [a.text() for a in c.menu.actions() if a.text()] == LABELS_OLD
+E       AssertionError: assert ['Ask Sparky…...essages', ...] == ['Ask Sparky…... 'Brain', ...]
+E         
+E         At index 5 diff: 'Recent messages' != 'Brain'
+E         Left contains one more item: 'Quit'
+E         
+E         Full diff: (-: missing in left side, +: extra in left side)
+E           [
+E               'Ask Sparky…',...
+E         
+E         ...Full output truncated, use '-vv' to show
+
+/var/tmp/plans5b-flaky/test_flaky_hide_menu_drill.py:32: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+This plugin does not support setting window masks
+This plugin does not support raise()
+qt.core.qobject.connect: QObject::connect: No such signal QPlatformNativeInterface::systemTrayWindowChanged(QScreen*)
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+=========================== short test summary info ============================
+FAILED ::test_old_body_slow_start - AssertionError: assert ['Ask Sparky…...es...
+========================= 1 failed, 4 passed in 19.29s =========================
+# exit 1

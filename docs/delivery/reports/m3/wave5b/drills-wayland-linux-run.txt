@@ -1,0 +1,11 @@
+
+=== summary
+PASS M3-04-content
+PASS M3-04-move-waits
+PASS M3-04-placed
+PASS M3-RC-input
+PASS M3-RC-keyboard
+PASS M3-14-sway-menu
+PASS M3-14-sway-bubble
+PASS M3-14-hosting
+PASS M3-RC-clipboard-v3

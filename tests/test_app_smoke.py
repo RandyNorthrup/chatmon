@@ -97,14 +97,17 @@ def test_local_commands_and_reminders(companion):
 
 def test_hide_menu_and_reload(companion):
     c = companion
+    # The greeting comes 1.5 s in and puts "Recent messages" in the menu: wait for it, so a slow start (a busy machine)
+    # can't land it in the middle of the test.
+    assert until(lambda: c.recent_messages())
     c.set_hidden(True)
     spin(1.0)
     assert c.behavior.hidden
     c.set_hidden(False)
     c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
-    assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
-                      "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
+    assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Recent messages", "Brain", "AI agents",
+                      "Appearance", "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
     submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
     appearance = [a.text() for a in submenu["Appearance"].actions()]
     assert appearance == ["Companion", "Bubble style", "Walk around", "Start when I log in"]

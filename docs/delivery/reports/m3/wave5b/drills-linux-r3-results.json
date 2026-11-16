@@ -1,0 +1,156 @@
+[
+  {
+    "id": "M3-04-buffers",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "MAX_BUFFERS = 2",
+      "replace": "MAX_BUFFERS = 3"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+    ],
+    "expected": [
+      "test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7495fcc1909cb2f816320f48a20654a99cd9ed598434edd5fe295302d515fa10",
+    "baseline_exit": 0,
+    "mutated_sha256": "2edef5bca901fc06a3c5a3541e5dc11d79b5f653e2105452c946a663279300fd",
+    "mutated_exit": 1,
+    "observed": "______ test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still ______",
+    "after_sha256": "7495fcc1909cb2f816320f48a20654a99cd9ed598434edd5fe295302d515fa10",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-04-trim",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "                self._buffers.remove(buf)",
+      "replace": "                pass  # drill: destroyed but still counted"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_it_keeps_two_buffers_at_most_and_lets_the_spare_go_once_still"
+    ],
+    "expected": [
+      "assert len(surf._buffers) == 1"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "7495fcc1909cb2f816320f48a20654a99cd9ed598434edd5fe295302d515fa10",
+    "baseline_exit": 0,
+    "mutated_sha256": "64160b5f977ec5fb4b36f42bfd3e5d446f4a0e8d97c53ed3943e360321a28c7d",
+    "mutated_exit": 1,
+    "observed": ">       assert len(surf._buffers) == 1 and surf._buffers[0] is surf._shown",
+    "after_sha256": "7495fcc1909cb2f816320f48a20654a99cd9ed598434edd5fe295302d515fa10",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-09-latin",
+    "requirement": "M3-09",
+    "file": "chatmon/xkb.py",
+    "mutation": {
+      "find": "            sym = self._latin_sym(xkb_code) or sym",
+      "replace": "            sym = 0 or sym"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_xkb.py::test_shortcuts_on_a_russian_layout_are_the_latin_keys",
+      "tests/test_xkb.py::test_the_latin_symbol_comes_from_the_first_layout_that_has_one"
+    ],
+    "expected": [
+      "test_shortcuts_on_a_russian_layout_are_the_latin_keys",
+      "test_the_latin_symbol_comes_from_the_first_layout_that_has_one"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d",
+    "baseline_exit": 0,
+    "mutated_sha256": "43ac52818b0be0db77e945761d42e28e7f64bf037dab0b581b42061babcd3955",
+    "mutated_exit": 1,
+    "observed": "____________ test_shortcuts_on_a_russian_layout_are_the_latin_keys _____________",
+    "after_sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-09-overlay",
+    "requirement": "M3-09",
+    "file": "chatmon/xkb.py",
+    "mutation": {
+      "find": "            sym = self._latin_sym(xkb_code) or sym",
+      "replace": "            sym = 0 or sym"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout",
+      "tests/test_overlay_stage.py::test_ctrl_v_pastes_under_a_russian_layout"
+    ],
+    "expected": [
+      "test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout",
+      "test_ctrl_v_pastes_under_a_russian_layout"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d",
+    "baseline_exit": 0,
+    "mutated_sha256": "43ac52818b0be0db77e945761d42e28e7f64bf037dab0b581b42061babcd3955",
+    "mutated_exit": 1,
+    "observed": "_______ test_shortcuts_reach_the_stage_as_latin_keys_on_a_russian_layout _______",
+    "after_sha256": "96380de631c39b6b943de59d265ba9206ca4e577c8f1adb338c682c4f67fab3d",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-10-xserver",
+    "requirement": "M3-10",
+    "file": "chatmon/clickthrough.py",
+    "mutation": {
+      "find": "        shape = device_rects(key[0], ratio)",
+      "replace": "        shape = key[0]"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_clickthrough.py::test_the_x_server_gets_the_shape_in_device_pixels"
+    ],
+    "expected": [
+      "test_the_x_server_gets_the_shape_in_device_pixels"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a833a2b8c45513bd4ed13e2dcc199bd0905b308bfea05917febd0f512b0e4353",
+    "baseline_exit": 0,
+    "mutated_sha256": "16433c59310e05add6d03a44e199f2bdf0f8afd8dc1277307e03b95301204c43",
+    "mutated_exit": 1,
+    "observed": "______________ test_the_x_server_gets_the_shape_in_device_pixels _______________",
+    "after_sha256": "a833a2b8c45513bd4ed13e2dcc199bd0905b308bfea05917febd0f512b0e4353",
+    "restored_exit": 0
+  }
+]

@@ -1,0 +1,758 @@
+{
+ "plan": "docs/delivery/m3-stage-overlay.md",
+ "section": "docs/delivery/reports/m3/wave5b/section.md",
+ "rules": {},
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {},
+ "ledger_edits": {},
+ "stale_reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, or the plans it binds, or this round's section, which every receipt's scope includes. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103",
+ "receipts": [
+  {
+   "id": "W5B-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-quiet",
+    "AC-M3-01-pointer",
+    "AC-M3-02-refresh",
+    "AC-M3-02-pixels",
+    "AC-M3-02-drag",
+    "AC-M3-03-once",
+    "AC-M3-03-cache",
+    "AC-M3-04-buffers",
+    "AC-M3-05-keys",
+    "AC-M3-05-focus",
+    "AC-M3-06-scroll",
+    "AC-M3-06-hover",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-04-content",
+    "AC-M3-14-sway",
+    "AC-M3-14-atspi",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave5b/readiness.md",
+   "method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed, no change at run time) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; no conflict or gap; M3-RC-clipboard-v3 in -v2's place."
+  },
+  {
+   "id": "W5B-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage"
+   ],
+   "artifact": "docs/delivery/reports/wave5b/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 56caddd's source on this Windows 11 workstation (offscreen Qt, the shared venv, BelowNormal priority, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1293 passed, 225 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. These are the criteria the Windows side tests (offscreen); the Linux-only and real-compositor tests skip here with their reasons, and the WSL and CI receipts carry them. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-BEH-WSL-SUITE",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-04-buffers",
+    "AC-M3-04-content",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/wave5b/suite-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1, UPower 1.91.5 on the system bus, KWin 6.8.2 and Hyprland 0.57.0 installed, so tests/test_compositors.py runs; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11) on 56caddd's files, through docs/delivery/reports/wave5b/run-wsl-suite.sh under nice 10, with a CHATMON_INSTANCE of its own and nothing else running on the machine: 1391 passed, 127 skipped. Retried at 56caddd, whose fix to test_hide_menu_and_reload (wait for the greeting) is the cause of the quiet run's failure at 7816159; the two failed runs there (W5-BEH-WSL-SUITE, W5-BEH-WSL-SUITE-LOADED) stay as history. The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere)."
+  },
+  {
+   "id": "W5B-BEH-WSL-M3",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-01-idle",
+    "AC-M3-01-pointer",
+    "AC-M3-01-quiet",
+    "AC-M3-02-drag",
+    "AC-M3-02-pixels",
+    "AC-M3-02-refresh",
+    "AC-M3-03-cache",
+    "AC-M3-03-once",
+    "AC-M3-04-buffers",
+    "AC-M3-04-content",
+    "AC-M3-05-focus",
+    "AC-M3-05-keys",
+    "AC-M3-06-hover",
+    "AC-M3-06-scroll",
+    "AC-M3-07-contrast",
+    "AC-M3-08-rows",
+    "AC-M3-09-latin",
+    "AC-M3-09-overlay",
+    "AC-M3-10-shape",
+    "AC-M3-11-still",
+    "AC-M3-12-hold",
+    "AC-M3-13-badge",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-14-unhosted",
+    "AC-M3-15-follow",
+    "AC-M3-M2-stage",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave5b/m3-tests-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-rs",
+    "tests/test_wayland.py",
+    "tests/test_xkb.py",
+    "tests/test_overlay_stage.py",
+    "tests/test_clickthrough.py",
+    "tests/test_stage_timer.py",
+    "tests/test_behavior.py",
+    "tests/test_sprites.py",
+    "tests/test_stagemenu.py",
+    "tests/test_stage_features.py",
+    "tests/test_sway.py"
+   ],
+   "exit_code": 0,
+   "method": "M3's own test files in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1; /var/tmp/plans-venv, PyQt6 6.11) on 56caddd's files, through docs/delivery/reports/wave5b/run-wsl.sh: every file any of M3's drills runs a test of, the real-compositor and real-Orca tests of tests/test_sway.py among them. 151 passed, 6 skipped (tests/test_clickthrough.py's Windows-only tests, each with its reason), exit 0. The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere)."
+  },
+  {
+   "id": "W5B-BEH-WSL-SWAY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-04-content",
+    "AC-M3-14-atspi",
+    "AC-M3-14-sway",
+    "AC-M3-RC-sway"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave5b/sway-tests-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-p",
+    "no:cacheprovider",
+    "-v",
+    "-rs",
+    "tests/test_sway.py",
+    "tests/test_wayland.py"
+   ],
+   "exit_code": 0,
+   "method": "tests/test_sway.py and tests/test_wayland.py on their own in WSL, verbose, on 56caddd's files with the real sway 1.12, at-spi2-core 2.62.1 and Orca 51.1: 57 passed, none skipped, every real-compositor test by name, the two real-Orca tests among them (the ask box as a window announced and echoing typing; drawn on the overlay, neither announced nor echoed)."
+  },
+  {
+   "id": "W5B-BEH-MEMORY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "artifact": "docs/delivery/reports/m3/wave5b/memory-after--window.json",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "docs/delivery/reports/m3/memory.py",
+    "/mnt/c/Users/Randy/Coding/chatmon-wt/measure",
+    "--window"
+   ],
+   "exit_code": 0,
+   "method": "M3's memory.py on 56caddd's files: a headless sway at 3840x2160 and scale 2 with a window under the overlay, the overlay's buffers read inside Chatmon at each moment: at every moment at most two buffers, sized to what is shown (384x384, 640x640, 896x768, 896x1088), 1.1 to 7.4 MB, against fb19cb9's one or two full-output 3840x2160 buffers (31.6 to 63.3 MB) in M3's memory-before--window.json. With nothing showing, 5 s on, the overlay held 1 640x640 buffer (1.6 MB) and drew 0 frames in 2 s; that is within M3-04's at most two buffers sized to what is shown. The fb19cb9 side of the comparison is M3's own memory-before--window.json, whose code (revision 2's) hasn't changed."
+  },
+  {
+   "id": "W5B-BEH-CI-SWAY",
+   "kind": "behavior",
+   "acceptance": [
+    "AC-M3-RC-sway",
+    "AC-M3-14-sway",
+    "AC-M3-14-atspi",
+    "AC-M3-04-content"
+   ],
+   "artifact": "docs/delivery/reports/m3/ci/ci-133061193363-sway.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43794815103",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133061193363",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "PR #24's CI run 43794815103 on 56caddd, job sway (one of main's 19 required checks): a headless sway 1.9 of the tests' own on ubuntu-24.04, with CHATMON_SWAY=1 making a missing piece a failure, ran tests/test_sway.py and tests/test_wayland.py: 54 passed, 3 skipped. The overlay mapped as a layer surface sway draws and keeps out of its windows; clicks, the keyboard, the penguin's menu, the clipboard, full-screen windows, a screen going and drags all worked; buffers were the size of what is shown at 3840x2160 scale 2 and 2560x1440 scale 1.5; with a screen reader the ask box was a window sway floats, centres and focuses, and AT-SPI's registry found its field, buttons and conversation. The three skips say why: wlr-protocols isn't installed (the virtual pointer's opcode check), and Orca isn't installed (the two real-Orca tests, which ran in WSL: W5B-BEH-WSL-SWAY). Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 56caddd's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-56caddd.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-01-idle",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-idle"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-01-idle",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-01-idle through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-01-missed",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-idle"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-01-missed",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-01-missed through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-01-pointer",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-pointer"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-01-pointer",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-01-pointer through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-01-quiet",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-01-quiet"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-01-quiet",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-01-quiet through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-02-drag",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-02-drag"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-02-drag",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-02-drag through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-02-pixels",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-02-pixels"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-02-pixels",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-02-pixels through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-02-refresh",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-02-refresh"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-02-refresh",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-02-refresh through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-03-cache",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-03-cache"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-03-cache",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-03-cache through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-03-once",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-03-once"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-03-once",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-03-once through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-04-buffers",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-buffers"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-linux-r3-results.json",
+   "drill": "M3-04-buffers",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-linux-r3.log",
+   "method": "Red drill M3-04-buffers in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-04-content",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-04-content",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-04-content in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-04-extent",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-results.json",
+   "drill": "M3-04-extent",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland.log",
+   "method": "Red drill M3-04-extent through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-04-move-waits",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-04-move-waits",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-04-move-waits in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-04-placed",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-content"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-04-placed",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-04-placed in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-04-trim",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-04-buffers"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-linux-r3-results.json",
+   "drill": "M3-04-trim",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-linux-r3.log",
+   "method": "Red drill M3-04-trim in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-05-focus",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-focus"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-05-focus",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-05-focus through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-05-keys",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-keys"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-05-keys",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-05-keys through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-05-outline",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-focus"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-05-outline",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-05-outline through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-05-route",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-05-keys"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-05-route",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-05-route through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-06-hover",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-06-hover"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-06-hover",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-06-hover through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-06-scroll",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-06-scroll"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-06-scroll",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-06-scroll through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-07-contrast",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-07-contrast"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-07-contrast",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-07-contrast through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-08-rows",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-08-rows"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-08-rows",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-08-rows through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-09-latin",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-09-latin"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-linux-r3-results.json",
+   "drill": "M3-09-latin",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-linux-r3.log",
+   "method": "Red drill M3-09-latin in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-09-overlay",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-09-overlay"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-linux-r3-results.json",
+   "drill": "M3-09-overlay",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-linux-r3.log",
+   "method": "Red drill M3-09-overlay in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-10-shape",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-10-shape"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-10-shape",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-10-shape through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-10-xserver",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-10-shape"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-linux-r3-results.json",
+   "drill": "M3-10-xserver",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-linux-r3.log",
+   "method": "Red drill M3-10-xserver in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-11-still",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-11-still"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-11-still",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-11-still through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-11-zs",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-11-still"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-11-zs",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-11-zs through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-12-hold",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-12-hold"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-12-hold",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-12-hold through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-13-badge",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-13-badge"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-13-badge",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-13-badge through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-14-bubble-clear",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-results.json",
+   "drill": "M3-14-bubble-clear",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland.log",
+   "method": "Red drill M3-14-bubble-clear through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-14-hosting",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway",
+    "AC-M3-14-atspi"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-14-hosting",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-14-hosting in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-14-menu-keys",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-results.json",
+   "drill": "M3-14-menu-keys",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland.log",
+   "method": "Red drill M3-14-menu-keys through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-14-sway-bubble",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-14-sway-bubble",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-14-sway-bubble in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-14-sway-menu",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-14-sway-menu",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-14-sway-menu in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-14-unhosted",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-14-unhosted"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-14-unhosted",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-14-unhosted through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-15-follow",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-15-follow"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-15-follow",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-15-follow through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-M2-hover",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-M2-stage"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-M2-hover",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-M2-hover through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-M2-link",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-M2-stage"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-M2-link",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-M2-link through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-M2-ring",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-M2-stage"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-r3-results.json",
+   "drill": "M3-M2-ring",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-r3.log",
+   "method": "Red drill M3-M2-ring through tests/drills/run.py on this Windows workstation, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-RC-clipboard-v3",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-RC-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-RC-clipboard-v3",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-RC-clipboard-v3 in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-RC-input",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-RC-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-RC-input",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-RC-input in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  },
+  {
+   "id": "W5B-RED-M3-RC-keyboard",
+   "kind": "red",
+   "acceptance": [
+    "AC-M3-RC-sway"
+   ],
+   "results": "docs/delivery/reports/m3/wave5b/drills-wayland-linux-results.json",
+   "drill": "M3-RC-keyboard",
+   "artifact": "docs/delivery/reports/m3/wave5b/drills-wayland-linux.log",
+   "method": "Red drill M3-RC-keyboard in WSL (Arch Linux) through docs/delivery/reports/wave4/wsl_drills.py, which hands each drill to tests/drills/run.py's own drill step, under xvfb-run -a with /var/tmp/plans-venv/bin/python, in a temporary copy of 56caddd's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 56caddd: v0.10.0's 7816159 with the coordinator's df3e93c (layer.py's two QGuiApplication.instance() calls typed, CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting)."
+  }
+ ],
+ "tasks": {},
+ "pending": [],
+ "next_action": "None in M3 on 56caddd: sway is one of main's 19 required checks, and the release's compositor round ran the same checks headless on KWin and Hyprland (reports/release/compositors/). Owners named in the Integration notes keep theirs (speaking the drawn penguin menu's items to a screen reader).",
+ "source_revision": "56caddd66b69420e073e9a7d2c5ec40eabb5840b"
+}

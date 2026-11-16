@@ -1,0 +1,433 @@
+test-signed-windows	Set up job	﻿2026-11-16T00:35:27.1276813Z Current runner version: '2.338.2'
+test-signed-windows	Set up job	2026-11-16T00:35:27.1491218Z ##[group]Runner Image Provisioner
+test-signed-windows	Set up job	2026-11-16T00:35:27.1491822Z Hosted Compute Agent
+test-signed-windows	Set up job	2026-11-16T00:35:27.1492192Z Version: 20261103.629
+test-signed-windows	Set up job	2026-11-16T00:35:27.1492562Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+test-signed-windows	Set up job	2026-11-16T00:35:27.1492994Z Build Date: 2026-11-03T17:26:59Z
+test-signed-windows	Set up job	2026-11-16T00:35:27.1493387Z Worker ID: {f10a2dfd-0229-4af2-befe-2d945ded0088}
+test-signed-windows	Set up job	2026-11-16T00:35:27.1493808Z Region: centralus
+test-signed-windows	Set up job	2026-11-16T00:35:27.1494131Z Cloud: Azure
+test-signed-windows	Set up job	2026-11-16T00:35:27.1494433Z ##[endgroup]
+test-signed-windows	Set up job	2026-11-16T00:35:27.1495231Z ##[group]Operating System
+test-signed-windows	Set up job	2026-11-16T00:35:27.1495772Z Microsoft Windows Server 2025
+test-signed-windows	Set up job	2026-11-16T00:35:27.1496264Z 10.0.26100
+test-signed-windows	Set up job	2026-11-16T00:35:27.1496724Z Datacenter
+test-signed-windows	Set up job	2026-11-16T00:35:27.1497129Z ##[endgroup]
+test-signed-windows	Set up job	2026-11-16T00:35:27.1497598Z ##[group]Runner Image
+test-signed-windows	Set up job	2026-11-16T00:35:27.1498081Z Image: windows-2025-vs2026
+test-signed-windows	Set up job	2026-11-16T00:35:27.1498580Z Version: 20261103.298.1
+test-signed-windows	Set up job	2026-11-16T00:35:27.1499607Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+test-signed-windows	Set up job	2026-11-16T00:35:27.1501539Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+test-signed-windows	Set up job	2026-11-16T00:35:27.1502484Z ##[endgroup]
+test-signed-windows	Set up job	2026-11-16T00:35:27.1503849Z ##[group]GITHUB_TOKEN Permissions
+test-signed-windows	Set up job	2026-11-16T00:35:27.1505588Z Contents: read
+test-signed-windows	Set up job	2026-11-16T00:35:27.1506204Z Metadata: read
+test-signed-windows	Set up job	2026-11-16T00:35:27.1506708Z ##[endgroup]
+test-signed-windows	Set up job	2026-11-16T00:35:27.1508655Z Secret source: Actions
+test-signed-windows	Set up job	2026-11-16T00:35:27.1509496Z Cache mode: write
+test-signed-windows	Set up job	2026-11-16T00:35:27.1510108Z Prepare workflow directory
+test-signed-windows	Set up job	2026-11-16T00:35:27.2242238Z Prepare all required actions
+test-signed-windows	Set up job	2026-11-16T00:35:27.2275020Z Getting action download info
+test-signed-windows	Set up job	2026-11-16T00:35:27.4710395Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+test-signed-windows	Set up job	2026-11-16T00:35:27.6001812Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+test-signed-windows	Set up job	2026-11-16T00:35:28.0269280Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+test-signed-windows	Set up job	2026-11-16T00:35:28.4548285Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+test-signed-windows	Set up job	2026-11-16T00:35:28.9459822Z Complete job name: test-signed-windows
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:35:29.4828718Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4830236Z with:
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4830803Z   persist-credentials: false
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4831525Z   repository: RandyNorthrup/chatmon
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4838062Z   token: ***
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4838614Z   ssh-strict: true
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4839155Z   ssh-user: git
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4839679Z   clean: true
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4840241Z   sparse-checkout-cone-mode: true
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4840923Z   fetch-depth: 1
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4841503Z   fetch-tags: false
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4842197Z   show-progress: true
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4842761Z   lfs: false
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4843297Z   submodules: false
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4843868Z   set-safe-directory: true
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4844533Z   allow-unsafe-pr-checkout: false
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4845345Z env:
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4845865Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.4846537Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.6183726Z Syncing repository: RandyNorthrup/chatmon
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.6185949Z ##[group]Getting Git version info
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.6186803Z Working directory is 'D:\a\chatmon\chatmon'
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.6594164Z [command]"C:\Program Files\Git\bin\git.exe" version
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.9526689Z git version 2.56.0.windows.4
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.9561295Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.9591676Z Temporarily overriding HOME='D:\a\_temp\467734dc-0550-4529-963e-142a0eaf2fa3' before making global git config changes
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.9640965Z Adding repository directory to the temporary git global config as a safe directory
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:29.9642473Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0065318Z Deleting the contents of 'D:\a\chatmon\chatmon'
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0069596Z ##[group]Determining repository object format
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0070858Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0071868Z ##[group]Initializing the repository
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0076976Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\chatmon\chatmon
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0774902Z Initialized empty Git repository in D:/a/chatmon/chatmon/.git/
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.0813635Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/RandyNorthrup/chatmon
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1387037Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1388210Z ##[group]Disabling automatic garbage collection
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1400107Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1692528Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1693412Z ##[group]Setting up auth
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1693973Z Removing SSH command configuration
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1703047Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:30.1966920Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:31.7263604Z Removing HTTP extra header
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:31.7271212Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:31.7541018Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.1608955Z Removing includeIf entries pointing to credentials config files
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.1617599Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.1870652Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.6205136Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.6463498Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git.path D:\a\_temp\git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.6720147Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D:\a\_temp\git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.7040279Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.7306379Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.7605744Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.7606285Z ##[group]Fetching the repository
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:32.7615460Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/tags/v0.10.0:refs/tags/v0.10.0
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4125773Z From https://github.com/RandyNorthrup/chatmon
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4126717Z  * [new tag]         v0.10.0    -> v0.10.0
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4163023Z [command]"C:\Program Files\Git\bin\git.exe" tag --list v0.10.0
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4464579Z v0.10.0
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4492205Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/tags/v0.10.0^{commit}
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4753988Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4776527Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4776854Z ##[group]Determining the checkout info
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4777311Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.4782857Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.5097941Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.5333926Z ##[group]Checking out the ref
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:36.5339164Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/tags/v0.10.0
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.5723862Z Updating files:   6% (217/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.5824015Z Updating files:   7% (224/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.5885894Z Updating files:   8% (256/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6039180Z Updating files:   9% (288/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6481272Z Updating files:  10% (320/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6524579Z Updating files:  11% (352/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6571478Z Updating files:  12% (384/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6613754Z Updating files:  13% (416/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6671775Z Updating files:  14% (448/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6711685Z Updating files:  15% (480/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6745010Z Updating files:  16% (512/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6778174Z Updating files:  17% (543/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6825506Z Updating files:  18% (575/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6899831Z Updating files:  19% (607/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6935314Z Updating files:  20% (639/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.6966953Z Updating files:  21% (671/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7003645Z Updating files:  22% (703/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7061135Z Updating files:  23% (735/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7099590Z Updating files:  24% (767/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7134015Z Updating files:  25% (799/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7212534Z Updating files:  26% (831/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7257843Z Updating files:  27% (863/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7305838Z Updating files:  28% (895/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7353042Z Updating files:  29% (927/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7389694Z Updating files:  30% (959/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7423603Z Updating files:  31% (991/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7455849Z Updating files:  32% (1023/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7516383Z Updating files:  33% (1055/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7565081Z Updating files:  34% (1086/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7606093Z Updating files:  35% (1118/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7642720Z Updating files:  36% (1150/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7677886Z Updating files:  37% (1182/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7711758Z Updating files:  38% (1214/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7748796Z Updating files:  39% (1246/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7806248Z Updating files:  40% (1278/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7849777Z Updating files:  41% (1310/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7881458Z Updating files:  42% (1342/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7915299Z Updating files:  43% (1374/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7949114Z Updating files:  44% (1406/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.7981829Z Updating files:  45% (1438/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8016037Z Updating files:  46% (1470/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8063435Z Updating files:  47% (1502/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8099402Z Updating files:  48% (1534/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8138111Z Updating files:  49% (1566/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8218587Z Updating files:  50% (1597/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8276585Z Updating files:  51% (1629/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8313388Z Updating files:  52% (1661/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8351897Z Updating files:  53% (1693/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8386952Z Updating files:  54% (1725/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8422267Z Updating files:  55% (1757/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8460603Z Updating files:  56% (1789/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8502393Z Updating files:  57% (1821/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8551062Z Updating files:  58% (1853/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8637688Z Updating files:  59% (1885/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8678603Z Updating files:  60% (1917/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8713559Z Updating files:  61% (1949/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8753382Z Updating files:  62% (1981/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8796113Z Updating files:  63% (2013/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8859034Z Updating files:  64% (2045/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8899579Z Updating files:  65% (2077/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8933938Z Updating files:  66% (2109/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.8985700Z Updating files:  67% (2140/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9021245Z Updating files:  68% (2172/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9054029Z Updating files:  69% (2204/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9089222Z Updating files:  70% (2236/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9122388Z Updating files:  71% (2268/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9159359Z Updating files:  72% (2300/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9194348Z Updating files:  73% (2332/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9243737Z Updating files:  74% (2364/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9346601Z Updating files:  75% (2396/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9413574Z Updating files:  76% (2428/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9471412Z Updating files:  77% (2460/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9502824Z Updating files:  78% (2492/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9552689Z Updating files:  79% (2524/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9585360Z Updating files:  80% (2556/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9610206Z Updating files:  81% (2588/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9642693Z Updating files:  82% (2620/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9677732Z Updating files:  83% (2652/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9712120Z Updating files:  84% (2683/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9750510Z Updating files:  85% (2715/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9816287Z Updating files:  86% (2747/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9878315Z Updating files:  87% (2779/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9938268Z Updating files:  88% (2811/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:37.9980894Z Updating files:  89% (2843/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0049762Z Updating files:  90% (2875/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0127575Z Updating files:  91% (2907/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0172939Z Updating files:  92% (2939/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0238860Z Updating files:  93% (2971/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0275066Z Updating files:  94% (3003/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0596222Z Updating files:  95% (3035/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0641056Z Updating files:  96% (3067/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0689696Z Updating files:  97% (3099/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0733288Z Updating files:  98% (3131/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0778013Z Updating files:  99% (3163/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0778268Z Updating files: 100% (3194/3194)
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0778481Z Updating files: 100% (3194/3194), done.
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0864256Z Note: switching to 'refs/tags/v0.10.0'.
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0864694Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0864814Z You are in 'detached HEAD' state. You can look around, make experimental
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0865174Z changes and commit them, and you can discard any commits you make in this
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0865569Z state without impacting any branches by switching back to a branch.
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0865848Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0866008Z If you want to create a new branch to retain commits you create, you may
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0866347Z do so (now or later) by using -c with the switch command. Example:
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0866599Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0866757Z   git switch -c <new-branch-name>
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0866911Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0866978Z Or undo this operation with:
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0867084Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0867128Z   git switch -
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0867198Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0867309Z Turn off this advice by setting config variable advice.detachedHead to false
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0867476Z 
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.0867607Z HEAD is now at 7816159 Merge pull request #22 from RandyNorthrup/release/0.10.0-fixes
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1131177Z ##[endgroup]
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1483565Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1708657Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1738014Z ##[group]Removing auth
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1738431Z Removing SSH command configuration
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1743836Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.1989541Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.5924284Z Removing HTTP extra header
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.5930461Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:38.6187521Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0497831Z Removing includeIf entries pointing to credentials config files
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0503719Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0723973Z includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0724221Z includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0724426Z includeif.gitdir:/github/workspace/.git.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0724622Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0754679Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.0974018Z D:\a\_temp\git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1003269Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git.path D\:\\a\\_temp\\git\-credentials\-1c2ef933\-5736\-4810\-ba11\-d48b04e65e37\.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1252154Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1469263Z D:\a\_temp\git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1497815Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/chatmon/chatmon/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-1c2ef933\-5736\-4810\-ba11\-d48b04e65e37\.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1744058Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1957908Z /github/runner_temp/git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.1984039Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-1c2ef933\-5736\-4810\-ba11\-d48b04e65e37\.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.2222903Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.2430869Z /github/runner_temp/git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.2457512Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-1c2ef933\-5736\-4810\-ba11\-d48b04e65e37\.config
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.2695805Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.6495446Z Removing credentials config 'D:\a\_temp\git-credentials-1c2ef933-5736-4810-ba11-d48b04e65e37.config'
+test-signed-windows	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:35:39.6504266Z ##[endgroup]
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T00:35:39.6811293Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6811550Z with:
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6811680Z   python-version: 3.14
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6812275Z   check-latest: false
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6813871Z   token: ***
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814051Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814267Z   update-environment: true
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814399Z   allow-prereleases: false
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814523Z   freethreaded: false
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814645Z env:
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814754Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.6814889Z ##[endgroup]
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.7764520Z ##[group]Installed versions
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.7907981Z Successfully set up CPython (3.14.10)
+test-signed-windows	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T00:35:39.7908385Z ##[endgroup]
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-11-16T00:35:39.8127859Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128155Z with:
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128267Z   name: windows-signed
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128381Z   path: dist
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128493Z   merge-multiple: false
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128623Z   repository: RandyNorthrup/chatmon
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128777Z   run-id: 43778675599
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8128893Z   skip-decompress: false
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8129014Z   digest-mismatch: error
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8129125Z env:
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8129233Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8129413Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8129677Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8129927Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8130150Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8130371Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.8130564Z ##[endgroup]
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:39.9224276Z Downloading single artifact
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:40.0777089Z Preparing to download the following artifacts:
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:40.0777883Z - windows-signed (ID: 14188322820, Size: 50925055, Expected Digest: sha256:efae022cd333095fe44be9ecbd5ef32dba02b5b509cb4ac7c69b1bea30b706f6)
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:40.3708297Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-e872ad98-c63d-5ef5-9e9e-5f4be99100c2/artifacts/32e3efdf96a5aced2ea420d7643bc117d27ba71c5569699ab555de33de3bab2e.zip
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:40.3709418Z Starting download of artifact to: D:\a\chatmon\chatmon\dist
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:40.6931399Z (node:6704) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:40.6931955Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:41.6220778Z SHA256 digest of downloaded artifact is efae022cd333095fe44be9ecbd5ef32dba02b5b509cb4ac7c69b1bea30b706f6
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:41.6221202Z Artifact download completed successfully.
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:41.6221396Z Total of 1 artifact(s) downloaded
+test-signed-windows	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:35:41.6227675Z Download artifact has finished successfully
+test-signed-windows	Install it, run it, uninstall it	﻿2026-11-16T00:35:41.6467847Z ##[group]Run ./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.6468579Z [36;1m./packaging/windows/test-install.ps1 (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName $env:VERSION[0m
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.6998873Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.6999462Z env:
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.6999588Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.6999793Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.7000050Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.7000308Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.7000534Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.7001048Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.7001224Z   VERSION: 0.10.0
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:41.7001369Z ##[endgroup]
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:42.4670205Z ok: the installer is signed: Valid, by CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US, timestamped by CN=Microsoft Public RSA Time Stamping Authority, OU=nShield TSS ESN:7A00-05E0-D947, OU=Microsoft America Operations, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:46.6974821Z ok: the installer finished (exit 0)
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:46.7004972Z ok: chatmon.exe and chatmonw.exe in C:\Users\runneradmin\AppData\Local\Programs\Chatmon
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:46.7015376Z ok: nothing left of an older version's PyInstaller build
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:46.7450582Z ok: the uninstaller is signed: Valid, by CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US, timestamped by CN=Microsoft Public RSA Time Stamping Authority, OU=nShield TSS ESN:A500-05E0-D947, OU=Microsoft America Operations, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:46.8625913Z ok: chatmon.exe is signed: Valid, by CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US, timestamped by CN=Microsoft Public RSA Time Stamping Authority, OU=nShield TSS ESN:A500-05E0-D947, OU=Microsoft America Operations, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:46.9875142Z ok: chatmonw.exe is signed: Valid, by CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US, timestamped by CN=Microsoft Public RSA Time Stamping Authority, OU=nShield TSS ESN:A500-05E0-D947, OU=Microsoft America Operations, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.7399604Z ok: every program and library installed is signed
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.8050459Z ok: a Start menu entry that starts chatmonw.exe
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.8273480Z ok: the Start menu entry is Chatmon's own (its AppUserModelID)
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.8301428Z ok: a desktop icon that starts chatmonw.exe
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.8355942Z ok: its folder on your PATH
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.8385413Z ok: starting at login
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:48.8455099Z ok: in Apps & features as Chatmon 0.10.0
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:50.9426968Z C:\Users\runneradmin\AppData\Local\Programs\Chatmon\chatmon.exe --version: 0.10.0
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:50.9427301Z it answered
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:50.9427430Z it quit when asked: all good
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:50.9499417Z ok: the installed Chatmon runs
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:52.0739550Z ok: its folder is gone
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:52.0744675Z ok: the Start menu entry and desktop icon are gone
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:52.0760280Z ok: PATH is as it was, type and all
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:52.0785428Z ok: it no longer starts at login
+test-signed-windows	Install it, run it, uninstall it	2026-11-16T00:35:52.0792118Z ok: it's gone from Apps & features
+test-signed-windows	Chatmon's own updater would install it	﻿2026-11-16T00:35:52.1393497Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-test.txt  # the Qt that ships, hash-locked
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1394092Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-test.txt  # the Qt that ships, hash-locked[0m
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1394473Z [36;1m$setup = (Get-Item dist/Chatmon-*-windows-x64-setup.exe).FullName[0m
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1395012Z [36;1mpython -c "import sys; from pathlib import Path; from chatmon import updates; f = Path(sys.argv[1]); print(updates.windows_signer(f)); why = updates.verify(f, updates.sha256(f), updates.WINDOWS); sys.exit(why)" $setup[0m
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1443097Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1443313Z env:
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1443432Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1443634Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1443900Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1444191Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1444426Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1444797Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:52.1444980Z ##[endgroup]
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:55.1543339Z Collecting colorama==0.4.6 (from -r packaging/requirements-test.txt (line 3))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:55.2054397Z   Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:55.2778236Z Collecting comtypes==1.4.17 (from -r packaging/requirements-test.txt (line 7))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:55.2941992Z   Downloading comtypes-1.4.17-py3-none-any.whl (298 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:55.7008986Z Collecting coverage==7.17.0 (from -r packaging/requirements-test.txt (line 11))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:55.7205551Z   Downloading coverage-7.17.0-cp314-cp314-win_amd64.whl (228 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.0026869Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-test.txt (line 132))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.0172210Z   Downloading hypothesis-6.170.14-cp314-cp314-win_amd64.whl (690 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.0528939Z      ---------------------------------------- 690.7/690.7 kB 16.0 MB/s  0:00:00
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.0813270Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-test.txt (line 217))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.0924739Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.1304303Z Collecting packaging==26.3 (from -r packaging/requirements-test.txt (line 221))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.1414900Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.1785840Z Collecting pluggy==1.7.0 (from -r packaging/requirements-test.txt (line 225))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.1896519Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.2621050Z Collecting psutil==7.2.2 (from -r packaging/requirements-test.txt (line 229))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.2739354Z   Downloading psutil-7.2.2-cp37-abi3-win_amd64.whl (137 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.3166005Z Collecting pygments==2.21.0 (from -r packaging/requirements-test.txt (line 252))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.3281863Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.3557377Z      ---------------------------------------- 1.3/1.3 MB 38.7 MB/s  0:00:00
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.3904139Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-test.txt (line 256))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.4048725Z   Downloading pyqt6-6.11.0-cp310-abi3-win_amd64.whl (6.8 MB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.5373801Z      ---------------------------------------- 6.8/6.8 MB 50.5 MB/s  0:00:00
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.5881700Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-test.txt (line 264))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:56.6031694Z   Downloading pyqt6_qt6-6.11.2-py3-none-win_amd64.whl (78.0 MB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:58.9592128Z      ---------------------------------------- 78.0/78.0 MB 33.0 MB/s  0:00:02
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.0658721Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-test.txt (line 274))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.0785949Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-win_amd64.whl (55 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.1246748Z Collecting pytest==9.2.0 (from -r packaging/requirements-test.txt (line 306))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.1353460Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.1817635Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-test.txt (line 312))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.1930099Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.2327919Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-test.txt (line 316))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.2442409Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.2869055Z Collecting tzdata==2026.6 (from -r packaging/requirements-test.txt (line 320))
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.2981735Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:35:59.5088349Z Installing collected packages: sortedcontainers, pyqt6-qt6, tzdata, pyqt6-sip, pygments, psutil, pluggy, packaging, iniconfig, hypothesis, coverage, comtypes, colorama, pytest, pyqt6, pytest-timeout
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:36:07.1988159Z 
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:36:07.2002715Z Successfully installed colorama-0.4.6 comtypes-1.4.17 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 sortedcontainers-2.4.0 tzdata-2026.6
+test-signed-windows	Chatmon's own updater would install it	2026-11-16T00:36:08.0176806Z ('Valid', 'CN=Randy Northrup, O=Randy Northrup, L=Ventura, S=California, C=US', 'CN=Microsoft ID Verified CS EOC CA 03, O=Microsoft Corporation, C=US', ['1.3.6.1.4.1.311.97.1.0', '1.3.6.1.5.5.7.3.3', '1.3.6.1.4.1.311.97.15158122.532186155.467764996.339863661'])
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-16T00:36:08.0691427Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0691743Z with:
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0691865Z   name: package-windows
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0691994Z   path: dist/*.exe
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692117Z   if-no-files-found: error
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692261Z   compression-level: 6
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692381Z   overwrite: false
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692504Z   include-hidden-files: false
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692655Z   archive: true
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692774Z env:
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0692893Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0693088Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0693356Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.14.10\x64/lib/pkgconfig
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0693630Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0693860Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0694089Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.14.10\x64
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.0694300Z ##[endgroup]
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.1948738Z With the provided path, there will be 1 file uploaded
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.1952282Z Artifact name is valid!
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.1953024Z Root directory input is valid!
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.4258198Z Uploading artifact: package-windows.zip
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:08.4281217Z Beginning upload of artifact content to blob storage
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.2766355Z Uploaded bytes 8388608
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.5964038Z Uploaded bytes 16777216
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.6302177Z Uploaded bytes 25165824
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.7289382Z Uploaded bytes 33554432
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.7696149Z Uploaded bytes 41943040
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.8371857Z Uploaded bytes 50331648
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.9395422Z Uploaded bytes 50925055
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.9835036Z Finished uploading artifact content to blob storage!
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.9837447Z SHA256 digest of uploaded artifact is 8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:09.9838889Z Finalizing artifact upload
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:10.4186083Z Artifact package-windows successfully finalized. Artifact ID 14188371673
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:10.4186560Z Artifact package-windows has been successfully uploaded! Final size is 50925055 bytes. Artifact ID is 14188371673
+test-signed-windows	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:10.4194002Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43778675599/artifacts/14188371673
+test-signed-windows	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T00:36:10.4482635Z Post job cleanup.
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:36:10.5691398Z Post job cleanup.
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.6800762Z [command]"C:\Program Files\Git\bin\git.exe" version
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7049959Z git version 2.56.0.windows.4
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7096040Z Temporarily overriding HOME='D:\a\_temp\2c576b21-31c0-489c-8866-720bb5df672a' before making global git config changes
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7096940Z Adding repository directory to the temporary git global config as a safe directory
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7102817Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\chatmon\chatmon
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7363160Z Removing SSH command configuration
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7370934Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:10.7660932Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:11.1961473Z Removing HTTP extra header
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:11.1969565Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:11.2240647Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:11.6860408Z Removing includeIf entries pointing to credentials config files
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:11.6869487Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test-signed-windows	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:11.7131559Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test-signed-windows	Complete job	﻿2026-11-16T00:36:12.2046123Z Cleaning up orphan processes

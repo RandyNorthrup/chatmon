@@ -1,0 +1,300 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed, so CONTRIBUTING.md's 6.12.1 sentence can hold; CONTRIBUTING.md's opt-in table names CHATMON_PINS_NETWORK) and 56caddd (a test's wait): neither changes what a criterion asks. M6A-02's replacement by M6A-02B, confirmed by the coordinator, stands; no conflict or gap.",
+ "windows_acceptance": [
+  "M6A-01.A3",
+  "M6A-02B.A2",
+  "M6A-05.A1",
+  "M6A-06.A1",
+  "M6A-08.A1",
+  "M6A-10.A2"
+ ],
+ "windows_note": "For these criteria the suite is the check itself: pyproject.toml's settings (every warning an error, strict marks, the time limit) hold the whole run, and tests/test_requirements.py, tests/test_package_data.py and the pins check's tests/test_pins.py passed in it.",
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py"
+ ],
+ "drill_acceptance": {
+  "M6A-01-warnings": [
+   "M6A-01.A3"
+  ],
+  "M6A-05-qt": [
+   "M6A-05.A1"
+  ],
+  "M6A-06-hash": [
+   "M6A-06.A1"
+  ],
+  "M6A-06-stale": [
+   "M6A-06.A1"
+  ],
+  "M6A-10-dev": [
+   "M6A-10.A2"
+  ],
+  "M6A-08-glob": [
+   "M6A-08.A1"
+  ],
+  "G-zizmor-unpinned": [
+   "M6A-01.A1",
+   "M6A-12.A1"
+  ],
+  "G-actionlint-expression": [
+   "M6A-12.A1"
+  ],
+  "G-mypy-gated": [
+   "M6A-13.A1"
+  ],
+  "G-pytest-strict-markers": [
+   "M6A-01.A3"
+  ],
+  "G-pip-hashes": [
+   "M6A-06.A2"
+  ],
+  "G-checksums-key": [
+   "M6A-I1.A1"
+  ],
+  "G-coverage-floor": [
+   "M6A-04.A1"
+  ],
+  "W-wheel-sounds": [
+   "M6A-08.A2"
+  ],
+  "W-entry-points": [
+   "M6A-09.A1"
+  ],
+  "W-twine-markup": [
+   "M6A-08.A2"
+  ],
+  "W4-M6A-03-distro-fails-on-a-failed-test": [
+   "M6A-03.A1"
+  ],
+  "PINS-skip": [
+   "M6A-02B.A2"
+  ],
+  "PINS-qt-group": [
+   "M6A-02B.A2"
+  ],
+  "PINS-universal": [
+   "M6A-02B.A2"
+  ],
+  "PINS-cooldown": [
+   "M6A-02B.A2"
+  ],
+  "PINS-cutoff-to-uv": [
+   "M6A-02B.A2"
+  ],
+  "PINS-backwards": [
+   "M6A-02B.A2"
+  ],
+  "PINS-one-version": [
+   "M6A-02B.A2"
+  ],
+  "PINS-dev-extra": [
+   "M6A-02B.A2"
+  ],
+  "PINS-seed": [
+   "M6A-02B.A2"
+  ]
+ },
+ "results_where": {
+  "gate-drills-results.json": "through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6a/gate_drills.py in wave5b/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: the gate green on a temporary copy, the violation put in and the gate failing with the expected finding, the file's bytes put back and the gate green again, the tree's file checked unchanged"
+ },
+ "drill_method": {
+  "W4-M6A-03-distro-fails-on-a-failed-test": "Red drill on .github/scripts/distro-tests.sh as CI's distro jobs run it (docs/delivery/reports/m6a/wave4f/distro_drill.sh, in WSL with podman 6.2.0). Each run was a fresh debian:trixie container on its own PyQt6, against a copy of 56caddd's files with LF as git stores them. The script went green; then red, with tests/test_cli.py's '--help' assertion made '== 1' in the copy, so the script failed and the job would; then green again, with the file's bytes put back and checked by SHA-256. The three runs' logs are distro-drill-green.log, -red.log and -restored.log, beside the summary."
+ },
+ "observe_add": [
+  "tests/test_requirements.py",
+  "tests/test_package_data.py",
+  "tests/test_pins.py"
+ ],
+ "ci": [
+  {
+   "id": "W5B-BEH-CI-LINT",
+   "leg": "ubu3.15",
+   "log": "ci-133061193403-lint.log",
+   "acceptance": [
+    "M6A-01.A1",
+    "M6A-12.A1"
+   ],
+   "no_cilog": true,
+   "method": "PR #24's CI run 43794815103 on 56caddd, job lint. Two steps ran on .github and passed: 'actionlint, on the workflows (and shellcheck, the runner's, on their scripts)' and 'zizmor, the workflows' security audit'. zizmor v1.31.1 completed .github/dependabot.yml, ci.yml, packages.yml and the new pins.yml with no finding, and the job succeeded. These clean runs check that every action is pinned to a commit SHA and credentials aren't persisted, and they are themselves the actionlint and zizmor runs in CI."
+  },
+  {
+   "id": "W5B-BEH-CI-DISTRO-UBUNTU",
+   "leg": "ubuntu",
+   "log": "ci-133061193482-distro-ubuntu-24.04.log",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "method": "PR #24's CI run 43794815103 on 56caddd, job distro (ubuntu:24.04). The whole suite ran in the container on Ubuntu 24.04's own python3-pyqt6: 1319 passed, 199 skipped (each with its reason), and the job succeeded."
+  },
+  {
+   "id": "W5B-BEH-CI-DISTRO-DEBIAN",
+   "leg": "debian",
+   "log": "ci-133061193346-distro-debian-trixie.log",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "method": "PR #24's CI run 43794815103 on 56caddd, job distro (debian:trixie). The whole suite ran on Debian trixie's own PyQt6: 1319 passed, 199 skipped, and the job succeeded."
+  },
+  {
+   "id": "W5B-BEH-CI-DISTRO-FEDORA",
+   "leg": "fedora",
+   "log": "ci-133061193474-distro-fedora-44.log",
+   "acceptance": [
+    "M6A-03.A1"
+   ],
+   "method": "PR #24's CI run 43794815103 on 56caddd, job distro (fedora:44). The whole suite ran on Fedora 44's own PyQt6: 1321 passed, 197 skipped, and the job succeeded."
+  },
+  {
+   "id": "W5B-BEH-CI-COVERAGE",
+   "leg": "ubu3.15",
+   "log": "ci-133065350839-coverage.log",
+   "acceptance": [
+    "M6A-04.A1"
+   ],
+   "no_cilog": true,
+   "method": "PR #24's CI run 43794815103 on 56caddd, job coverage (its second attempt; the first was skipped when one macOS 3.15 test failed, and passed on its re-run). It downloaded the three Python 3.14 legs' data (Windows, macOS, ubuntu-24.04-arm), combined it, wrote the table to the summary, and held the total to pyproject.toml's fail_under = 84. TOTAL was 20941 statements with 2289 missed, 86.4%, and the job succeeded. The same data, downloaded and combined here, gives the same total (wave5b/coverage-combined.log)."
+  },
+  {
+   "id": "W5B-BEH-PKG-INSTALL",
+   "leg": "ubu3.15",
+   "log": "pkg-133010696522-windows.log",
+   "acceptance": [
+    "M6A-06.A2"
+   ],
+   "no_cilog": true,
+   "run": "43778675599",
+   "method": "Packages run 43778675599, the push of the annotated tag v0.10.0 (\"Chatmon 0.10.0\") on 7816159, all ten jobs green (reports/m6a/wave5/outcomes.log). Job windows, from log line 277: python -m pip install --require-hashes -r packaging/requirements-build.txt, then --require-hashes --no-build-isolation -r packaging/requirements.txt; both succeeded, and the job built the installer that sign-windows signed and published. The files this receipt binds are the same at 56caddd as at 7816159: the coordinator's df3e93c and 56caddd change chatmon/layer.py, CONTRIBUTING.md and tests/test_app_smoke.py, none of which this job reads. Packages runs on a v* tag, by hand, or on a pull request that changes packaging/, pyproject.toml, tests/test_package_data.py or packages.yml, so none ran on PR #24."
+  },
+  {
+   "id": "W5B-BEH-PKG-WHEEL",
+   "leg": "ubu3.15",
+   "log": "pkg-133010696583-python.log",
+   "acceptance": [
+    "M6A-08.A2",
+    "M6A-09.A1"
+   ],
+   "no_cilog": true,
+   "run": "43778675599",
+   "method": "Packages run 43778675599, the push of the annotated tag v0.10.0 on 7816159. Job python. It dated the build by the commit (SOURCE_DATE_EPOCH 1794787737) and built the wheel and sdist without isolation on the hash-locked setuptools. twine check passed both (log lines 1182-1183). tests/test_package_data.py then passed on what was built, 5 of 5 (line 1210): every tracked file under chatmon/ is in the wheel, and the only console script is chatmon. The files this receipt binds are the same at 56caddd as at 7816159: the coordinator's df3e93c and 56caddd change chatmon/layer.py, CONTRIBUTING.md and tests/test_app_smoke.py, none of which this job reads."
+  },
+  {
+   "id": "W5B-BEH-CI-TYPES",
+   "leg": "ubu3.15",
+   "log": "ci-133061193311-types-linux.log",
+   "acceptance": [
+    "M6A-13.A1"
+   ],
+   "no_cilog": true,
+   "method": "PR #24's CI run 43794815103 on 56caddd, job types (linux): mypy --platform linux on pyproject.toml's [tool.mypy] passed ('Success: no issues found in 70 source files'). The types (win32) and types (darwin) jobs, whose logs are in wave5b/ci/, passed too. M6B took every module off the exemption list, so the gate as it stands passes on all three platforms."
+  },
+  {
+   "id": "W5B-BEH-CI-PINS-TYPES",
+   "leg": "ubu3.15",
+   "log": "pins-133010593575-types.log",
+   "acceptance": [
+    "M6A-02B.A2"
+   ],
+   "no_cilog": true,
+   "run": "43778643021",
+   "method": "Pins run 43778643021, the push of 7816159 to main, job types (pins.yml's own CI for pins.py): mypy --strict --platform linux, win32 and darwin on packaging/pins.py each said 'Success: no issues found in 1 source file', then python -m pytest tests/test_pins.py tests/test_requirements.py: 28 passed, 1 skipped (the opt-in real-uv test, with its reason), and the job succeeded. Of what this receipt binds only CONTRIBUTING.md changed since (df3e93c's opt-in row), which the job doesn't read; pins.yml runs on pull requests only when pins.py, its tests, its locks or pins.yml change, so none ran on PR #24. The same steps ran here on 56caddd (W5B-BEH-PINS-TESTS)."
+  }
+ ],
+ "receipts": [
+  {
+   "id": "W5B-BEH-PINS-TESTS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-02B.A2"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/pins-tests.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-p",
+    "no:cacheprovider",
+    "-v",
+    "-rs",
+    "tests/test_pins.py",
+    "tests/test_requirements.py"
+   ],
+   "exit_code": 0,
+   "method": "pins.yml's types job, run here on 56caddd's files (the log names the worktree's HEAD, a commit on this branch that changes only docs/ after 56caddd); Windows 11, the shared venv, a CHATMON_INSTANCE of its own, through wave5b/run-windows.sh: mypy 2.4.1 --strict on packaging/pins.py for linux, win32 and darwin, then tests/test_pins.py and tests/test_requirements.py by name. Each test this criterion names passed: the cutoff fourteen days back, the newest release two weeks old, PyQt6 6.12.0's skip with its reason, PyQt6 and its Qt on one line, one version across the locks, nothing backwards, --apply moving the pins and the dev extra with the floor kept and locking each list with its own command, a lock that isn't uv's universal one refused. The opt-in real-uv test skipped with its reason. The whole suite here ran them too (wave5b/suite-windows.log)."
+  },
+  {
+   "id": "W5B-BEH-CHECKSUMS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6A-I1.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/gate-drills.log",
+   "command": [
+    "C:/Program Files/Git/usr/bin/bash.exe",
+    "<copy>/run-step.sh"
+   ],
+   "exit_code": 0,
+   "method": "The checksums job's own run: block from packages.yml at 56caddd, run by gate_drills.py's G-checksums-key setup on a copy with a throwaway Ed25519 key that chatmon/releasecheck.py trusts. Its green run (gate-drills.log, section G-checksums-key) listed and signed both files and found the signing key in RELEASE_KEYS. The real job ran on the tag in Packages run 43778675599 and succeeded: v0.10.0's SHA256SUMS.txt and its signature are published, and every file matches the list (reports/m6a/wave5b/outcomes.log)."
+  },
+  {
+   "id": "W5B-MAN-CI-REVIEW",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-01.A2",
+    "M6A-04.A2",
+    "M6A-05.A2",
+    "M6A-07.A1",
+    "M6A-15.A1",
+    "M6A-I1.A2"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/ci-review.md",
+   "method": "Each criterion read again at 56caddd (ci-review.md): ci.yml and packages.yml are unchanged since 7816159 (git diff 7816159 56caddd -- .github is empty), so the first review's line-by-line reading and its reading of v0.10.0's tagged Packages run 43778675599 stand (wave5/ci-review.md, P-RELEASE in wave5/outcomes.log). What ran on 56caddd: PR #24's CI run 43794815103, all 19 jobs green on its second attempt (the first failed one test on macOS 3.15; its re-run passed), its coverage job at 86.4% against fail_under = 84, its test merge with 56caddd's own tree."
+  },
+  {
+   "id": "W5B-MAN-DEPENDABOT-ACTIONS",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-02B.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/dependabot-schema.log",
+   "method": "check-jsonschema 0.39.0 validated .github/dependabot.yml at 56caddd (the log names the worktree's HEAD, a commit on this branch that changes only docs/ after 56caddd) against SchemaStore's Dependabot schema, exit 0 (dependabot-schema.log). The file is unchanged since 7816159 and was read again (wave5b/pins-review.md): one entry, github-actions, weekly, a 14-day cooldown, one group; no pip entry, and its header says why and where the Python pins move instead. Dependabot's first run on main and the owner's closing of #19-#21 are as observed in wave5/outcomes.log."
+  },
+  {
+   "id": "W5B-MAN-PINS-WORKFLOW",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-02B.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/pins-review.md",
+   "method": ".github/workflows/pins.yml at 56caddd, unchanged since 7816159, read again (wave5b/pins-review.md) against the first review's line-by-line reading (wave5/pins-review.md): the schedule and dispatch, permissions: {} with contents: read and issues: write on the pins job, uv installed --require-hashes, the issue step, the types job. CI's lint job passed actionlint and zizmor on it in PR #24's run 43794815103, and it validates against SchemaStore's workflow schema. Its runs on main are those observed at 7816159: dispatched Pins run 43778713259 opened #23 and run 43778794994 edited it in place, one issue by that title (wave5/outcomes.log)."
+  },
+  {
+   "id": "W5B-MAN-SDE",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-06.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/source-date-epoch.log",
+   "method": "sde_check.py made two copies of the wheel's inputs at 56caddd with file times a fortnight apart, and built each with python -m build --no-isolation --wheel on the hash-locked build tools. The wheels differed without SOURCE_DATE_EPOCH and were byte-identical with it set to the commit's time, which is how packages.yml's 'Date the build by its commit' step sets it (observed in Packages run 43778675599). The commit time is the worktree's HEAD's (named in the log), a commit on this branch that changes only docs/ after 56caddd (git diff 56caddd HEAD outside docs/ is empty), so the wheel's inputs are 56caddd's."
+  },
+  {
+   "id": "W5B-MAN-WINUPDATE",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-11.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/windows-update-optin.log",
+   "method": "On this Windows workstation at 56caddd, tests/test_windows.py -k windows_update_check skipped by default, with its reason naming CHATMON_TEST_WINDOWS_UPDATE=1. With the variable set, it ran against Windows Update and passed; its duration is in the log."
+  },
+  {
+   "id": "W5B-MAN-DOCS",
+   "kind": "manual",
+   "acceptance": [
+    "M6A-10.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5b/docs-review.md",
+   "method": "SECURITY.md, CONTRIBUTING.md and the issue chooser read claim by claim against 56caddd (docs-review.md). Every claim holds. The one that failed at 7816159 (W5-MAN-DOCS, kept as history), 'It also passes with the next PyQt6's stubs (6.12.1)', is true again: mypy 2.4.1 with PyQt6 6.12.1 finds no issues on linux, win32 and darwin, in WSL (mypy-pyqt6-6.12.1-*.log), here (../m10/wave5b/mypy-6121.log) and in the how-to's replay, since df3e93c gave layer.py's two lines their type. The opt-in table now names CHATMON_PINS_NETWORK, the pins check's real-uv test."
+  }
+ ],
+ "pending": [],
+ "next_action": "None in M6A on 56caddd. P-RELEASE and P-DEPENDABOT were observed and recorded at 7816159 (reports/m6a/wave5/outcomes.log), and M6A-02 is superseded by M6A-02B.",
+ "tasks": {}
+}

@@ -1,0 +1,9 @@
+# .github/dependabot.yml and .github/workflows/pins.yml at b8da74a against SchemaStore's schemas (check-jsonschema's built-in copies), 2026-11-16T01:50:43Z
+$ check-jsonschema --version
+check-jsonschema, version 0.39.0
+$ check-jsonschema --builtin-schema vendor.dependabot .github/dependabot.yml
+ok -- validation done
+exit 0
+$ check-jsonschema --builtin-schema vendor.github-workflows .github/workflows/pins.yml
+ok -- validation done
+exit 0

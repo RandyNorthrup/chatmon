@@ -1,0 +1,39 @@
+# The coordinator's drill for test_hide_menu_and_reload (wave5/flaky-hide-menu/drill.py.txt, run as a .py copy), 56caddd, 2026-11-16T02:59:27Z, Windows 11, Python 3.14.10, CHATMON_INSTANCE=plans5b-win-2-353098
+$ python -m pytest -p no:cacheprovider -v <copy>/test_flaky_hide_menu_drill.py --rootdir .   (expected: the old body fails, 1; the new body passes, 4)
+============================= test session starts =============================
+platform win32 -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: C:\Users\Randy\Coding\chatmon-wt\measure
+plugins: hypothesis-6.170.15, timeout-2.4.0
+collecting ... collected 5 items
+::test_old_body_slow_start FAILED                                        [ 20%]
+::test_new_body[0.0] PASSED                                              [ 40%]
+::test_new_body[0.6] PASSED                                              [ 60%]
+::test_new_body[1.4] PASSED                                              [ 80%]
+::test_new_body[2.0] PASSED                                              [100%]
+================================== FAILURES ===================================
+__________________________ test_old_body_slow_start ___________________________
+companion = <chatmon.app.Companion object at 0x000001547D08D4F0>
+    def test_old_body_slow_start(companion):
+        c = companion
+        spin(SLOW_START)
+        c.set_hidden(True)
+        spin(1.0)
+        c.set_hidden(False)
+        c.menus.fill()
+>       assert [a.text() for a in c.menu.actions() if a.text()] == LABELS_OLD
+E       AssertionError: assert ['Ask Sparky…...essages', ...] == ['Ask Sparky…... 'Brain', ...]
+E         
+E         At index 5 diff: 'Recent messages' != 'Brain'
+E         Left contains one more item: 'Quit'
+E         
+E         Full diff: (-: missing in left side, +: extra in left side)
+E           [
+E               'Ask Sparky…',...
+E         
+E         ...Full output truncated, use '-vv' to show
+..\..\..\AppData\Local\Temp\claude\7c6ca09538d30e43\c556eb9f-f3e9-4bef-aa5d-6224074a51c8\scratchpad\flaky5b\test_flaky_hide_menu_drill.py:32: AssertionError
+=========================== short test summary info ===========================
+FAILED ::test_old_body_slow_start - AssertionError: assert ['Ask Sparky…...es...
+======================== 1 failed, 4 passed in 49.47s =========================
+# exit 1

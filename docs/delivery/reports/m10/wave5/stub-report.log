@@ -1,0 +1,94 @@
+# The PyQt mailing list's archive, read 2026-11-16T00:47:22Z (curl 8.17.0, no addresses kept)
+
+## https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046574.html (curl exit 0)
+subject: PyQt v6.12.1 Wheels Available for Testing
+author:  Veronica Berglyd Olsen 
+date:    Sat Nov 14 16:03:37 GMT 2026
+body, first lines:
+    > The PyQt v6.12.1 wheels are available for testing at the local pypi
+    > server. There are .1 releases of all other wheels as well.
+    > 
+    > Hopefully these resolve all the outstanding issues.
+    > 
+    > Phil
+    > 
+    The typing stubs for 6.12.1 now generate a two new errors for me with pyright
+    1. For pyqtSignal it gives:
+    error: Argument missing for parameter "arguments" (reportCallIssue)
+    So arguments is now a required parameter, which it shouldn't be.
+    QtCore.pyi:
+    class pyqtSignal:
+        signatures: tuple[str, ...]
+        def __init__(self, *types: typing.Any, name: str = ..., revision: int = ..., arguments: collections.abc.Sequence[str]) -> None: ...
+    2. For subclasses of QWidget (at least) it requires that the super is initialised with Self, instead of previous QObject | None, so all  my subclasses require I pass self to the super.
+    error: Argument of type "QWidget" cannot be assigned to parameter "parent" of type "Self at _NewProjectForm" in function "__init__"
+    QtWidgets.pyi
+    class QWidget(QtCore.QObject, QtGui.QPaintDevice):
+        class RenderFlag(enum.Flag):
+            DrawWindowBackground: QWidget.RenderFlag
+            DrawChildren: QWidget.RenderFlag
+            IgnoreMask: QWidget.RenderFlag
+        def __init__(self, /, parent: typing.Self = ..., flags: QtCore.Qt.WindowType = ...) -> None: ...
+    Veronica Berglyd Olsen
+
+## https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046578.html (curl exit 0)
+subject: PyQt6 6.12.1 stubs: typing.Self breaks type checking across all modules
+author:  Dragan A. 
+date:    Sun Nov 15 23:08:31 GMT 2026
+body, first lines:
+    Hi Phil,
+    Veronica reported two pyright errors with the 6.12.1 stubs
+    (https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046574.html
+    ).
+    They are not two separate issues. The 6.12.1 stubs replace a class's own
+    name with typing.Self everywhere, and in most of those places Self is
+    wrong.
+    6.12.0 works fine: pyright reports 0 errors in our project. After updating
+    to 6.12.1, with no other change, it reports 716 errors in 136 files. For
+    example, 6.12.0 has
+        QCoreApplication.instance() -> 'QCoreApplication|None'
+    where 6.12.1 has
+        QCoreApplication.instance() -> typing.Self
+    QtCore.pyi in 6.12.0 doesn't use typing.Self at all; in 6.12.1 it
+    appears 567 times. The code runs fine on 6.12.1; only the stubs are wrong.
+    -------------- next part --------------
+    An HTML attachment was scrubbed...
+    URL: <https://www.riverbankcomputing.com/pipermail/pyqt/attachments/20261116/895580da/attachment.htm>
+    	Previous message (by thread): ANN: PyQt6 v6.12.1 Released
+    	Next message (by thread): PyQt6 6.12.1 stubs: typing.Self breaks type checking across all modules
+              Messages sorted by: 
+                  [ date ]
+                  [ thread ]
+                  [ subject ]
+                  [ author ]
+
+## https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046579.html (curl exit 0)
+subject: PyQt6 6.12.1 stubs: typing.Self breaks type checking across all modules
+author:  Randy Northrup 
+date:    Mon Nov 16 00:45:10 GMT 2026
+body, first lines:
+    Hi Phil,
+    Adding to Dragan's and Veronica's reports: mypy shows the same, and a few
+    more places where typing.Self doesn't fit.
+    With PyQt6 6.12.1, mypy 2.4.1 --strict on this file:
+        from PyQt6.QtCore import QObject, pyqtSignal
+        class A(QObject):
+            changed = pyqtSignal(int)
+        class B(QObject):
+            def watch(self, a: A) -> None:
+                a.installEventFilter(self)
+                a.removeEventFilter(self)
+                self.setParent(None)
+    gives:
+        repro.py:5: error: Missing named argument "arguments" for
+    "pyqtSignal"  [call-arg]
+        repro.py:10: error: Argument 1 to "installEventFilter" of
+    "QObject" has incompatible type "B"; expected "A"  [arg-type]
+        repro.py:11: error: Argument 1 to "removeEventFilter" of "QObject"
+    has incompatible type "B"; expected "A"  [arg-type]
+        repro.py:12: error: Argument 1 to "setParent" of "QObject" has
+    incompatible type "None"; expected "B"  [arg-type]
+    With PyQt6 6.11.0 the same file passes.
+    So besides pyqtSignal's "arguments" having no default:
+    - QObject.installEventFilter(), removeEventFilter() and setParent() take
+      typing.Self where any QObject is meant, and setParent() has also lost

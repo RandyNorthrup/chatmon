@@ -1,0 +1,16 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed; CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; df3e93c gives layer.py's two lines the second workaround, so M6B-02.A1's 6.12 half can pass; the M6A and M8 plans it takes as inputs were re-bound first; no conflict or gap.",
+ "next_action": "None in M6B on 56caddd.",
+ "stale_reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M6A and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103",
+ "tasks": {},
+ "receipts": {
+  "W5B-BEH-WSL-MYPY-6121": {
+   "method": "M6B-02.A1's 6.12 half: mypy 2.4.1 with PyQt6 6.12.1's stubs (/var/tmp/m4a-venv in WSL Arch) on 56caddd's files, --platform linux: 'Success: no issues found in 70 source files'. win32 and darwin the same (mypy-pyqt6-6.12.1-win32.log, -darwin.log), and so did M10's run here (../m10/wave5b/mypy-6121.log). At 7816159 two errors were found in chatmon/layer.py (W5-BEH-WSL-MYPY-6121, kept as history); df3e93c gave both lines their type.",
+   "status": "pass",
+   "exit_code": 0
+  },
+  "W5B-BEH-TEMPLATE": {
+   "method": "packaging/extract_strings.py --check on 56caddd's files on this workstation (the log names the worktree's HEAD, a commit that changes only docs/ after 56caddd), exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes, so the fixes added or changed no marked string."
+  }
+ }
+}

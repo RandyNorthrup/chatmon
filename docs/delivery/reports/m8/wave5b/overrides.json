@@ -1,0 +1,9 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed; CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; the M0 and M7 plans it takes as inputs were re-bound first; no conflict or gap.",
+ "next_action": "None in M8 on 56caddd. Any string a later change adds must be in the template: extract_strings.py --check, and CI's lint job, say so.",
+ "receipts": {
+  "W5B-BEH-TEMPLATE": {
+   "method": "packaging/extract_strings.py --check on 56caddd's files on this workstation (the log names the worktree's HEAD, a commit that changes only docs/ after 56caddd), exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes from today's marked strings, and none of them is a string that couldn't be translated; df3e93c and 56caddd added or changed no marked string."
+  }
+ }
+}

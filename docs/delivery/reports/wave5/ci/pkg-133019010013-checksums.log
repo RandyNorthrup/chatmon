@@ -1,0 +1,288 @@
+checksums	Set up job	﻿2026-11-16T00:36:20.0812764Z Current runner version: '2.338.2'
+checksums	Set up job	2026-11-16T00:36:20.0829560Z ##[group]Runner Image Provisioner
+checksums	Set up job	2026-11-16T00:36:20.0830265Z Hosted Compute Agent
+checksums	Set up job	2026-11-16T00:36:20.0830707Z Version: 20261103.629
+checksums	Set up job	2026-11-16T00:36:20.0831246Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+checksums	Set up job	2026-11-16T00:36:20.0832068Z Build Date: 2026-11-03T17:26:59Z
+checksums	Set up job	2026-11-16T00:36:20.0832813Z Worker ID: {0f8abc47-eca2-4dac-a8f0-e62e98867517}
+checksums	Set up job	2026-11-16T00:36:20.0833369Z Region: us-west-2
+checksums	Set up job	2026-11-16T00:36:20.0834035Z Cloud: AWS
+checksums	Set up job	2026-11-16T00:36:20.0834459Z ##[endgroup]
+checksums	Set up job	2026-11-16T00:36:20.0835642Z ##[group]Operating System
+checksums	Set up job	2026-11-16T00:36:20.0836154Z Ubuntu
+checksums	Set up job	2026-11-16T00:36:20.0836557Z 24.04.5
+checksums	Set up job	2026-11-16T00:36:20.0836988Z LTS
+checksums	Set up job	2026-11-16T00:36:20.0837398Z ##[endgroup]
+checksums	Set up job	2026-11-16T00:36:20.0837844Z ##[group]Runner Image
+checksums	Set up job	2026-11-16T00:36:20.0838303Z Image: ubuntu-24.04
+checksums	Set up job	2026-11-16T00:36:20.0838732Z Version: 20261111.127.1
+checksums	Set up job	2026-11-16T00:36:20.0839574Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+checksums	Set up job	2026-11-16T00:36:20.0840887Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+checksums	Set up job	2026-11-16T00:36:20.0841599Z ##[endgroup]
+checksums	Set up job	2026-11-16T00:36:20.0842678Z ##[group]GITHUB_TOKEN Permissions
+checksums	Set up job	2026-11-16T00:36:20.0844455Z Contents: read
+checksums	Set up job	2026-11-16T00:36:20.0844934Z Metadata: read
+checksums	Set up job	2026-11-16T00:36:20.0845346Z ##[endgroup]
+checksums	Set up job	2026-11-16T00:36:20.0846840Z Secret source: Actions
+checksums	Set up job	2026-11-16T00:36:20.0847564Z Cache mode: write
+checksums	Set up job	2026-11-16T00:36:20.0848153Z Prepare workflow directory
+checksums	Set up job	2026-11-16T00:36:20.1108690Z Prepare all required actions
+checksums	Set up job	2026-11-16T00:36:20.1144674Z Getting action download info
+checksums	Set up job	2026-11-16T00:36:20.4668143Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+checksums	Set up job	2026-11-16T00:36:21.2464850Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+checksums	Set up job	2026-11-16T00:36:21.5851341Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+checksums	Set up job	2026-11-16T00:36:21.7859882Z Complete job name: checksums
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:36:21.8518832Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8520186Z with:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8520711Z   persist-credentials: false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8521421Z   sparse-checkout: chatmon/releasecheck.py
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8522591Z   sparse-checkout-cone-mode: false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8523316Z   repository: RandyNorthrup/chatmon
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8530229Z   token: ***
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8530758Z   ssh-strict: true
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8531289Z   ssh-user: git
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8531756Z   clean: true
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8532423Z   fetch-depth: 1
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8532936Z   fetch-tags: false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8533500Z   show-progress: true
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8534019Z   lfs: false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8534487Z   submodules: false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8535080Z   set-safe-directory: true
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8535701Z   allow-unsafe-pr-checkout: false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8536644Z env:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8537139Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:21.8537859Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.4089727Z Syncing repository: RandyNorthrup/chatmon
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.4091233Z ##[group]Getting Git version info
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.4091642Z Working directory is '/home/runner/work/chatmon/chatmon'
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.4092539Z [command]/usr/bin/git version
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5912768Z git version 2.56.1
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5924763Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5932316Z Temporarily overriding HOME='/home/runner/work/_temp/38f5f1f2-f946-4a63-8912-2bfc15736a03' before making global git config changes
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5933406Z Adding repository directory to the temporary git global config as a safe directory
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5936242Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5966994Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5969163Z ##[group]Determining repository object format
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5969955Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5970521Z ##[group]Initializing the repository
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.5973042Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6376420Z hint: Using 'master' as the name for the initial branch. This default branch name
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6377284Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6377910Z hint: to use in all of your new repositories, which will suppress this warning,
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6378344Z hint: call:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6378711Z hint:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6379223Z hint: 	git config --global init.defaultBranch <name>
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6379763Z hint:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6380235Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6380812Z hint: 'development'. The just-created branch can be renamed via this command:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6381267Z hint:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6381582Z hint: 	git branch -m <name>
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6382122Z hint:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6382655Z hint: Disable this message with "git config set advice.defaultBranchName false"
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6383372Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6386785Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6421439Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6422166Z ##[group]Disabling automatic garbage collection
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6423852Z [command]/usr/bin/git config --local gc.auto 0
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6443203Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6443818Z ##[group]Setting up auth
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6444227Z Removing SSH command configuration
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6447544Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.6469818Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8304935Z Removing HTTP extra header
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8308786Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8330588Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8472617Z Removing includeIf entries pointing to credentials config files
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8479491Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8505234Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8650965Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8677123Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8698448Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8719502Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8740693Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8759328Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8759915Z ##[group]Fetching the repository
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:25.8765549Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +refs/tags/v0.10.0:refs/tags/v0.10.0
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9626100Z From https://github.com/RandyNorthrup/chatmon
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9626785Z  * [new tag]         v0.10.0    -> v0.10.0
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9631444Z [command]/usr/bin/git tag --list v0.10.0
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9655003Z v0.10.0
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9659516Z [command]/usr/bin/git rev-parse refs/tags/v0.10.0^{commit}
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9676014Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9678223Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9678777Z ##[group]Determining the checkout info
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9679396Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9679980Z ##[group]Setting up sparse checkout
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9683184Z [command]/usr/bin/git config core.sparseCheckout true
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9704333Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9719256Z .git/info/sparse-checkout
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9723151Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9723597Z ##[group]Checking out the ref
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:26.9726655Z [command]/usr/bin/git checkout --progress --force refs/tags/v0.10.0
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4576008Z Note: switching to 'refs/tags/v0.10.0'.
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4576418Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4576685Z You are in 'detached HEAD' state. You can look around, make experimental
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4578177Z changes and commit them, and you can discard any commits you make in this
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4578888Z state without impacting any branches by switching back to a branch.
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4579267Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4579542Z If you want to create a new branch to retain commits you create, you may
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4580160Z do so (now or later) by using -c with the switch command. Example:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4580628Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4580824Z   git switch -c <new-branch-name>
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4581112Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4581265Z Or undo this operation with:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4581534Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4581729Z   git switch -
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4582127Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4582419Z Turn off this advice by setting config variable advice.detachedHead to false
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4582998Z 
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4583355Z HEAD is now at 7816159 Merge pull request #22 from RandyNorthrup/release/0.10.0-fixes
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4599717Z ##[endgroup]
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4626783Z [command]/usr/bin/git log -1 --format=%H
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4643108Z 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4648725Z ##[group]Removing auth
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4649490Z Removing SSH command configuration
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4652179Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4672266Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4823879Z Removing HTTP extra header
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4826825Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4847789Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4992866Z Removing includeIf entries pointing to credentials config files
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.4995158Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5014223Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5014839Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5015448Z includeif.gitdir:/github/workspace/.git.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5015887Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5020535Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5036080Z /home/runner/work/_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5077285Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-a3c299bb\-4ae3\-4be7\-9c4b\-af5ea19174f6\.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5099745Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5113318Z /home/runner/work/_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5119206Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-a3c299bb\-4ae3\-4be7\-9c4b\-af5ea19174f6\.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5145384Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5162399Z /github/runner_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5167356Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-a3c299bb\-4ae3\-4be7\-9c4b\-af5ea19174f6\.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5188682Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5204552Z /github/runner_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5209266Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-a3c299bb\-4ae3\-4be7\-9c4b\-af5ea19174f6\.config
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5229901Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5370571Z Removing credentials config '/home/runner/work/_temp/git-credentials-a3c299bb-4ae3-4be7-9c4b-af5ea19174f6.config'
+checksums	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:27.5375811Z ##[endgroup]
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-11-16T00:36:27.5571552Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5572199Z with:
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5572460Z   pattern: package-*
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5572747Z   path: /home/runner/work/_temp/dist
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5573016Z   merge-multiple: true
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5573264Z   repository: RandyNorthrup/chatmon
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5573532Z   run-id: 43778675599
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5573782Z   skip-decompress: false
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5574055Z   digest-mismatch: error
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5574281Z env:
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5574517Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.5574767Z ##[endgroup]
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9664763Z Found 7 artifact(s)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9665434Z Filtering artifacts by pattern 'package-*'
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9678503Z Preparing to download the following artifacts:
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9679224Z - package-windows (ID: 14188371673, Size: 50925055, Expected Digest: sha256:8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9680201Z - package-linux (ID: 14187456743, Size: 54243308, Expected Digest: sha256:ce2666c837e6fa008b048456b4e392a31b0cadd94495a139751b9b28228cebbd)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9681002Z - package-macos-macos-latest (ID: 14187362899, Size: 134417357, Expected Digest: sha256:58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9682161Z - package-macos-macos-15-intel (ID: 14187347932, Size: 145165742, Expected Digest: sha256:1c9b2c5344ce0982909dcfd64113bea18bda6cd9fbe9337c85f6eb48ba729170)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:27.9682931Z - package-python (ID: 14186969382, Size: 54041901, Expected Digest: sha256:6adbd2b8e2a107b80370b917a362043aa7f23c6a0af0c076e8b70276447c914e)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5080757Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-43b1f0cb-afd2-552d-8bb1-61f9b07187b7/artifacts/e9e6d9dd72b8e04c71cdfdb05483a0906ce5d1d478fd780be47b51c5ce80b362.zip
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5082666Z Starting download of artifact to: /home/runner/work/_temp/dist
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5313134Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-e3f05e08-dc1c-54d2-b580-37f55c8ccba8/artifacts/73deba440d19b5e94e9f97061ab5f9562e1c9fc9957d3bc7656999b3c1cf18cb.zip
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5314112Z Starting download of artifact to: /home/runner/work/_temp/dist
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5438854Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-183c7327-f25a-55bc-9270-d6fd2e7f6149/artifacts/579b24c85e199630ff00713849bf5adf51a66a22f2590148f513601cea5b9f46.zip
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5439867Z Starting download of artifact to: /home/runner/work/_temp/dist
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5582898Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-6a115ee9-da82-54e4-bb89-cd809f74fc30/artifacts/4aa44b95f6f28a25606c69a226b73b5083cd20032366648f24a086995f206ecd.zip
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.5584358Z Starting download of artifact to: /home/runner/work/_temp/dist
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.8786723Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-fc184724-c0e7-55dc-b2b4-771ffcc234c1/artifacts/938767022c28829126526ccacf848e23b0b48ca932ef930529a1852cbcd463a2.zip
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.8788032Z Starting download of artifact to: /home/runner/work/_temp/dist
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.8859885Z (node:2254) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:28.8860698Z (Use `node --trace-deprecation ...` to show where the warning was created)
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:32.7949314Z SHA256 digest of downloaded artifact is ce2666c837e6fa008b048456b4e392a31b0cadd94495a139751b9b28228cebbd
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:32.7950207Z Artifact download completed successfully.
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:32.8245511Z SHA256 digest of downloaded artifact is 6adbd2b8e2a107b80370b917a362043aa7f23c6a0af0c076e8b70276447c914e
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:32.8246134Z Artifact download completed successfully.
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:32.8268217Z SHA256 digest of downloaded artifact is 8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:32.8268791Z Artifact download completed successfully.
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:37.5617485Z SHA256 digest of downloaded artifact is 58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:37.5618597Z Artifact download completed successfully.
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:39.1773658Z SHA256 digest of downloaded artifact is 1c9b2c5344ce0982909dcfd64113bea18bda6cd9fbe9337c85f6eb48ba729170
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:39.1774354Z Artifact download completed successfully.
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:39.1774869Z Total of 5 artifact(s) downloaded
+checksums	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:39.1778478Z Download artifact has finished successfully
+checksums	List and sign every file's checksum	﻿2026-11-16T00:36:39.1897254Z ##[group]Run cd "$DIST"
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1897733Z [36;1mcd "$DIST"[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1898079Z [36;1msha256sum -- * > SHA256SUMS.txt[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1898657Z [36;1mcat SHA256SUMS.txt[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1898958Z [36;1mumask 077[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1899272Z [36;1mkey="$RUNNER_TEMP/release.pem"[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1899616Z [36;1mtrap 'rm -f "$key"' EXIT[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1899947Z [36;1mprintf '%s\n' "$KEY" > "$key"[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1900442Z [36;1mopenssl pkeyutl -sign -inkey "$key" -rawin -in SHA256SUMS.txt -out SHA256SUMS.txt.sig[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1901033Z [36;1m# The key that signed is the one Chatmon trusts, and the signature checks out with it.[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1901597Z [36;1mpublic=$(openssl pkey -in "$key" -pubout -outform DER | tail -c 32 | od -An -tx1 | tr -d ' \n')[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1902698Z [36;1mgrep -q "\"$public\"" "$GITHUB_WORKSPACE/chatmon/releasecheck.py" || { echo "RELEASE_SIGNING_KEY isn't a key in RELEASE_KEYS"; exit 1; }[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1903449Z [36;1mopenssl pkey -in "$key" -pubout -out "$RUNNER_TEMP/release.pub"[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.1904049Z [36;1mopenssl pkeyutl -verify -pubin -inkey "$RUNNER_TEMP/release.pub" -rawin -in SHA256SUMS.txt -sigfile SHA256SUMS.txt.sig[0m
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.3795509Z shell: /usr/bin/bash -e {0}
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.3795988Z env:
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.3796267Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.3797188Z   KEY: ***
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.3797460Z   DIST: /home/runner/work/_temp/dist
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.3797817Z ##[endgroup]
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6728366Z fd9694e2c8b866a242099151bc9963a6aabb877ca8688a815f348384fb0b6c12  Chatmon-0.10.0-macos-arm64.dmg
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6729032Z f4c8602eea34c7a4b4b4437d100ff43e87eead4e029f67b9abf3dd3eebebbb57  Chatmon-0.10.0-macos-arm64.pkg
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6729862Z dcc50f1a08b890bba65d474caefd1c939c8b27d1def55628c3d0a4aac9ceb910  Chatmon-0.10.0-macos-intel.dmg
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6730477Z 92b4815ba7b93788064f7aec4754f3cef4ab595c61c4af858f75a3df5fc8fb4e  Chatmon-0.10.0-macos-intel.pkg
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6731127Z 9414f8cb4cf6b65471993e9b8907503dcad412c04c9161d2ac4eab37402405f5  Chatmon-0.10.0-windows-x64-setup.exe
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6731761Z 7eed2ed884514ce9ee13eadbeb010eddbd1633ca6e80ddd8c13e2082ff117e48  chatmon-0.10.0-1.noarch.rpm
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6732553Z 27e5f9e7c275b0f6aace4d12509fb36ec640225c8d9ade2fdd04cc778c0720c5  chatmon-0.10.0-py3-none-any.whl
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6733187Z f555056e395153818be2b01bf59b413ebb74e1235d485de9057b580dadd0f5e1  chatmon-0.10.0.tar.gz
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.6733741Z b2a330cb585117fe287400979c1c2a8e97dfb26174f3a4ef823bba1c5d70dbb0  chatmon_0.10.0-1_all.deb
+checksums	List and sign every file's checksum	2026-11-16T00:36:39.7219769Z Signature Verified Successfully
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-11-16T00:36:39.7285737Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7286173Z with:
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7286486Z   name: package-checksums
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7286940Z   path: /home/runner/work/_temp/dist/SHA256SUMS.txt
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	/home/runner/work/_temp/dist/SHA256SUMS.txt.sig
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7287421Z   if-no-files-found: error
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7287731Z   compression-level: 6
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7288120Z   overwrite: false
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7288404Z   include-hidden-files: false
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7288731Z   archive: true
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7288978Z env:
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7289709Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.7290027Z ##[endgroup]
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.8359795Z Multiple search paths detected. Calculating the least common ancestor of all paths
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.8361133Z The least common ancestor is /home/runner/work/_temp/dist. This will be the root directory of the artifact
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.8361996Z With the provided path, there will be 2 files uploaded
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.8364886Z Artifact name is valid!
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:39.8365797Z Root directory input is valid!
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:40.2124153Z Uploading artifact: package-checksums.zip
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:40.2137814Z Beginning upload of artifact content to blob storage
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:40.5620124Z Uploaded bytes 803
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:40.6506222Z Finished uploading artifact content to blob storage!
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:40.6507147Z SHA256 digest of uploaded artifact is edac6092d1b1aead63fa057a58e3ac194f91cc87e45f1c20c4d06bec50bbb710
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:40.6507738Z Finalizing artifact upload
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:41.2004796Z Artifact package-checksums successfully finalized. Artifact ID 14188122394
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:41.2005676Z Artifact package-checksums has been successfully uploaded! Final size is 803 bytes. Artifact ID is 14188122394
+checksums	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-11-16T00:36:41.2006649Z Artifact download URL: https://github.com/RandyNorthrup/chatmon/actions/runs/43778675599/artifacts/14188122394
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T00:36:41.2147848Z Post job cleanup.
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2756617Z [command]/usr/bin/git version
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2783540Z git version 2.56.1
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2805462Z Temporarily overriding HOME='/home/runner/work/_temp/bfc2d467-06bf-4450-85ec-2bc375a591ea' before making global git config changes
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2806400Z Adding repository directory to the temporary git global config as a safe directory
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2808555Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2829859Z Removing SSH command configuration
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2835273Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.2885897Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.3037445Z Removing HTTP extra header
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.3040466Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.3063344Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.3206079Z Removing includeIf entries pointing to credentials config files
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.3209516Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+checksums	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T00:36:41.3230346Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+checksums	Complete job	﻿2026-11-16T00:36:41.3472679Z Cleaning up orphan processes

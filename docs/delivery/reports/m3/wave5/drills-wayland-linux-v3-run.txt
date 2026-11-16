@@ -1,0 +1,3 @@
+
+=== summary
+PASS M3-RC-clipboard-v3

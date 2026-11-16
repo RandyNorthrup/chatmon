@@ -1,0 +1,158 @@
+attest	Set up job	﻿2026-11-16T00:36:46.9285332Z Current runner version: '2.338.2'
+attest	Set up job	2026-11-16T00:36:46.9314771Z ##[group]Runner Image Provisioner
+attest	Set up job	2026-11-16T00:36:46.9316007Z Hosted Compute Agent
+attest	Set up job	2026-11-16T00:36:46.9316903Z Version: 20261103.629
+attest	Set up job	2026-11-16T00:36:46.9317527Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+attest	Set up job	2026-11-16T00:36:46.9318682Z Build Date: 2026-11-03T17:26:59Z
+attest	Set up job	2026-11-16T00:36:46.9319358Z Worker ID: {f2df7e24-e695-485f-83db-1dddab01acd1}
+attest	Set up job	2026-11-16T00:36:46.9320079Z Region: eastus2
+attest	Set up job	2026-11-16T00:36:46.9320612Z Cloud: Azure
+attest	Set up job	2026-11-16T00:36:46.9321112Z ##[endgroup]
+attest	Set up job	2026-11-16T00:36:46.9322559Z ##[group]Operating System
+attest	Set up job	2026-11-16T00:36:46.9323164Z Ubuntu
+attest	Set up job	2026-11-16T00:36:46.9323657Z 24.04.5
+attest	Set up job	2026-11-16T00:36:46.9324150Z LTS
+attest	Set up job	2026-11-16T00:36:46.9324629Z ##[endgroup]
+attest	Set up job	2026-11-16T00:36:46.9325157Z ##[group]Runner Image
+attest	Set up job	2026-11-16T00:36:46.9325714Z Image: ubuntu-24.04
+attest	Set up job	2026-11-16T00:36:46.9326244Z Version: 20261111.370.1
+attest	Set up job	2026-11-16T00:36:46.9327263Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+attest	Set up job	2026-11-16T00:36:46.9329195Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+attest	Set up job	2026-11-16T00:36:46.9330140Z ##[endgroup]
+attest	Set up job	2026-11-16T00:36:46.9331316Z ##[group]GITHUB_TOKEN Permissions
+attest	Set up job	2026-11-16T00:36:46.9333606Z Attestations: write
+attest	Set up job	2026-11-16T00:36:46.9334430Z Contents: read
+attest	Set up job	2026-11-16T00:36:46.9335113Z Metadata: read
+attest	Set up job	2026-11-16T00:36:46.9335635Z ##[endgroup]
+attest	Set up job	2026-11-16T00:36:46.9337633Z Secret source: Actions
+attest	Set up job	2026-11-16T00:36:46.9338856Z Cache mode: write
+attest	Set up job	2026-11-16T00:36:46.9339708Z Prepare workflow directory
+attest	Set up job	2026-11-16T00:36:46.9862440Z Prepare all required actions
+attest	Set up job	2026-11-16T00:36:46.9932593Z Getting action download info
+attest	Set up job	2026-11-16T00:36:47.1903506Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+attest	Set up job	2026-11-16T00:36:47.5422849Z Download action repository 'actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8' (SHA:4d101475d8b20a2381f78447822ac1eab6504dd8)
+attest	Set up job	2026-11-16T00:36:47.7178286Z Getting action download info
+attest	Set up job	2026-11-16T00:36:47.7892071Z Download action repository 'actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d' (SHA:508db95dd578ae2727ebd6217d5ba78e4fbda05d)
+attest	Set up job	2026-11-16T00:36:48.0656066Z Complete job name: attest
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-11-16T00:36:48.1508087Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1509846Z with:
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1510443Z   pattern: package-*
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1511093Z   path: dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1511690Z   merge-multiple: true
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1512328Z   repository: RandyNorthrup/chatmon
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1513096Z   run-id: 43778675599
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1513671Z   skip-decompress: false
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1514316Z   digest-mismatch: error
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1515068Z env:
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1515591Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.1516293Z ##[endgroup]
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5514792Z Found 8 artifact(s)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5517229Z Filtering artifacts by pattern 'package-*'
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5536140Z Preparing to download the following artifacts:
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5540447Z - package-windows (ID: 14188371673, Size: 50925055, Expected Digest: sha256:8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5546998Z - package-checksums (ID: 14188122394, Size: 803, Expected Digest: sha256:edac6092d1b1aead63fa057a58e3ac194f91cc87e45f1c20c4d06bec50bbb710)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5552654Z - package-linux (ID: 14187456743, Size: 54243308, Expected Digest: sha256:ce2666c837e6fa008b048456b4e392a31b0cadd94495a139751b9b28228cebbd)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5558906Z - package-macos-macos-latest (ID: 14187362899, Size: 134417357, Expected Digest: sha256:58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5566216Z - package-macos-macos-15-intel (ID: 14187347932, Size: 145165742, Expected Digest: sha256:1c9b2c5344ce0982909dcfd64113bea18bda6cd9fbe9337c85f6eb48ba729170)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.5573989Z - package-python (ID: 14186969382, Size: 54041901, Expected Digest: sha256:6adbd2b8e2a107b80370b917a362043aa7f23c6a0af0c076e8b70276447c914e)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7460114Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-6a115ee9-da82-54e4-bb89-cd809f74fc30/artifacts/4aa44b95f6f28a25606c69a226b73b5083cd20032366648f24a086995f206ecd.zip
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7469358Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7489070Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-eb6a5b25-01b9-5130-b7cc-d5cb935e3a78/artifacts/b5e727d4dd1e0b5d7360230e18380e9bf39d475a9ce90139208ae9b57a5f02bf.zip
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7496641Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7512381Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-183c7327-f25a-55bc-9270-d6fd2e7f6149/artifacts/579b24c85e199630ff00713849bf5adf51a66a22f2590148f513601cea5b9f46.zip
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7519401Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7533894Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-43b1f0cb-afd2-552d-8bb1-61f9b07187b7/artifacts/e9e6d9dd72b8e04c71cdfdb05483a0906ce5d1d478fd780be47b51c5ce80b362.zip
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7540348Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7570422Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-fc184724-c0e7-55dc-b2b4-771ffcc234c1/artifacts/938767022c28829126526ccacf848e23b0b48ca932ef930529a1852cbcd463a2.zip
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7576541Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7719084Z Redirecting to blob download url: https://productionresultssa31.blob.core.windows.net/actions-results/d26b6c89-4197-840d-96dd-e8f8f6644e0a/workflow-job-run-e3f05e08-dc1c-54d2-b580-37f55c8ccba8/artifacts/73deba440d19b5e94e9f97061ab5f9562e1c9fc9957d3bc7656999b3c1cf18cb.zip
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7725240Z Starting download of artifact to: /home/runner/work/chatmon/chatmon/dist
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7824038Z (node:2132) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7830104Z (Use `node --trace-deprecation ...` to show where the warning was created)
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7873044Z SHA256 digest of downloaded artifact is edac6092d1b1aead63fa057a58e3ac194f91cc87e45f1c20c4d06bec50bbb710
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:48.7876027Z Artifact download completed successfully.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:50.8318881Z SHA256 digest of downloaded artifact is 8bee9d5170291a142c7ef7a4ba0c977711aa9bbffb74abc0e39198665c7abd2d
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:50.8321439Z Artifact download completed successfully.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:50.8980511Z SHA256 digest of downloaded artifact is 6adbd2b8e2a107b80370b917a362043aa7f23c6a0af0c076e8b70276447c914e
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:50.8982782Z Artifact download completed successfully.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:50.9072916Z SHA256 digest of downloaded artifact is ce2666c837e6fa008b048456b4e392a31b0cadd94495a139751b9b28228cebbd
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:50.9074124Z Artifact download completed successfully.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:52.5918244Z SHA256 digest of downloaded artifact is 1c9b2c5344ce0982909dcfd64113bea18bda6cd9fbe9337c85f6eb48ba729170
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:52.5920029Z Artifact download completed successfully.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:52.6045032Z SHA256 digest of downloaded artifact is 58eb24e44a1485245c14816567498e1168bdda3f4a9b0527a63ced53e653244d
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:52.6046368Z Artifact download completed successfully.
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:52.6047533Z Total of 6 artifact(s) downloaded
+attest	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-11-16T00:36:52.6052351Z Download artifact has finished successfully
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	﻿2026-11-16T00:36:52.6435184Z ##[group]Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6435925Z with:
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6436381Z   subject-path: dist/*
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6436914Z   push-to-registry: false
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6437403Z   create-storage-record: true
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6437878Z   show-summary: true
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6441066Z   github-token: ***
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6441536Z env:
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6441931Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6442425Z ##[endgroup]
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6503053Z ##[start-action display=Attest;id=__actions_attest-build-provenance.attest]
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6589332Z ##[group]Run actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6590016Z with:
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6590458Z   subject-path: dist/*
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6590967Z   push-to-registry: false
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6591454Z   create-storage-record: true
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6592306Z   show-summary: true
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6595184Z   github-token: ***
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6595807Z env:
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6596220Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6596755Z   NODE_OPTIONS: --max-http-header-size=32768
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.6597246Z ##[endgroup]
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:52.8143452Z Attestation type: Build Provenance
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2125462Z Attestation created for 11 subjects
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2227491Z ##[group][36mAttestation signed using certificate from Public Good Sigstore instance[39m
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2228389Z -----BEGIN CERTIFICATE-----
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2229036Z MIIHCjCCBpCgAwIBAgIUN2kUdyMbYi6Q4jOx+uPjnpg2qTswCgYIKoZIzj0EAwMw
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2229702Z NzEVMBMGA1UEChMMc2lnc3RvcmUuZGV2MR4wHAYDVQQDExVzaWdzdG9yZS1pbnRl
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2230382Z cm1lZGlhdGUwHhcNMjYxMTE2MDAzNjU0WhcNMjYxMTE2MDA0NjU0WjAAMFkwEwYH
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2231083Z KoZIzj0CAQYIKoZIzj0DAQcDQgAEbzRkVJN4iWayWtsSPCsX47T4Zb9W1Ry3mJ+Q
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2231728Z zeaKS0+b/C5Oql2NPkuIEnUHBPa+wfUAMvevbAhoWQ2dvXgTnKOCBa8wggWrMA4G
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2232379Z A1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzAfBgNVHSMEGDAWgBTf
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2233059Z 0+nPViQRlvmo2OkoVaLGLhhkPzBnBgNVHREBAf8EXTBbhllodHRwczovL2dpdGh1
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2233686Z Yi5jb20vUmFuZHlOb3J0aHJ1cC9jaGF0bW9uLy5naXRodWIvd29ya2Zsb3dzL3Bh
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2234312Z Y2thZ2VzLnltbEByZWZzL3RhZ3MvdjAuMTAuMDA5BgorBgEEAYO/MAEBBCtodHRw
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2234926Z czovL3Rva2VuLmFjdGlvbnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tMBIGCisGAQQB
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2235596Z g78wAQIEBHB1c2gwNgYKKwYBBAGDvzABAwQoNzgxNjE1OTM1YTQ5YTNkYzQ4YTFi
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2236193Z N2FiMDE1ZDhhZTAxYjFmZDUzMTAWBgorBgEEAYO/MAEEBAhQYWNrYWdlczAjBgor
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2236802Z BgEEAYO/MAEFBBVSYW5keU5vcnRocnVwL2NoYXRtb24wHwYKKwYBBAGDvzABBgQR
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2237455Z cmVmcy90YWdzL3YwLjEwLjAwOwYKKwYBBAGDvzABCAQtDCtodHRwczovL3Rva2Vu
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2238267Z LmFjdGlvbnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tMGkGCisGAQQBg78wAQkEWwxZ
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2238962Z aHR0cHM6Ly9naXRodWIuY29tL1JhbmR5Tm9ydGhydXAvY2hhdG1vbi8uZ2l0aHVi
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2239612Z L3dvcmtmbG93cy9wYWNrYWdlcy55bWxAcmVmcy90YWdzL3YwLjEwLjAwOAYKKwYB
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2240263Z BAGDvzABCgQqDCg3ODE2MTU5MzVhNDlhM2RjNDhhMWI3YWIwMTVkOGFlMDFiMWZk
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2240897Z NTMxMB0GCisGAQQBg78wAQsEDwwNZ2l0aHViLWhvc3RlZDA4BgorBgEEAYO/MAEM
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2241518Z BCoMKGh0dHBzOi8vZ2l0aHViLmNvbS9SYW5keU5vcnRocnVwL2NoYXRtb24wOAYK
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2242674Z KwYBBAGDvzABDQQqDCg3ODE2MTU5MzVhNDlhM2RjNDhhMWI3YWIwMTVkOGFlMDFi
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2243352Z MWZkNTMxMCEGCisGAQQBg78wAQ4EEwwRcmVmcy90YWdzL3YwLjEwLjAwGgYKKwYB
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2243998Z BAGDvzABDwQMDAoxNDQxMDQ4NDY5MDAGCisGAQQBg78wARAEIgwgaHR0cHM6Ly9n
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2244621Z aXRodWIuY29tL1JhbmR5Tm9ydGhydXAwGQYKKwYBBAGDvzABEQQLDAkxMjI1NTE0
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2245293Z MjUwaQYKKwYBBAGDvzABEgRbDFlodHRwczovL2dpdGh1Yi5jb20vUmFuZHlOb3J0
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2246215Z aHJ1cC9jaGF0bW9uLy5naXRodWIvd29ya2Zsb3dzL3BhY2thZ2VzLnltbEByZWZz
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2246840Z L3RhZ3MvdjAuMTAuMDA4BgorBgEEAYO/MAETBCoMKDc4MTYxNTkzNWE0OWEzZGM0
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2247618Z OGExYjdhYjAxNWQ4YWUwMWIxZmQ1MzEwFAYKKwYBBAGDvzABFAQGDARwdXNoMFwG
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2248531Z CisGAQQBg78wARUETgxMaHR0cHM6Ly9naXRodWIuY29tL1JhbmR5Tm9ydGhydXAv
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2249168Z Y2hhdG1vbi9hY3Rpb25zL3J1bnMvNDM3Nzg2NzU1OTkvYXR0ZW1wdHMvMTAWBgor
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2249819Z BgEEAYO/MAEWBAgMBnB1YmxpYzBVBgorBgEEAYO/MAEYBEcMRXJlcG86UmFuZHlO
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2250523Z b3J0aHJ1cEAxMjI1NTE0MjUvY2hhdG1vbkAxNDQxMDQ4NDY5OnJlZjpyZWZzL3Rh
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2251222Z Z3MvdjAuMTAuMDCBiwYKKwYBBAHWeQIEAgR9BHsAeQB3AN09MGrGxxEyYxkeHJln
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2251856Z NwKiSl643jyt/4eKcoAvKe6OAAABoeHJFaYAAAQDAEgwRgIhAPWjd+dXUiDsLXHg
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2252480Z p8fjo/EU1iK1oyN/QP3HR9F7yPziAiEA+H938g2cRMYF6Csh+Fr/XDvAmMJTo/Z0
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2253082Z SfJAPV9GZeswCgYIKoZIzj0EAwMDaAAwZQIxAKj6SexqB873Ifk8+govqcXncTmi
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2253741Z 98Z9pRBrDld47a5Tfpu03rtrRUGyAKYddvMFagIwDpZphK5Ig93BEzDAobKIuL0w
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2254269Z 3PGXxWS/cRmNvHmCveGX9xFL5mH5oIy8/pyehG46
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2254760Z -----END CERTIFICATE-----
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2254993Z 
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2255653Z ##[endgroup]
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2256264Z [36mAttestation signature uploaded to Rekor transparency log[39m
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2256818Z https://search.sigstore.dev?logIndex=3913702350
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2257332Z [36mAttestation uploaded to repository[39m
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2257877Z https://github.com/RandyNorthrup/chatmon/attestations/67922042
+attest	Run actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8	2026-11-16T00:36:56.2616254Z ##[end-action id=__actions_attest-build-provenance.attest;outcome=success;conclusion=success;duration_ms=3611]
+attest	Complete job	﻿2026-11-16T00:36:56.2727897Z Cleaning up orphan processes

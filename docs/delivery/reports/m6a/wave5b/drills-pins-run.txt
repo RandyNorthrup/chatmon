@@ -1,0 +1,11 @@
+
+=== summary
+PASS PINS-skip
+PASS PINS-qt-group
+PASS PINS-universal
+PASS PINS-cooldown
+PASS PINS-cutoff-to-uv
+PASS PINS-backwards
+PASS PINS-one-version
+PASS PINS-dev-extra
+PASS PINS-seed

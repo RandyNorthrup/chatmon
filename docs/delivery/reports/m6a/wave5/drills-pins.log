@@ -1,0 +1,344 @@
+red drills from docs\delivery\reports\m6a\wave5\drill-spec-pins.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-cxxtw_v2
+copied 318 files
+
+=== drill PINS-skip (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.99s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why ___________
+
+repo = <test_pins.Repo object at 0x000001EECFAA5D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x000001EECFAA6660>
+
+    def test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why(repo, capsys):
+        """6.12.0 is two weeks old and newer than the 6.11.0 that ships, but its own stubs stop mypy."""
+        code, out, _ = repo.run(capsys)
+        assert code == pins.EXIT_MOVABLE
+>       assert not rows(out, "PyQt6"), "PyQt6 moved, though 6.12.0 is skipped"  # it stays at 6.11.0
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: PyQt6 moved, though 6.12.0 is skipped
+E       assert not ['| PyQt6 | 6.11.0 | 6.12.0 | requirements-dev.txt, requirements-test.txt, requirements.txt | requirements-test.in, requirements.in, pyproject.toml (dev) |']
+E        +  where ['| PyQt6 | 6.11.0 | 6.12.0 | requirements-dev.txt, requirements-test.txt, requirements.txt | requirements-test.in, requirements.in, pyproject.toml (dev) |'] = rows('# Python pins ready to move\n\nuv 0.0.0 locked each list in packaging/ again with every pin set free (its environment...e this; .github/workflows/pins.yml runs it every week and keeps one issue with its report while something can move._\n', 'PyQt6')
+
+tests\test_pins.py:276: AssertionError
+1 failed in 2.41s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.00s
+
+=== drill PINS-qt-group (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_pyqt6_and_its_qt_stay_on_one_release_line
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.39s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_pyqt6_and_its_qt_stay_on_one_release_line ________________
+
+repo = <test_pins.Repo object at 0x0000018082335D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000018082336660>
+
+    def test_pyqt6_and_its_qt_stay_on_one_release_line(repo, capsys):
+        """Should PyQt6 6.11.0 let PyQt6-Qt6 6.12.0 in, the Qt group still moves together: Qt stays on the 6.11 line."""
+        loose = json.loads(json.dumps(INDEX))
+        loose["PyQt6"][0]["requires"] = ["PyQt6-Qt6>=6.11.0", "PyQt6-sip>=13.8,<14"]
+        repo.write_index(loose)
+        code, out, _ = repo.run(capsys)
+        assert code == pins.EXIT_MOVABLE
+>       assert [row.split(" | ")[2] for row in rows(out, "PyQt6-Qt6")] == ["6.11.3"], f"the Qt group split: {rows(out, 'PyQt6-Qt6')}"
+E       AssertionError: the Qt group split: ['| PyQt6-Qt6 | 6.11.2 | 6.12.0 | requirements-dev.txt, requirements-test.txt, requirements.txt | requirements-test.in, requirements.in, pyproject.toml (dev) |']
+E       assert ['6.12.0'] == ['6.11.3']
+E         
+E         At index 0 diff: '6.12.0' != '6.11.3'
+E         Use -v to get more diff
+
+tests\test_pins.py:299: AssertionError
+1 failed in 1.95s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.41s
+
+=== drill PINS-universal (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.10s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_apply_moves_the_pins_and_locks_each_list_with_its_own_command ______
+
+repo = <test_pins.Repo object at 0x00000262E7745D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x00000262E7746660>
+
+    def test_apply_moves_the_pins_and_locks_each_list_with_its_own_command(repo, capsys):
+        code, out, err = repo.run(capsys, "--apply", "--cutoff", CUTOFF)
+>       assert code == pins.EXIT_NOTHING, err
+E       AssertionError: pins.py: requirements-dev.txt came out unlike the report: (locked, reported) {'comtypes': (None, '1.4.17')}, and also locked []
+E         
+E       assert 2 == 0
+E        +  where 0 = pins.EXIT_NOTHING
+
+tests\test_pins.py:390: AssertionError
+1 failed in 2.44s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.52s
+
+=== drill PINS-cooldown (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old tests/test_pins.py::test_the_cutoff_is_fourteen_days_back
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.62s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___________ test_each_pin_moves_to_its_newest_release_two_weeks_old ___________
+
+repo = <test_pins.Repo object at 0x00000271C2C95D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x00000271C2C96660>
+
+    def test_each_pin_moves_to_its_newest_release_two_weeks_old(repo, capsys):
+        """nuitka 4.3.5 is a week old, so 4.3.4 is the newest it moves to."""
+        before = repo.hashes()
+        code, out, _ = repo.run(capsys)
+        assert code == pins.EXIT_MOVABLE
+>       assert rows(out, "nuitka") == ["| nuitka | 4.3.1 | 4.3.4 | requirements.txt | requirements.in |"]
+E       AssertionError: assert ['| nuitka | ...rements.in |'] == ['| nuitka | ...rements.in |']
+E         
+E         At index 0 diff: '| nuitka | 4.3.1 | 4.3.5 | requirements.txt | requirements.in |' != '| nuitka | 4.3.1 | 4.3.4 | requirements.txt | requirements.in |'
+E         Use -v to get more diff
+
+tests\test_pins.py:255: AssertionError
+____________________ test_the_cutoff_is_fourteen_days_back ____________________
+
+    def test_the_cutoff_is_fourteen_days_back():
+>       assert pins.COOLDOWN == dt.timedelta(days=14)
+E       AssertionError: assert datetime.timedelta(0) == datetime.timedelta(days=14)
+E        +  where datetime.timedelta(0) = pins.COOLDOWN
+E        +  and   datetime.timedelta(days=14) = <class 'datetime.timedelta'>(days=14)
+E        +    where <class 'datetime.timedelta'> = dt.timedelta
+
+tests\test_pins.py:225: AssertionError
+2 failed in 1.73s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.73s
+
+=== drill PINS-cutoff-to-uv (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.61s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_each_pin_moves_to_its_newest_release_two_weeks_old ___________
+
+repo = <test_pins.Repo object at 0x00000298E11E5D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x00000298E11E6660>
+
+    def test_each_pin_moves_to_its_newest_release_two_weeks_old(repo, capsys):
+        """nuitka 4.3.5 is a week old, so 4.3.4 is the newest it moves to."""
+        before = repo.hashes()
+        code, out, _ = repo.run(capsys)
+        assert code == pins.EXIT_MOVABLE
+>       assert rows(out, "nuitka") == ["| nuitka | 4.3.1 | 4.3.4 | requirements.txt | requirements.in |"]
+E       AssertionError: assert ['| nuitka | ...rements.in |'] == ['| nuitka | ...rements.in |']
+E         
+E         At index 0 diff: '| nuitka | 4.3.1 | 4.3.5 | requirements.txt | requirements.in |' != '| nuitka | 4.3.1 | 4.3.4 | requirements.txt | requirements.in |'
+E         Use -v to get more diff
+
+tests\test_pins.py:255: AssertionError
+1 failed in 1.72s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.73s
+
+=== drill PINS-backwards (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_nothing_moves_backwards
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.88s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________________ test_nothing_moves_backwards _________________________
+
+repo = <test_pins.Repo object at 0x000001B9809D16D0>
+capsys = <_pytest.capture.CaptureFixture object at 0x000001B980896660>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-8640/test_nothing_moves_backwards0')
+
+    def test_nothing_moves_backwards(repo, capsys, tmp_path):
+        """A pin moved by hand to a release newer than the cutoff (a security fix) stays there."""
+        newer = dict(IN_FILES, **{"requirements.in": IN_FILES["requirements.in"].replace("nuitka==4.3.1", "nuitka==4.3.5")})
+        shutil.rmtree(repo.packaging)
+        repo.log.unlink(missing_ok=True)
+        (repo.root / "pyproject.toml").unlink()
+        repo = Repo(tmp_path, INDEX, newer)
+        code, out, _ = repo.run(capsys)
+        assert code == pins.EXIT_MOVABLE  # the rest still moves
+>       assert not rows(out, "nuitka"), "nuitka went backwards"
+E       AssertionError: nuitka went backwards
+E       assert not ['| nuitka | 4.3.5 | 4.3.4 | requirements.txt | requirements.in |']
+E        +  where ['| nuitka | 4.3.5 | 4.3.4 | requirements.txt | requirements.in |'] = rows('# Python pins ready to move\n\nuv 0.0.0 locked each list in packaging/ again with every pin set free (its environment...e this; .github/workflows/pins.yml runs it every week and keeps one issue with its report while something can move._\n', 'nuitka')
+
+tests\test_pins.py:345: AssertionError
+1 failed in 2.27s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.76s
+
+=== drill PINS-one-version (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_a_package_in_more_than_one_lock_stays_at_one_version
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.15s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_a_package_in_more_than_one_lock_stays_at_one_version __________
+
+repo = <test_pins.Repo object at 0x0000019B87FC5D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000019B87FC6660>
+
+    def test_a_package_in_more_than_one_lock_stays_at_one_version(repo, capsys):
+        """psutil 7.3.0 needs Python 3.12: the 3.14 lock could take it, the 3.11 ones can't, so none does."""
+        repo.write_index(with_release(INDEX, "psutil", release("7.3.0", "2026-10-01", python=">=3.12")))
+        code, out, _ = repo.run(capsys)
+        assert code == pins.EXIT_MOVABLE
+>       assert not rows(out, "psutil"), "psutil would be at two versions"
+E       AssertionError: psutil would be at two versions
+E       assert not ['| psutil | 7.2.2 | 7.3.0 | requirements.txt | requirements-test.in, requirements.in, pyproject.toml (dev) |']
+E        +  where ['| psutil | 7.2.2 | 7.3.0 | requirements.txt | requirements-test.in, requirements.in, pyproject.toml (dev) |'] = rows('# Python pins ready to move\n\nuv 0.0.0 locked each list in packaging/ again with every pin set free (its environment...e this; .github/workflows/pins.yml runs it every week and keeps one issue with its report while something can move._\n', 'psutil')
+
+tests\test_pins.py:331: AssertionError
+1 failed in 1.57s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.17s
+
+=== drill PINS-dev-extra (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command tests/test_pins.py::test_after_apply_the_lists_agree_as_tests_test_requirements_wants
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 3.97s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_____ test_apply_moves_the_pins_and_locks_each_list_with_its_own_command ______
+
+repo = <test_pins.Repo object at 0x0000023423865D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000023423866660>
+
+    def test_apply_moves_the_pins_and_locks_each_list_with_its_own_command(repo, capsys):
+        code, out, err = repo.run(capsys, "--apply", "--cutoff", CUTOFF)
+        assert code == pins.EXIT_NOTHING, err
+        assert "Moved: packaging/requirements-dev.in, packaging/requirements-dev.txt" in out
+        assert "nuitka==4.3.4; sys_platform == 'win32'  # Windows: compiles Chatmon\n" in repo.text("requirements.in")
+        assert "PyQt6==6.11.0  # the Qt that ships\nPyQt6-Qt6==6.11.3\n" in repo.text("requirements.in")
+        assert repo.text("requirements-test.in") == IN_FILES["requirements-test.in"].replace("PyQt6-Qt6==6.11.2", "PyQt6-Qt6==6.11.3")
+        assert repo.text("requirements-dev.in") == IN_FILES["requirements-dev.in"].replace("0.17.3", "0.17.4")
+>       assert (repo.root / "pyproject.toml").read_text(encoding="utf-8") == PYPROJECT.replace("Qt6==6.11.2", "Qt6==6.11.3").replace("0.17.3", "0.17.4")
+E       assert '[project]\nn...0.17.3",\n]\n' == '[project]\nn...0.17.4",\n]\n'
+E         
+E         Skipping 234 identical leading characters in diff, use -v to show
+E         - Qt6==6.11.3",
+E         ?           ^
+E         + Qt6==6.11.2",
+E         ?           ^
+E               "psutil==7.2.2",...
+E         
+E         ...Full output truncated, use '-vv' to show
+
+tests\test_pins.py:396: AssertionError
+______ test_after_apply_the_lists_agree_as_tests_test_requirements_wants ______
+
+repo = <test_pins.Repo object at 0x00000234239E1950>
+capsys = <_pytest.capture.CaptureFixture object at 0x00000234239E20D0>
+
+    def test_after_apply_the_lists_agree_as_tests_test_requirements_wants(repo, capsys):
+        assert repo.run(capsys, "--apply", "--cutoff", CUTOFF)[0] == pins.EXIT_NOTHING
+        lists = pins.read_lists(repo.packaging)
+        by_name = {lst.infile.path.name: lst for lst in lists}
+        for lst in lists:
+            wanted = {pin.key: pin.version for name in (lst.infile.path.name, *lst.infile.includes) for pin in by_name[name].infile.pins}
+            assert {key: lst.current[key] for key in wanted} == wanted, lst.txt.name
+        dev = by_name["requirements-dev.in"]
+        pinned = {pin.key: pin.version for name in ("requirements-dev.in", "requirements-test.in") for pin in by_name[name].infile.pins}
+>       assert pins.dev_extra(repo.root / "pyproject.toml") == pinned
+E       AssertionError: assert {'pyqt6': '6.... '9.2.0', ...} == {'ruff': '0.1... '7.2.2', ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'ruff': '0.17.3'} != {'ruff': '0.17.4'}
+E         {'pyqt6-qt6': '6.11.2'} != {'pyqt6-qt6': '6.11.3'}
+E         Use -v to get more diff
+
+tests\test_pins.py:423: AssertionError
+2 failed in 4.04s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 4.51s
+
+=== drill PINS-seed (P-DEPENDABOT) on packaging/pins.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.21s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_apply_moves_the_pins_and_locks_each_list_with_its_own_command ______
+
+repo = <test_pins.Repo object at 0x0000021ED7425D30>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000021ED7426660>
+
+    def test_apply_moves_the_pins_and_locks_each_list_with_its_own_command(repo, capsys):
+        code, out, err = repo.run(capsys, "--apply", "--cutoff", CUTOFF)
+        assert code == pins.EXIT_NOTHING, err
+        assert "Moved: packaging/requirements-dev.in, packaging/requirements-dev.txt" in out
+        assert "nuitka==4.3.4; sys_platform == 'win32'  # Windows: compiles Chatmon\n" in repo.text("requirements.in")
+        assert "PyQt6==6.11.0  # the Qt that ships\nPyQt6-Qt6==6.11.3\n" in repo.text("requirements.in")
+        assert repo.text("requirements-test.in") == IN_FILES["requirements-test.in"].replace("PyQt6-Qt6==6.11.2", "PyQt6-Qt6==6.11.3")
+        assert repo.text("requirements-dev.in") == IN_FILES["requirements-dev.in"].replace("0.17.3", "0.17.4")
+        assert (repo.root / "pyproject.toml").read_text(encoding="utf-8") == PYPROJECT.replace("Qt6==6.11.2", "Qt6==6.11.3").replace("0.17.3", "0.17.4")
+        moving = [call for call in repo.calls() if Path(call["cwd"]) == repo.packaging]
+        assert [call["argv"][2] for call in moving] == ["requirements-dev.in", "requirements-test.in", "requirements.in"]
+        for call in moving:
+            stem = call["argv"][2].removesuffix(".in")
+            command = COMMANDS[stem].replace(" --exclude-newer 2026-10-31", "")
+            assert call["argv"] == ["pip", "compile", *command.split(), "--exclude-newer", CUTOFF, "--quiet"]
+>           assert call["preferences"] == repo.locked(stem)  # uv was handed the report's versions first
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: assert {'comtypes': ...'6.11.0', ...} == {'comtypes': ...'6.11.0', ...}
+E             
+E             Omitting 6 identical items, use -vv to show
+E             Differing items:
+E             {'ruff': '0.17.3'} != {'ruff': '0.17.4'}
+E             {'pyqt6-qt6': '6.11.2'} != {'pyqt6-qt6': '6.11.3'}
+E             Use -v to get more diff
+
+tests\test_pins.py:403: AssertionError
+1 failed in 2.98s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 9.95s
+
+=== summary
+PASS PINS-skip
+PASS PINS-qt-group
+PASS PINS-universal
+PASS PINS-cooldown
+PASS PINS-cutoff-to-uv
+PASS PINS-backwards
+PASS PINS-one-version
+PASS PINS-dev-extra
+PASS PINS-seed

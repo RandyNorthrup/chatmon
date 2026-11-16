@@ -1,0 +1,787 @@
+{
+ "plan": "docs/delivery/m6b-static-analysis-logging.md",
+ "section": "docs/delivery/reports/m6b/wave5/section.md",
+ "rules": {},
+ "inputs_add": [
+  "docs/delivery/reports/wave4/cilog.py",
+  "docs/delivery/reports/wave4/wsl_drills.py"
+ ],
+ "task_changes_add": {},
+ "ledger_edits": {},
+ "stale_reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M6A and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147",
+ "receipts": [
+  {
+   "id": "W5-READY",
+   "kind": "readiness",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A2",
+    "M6B-01.A3",
+    "M6B-02.A1",
+    "M6B-02.A2",
+    "M6B-02.A3",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-RW.A1",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4"
+   ],
+   "artifact": "docs/delivery/reports/m6b/wave5/readiness.md",
+   "method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three), PR #22's changes to the modules and tests T1-ruff to T7-leftovers own, and the M6A and M8 plans it takes as inputs (re-bound in this round first); no conflict or gap; the new code passes ruff and mypy with no new ignore."
+  },
+  {
+   "id": "W5-BEH-WINDOWS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2",
+    "M6B-02.A2",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4",
+    "M6B-RW.A1"
+   ],
+   "artifact": "docs/delivery/reports/wave5/suite-windows.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "exit_code": 0,
+   "method": "The whole suite on 7816159's source on this Windows 11 workstation (offscreen Qt, the shared venv, BelowNormal priority, a CHATMON_INSTANCE of its own), which runs every test these criteria's earlier receipts named: 1293 passed, 225 skipped (other platforms' tests, each skip with its reason), exit 0; per-test results are mapped from the log by docs/delivery/reports/wave4/cilog.py. Every criterion's tests ran here; the Linux-only overlay and log-mode tests skip on Windows, and CI's and WSL's receipts add them. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-TEMPLATE",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "artifact": "docs/delivery/reports/wave5/extract-strings-check.log",
+   "command": [
+    "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+    "packaging/extract_strings.py",
+    "--check"
+   ],
+   "exit_code": 0,
+   "method": "packaging/extract_strings.py --check on 7816159's files on this workstation (the worktree's HEAD then, b8da74a, named in the log, changes only docs/ after 7816159: git diff 7816159 b8da74a outside docs/ is empty), exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes from today's marked strings, and none of them is a string that couldn't be translated; PR #22 added or changed no marked string."
+  },
+  {
+   "id": "W5-BEH-WSL-MYPY-6121",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "artifact": "docs/delivery/reports/m6a/wave5/mypy-pyqt6-6.12.1-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/m4a-venv/bin/python",
+    "-m",
+    "mypy",
+    "--platform",
+    "linux",
+    "--no-incremental",
+    "--cache-dir",
+    "/var/tmp/plans5-mypy-linux"
+   ],
+   "exit_code": 1,
+   "method": "M6B-02.A1's 6.12 half: mypy 2.4.1 with PyQt6 6.12.1's stubs (/var/tmp/m4a-venv in WSL Arch) on 7816159's files, --platform linux; win32 and darwin the same (mypy-pyqt6-6.12.1-win32.log, -darwin.log), and so did M10's run here (../m10/wave5/mypy-6121.log). Two errors each, both in chatmon/layer.py.",
+   "status": "fail",
+   "reason": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again."
+  },
+  {
+   "id": "W5-BEH-CI-LINT",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A1",
+    "M6B-01.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-133010594152-lint.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594152",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job lint. It ran ruff check . with pyproject.toml's settings: the eleven families, max-complexity 15, RUF001-003 ignored, S101 allowed only in tests, and no per-file exemption left for the eight hub files. The result was 'All checks passed!', and the job succeeded. ruff is pinned in packaging/requirements-dev.txt, which the job installed with --require-hashes. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-TYPES-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-133010594218-types-linux.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594218",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job types (linux): mypy --platform linux on [tool.mypy], which has no overrides and no exemption list. It passed with the locked PyQt6 6.11 stubs (packaging/requirements-dev.txt), and the job succeeded. That is M6B-02.A1's 6.11 half; its 6.12 half is W5-BEH-WSL-MYPY-6121. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-TYPES-WIN32",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-133010594268-types-win32.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594268",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job types (win32): mypy --platform win32 passed with no module exempt. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-TYPES-DARWIN",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-02.A1",
+    "M6B-02.A3"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-133010594142-types-darwin.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594142",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job types (darwin): mypy --platform darwin passed with no module exempt. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-LINUX",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2",
+    "M6B-02.A2",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-RW.A1",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-133010594255-test-ubuntu-24.04-3.15.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594255",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job test (ubuntu-24.04, 3.15), every test under xvfb-run. Every warning is an error there (pyproject.toml), and every test these criteria's drills name passed, apart from the Windows-only installer test (tests/test_updates.py::test_the_windows_installer_runs_from_a_copy_nobody_can_change), which skips there: the log's 0600 and no-link test, tests/test_imports.py on Linux, the overlay's keymap and debug-log tests in tests/test_wayland.py, and the suite's own ResourceWarning-free run. That is integration note 1's Linux xvfb run. The Qt 6.4-era distribution containers (ubuntu:24.04, debian:trixie, fedora:44 on their own PyQt6) passed the whole suite too. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-BEH-CI-MACOS",
+   "kind": "behavior",
+   "acceptance": [
+    "M6B-01.A2",
+    "M6B-02.A2",
+    "M6B-03.A1",
+    "M6B-03.A2",
+    "M6B-03.A3",
+    "M6B-03.A4",
+    "M6B-03.A5",
+    "M6B-03.A6",
+    "M6B-RW.A1",
+    "M6B-LEFT.A1",
+    "M6B-LEFT.A2",
+    "M6B-LEFT.A3",
+    "M6B-LEFT.A4"
+   ],
+   "artifact": "docs/delivery/reports/m6b/ci/ci-133010594239-test-macos-latest-3.14.log",
+   "command": [
+    "gh",
+    "run",
+    "view",
+    "43778643147",
+    "--repo",
+    "RandyNorthrup/chatmon",
+    "--job",
+    "133010594239",
+    "--log"
+   ],
+   "exit_code": 0,
+   "method": "main's CI run 43778643147 on 7816159, job test (macos-latest, 3.14): the same tests passed on macOS (the Windows-only installer test skipping there too), with every warning an error, as on the 3.11 and 3.15 legs. fb19cb9's change keeps the log tests to themselves on macOS, and they still do. That is integration note 1's macOS run. Read from the job's log (fetched here with the command above, exit 0) by docs/delivery/reports/wave4/cilog.py, which maps pytest's progress characters onto 7816159's collection and checks the run's own counts and skip lines; every leg's result for these tests is in ci/observed-7816159.txt. The CI run's own platform and versions are in the log; this receipt's environment is the plan's profile, the workstation that fetched and read it (ROADMAP: evidence from elsewhere). Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-01-bubble-not-clear-of-the-box",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-01-bubble-not-clear-of-the-box",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-01-bubble-not-clear-of-the-box through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-01-extractor-misses-import-time",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-01-extractor-misses-import-time",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-01-extractor-misses-import-time through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-01-menu-end-key-goes-home",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-01-menu-end-key-goes-home",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-01-menu-end-key-goes-home through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-02-a-module-loads-macos-on-import",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-02-a-module-loads-macos-on-import",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-02-a-module-loads-macos-on-import through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-autostart-warning-printed",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A4"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-autostart-warning-printed",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-autostart-warning-printed through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-brain-failure-not-logged",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-brain-failure-not-logged",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-brain-failure-not-logged through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-brain-key-not-scrubbed",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-brain-key-not-scrubbed",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-brain-key-not-scrubbed through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-chat-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-chat-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-chat-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-console-not-blanked",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-console-not-blanked",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-console-not-blanked through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-debug-env-ignored",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-debug-env-ignored",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-debug-env-ignored through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-keys-not-blanked",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-keys-not-blanked",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-keys-not-blanked through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-limit-ten-times",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-limit-ten-times",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-limit-ten-times through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-no-stderr",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-no-stderr",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-no-stderr through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-package-manager-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-package-manager-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-package-manager-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-phrases-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-phrases-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-phrases-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-player-failure-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-player-failure-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-player-failure-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-reminder-words-logged",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A5"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-reminder-words-logged",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-reminder-words-logged through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-rotated-as-dot-1",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-rotated-as-dot-1",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-rotated-as-dot-1 through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-03-setup-twice-doubles",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-03-setup-twice-doubles",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-03-setup-twice-doubles through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-desktops-words-not-shown",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-desktops-words-not-shown",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-desktops-words-not-shown through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-escaped-exception-not-in-the-log",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A6"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-escaped-exception-not-in-the-log",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-escaped-exception-not-in-the-log through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-hotkey-bound-kept-private",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A2"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-hotkey-bound-kept-private",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-hotkey-bound-kept-private through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-leak-fails-without-a-flag",
+   "kind": "red",
+   "acceptance": [
+    "M6B-RW.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-leak-fails-without-a-flag",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-leak-fails-without-a-flag through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-player-not-closed",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-player-not-closed",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-player-not-closed through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-players-left-at-quit",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-players-left-at-quit",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-players-left-at-quit through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-status-waits-for-the-brain",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-status-waits-for-the-brain",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-status-waits-for-the-brain through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-unclear-script-reminder-unsaid",
+   "kind": "red",
+   "acceptance": [
+    "M6B-LEFT.A4"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-unclear-script-reminder-unsaid",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-unclear-script-reminder-unsaid through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-B-unreadable-settings-hidden",
+   "kind": "red",
+   "acceptance": [
+    "M6B-03.A6"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-b-results.json",
+   "drill": "M6B-B-unreadable-settings-hidden",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills-b.log",
+   "method": "Red drill M6B-B-unreadable-settings-hidden through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-RW-http-error-left-open",
+   "kind": "red",
+   "acceptance": [
+    "M6B-RW.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-RW-http-error-left-open",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-RW-http-error-left-open through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-M6B-RW-release-server-left-open",
+   "kind": "red",
+   "acceptance": [
+    "M6B-RW.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/drills-results.json",
+   "drill": "M6B-RW-release-server-left-open",
+   "artifact": "docs/delivery/reports/m6b/wave5/drills.log",
+   "method": "Red drill M6B-RW-release-server-left-open through tests/drills/run.py on this Windows workstation, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-mypy-app",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "mypy-app",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill mypy-app through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-mypy-brains",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "mypy-brains",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill mypy-brains through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-mypy-menus",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "mypy-menus",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill mypy-menus through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-mypy-winpipe",
+   "kind": "red",
+   "acceptance": [
+    "M6B-02.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "mypy-winpipe",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill mypy-winpipe through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-BLE",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-BLE",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-BLE through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-C4",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-C4",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-C4 through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-C90",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-C90",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-C90 through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-DTZ",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-DTZ",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-DTZ through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-PERF",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-PERF",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-PERF through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-PIE",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-PIE",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-PIE through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-RUF",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-RUF",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-RUF through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-S",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-S",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-S through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-S101-in-chatmon",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-S101-in-chatmon",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-S101-in-chatmon through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-UP",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A1"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-UP",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-UP through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-app",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-app",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-app through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  },
+  {
+   "id": "W5-RED-ruff-app-test",
+   "kind": "red",
+   "acceptance": [
+    "M6B-01.A3"
+   ],
+   "results": "docs/delivery/reports/m6b/wave5/gate-drills-results.json",
+   "drill": "ruff-app-test",
+   "artifact": "docs/delivery/reports/m6b/wave5/gate-drills.log",
+   "method": "Red drill ruff-app-test through gate_drills.py (a byte-for-byte copy of docs/delivery/reports/m6b/gate_drills.py in wave5/, so its logs land there and the earlier ones stay as they were) on this Windows workstation: ruff or mypy green on a temporary copy of chatmon/, packaging/, tests/ and pyproject.toml, the violation put in and the gate failing with the expected rule or error, the file's bytes put back and the gate green again, in a temporary copy of 7816159's files: green, the defect put in, the named tests failing with pytest's tests-failed exit and the expected test named, the file's bytes put back (checked by SHA-256) and green again. Evidence for 7816159, v0.10.0's commit (PR #22 merged: the KDE and Hyprland overlay fixes, the screen-reader fixes, the Dependabot replacement)."
+  }
+ ],
+ "tasks": {
+  "T4-mypy": {
+   "status": "blocked",
+   "blocker": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. That is M6B-02.A1's 6.12 half. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again."
+  },
+  "T6-phase-b": {
+   "status": "blocked",
+   "blocker": "Waits for T4-mypy, which it depends on and which is blocked at 7816159 (mypy with PyQt6 6.12.1's stubs fails on chatmon/layer.py:824 and :917). Its own criteria's receipts all pass at 7816159; it can be verified again once T4-mypy is."
+  },
+  "T7-leftovers": {
+   "status": "blocked",
+   "blocker": "Waits for T6-phase-b, which it depends on and which waits for T4-mypy (mypy with PyQt6 6.12.1's stubs fails on chatmon/layer.py:824 and :917 at 7816159). Its own criteria's receipts all pass at 7816159; it can be verified again once T6-phase-b is."
+  }
+ },
+ "pending": [],
+ "next_action": "M6B-02.A1's 6.12 half fails at 7816159: mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again; then T4-mypy can be verified, and T6-phase-b and T7-leftovers, which depend on it and whose own receipts pass, with it, and M6B closed. The 6.11 half and every other criterion pass.",
+ "source_revision": "781615935a49a3dc48a1b7ab015d8ae01b1fd531"
+}

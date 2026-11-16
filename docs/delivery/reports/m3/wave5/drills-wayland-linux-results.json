@@ -1,0 +1,284 @@
+[
+  {
+    "id": "M3-04-content",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "        return \"wl_subcompositor\" in self.globals and \"wp_viewporter\" in self.globals",
+      "replace": "        return False  # drill: full-output buffers again"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown",
+      "tests/test_sway.py::test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales"
+    ],
+    "expected": [
+      "test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown",
+      "test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[3840x2160-2]",
+      "test_buffers_are_the_size_of_what_is_shown_at_4k_and_fractional_scales[2560x1440-1.5]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "1d0561c9624fe8410e27b6d2fcccabffd4017b81057ee1b9cc12b513fea5293d",
+    "mutated_exit": 1,
+    "observed": "_______ test_with_subsurfaces_the_buffers_are_the_size_of_what_is_shown ________",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-04-move-waits",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "            return False  # one comes back with wl_buffer.release: a move waits for it, never shown without its pixels",
+      "replace": "            if box != self._box:  # drill: moved now, with the old pixels\n                c.request(subsurface, SUBSURFACE_SET_POSITION, \"ii\", box.x(), box.y())\n            return False"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place"
+    ],
+    "expected": [
+      "test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "e7734d2320a41a6f09bd0c691e465daf3085f33b3c9e6b871e49127380082357",
+    "mutated_exit": 1,
+    "observed": "__ test_a_move_waits_for_a_buffer_rather_than_show_old_pixels_in_a_new_place ___",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-04-placed",
+    "requirement": "M3-04",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "        p.translate(-QPointF(covered.topLeft()))  # the stage draws in its own coordinates",
+      "replace": "        pass  # drill: drawn as if the subsurface were at the output's corner"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sway.py::test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else"
+    ],
+    "expected": [
+      "test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "fad9ff2b379a2865a692e2db97d58f73572d8b8bd2306e490b09534d7ee90f71",
+    "mutated_exit": 1,
+    "observed": "_ test_dragged_across_the_screen_it_is_drawn_once_where_it_is_and_nowhere_else _",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-RC-input",
+    "requirement": "M3-RC",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "        c.requests(region, REGION_ADD, \"iiii\", rows)  # a sprite's outline is some fifty of them, as it walks",
+      "replace": "        c.requests(region, REGION_ADD, \"iiii\", [(0, 0, 1 << 15, 1 << 15)])  # drill: every click taken"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_layer_surface_draws_and_takes_clicks_only_on_the_penguin",
+      "tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else"
+    ],
+    "expected": [
+      "test_layer_surface_draws_and_takes_clicks_only_on_the_penguin",
+      "test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "0e71f1b432050cd20117174e5cd87b80e61424f0a0affe974490b9af38ba41a3",
+    "mutated_exit": 1,
+    "observed": "________ test_layer_surface_draws_and_takes_clicks_only_on_the_penguin _________",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-RC-keyboard",
+    "requirement": "M3-RC",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "                if not self._dropped_on_handover():  # taken back at once: the stage never knew it had gone",
+      "replace": "                if True:  # drill: the keyboard lost on the handover left lost"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive",
+      "tests/test_sway.py::test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open"
+    ],
+    "expected": [
+      "test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive",
+      "test_the_keyboard_is_the_overlays_only_while_the_ask_box_is_open"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "13142136f93331580078f3a6deeaf13ee2c90da335c2a9898156ff149f2dfba0",
+    "mutated_exit": 1,
+    "observed": "_ test_where_the_compositor_takes_the_keyboard_back_on_the_handover_grabs_stay_exclusive _",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-RC-clipboard-v2",
+    "requirement": "M3-RC",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "            board.setText(text)\n            # KWin takes a selection only",
+      "replace": "            pass  # drill: the overlay's clipboard only\n            # KWin takes a selection only"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_the_clipboard_is_the_overlays_own",
+      "tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+    ],
+    "expected": [
+      "test_the_clipboard_is_the_overlays_own",
+      "test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+    ],
+    "status": "fail",
+    "reason": "mutated run did not print ['test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows']",
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "b827c38b138b8ae2d212cef8dadf39c1a71c232ef22e6c0c196e3cb2a9ed0e05",
+    "mutated_exit": 1,
+    "observed": "____________________ test_the_clipboard_is_the_overlays_own ____________________",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1"
+  },
+  {
+    "id": "M3-14-sway-menu",
+    "requirement": "M3-14",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        drawn_here = bool(getattr(self.surface, \"draws_menus\", False))  # whatever the hosting: this menu is the overlay's",
+      "replace": "        drawn_here = self.draws_menus()  # drill: as before, only while hosting"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sway.py::test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back"
+    ],
+    "expected": [
+      "test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "5e1a57bcaae14984d6b224514760e1e8f5dd09d18c0dea0d360fabbada683926",
+    "mutated_exit": 1,
+    "observed": "_ test_with_the_box_a_window_the_penguins_menu_works_and_gives_the_keyboard_back _",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-14-sway-bubble",
+    "requirement": "M3-14",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith(\"wayland\")",
+      "replace": "        return True  # drill: as before, the box's geometry trusted everywhere"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses"
+    ],
+    "expected": [
+      "test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "464978c5eeb921d5b89d60a6c162656c9fa39334a7836e92dfdc2f9e14099fc1",
+    "mutated_exit": 1,
+    "observed": "_ test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses _",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-14-hosting",
+    "requirement": "M3-14",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            self.stage.set_hosting(not self._ask_box_as_window())",
+      "replace": "            pass  # drill: the box always drawn on the overlay"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sway.py::test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses",
+      "tests/test_sway.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader",
+      "tests/test_sway.py::test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said"
+    ],
+    "expected": [
+      "test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses",
+      "test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[auto-True]",
+      "test_with_orca_the_box_as_a_window_is_announced_and_echoes_typing_and_bubbles_are_said"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "baseline_exit": 0,
+    "mutated_sha256": "4b0c8ed4454a438c69eb35fa2282b97b2a7e8e88705c4207f4268d1ebb67fd42",
+    "mutated_exit": 1,
+    "observed": "_ test_with_a_screen_reader_the_ask_box_is_a_window_sway_floats_centres_and_focuses _",
+    "after_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "restored_exit": 0
+  }
+]

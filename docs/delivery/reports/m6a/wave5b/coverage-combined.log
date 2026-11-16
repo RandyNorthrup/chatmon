@@ -1,0 +1,9 @@
+# CI's coverage data for 56caddd (the three Python 3.14 legs' artifacts of PR #24's run 43794815103, gh run download -p 'coverage-*'), combined here as CI's coverage job combines them
+$ python -m coverage combine --keep --data-file build/wave5b-coverage/.coverage.combined <the data files>
+Combined 5 files
+# exit 0
+$ python -m coverage report --data-file build/wave5b-coverage/.coverage.combined (pyproject.toml: fail_under = 84)
+chatmon\xkb.py                166     23     58     11  83.0%
+-------------------------------------------------------------
+TOTAL                       20941   2289   6412    941  86.4%
+# exit 0

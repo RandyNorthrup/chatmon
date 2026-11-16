@@ -1,0 +1,57 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed, so CONTRIBUTING.md's 6.12.1 sentence can hold; CONTRIBUTING.md's opt-in table names CHATMON_PINS_NETWORK) and 56caddd (a test's wait): neither changes what a criterion asks. M6A-02's replacement by M6A-02B, confirmed by the coordinator, stands; no conflict or gap.",
+ "next_action": "None in M6A on 56caddd. P-RELEASE and P-DEPENDABOT were observed and recorded at 7816159 (reports/m6a/wave5/outcomes.log), and M6A-02 is superseded by M6A-02B.",
+ "tasks": {},
+ "ci": {
+  "W5B-BEH-CI-DISTRO-UBUNTU": {
+   "method": "PR #24's CI run 43794815103 on 56caddd, job distro (ubuntu:24.04). The whole suite ran in the container on Ubuntu 24.04's own python3-pyqt6: 1319 passed, 199 skipped (each with its reason), and the job succeeded."
+  },
+  "W5B-BEH-CI-DISTRO-DEBIAN": {
+   "method": "PR #24's CI run 43794815103 on 56caddd, job distro (debian:trixie). The whole suite ran on Debian trixie's own PyQt6: 1319 passed, 199 skipped, and the job succeeded."
+  },
+  "W5B-BEH-CI-DISTRO-FEDORA": {
+   "method": "PR #24's CI run 43794815103 on 56caddd, job distro (fedora:44). The whole suite ran on Fedora 44's own PyQt6: 1321 passed, 197 skipped, and the job succeeded."
+  },
+  "W5B-BEH-CI-COVERAGE": {
+   "log": "ci-133065350839-coverage.log",
+   "method": "PR #24's CI run 43794815103 on 56caddd, job coverage (its second attempt; the first was skipped when one macOS 3.15 test failed, and passed on its re-run). It downloaded the three Python 3.14 legs' data (Windows, macOS, ubuntu-24.04-arm), combined it, wrote the table to the summary, and held the total to pyproject.toml's fail_under = 84. TOTAL was 20941 statements with 2289 missed, 86.4%, and the job succeeded. The same data, downloaded and combined here, gives the same total (wave5b/coverage-combined.log)."
+  },
+  "W5B-BEH-PKG-INSTALL": {
+   "log": "pkg-133010696522-windows.log",
+   "run": "43778675599",
+   "method": "Packages run 43778675599, the push of the annotated tag v0.10.0 (\"Chatmon 0.10.0\") on 7816159, all ten jobs green (reports/m6a/wave5/outcomes.log). Job windows, from log line 277: python -m pip install --require-hashes -r packaging/requirements-build.txt, then --require-hashes --no-build-isolation -r packaging/requirements.txt; both succeeded, and the job built the installer that sign-windows signed and published. The files this receipt binds are the same at 56caddd as at 7816159: the coordinator's df3e93c and 56caddd change chatmon/layer.py, CONTRIBUTING.md and tests/test_app_smoke.py, none of which this job reads. Packages runs on a v* tag, by hand, or on a pull request that changes packaging/, pyproject.toml, tests/test_package_data.py or packages.yml, so none ran on PR #24."
+  },
+  "W5B-BEH-PKG-WHEEL": {
+   "log": "pkg-133010696583-python.log",
+   "run": "43778675599",
+   "method": "Packages run 43778675599, the push of the annotated tag v0.10.0 on 7816159. Job python. It dated the build by the commit (SOURCE_DATE_EPOCH 1794787737) and built the wheel and sdist without isolation on the hash-locked setuptools. twine check passed both (log lines 1182-1183). tests/test_package_data.py then passed on what was built, 5 of 5 (line 1210): every tracked file under chatmon/ is in the wheel, and the only console script is chatmon. The files this receipt binds are the same at 56caddd as at 7816159: the coordinator's df3e93c and 56caddd change chatmon/layer.py, CONTRIBUTING.md and tests/test_app_smoke.py, none of which this job reads."
+  },
+  "W5B-BEH-CI-PINS-TYPES": {
+   "log": "pins-133010593575-types.log",
+   "run": "43778643021",
+   "method": "Pins run 43778643021, the push of 7816159 to main, job types (pins.yml's own CI for pins.py): mypy --strict --platform linux, win32 and darwin on packaging/pins.py each said 'Success: no issues found in 1 source file', then python -m pytest tests/test_pins.py tests/test_requirements.py: 28 passed, 1 skipped (the opt-in real-uv test, with its reason), and the job succeeded. Of what this receipt binds only CONTRIBUTING.md changed since (df3e93c's opt-in row), which the job doesn't read; pins.yml runs on pull requests only when pins.py, its tests, its locks or pins.yml change, so none ran on PR #24. The same steps ran here on 56caddd (W5B-BEH-PINS-TESTS)."
+  }
+ },
+ "receipts": {
+  "W5B-MAN-DEPENDABOT": null,
+  "W5B-BEH-PINS-TESTS": {
+   "method": "pins.yml's types job, run here on 56caddd's files (the log names the worktree's HEAD, a commit on this branch that changes only docs/ after 56caddd); Windows 11, the shared venv, a CHATMON_INSTANCE of its own, through wave5b/run-windows.sh: mypy 2.4.1 --strict on packaging/pins.py for linux, win32 and darwin, then tests/test_pins.py and tests/test_requirements.py by name. Each test this criterion names passed: the cutoff fourteen days back, the newest release two weeks old, PyQt6 6.12.0's skip with its reason, PyQt6 and its Qt on one line, one version across the locks, nothing backwards, --apply moving the pins and the dev extra with the floor kept and locking each list with its own command, a lock that isn't uv's universal one refused. The opt-in real-uv test skipped with its reason. The whole suite here ran them too (wave5b/suite-windows.log)."
+  },
+  "W5B-MAN-CI-REVIEW": {
+   "method": "Each criterion read again at 56caddd (ci-review.md): ci.yml and packages.yml are unchanged since 7816159 (git diff 7816159 56caddd -- .github is empty), so the first review's line-by-line reading and its reading of v0.10.0's tagged Packages run 43778675599 stand (wave5/ci-review.md, P-RELEASE in wave5/outcomes.log). What ran on 56caddd: PR #24's CI run 43794815103, all 19 jobs green on its second attempt (the first failed one test on macOS 3.15; its re-run passed), its coverage job at 86.4% against fail_under = 84, its test merge with 56caddd's own tree."
+  },
+  "W5B-MAN-DEPENDABOT-ACTIONS": {
+   "method": "check-jsonschema 0.39.0 validated .github/dependabot.yml at 56caddd (the log names the worktree's HEAD, a commit on this branch that changes only docs/ after 56caddd) against SchemaStore's Dependabot schema, exit 0 (dependabot-schema.log). The file is unchanged since 7816159 and was read again (wave5b/pins-review.md): one entry, github-actions, weekly, a 14-day cooldown, one group; no pip entry, and its header says why and where the Python pins move instead. Dependabot's first run on main and the owner's closing of #19-#21 are as observed in wave5/outcomes.log."
+  },
+  "W5B-MAN-PINS-WORKFLOW": {
+   "method": ".github/workflows/pins.yml at 56caddd, unchanged since 7816159, read again (wave5b/pins-review.md) against the first review's line-by-line reading (wave5/pins-review.md): the schedule and dispatch, permissions: {} with contents: read and issues: write on the pins job, uv installed --require-hashes, the issue step, the types job. CI's lint job passed actionlint and zizmor on it in PR #24's run 43794815103, and it validates against SchemaStore's workflow schema. Its runs on main are those observed at 7816159: dispatched Pins run 43778713259 opened #23 and run 43778794994 edited it in place, one issue by that title (wave5/outcomes.log)."
+  },
+  "W5B-MAN-SDE": {
+   "method": "sde_check.py made two copies of the wheel's inputs at 56caddd with file times a fortnight apart, and built each with python -m build --no-isolation --wheel on the hash-locked build tools. The wheels differed without SOURCE_DATE_EPOCH and were byte-identical with it set to the commit's time, which is how packages.yml's 'Date the build by its commit' step sets it (observed in Packages run 43778675599). The commit time is the worktree's HEAD's (named in the log), a commit on this branch that changes only docs/ after 56caddd (git diff 56caddd HEAD outside docs/ is empty), so the wheel's inputs are 56caddd's."
+  },
+  "W5B-MAN-DOCS": {
+   "method": "SECURITY.md, CONTRIBUTING.md and the issue chooser read claim by claim against 56caddd (docs-review.md). Every claim holds. The one that failed at 7816159 (W5-MAN-DOCS, kept as history), 'It also passes with the next PyQt6's stubs (6.12.1)', is true again: mypy 2.4.1 with PyQt6 6.12.1 finds no issues on linux, win32 and darwin, in WSL (mypy-pyqt6-6.12.1-*.log), here (../m10/wave5b/mypy-6121.log) and in the how-to's replay, since df3e93c gave layer.py's two lines their type. The opt-in table now names CHATMON_PINS_NETWORK, the pins check's real-uv test.",
+   "status": "pass"
+  }
+ }
+}

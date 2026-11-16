@@ -1,0 +1,21 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed; CONTRIBUTING.md's opt-in table) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; df3e93c gives layer.py's two lines the second workaround, so M10-03.A1 and A3 can pass; the M4A, M6A, M6B and M8 plans it takes as inputs were re-bound first; note 2's CI entry is the coordinator's from 2026-11-28; note 4's upstream report is posted (wave5/stub-report.log).",
+ "next_action": "None in M10's criteria on 56caddd. From 2026-11-28, the coordinator: the types job's check against PyQt6 6.12.1's stubs (P-CI-NEXT-STUBS, integration note 2), which would catch a line like layer.py's in CI. Note 4's upstream report is posted (https://www.riverbankcomputing.com/pipermail/pyqt/2026-November/046579.html, 2026-11-16, after 046574 and 046578 by others) and waits on Riverbank's fix to the stubs.",
+ "stale_reason": "Stale in the plans round's second binding (2026-11-15): the coordinator's df3e93c and 56caddd changed files it was bound to, the M4A, M6A, M6B and M8 plans this plan binds were re-bound, and this round's section changed the plan's prose. The W5B- receipts re-ran its check on 56caddd or read it from PR #24's CI run 43794815103",
+ "tasks": {},
+ "receipts": {
+  "W5B-RED-signal-from-qtcore": null,
+  "W5B-RED-parent-unignored": null,
+  "W5B-RED-constructor-untyped": null,
+  "W5B-RED-null-image-unchecked": null,
+  "W5B-BEH-MYPY-6121": {
+   "method": "mypy 2.4.1 --platform linux, win32 and darwin on 56caddd's tree with the throwaway venv's PyQt6 6.12.1 stubs (%TEMP%/m10-qt6121), through M10's mypy_runs.py: 'Success: no issues found in 70 source files' on each, layer.py's two lines included now that df3e93c gave them their type (W5-BEH-MYPY-6121, the failed run at 7816159, is kept as history). No module exempted.",
+   "status": "pass",
+   "exit_code": 0
+  },
+  "W5B-MAN-HOWTO": {
+   "method": "Review of CONTRIBUTING.md's how-to for the next stubs and of the integration note's CI entry, line by line, against 56caddd and the commands run there (howto-review.md): mypy_runs.py with the 6.12.1 venv here, and CONTRIBUTING.md's five commands replayed as written in WSL Arch on a copy of 56caddd's tracked files (howto-replay.log): mypy finds no issues in 70 files on each platform. The sentence that mypy also passes with 6.12.1's stubs, false at 7816159 on layer.py's two lines (W5-MAN-HOWTO, kept as history), is true again.",
+   "status": "pass"
+  }
+ }
+}

@@ -1,0 +1,401 @@
+types (linux)	Set up job	﻿2026-11-16T02:53:26.3185927Z Current runner version: '2.338.2'
+types (linux)	Set up job	2026-11-16T02:53:26.3208420Z ##[group]Runner Image Provisioner
+types (linux)	Set up job	2026-11-16T02:53:26.3209233Z Hosted Compute Agent
+types (linux)	Set up job	2026-11-16T02:53:26.3209828Z Version: 20261103.629
+types (linux)	Set up job	2026-11-16T02:53:26.3210418Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+types (linux)	Set up job	2026-11-16T02:53:26.3211068Z Build Date: 2026-11-03T17:26:59Z
+types (linux)	Set up job	2026-11-16T02:53:26.3211683Z Worker ID: {c4e9b09a-d957-45f1-a420-9b57831626bf}
+types (linux)	Set up job	2026-11-16T02:53:26.3212353Z Region: westus2
+types (linux)	Set up job	2026-11-16T02:53:26.3212848Z Cloud: Azure
+types (linux)	Set up job	2026-11-16T02:53:26.3213347Z ##[endgroup]
+types (linux)	Set up job	2026-11-16T02:53:26.3214515Z ##[group]Operating System
+types (linux)	Set up job	2026-11-16T02:53:26.3215082Z Ubuntu
+types (linux)	Set up job	2026-11-16T02:53:26.3215595Z 24.04.5
+types (linux)	Set up job	2026-11-16T02:53:26.3216077Z LTS
+types (linux)	Set up job	2026-11-16T02:53:26.3216599Z ##[endgroup]
+types (linux)	Set up job	2026-11-16T02:53:26.3217146Z ##[group]Runner Image
+types (linux)	Set up job	2026-11-16T02:53:26.3217825Z Image: ubuntu-24.04
+types (linux)	Set up job	2026-11-16T02:53:26.3218363Z Version: 20261111.370.1
+types (linux)	Set up job	2026-11-16T02:53:26.3219279Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+types (linux)	Set up job	2026-11-16T02:53:26.3220822Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+types (linux)	Set up job	2026-11-16T02:53:26.3221649Z ##[endgroup]
+types (linux)	Set up job	2026-11-16T02:53:26.3222662Z ##[group]GITHUB_TOKEN Permissions
+types (linux)	Set up job	2026-11-16T02:53:26.3224225Z Contents: read
+types (linux)	Set up job	2026-11-16T02:53:26.3224818Z Metadata: read
+types (linux)	Set up job	2026-11-16T02:53:26.3225328Z ##[endgroup]
+types (linux)	Set up job	2026-11-16T02:53:26.3227030Z Secret source: Actions
+types (linux)	Set up job	2026-11-16T02:53:26.3228169Z Cache mode: write
+types (linux)	Set up job	2026-11-16T02:53:26.3228787Z Prepare workflow directory
+types (linux)	Set up job	2026-11-16T02:53:26.3535273Z Prepare all required actions
+types (linux)	Set up job	2026-11-16T02:53:26.3579779Z Getting action download info
+types (linux)	Set up job	2026-11-16T02:53:26.6814221Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+types (linux)	Set up job	2026-11-16T02:53:26.8194179Z Download action repository 'actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0' (SHA:6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)
+types (linux)	Set up job	2026-11-16T02:53:27.0001494Z Complete job name: types (linux)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T02:53:27.0666525Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0667821Z with:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0668240Z   persist-credentials: false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0668706Z   sparse-checkout: /*
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/art/
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	!/docs/
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0669208Z   sparse-checkout-cone-mode: false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0669680Z   repository: RandyNorthrup/chatmon
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0673003Z   token: ***
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0673390Z   ssh-strict: true
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0673777Z   ssh-user: git
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0674159Z   clean: true
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0674526Z   fetch-depth: 1
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0674911Z   fetch-tags: false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0675298Z   show-progress: true
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0675689Z   lfs: false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0676055Z   submodules: false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0676449Z   set-safe-directory: true
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0676891Z   allow-unsafe-pr-checkout: false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0677679Z env:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0678064Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.0678530Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3266496Z Syncing repository: RandyNorthrup/chatmon
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3268844Z ##[group]Getting Git version info
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3269749Z Working directory is '/home/runner/work/chatmon/chatmon'
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3271031Z [command]/usr/bin/git version
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3346890Z git version 2.56.1
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3362721Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3370917Z Temporarily overriding HOME='/home/runner/work/_temp/29f56163-b3ea-4a1c-a5a5-2dad10be8dc3' before making global git config changes
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3372339Z Adding repository directory to the temporary git global config as a safe directory
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3374671Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3411756Z Deleting the contents of '/home/runner/work/chatmon/chatmon'
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3414732Z ##[group]Determining repository object format
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3415951Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3417404Z ##[group]Initializing the repository
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3419819Z [command]/usr/bin/git init /home/runner/work/chatmon/chatmon
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3503992Z hint: Using 'master' as the name for the initial branch. This default branch name
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3504966Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3505742Z hint: to use in all of your new repositories, which will suppress this warning,
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3506372Z hint: call:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3506733Z hint:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3507328Z hint: 	git config --global init.defaultBranch <name>
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3507873Z hint:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3508371Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3509194Z hint: 'development'. The just-created branch can be renamed via this command:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3510078Z hint:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3510455Z hint: 	git branch -m <name>
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3510866Z hint:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3511706Z hint: Disable this message with "git config set advice.defaultBranchName false"
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3512996Z Initialized empty Git repository in /home/runner/work/chatmon/chatmon/.git/
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3518553Z [command]/usr/bin/git remote add origin https://github.com/RandyNorthrup/chatmon
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3558715Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3559418Z ##[group]Disabling automatic garbage collection
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3561243Z [command]/usr/bin/git config --local gc.auto 0
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3588435Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3589104Z ##[group]Setting up auth
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3589594Z Removing SSH command configuration
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3592712Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3622061Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3922214Z Removing HTTP extra header
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3927534Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.3965713Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4168663Z Removing includeIf entries pointing to credentials config files
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4177668Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4207825Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4409179Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4440039Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git.path /home/runner/work/_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4467004Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4493706Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4520430Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4545130Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4545782Z ##[group]Fetching the repository
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.4551049Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin +42ff6907e7bc9de5005394ad8d875fcd27e79aff:refs/remotes/pull/24/merge
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7508125Z From https://github.com/RandyNorthrup/chatmon
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7509280Z  * [new ref]         42ff6907e7bc9de5005394ad8d875fcd27e79aff -> pull/24/merge
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7513651Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7514590Z ##[group]Determining the checkout info
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7515572Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7516428Z ##[group]Setting up sparse checkout
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7520128Z [command]/usr/bin/git config core.sparseCheckout true
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7550046Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7570103Z .git/info/sparse-checkout
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7576544Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7577630Z ##[group]Checking out the ref
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:27.7580766Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/24/merge
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7803822Z Updating files:   0% (1/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7805070Z Updating files:   1% (4/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7818042Z Updating files:   2% (7/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7828196Z Updating files:   3% (10/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7858148Z Updating files:   4% (13/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7868234Z Updating files:   5% (16/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7868975Z Updating files:   6% (20/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7869664Z Updating files:   7% (23/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7871658Z Updating files:   8% (26/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7894908Z Updating files:   9% (29/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7920016Z Updating files:  10% (32/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7943348Z Updating files:  11% (35/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7953521Z Updating files:  12% (39/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7970006Z Updating files:  13% (42/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.7987053Z Updating files:  14% (45/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8002239Z Updating files:  15% (48/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8022051Z Updating files:  16% (51/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8042677Z Updating files:  17% (55/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8056155Z Updating files:  18% (58/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8070177Z Updating files:  19% (61/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8084266Z Updating files:  20% (64/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8092138Z Updating files:  21% (67/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8109168Z Updating files:  22% (70/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8122201Z Updating files:  23% (74/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8132384Z Updating files:  24% (77/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8142834Z Updating files:  25% (80/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8156334Z Updating files:  26% (83/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8159418Z Updating files:  27% (86/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8166520Z Updating files:  28% (90/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8171555Z Updating files:  29% (93/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8174512Z Updating files:  30% (96/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8195220Z Updating files:  31% (99/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8197919Z Updating files:  32% (102/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8204457Z Updating files:  33% (105/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8207535Z Updating files:  34% (109/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8210029Z Updating files:  35% (112/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8212126Z Updating files:  36% (115/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8214465Z Updating files:  37% (118/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8219392Z Updating files:  38% (121/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8221875Z Updating files:  39% (125/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8227129Z Updating files:  40% (128/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8231476Z Updating files:  41% (131/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8234751Z Updating files:  42% (134/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8237828Z Updating files:  43% (137/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8243147Z Updating files:  44% (140/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8245806Z Updating files:  45% (144/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8249106Z Updating files:  46% (147/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8252217Z Updating files:  47% (150/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8257365Z Updating files:  48% (153/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8269750Z Updating files:  49% (156/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8281077Z Updating files:  50% (159/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8283390Z Updating files:  51% (163/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8285970Z Updating files:  52% (166/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8287645Z Updating files:  53% (169/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8290136Z Updating files:  54% (172/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8293330Z Updating files:  55% (175/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8295931Z Updating files:  56% (179/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8297691Z Updating files:  57% (182/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8304836Z Updating files:  58% (185/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8340863Z Updating files:  59% (188/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8342283Z Updating files:  60% (191/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8345880Z Updating files:  61% (194/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8346866Z Updating files:  62% (198/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8348320Z Updating files:  63% (201/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8349504Z Updating files:  64% (204/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8351180Z Updating files:  65% (207/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8354390Z Updating files:  66% (210/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8356901Z Updating files:  67% (214/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8359233Z Updating files:  68% (217/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8362281Z Updating files:  69% (220/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8364379Z Updating files:  70% (223/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8365784Z Updating files:  71% (226/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8367968Z Updating files:  72% (229/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8369304Z Updating files:  73% (233/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8371852Z Updating files:  74% (236/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8374412Z Updating files:  75% (239/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8379898Z Updating files:  76% (242/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8382148Z Updating files:  77% (245/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8385092Z Updating files:  78% (249/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8388228Z Updating files:  79% (252/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8390271Z Updating files:  80% (255/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8392845Z Updating files:  81% (258/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8394992Z Updating files:  82% (261/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8398225Z Updating files:  83% (264/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8410251Z Updating files:  84% (268/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8411645Z Updating files:  85% (271/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8413139Z Updating files:  86% (274/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8414554Z Updating files:  87% (277/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8416092Z Updating files:  88% (280/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8417545Z Updating files:  89% (284/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8492855Z Updating files:  90% (287/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8494290Z Updating files:  91% (290/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8495580Z Updating files:  92% (293/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8498457Z Updating files:  93% (296/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8499778Z Updating files:  94% (299/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8500995Z Updating files:  95% (303/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8502124Z Updating files:  96% (306/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8503041Z Updating files:  97% (309/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8503955Z Updating files:  98% (312/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8504880Z Updating files:  99% (315/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8505803Z Updating files: 100% (318/318)
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8506727Z Updating files: 100% (318/318), done.
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8507991Z Note: switching to 'refs/remotes/pull/24/merge'.
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8508783Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8509484Z You are in 'detached HEAD' state. You can look around, make experimental
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8511335Z changes and commit them, and you can discard any commits you make in this
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8513114Z state without impacting any branches by switching back to a branch.
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8514168Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8514816Z If you want to create a new branch to retain commits you create, you may
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8516406Z do so (now or later) by using -c with the switch command. Example:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8517514Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8517881Z   git switch -c <new-branch-name>
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8518509Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8518854Z Or undo this operation with:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8519429Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8519736Z   git switch -
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8520145Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8520892Z Turn off this advice by setting config variable advice.detachedHead to false
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8522039Z 
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8523336Z HEAD is now at 42ff690 Merge 56caddd66b69420e073e9a7d2c5ec40eabb5840b into 781615935a49a3dc48a1b7ab015d8ae01b1fd531
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8557890Z ##[endgroup]
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8607615Z [command]/usr/bin/git log -1 --format=%H
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8631141Z 42ff6907e7bc9de5005394ad8d875fcd27e79aff
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8639521Z ##[group]Removing auth
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8640441Z Removing SSH command configuration
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8643810Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8674257Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8872055Z Removing HTTP extra header
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8875047Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.8904477Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9095096Z Removing includeIf entries pointing to credentials config files
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9097759Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9120162Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9122378Z includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9124310Z includeif.gitdir:/github/workspace/.git.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9125746Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9133364Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9153599Z /home/runner/work/_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9163015Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-e39b192d\-878a\-4b96\-9cb3\-8d12ce4ec020\.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9191587Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9211305Z /home/runner/work/_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9219484Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/chatmon/chatmon/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-e39b192d\-878a\-4b96\-9cb3\-8d12ce4ec020\.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9250066Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9273446Z /github/runner_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9283716Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-e39b192d\-878a\-4b96\-9cb3\-8d12ce4ec020\.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9311829Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9334671Z /github/runner_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9341379Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-e39b192d\-878a\-4b96\-9cb3\-8d12ce4ec020\.config
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9381128Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9574143Z Removing credentials config '/home/runner/work/_temp/git-credentials-e39b192d-878a-4b96-9cb3-8d12ce4ec020.config'
+types (linux)	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:28.9582096Z ##[endgroup]
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T02:53:29.0089602Z ##[group]Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0090994Z with:
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0091696Z   python-version: 3.14
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0092658Z   check-latest: false
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0101645Z   token: ***
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0102740Z   mirror: https://raw.githubusercontent.com/actions/python-versions/main
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0104110Z   update-environment: true
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0104980Z   allow-prereleases: false
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0105832Z   freethreaded: false
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0106591Z env:
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0107370Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.0108272Z ##[endgroup]
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.1193567Z ##[group]Installed versions
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.1349530Z Successfully set up CPython (3.14.10)
+types (linux)	Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	2026-11-16T02:53:29.1351349Z ##[endgroup]
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	﻿2026-11-16T02:53:29.1623964Z ##[group]Run python -m pip install --require-hashes -r packaging/requirements-dev.txt
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1626775Z [36;1mpython -m pip install --require-hashes -r packaging/requirements-dev.txt[0m
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1759010Z shell: /usr/bin/bash -e {0}
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1760363Z env:
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1761275Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1762890Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1764873Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1766956Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1768829Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1771220Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1772912Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:29.1774195Z ##[endgroup]
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.8533827Z Ignoring colorama: markers 'sys_platform == "win32"' don't match your environment
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.8534827Z Ignoring comtypes: markers 'sys_platform == "win32"' don't match your environment
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:33.9689532Z Collecting ast-serialize==0.13.1 (from -r packaging/requirements-dev.txt (line 3))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.0219012Z   Downloading ast_serialize-0.13.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.0920775Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 28.1 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.4302534Z Collecting coverage==7.17.0 (from -r packaging/requirements-dev.txt (line 70))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.4391197Z   Downloading coverage-7.17.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (261 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.7353408Z Collecting hypothesis==6.170.14 (from -r packaging/requirements-dev.txt (line 191))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.7529326Z   Downloading hypothesis-6.170.14-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.2 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.7851238Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 34.7 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.7998173Z Collecting iniconfig==2.3.1 (from -r packaging/requirements-dev.txt (line 276))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.8099867Z   Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.9048524Z Collecting librt==0.16.0 (from -r packaging/requirements-dev.txt (line 280))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:34.9797717Z   Downloading librt-0.16.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (523 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.0805799Z Collecting mypy==2.4.1 (from -r packaging/requirements-dev.txt (line 419))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.0950449Z   Downloading mypy-2.4.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (15.4 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.6741363Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.4/15.4 MB 30.8 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.7181652Z Collecting mypy-extensions==1.1.0 (from -r packaging/requirements-dev.txt (line 473))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.7277598Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.7426482Z Collecting packaging==26.3 (from -r packaging/requirements-dev.txt (line 477))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.7678862Z   Downloading packaging-26.3-py3-none-any.whl (129 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.7850180Z Collecting pathspec==1.1.1 (from -r packaging/requirements-dev.txt (line 481))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.7996456Z   Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.8196065Z Collecting pluggy==1.7.0 (from -r packaging/requirements-dev.txt (line 485))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.8270114Z   Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.8771272Z Collecting psutil==7.2.2 (from -r packaging/requirements-dev.txt (line 489))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.8882053Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.9126518Z Collecting pygments==2.21.0 (from -r packaging/requirements-dev.txt (line 512))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.9207881Z   Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.9493573Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 37.7 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.9684816Z Collecting pyqt6==6.11.0 (from -r packaging/requirements-dev.txt (line 516))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:35.9871834Z   Downloading pyqt6-6.11.0-cp310-abi3-manylinux_2_34_x86_64.whl (8.3 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.1882991Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 41.4 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.2145045Z Collecting pyqt6-qt6==6.11.2 (from -r packaging/requirements-dev.txt (line 524))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:36.2348081Z   Downloading pyqt6_qt6-6.11.2-py3-none-manylinux_2_34_x86_64.whl (86.0 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.4512191Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.0/86.0 MB 38.7 MB/s  0:00:02
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.5404311Z Collecting pyqt6-sip==13.13.0 (from -r packaging/requirements-dev.txt (line 534))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.5636502Z   Downloading pyqt6_sip-13.13.0-cp314-cp314-manylinux1_x86_64.manylinux_2_5_x86_64.whl (301 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.5961676Z Collecting pytest==9.2.0 (from -r packaging/requirements-dev.txt (line 566))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.6096447Z   Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.6329454Z Collecting pytest-timeout==2.4.0 (from -r packaging/requirements-dev.txt (line 572))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.6571030Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.9199477Z Collecting ruff==0.17.3 (from -r packaging/requirements-dev.txt (line 576))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:38.9283688Z   Downloading ruff-0.17.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.6 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.0588735Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 80.3 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.0798528Z Collecting sortedcontainers==2.4.0 (from -r packaging/requirements-dev.txt (line 596))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.0889941Z   Downloading sortedcontainers-2.4.0-py2.py3-none-any.whl (29 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.1452280Z Collecting typing-extensions==4.16.0 (from -r packaging/requirements-dev.txt (line 600))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.1525742Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.1775485Z Collecting tzdata==2026.6 (from -r packaging/requirements-dev.txt (line 604))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.1859914Z   Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.2312072Z Collecting zizmor==1.31.1 (from -r packaging/requirements-dev.txt (line 608))
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.2473887Z   Downloading zizmor-1.31.1-py3-none-manylinux_2_28_x86_64.whl (9.6 MB)
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.4469871Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.6/9.6 MB 48.7 MB/s  0:00:00
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:39.8510803Z Installing collected packages: sortedcontainers, pyqt6-qt6, zizmor, tzdata, typing-extensions, ruff, pyqt6-sip, pygments, psutil, pluggy, pathspec, packaging, mypy-extensions, librt, iniconfig, hypothesis, coverage, ast-serialize, pytest, pyqt6, mypy, pytest-timeout
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:44.7944346Z 
+types (linux)	Run python -m pip install --require-hashes -r packaging/requirements-dev.txt	2026-11-16T02:53:44.7964379Z Successfully installed ast-serialize-0.13.1 coverage-7.17.0 hypothesis-6.170.14 iniconfig-2.3.1 librt-0.16.0 mypy-2.4.1 mypy-extensions-1.1.0 packaging-26.3 pathspec-1.1.1 pluggy-1.7.0 psutil-7.2.2 pygments-2.21.0 pyqt6-6.11.0 pyqt6-qt6-6.11.2 pyqt6-sip-13.13.0 pytest-9.2.0 pytest-timeout-2.4.0 ruff-0.17.3 sortedcontainers-2.4.0 typing-extensions-4.16.0 tzdata-2026.6 zizmor-1.31.1
+types (linux)	Run mypy --platform "$PLATFORM"	﻿2026-11-16T02:53:44.9405034Z ##[group]Run mypy --platform "$PLATFORM"
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9405328Z [36;1mmypy --platform "$PLATFORM"[0m
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9423961Z shell: /usr/bin/bash -e {0}
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9424181Z env:
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9424366Z   PIP_DISABLE_PIP_VERSION_CHECK: 1
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9424647Z   pythonLocation: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9424997Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib/pkgconfig
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9425348Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9425657Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9425956Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.14.10/x64
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9426263Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.14.10/x64/lib
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9426525Z   PLATFORM: linux
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:44.9426702Z ##[endgroup]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7941194Z chatmon/bubble.py:248: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7942596Z chatmon/bubble.py:250: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7943626Z chatmon/bubble.py:251: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7944351Z chatmon/bubble.py:252: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7945078Z chatmon/bubble.py:254: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7945772Z chatmon/bubble.py:260: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7946491Z chatmon/bubble.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7947385Z chatmon/bubble.py:265: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7948166Z chatmon/bubble.py:267: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7948855Z chatmon/bubble.py:273: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7949546Z chatmon/bubble.py:274: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7950242Z chatmon/bubble.py:279: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7950948Z chatmon/bubble.py:280: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7951639Z chatmon/bubble.py:939: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7952321Z chatmon/bubble.py:949: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:48.7953007Z chatmon/bubble.py:950: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+types (linux)	Run mypy --platform "$PLATFORM"	2026-11-16T02:53:49.0888881Z Success: no issues found in 70 source files
+types (linux)	Post Run actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0	﻿2026-11-16T02:53:49.1159430Z Post job cleanup.
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-11-16T02:53:49.2266802Z Post job cleanup.
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.2961184Z [command]/usr/bin/git version
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.2995368Z git version 2.56.1
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3023030Z Temporarily overriding HOME='/home/runner/work/_temp/1ee6d2ff-41ef-4902-a39b-6544b50cc24d' before making global git config changes
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3024317Z Adding repository directory to the temporary git global config as a safe directory
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3027501Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/chatmon/chatmon
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3055847Z Removing SSH command configuration
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3060759Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3115252Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3314126Z Removing HTTP extra header
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3318432Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3349169Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3541611Z Removing includeIf entries pointing to credentials config files
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3546748Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+types (linux)	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-11-16T02:53:49.3573938Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+types (linux)	Complete job	﻿2026-11-16T02:53:49.3904646Z Cleaning up orphan processes

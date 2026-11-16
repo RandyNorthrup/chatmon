@@ -1,0 +1,43 @@
+{
+  "drills": [
+    {
+      "id": "M3-14-menu-keys",
+      "requirement": "M3-14",
+      "file": "chatmon/penguin.py",
+      "find": "        drawn_here = bool(getattr(self.surface, \"draws_menus\", False))  # whatever the hosting: this menu is the overlay's",
+      "replace": "        drawn_here = self.draws_menus()  # drill: as before, only while hosting",
+      "test": [
+        "tests/test_overlay_stage.py::test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open"
+      ],
+      "expect": [
+        "test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open"
+      ]
+    },
+    {
+      "id": "M3-14-bubble-clear",
+      "requirement": "M3-14",
+      "file": "chatmon/penguin.py",
+      "find": "        return widget.graphicsProxyWidget() is not None or not QGuiApplication.platformName().startswith(\"wayland\")",
+      "replace": "        return True  # drill: as before, the box's geometry trusted everywhere",
+      "test": [
+        "tests/test_overlay_stage.py::test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is"
+      ],
+      "expect": [
+        "test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is"
+      ]
+    },
+    {
+      "id": "M3-04-extent",
+      "requirement": "M3-04",
+      "file": "chatmon/penguin.py",
+      "find": "            parts.append(bubble_box.toAlignedRect().adjusted(-3, -3, 3, 3))",
+      "replace": "            pass  # drill: the bubble left out of what's drawn",
+      "test": [
+        "tests/test_overlay_stage.py::test_the_overlay_is_told_where_everything_drawn_is"
+      ],
+      "expect": [
+        "test_the_overlay_is_told_where_everything_drawn_is"
+      ]
+    }
+  ]
+}

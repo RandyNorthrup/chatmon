@@ -1,0 +1,77 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/measure/docs/delivery/reports/m3/wave5/drill-spec-wayland-linux-v3.json
+python: /var/tmp/plans-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-_d5vjxs_
+copied 318 files
+
+=== drill M3-RC-clipboard-v3 (M3-RC) on chatmon/layer.py
+command: /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_wayland.py::test_the_clipboard_is_the_overlays_own tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 8.75s
+-- red: exit 1
+        assert surf.clipboard_has_text()
+    
+        got = []
+        surf.paste(got.append)
+        (receive,) = named(server.requests(), offer, layer.DATA_OFFER_RECEIVE)
+        assert wayland.decode("sh", receive) == ["text/plain;charset=utf-8"]
+        write_end = server.fds[-1]  # the pasting app writes into it, then closes it
+        os.write(write_end, "héllo".encode())
+        os.close(write_end)
+        deadline = time.monotonic() + 3
+        while not got and time.monotonic() < deadline:
+            qapp.processEvents()
+        assert got == ["héllo"]
+    
+        server.send(ids["keyboard"], layer.EV_KEYBOARD_ENTER, "uoa", 77, ids["surface"], b"")  # copying needs an input serial
+        conn.read()
+        surf.copy("copied ✓")
+>       assert qapp.clipboard().text() == "copied ✓"  # Qt's too, for Chatmon's own windows: they'd ask this connection, on the thread they block
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert '' == 'copied ✓'
+E         
+E         - copied ✓
+
+tests/test_wayland.py:992: AssertionError
+_ test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows _
+
+sway = <sway_session.Session object at 0x791e41980440>
+chatmon = <sway_session.Probe object at 0x791e419806e0>
+hands = <sway_session.Input object at 0x791e41980830>
+
+    def test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows(sway, chatmon, hands):
+        """The overlay keeps its own clipboard (Qt's can't reach what's on it): another app's copy pasted into the ask
+        box, the box's copy pasted by another app (wl-clipboard's, separate processes) and by Chatmon's own windows,
+        which read Qt's clipboard in the same process: before, they froze two seconds and got nothing."""
+        if shutil.which("wl-copy") is None:
+            if os.environ.get("CHATMON_SWAY") == "1":
+                pytest.fail("CHATMON_SWAY=1, but wl-clipboard isn't installed")
+            pytest.skip("wl-clipboard isn't installed (CI's sway job installs it)")
+        chatmon.call(DESK_WINDOW)
+        subprocess.run(["wl-copy", "from another app"], env=sway.env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, check=True)
+        hands.click(*centre(penguin(chatmon)))
+        chatmon.call("until(lambda: surface._kb_focus and stage.clipboard_has_text(), 5)", settle=0.2)
+        hands.key("v", mods=4)  # Ctrl+V
+        assert chatmon.call("until(lambda: box.entry.text() != '', 5); result = box.entry.text()") == "from another app"
+        hands.key("a", mods=4)
+        hands.type("mine")
+        hands.key("a", mods=4)
+        hands.key("c", mods=4)  # Ctrl+C in the box: the overlay's clipboard
+        chatmon.call("settled()", settle=0.2)
+        pasted = subprocess.run(["wl-paste", "--no-newline"], env=sway.env, capture_output=True, text=True, timeout=10, check=True)
+        assert pasted.stdout == "mine"
+        hands.key("Escape")  # the box closes; the desk window, Chatmon's own, has the keyboard
+        got = chatmon.call("import time; t = time.monotonic(); text = QtWidgets.QApplication.clipboard().text(); result = [text, time.monotonic() - t]", settle=0.3)
+>       assert got[0] == "mine" and got[1] < 0.5
+E       AssertionError: assert ('' == 'mine'
+E         
+E         - mine)
+
+tests/test_sway.py:218: AssertionError
+2 failed in 11.86s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 6.48s
+
+=== summary
+PASS M3-RC-clipboard-v3

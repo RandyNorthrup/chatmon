@@ -1,0 +1,44 @@
+"""Drill: test_hide_menu_and_reload with the companion slow to start (0.6 s before the test body, as under load)."""
+import os
+import sys
+
+import pytest
+
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+sys.path.insert(0, os.path.join(os.getcwd(), "tests"))
+
+from app_harness import make_companion, spin, until  # noqa: E402
+
+SLOW_START = 0.6
+
+LABELS_OLD = ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Brain", "AI agents", "Appearance",
+              "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
+LABELS_NEW = ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Recent messages", "Brain", "AI agents",
+              "Appearance", "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
+
+
+@pytest.fixture
+def companion(tmp_path, monkeypatch):
+    yield from make_companion(tmp_path, monkeypatch)
+
+
+def test_old_body_slow_start(companion):
+    c = companion
+    spin(SLOW_START)
+    c.set_hidden(True)
+    spin(1.0)
+    c.set_hidden(False)
+    c.menus.fill()
+    assert [a.text() for a in c.menu.actions() if a.text()] == LABELS_OLD
+
+
+@pytest.mark.parametrize("slow", [0.0, SLOW_START, 1.4, 2.0])
+def test_new_body(companion, slow):
+    c = companion
+    spin(slow)
+    assert until(lambda: c.recent_messages())
+    c.set_hidden(True)
+    spin(1.0)
+    c.set_hidden(False)
+    c.menus.fill()
+    assert [a.text() for a in c.menu.actions() if a.text()] == LABELS_NEW

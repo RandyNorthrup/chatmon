@@ -1,0 +1,185 @@
+[
+  {
+    "id": "M6A-08-glob",
+    "requirement": "M6A-08",
+    "file": "pyproject.toml",
+    "mutation": {
+      "find": "\"bubbles/manifest.json\",",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_package_data.py::test_every_tracked_file_of_chatmon_ships"
+    ],
+    "expected": [
+      "bubbles/manifest.json",
+      "no package-data glob in pyproject.toml takes these"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3",
+    "baseline_exit": 0,
+    "mutated_sha256": "b7777c2e2a1fe58b192afe63815f110d3550cd9de894e5ff66b46956d970047a",
+    "mutated_exit": 1,
+    "observed": ">       assert not left_out, f\"no package-data glob in pyproject.toml takes these, so pip and pipx installs would lack them: {left_out}\"",
+    "after_sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6A-01-warnings",
+    "requirement": "M6A-01",
+    "file": "chatmon/changelog.py",
+    "mutation": {
+      "find": "    key = version_key(version)",
+      "replace": "    __import__(\"warnings\").warn(\"an old way to call find\", DeprecationWarning, stacklevel=2)\n    key = version_key(version)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release"
+    ],
+    "expected": [
+      "DeprecationWarning: an old way to call find"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0",
+    "baseline_exit": 0,
+    "mutated_sha256": "dc9ce419c0c9ad8400453c4df4e18ddc0a8a4f0a5d4b6fa1eafb214619b48163",
+    "mutated_exit": 1,
+    "observed": "E       DeprecationWarning: an old way to call find",
+    "after_sha256": "98a924c4355056ff2e39060d8260c0e09653ccd4a70ea2368f11d5d19a2c5bc0",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6A-05-qt",
+    "requirement": "M6A-05",
+    "file": "packaging/requirements-test.txt",
+    "mutation": {
+      "find": "pyqt6==6.11.0 \\",
+      "replace": "pyqt6==6.12.0 \\"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_requirements.py::test_a_package_in_more_than_one_lock_is_the_same_version_in_each"
+    ],
+    "expected": [
+      "locked at different versions",
+      "'pyqt6': {"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b",
+    "baseline_exit": 0,
+    "mutated_sha256": "9d35f1ccc9f0c8adba3138ffb75c6ea2e4d601ddda968f33e8fff5b0808efab0",
+    "mutated_exit": 1,
+    "observed": ">       assert not differ, f\"locked at different versions: {differ}\"",
+    "after_sha256": "d5befda1ab649c1dd0b4e91209101fb5699b531112871d2b31adaf1307b91a4b",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6A-06-hash",
+    "requirement": "M6A-06",
+    "file": "packaging/requirements-build.txt",
+    "mutation": {
+      "find": "wheel==0.48.0 \\",
+      "replace": "wheel==0.48.0  # \\"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_requirements.py::test_every_locked_requirement_is_pinned_and_hashed"
+    ],
+    "expected": [
+      "requirements-build.txt has no hash for ['wheel']"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878",
+    "baseline_exit": 0,
+    "mutated_sha256": "cb4b66cf0f4fea9d3649ca600f01137d24634c6cb7b76e07164281d22b0e9055",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: requirements-build.txt has no hash for ['wheel']: pip --require-hashes would refuse it",
+    "after_sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6A-06-stale",
+    "requirement": "M6A-06",
+    "file": "packaging/requirements-build.txt",
+    "mutation": {
+      "find": "setuptools==84.2.1 \\",
+      "replace": "setuptools==84.2.0 \\"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names"
+    ],
+    "expected": [
+      "requirements-build.txt doesn't lock these at the versions requirements-build.in pins",
+      "'setuptools': '84.2.1'"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878",
+    "baseline_exit": 0,
+    "mutated_sha256": "e00f483b8019c215f05414102f6a04d218c0c2ee4b46120c135c3d90c494c005",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: requirements-build.txt doesn't lock these at the versions requirements-build.in pins: {'setuptools': '84.2.1'}",
+    "after_sha256": "89f1b9b029139ec711cd61e345b19a93da4ec5e0d52a3828817bfdf430eb6878",
+    "restored_exit": 0
+  },
+  {
+    "id": "M6A-10-dev",
+    "requirement": "M6A-10",
+    "file": "pyproject.toml",
+    "mutation": {
+      "find": "\"ruff==0.17.3\",",
+      "replace": "\"ruff==0.17.4\","
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_requirements.py::test_the_dev_extra_pins_what_ci_runs"
+    ],
+    "expected": [
+      "dev extra: ruff==0.17.4, but CI runs ruff==0.17.3"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3",
+    "baseline_exit": 0,
+    "mutated_sha256": "712a07ff6bd558fb98cf315a7c40e14b56fc2f18676566132fe9386d9fb056ee",
+    "mutated_exit": 1,
+    "observed": "E           AssertionError: dev extra: ruff==0.17.4, but CI runs ruff==0.17.3",
+    "after_sha256": "e80d68be3601bb2210e68ce5826c78a38ef61cf98840248738f352f85f8e69e3",
+    "restored_exit": 0
+  }
+]

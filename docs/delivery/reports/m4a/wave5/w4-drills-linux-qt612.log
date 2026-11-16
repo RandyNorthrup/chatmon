@@ -1,0 +1,45 @@
+red drills from /mnt/c/Users/Randy/Coding/chatmon-wt/measure/docs/delivery/reports/m4a/wave5/w4-drill-spec-linux-qt612.json
+python: /var/tmp/m4a-venv/bin/python
+copy: /var/tmp/chatmon-wsl-drill-fcfk_iux
+copied 318 files
+
+=== drill W4-L-AC-04b-qt-signal (AC-04b) on chatmon/presence.py
+command: /var/tmp/m4a-venv/bin/python -m pytest -q -p no:cacheprovider tests/test_presence.py::test_qts_contrast_change_is_passed_on
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.78s
+-- red: exit 1
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_qts_contrast_change_is_passed_on _____________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x742ada534b90>
+
+    def test_qts_contrast_change_is_passed_on(qapp):
+        from PyQt6.QtCore import Qt, pyqtBoundSignal
+        from PyQt6.QtGui import QGuiApplication
+    
+        style_hints = QGuiApplication.styleHints()
+        if not hasattr(style_hints, "accessibility"):  # QStyleHints.accessibility() is Qt 6.10's
+            pytest.skip(f"Qt {qVersion()} is before 6.10: no contrast preference to follow")
+        hints = style_hints.accessibility()
+        if not isinstance(getattr(hints, "contrastPreferenceChanged", None), pyqtBoundSignal):
+            pytest.skip("PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal")
+        desk = presence.Desk("offscreen")
+        changes = []
+        desk.settings_changed.connect(lambda: changes.append(True))
+        hints.contrastPreferenceChanged.emit(Qt.ContrastPreference.HighContrast)
+>       assert changes == [True]
+E       assert [] == [True]
+E         
+E         Right contains one more item: True
+E         Use -v to get more diff
+
+tests/test_presence.py:274: AssertionError
+1 failed in 0.42s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+
+=== summary
+PASS W4-L-AC-04b-qt-signal

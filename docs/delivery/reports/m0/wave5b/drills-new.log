@@ -1,0 +1,298 @@
+red drills from docs\delivery\reports\m0\wave5b\drill-spec-new.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-35647uw2
+copied 318 files
+
+=== drill W4-M0-01-priority (M0-01.A1) on chatmon/messages.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_messages.py::test_alerts_then_reminders_then_prompts_then_plain_bubbles
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_alerts_then_reminders_then_prompts_then_plain_bubbles __________
+
+    def test_alerts_then_reminders_then_prompts_then_plain_bubbles():
+        q = MessageQueue()
+        for m in (plain("agent done"), prompt("delete chat?"), reminder("stretch", "reminder:1"), alert("claude needs you", "agent:claude"), plain("tests pass")):
+            q.add(m)
+>       assert drain(q) == ["claude needs you", "stretch", "delete chat?", "agent done", "tests pass"]
+E       AssertionError: assert ['agent done'... 'tests pass'] == ['claude need... 'tests pass']
+E         
+E         At index 0 diff: 'agent done' != 'claude needs you'
+E         Use -v to get more diff
+
+tests\test_messages.py:54: AssertionError
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+
+=== drill W4-M0-04-appearance (M0-04.A2) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_hide_menu_and_reload
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.24s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________________ test_hide_menu_and_reload __________________________
+
+companion = <chatmon.app.Companion object at 0x000002DCEF0D9310>
+
+    def test_hide_menu_and_reload(companion):
+        c = companion
+        # The greeting comes 1.5 s in and puts "Recent messages" in the menu: wait for it, so a slow start (a busy machine)
+        # can't land it in the middle of the test.
+        assert until(lambda: c.recent_messages())
+        c.set_hidden(True)
+        spin(1.0)
+        assert c.behavior.hidden
+        c.set_hidden(False)
+        c.menus.fill()
+        labels = [a.text() for a in c.menu.actions() if a.text()]
+>       assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Recent messages", "Brain", "AI agents",
+                          "Appearance", "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
+E       AssertionError: assert ['Ask Sparky…...essages', ...] == ['Ask Sparky…...essages', ...]
+E         
+E         At index 9 diff: 'Companion' != 'Hide (peek now and then)'
+E         Left contains one more item: 'Quit'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:109: AssertionError
+1 failed in 4.85s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.25s
+
+=== drill W4-M0-04-reload-under-help (M0-04.A3) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_hide_menu_and_reload
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.91s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________________ test_hide_menu_and_reload __________________________
+
+companion = <chatmon.app.Companion object at 0x000001A69E079270>
+
+    def test_hide_menu_and_reload(companion):
+        c = companion
+        # The greeting comes 1.5 s in and puts "Recent messages" in the menu: wait for it, so a slow start (a busy machine)
+        # can't land it in the middle of the test.
+        assert until(lambda: c.recent_messages())
+        c.set_hidden(True)
+        spin(1.0)
+        assert c.behavior.hidden
+        c.set_hidden(False)
+        c.menus.fill()
+        labels = [a.text() for a in c.menu.actions() if a.text()]
+        assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Recent messages", "Brain", "AI agents",
+                          "Appearance", "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
+        submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
+        appearance = [a.text() for a in submenu["Appearance"].actions()]
+        assert appearance == ["Companion", "Bubble style", "Walk around", "Start when I log in"]
+        help_items = {a.text(): a for a in submenu["Help && updates"].actions()}
+        focus_items = [a.text() for a in submenu["Focus and notes"].actions() if a.text()]
+        assert focus_items == ["Focus timer", "15 minutes", "25 minutes", "50 minutes", "Notes", "Add a note…"]
+>       help_items["Reload settings file"].trigger()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'Reload settings file'
+
+tests\test_app_smoke.py:117: KeyError
+1 failed in 5.68s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.60s
+
+=== drill W4-M0-05-hide-not-kept (M0-05.A1) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_commands.py::test_the_same_phrases_run_the_same_commands
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.38s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_the_same_phrases_run_the_same_commands _________________
+
+    def test_the_same_phrases_run_the_same_commands():
+        table = Table()
+        found = {phrase: table.find(phrase) for phrases in BEFORE.values() for phrase in phrases}
+        assert len(found) == 60  # every phrase, none twice
+>       assert found == {phrase: cid for cid, phrases in BEFORE.items() for phrase in phrases}
+E       AssertionError: assert {'help': 'hel...'status', ...} == {'help': 'hel...'status', ...}
+E         
+E         Omitting 57 identical items, use -vv to show
+E         Differing items:
+E         {'go away': None} != {'go away': 'hide'}
+E         {'go hide': None} != {'go hide': 'hide'}
+E         {'hide': None} != {'hide': 'hide'}
+E         Use -v to get more diff
+
+tests\test_commands.py:38: AssertionError
+1 failed in 1.19s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.45s
+
+=== drill W4-M0-09-password-read-out (M0-09.A1) on chatmon/commands.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_a_password_made_is_never_read_out
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.23s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_a_password_made_is_never_read_out ____________________
+
+companion = <chatmon.app.Companion object at 0x000002166D5193B0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002166D7D4510>
+
+    def test_a_password_made_is_never_read_out(companion, monkeypatch):
+        """Without a voice of its own to use, Chatmon reads out through a system notification (Narrator, NVDA and
+        JAWS read those on Windows), which the system keeps in its history: a password there would stay there."""
+        from PyQt6.QtWidgets import QSystemTrayIcon
+    
+        c = companion
+        reader = PretendReader(c)
+        c.open_ask()
+        c.submit("password 24")
+        shown = c.ask_box.answer.toPlainText()
+        made = shown.split("You: password 24", 1)[1].split()[0]
+>       assert len(made) == 24 and reader.said[-1] == ("Password made; it's in the box.", False)
+E       assert (24 == 24 and ('Ltrsi94BJ7P... now.', False) == ("Password ma... box.", False)
+E        +  where 24 = len('Ltrsi94BJ7PBcGlYd-5vG?Z?')
+E         
+E         At index 0 diff: "Ltrsi94BJ7PBcGlYd-5vG?Z? Made here, from your system's own randomness. I don't keep it anywhere: copy it now." != "Password made; it's in the box."
+E         Use -v to get more diff)
+
+tests\test_app_smoke.py:1910: AssertionError
+1 failed in 3.09s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.25s
+
+=== drill W4-M0-12-come-forward (M0-12.A2) on chatmon/cli.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_cli.py::test_on_windows_ask_lets_only_chatmon_come_forward_before_sending
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.54s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_on_windows_ask_lets_only_chatmon_come_forward_before_sending ______
+
+sent = []
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002032809B5C0>
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="only Windows keeps a program you're not using from coming to the front")
+    def test_on_windows_ask_lets_only_chatmon_come_forward_before_sending(sent, monkeypatch):
+        """It used to let any process come forward: now only the running Chatmon, by the process id it answers with."""
+        import ctypes
+    
+        order = []
+        monkeypatch.setattr(ctypes.windll.user32, "AllowSetForegroundWindow", lambda pid: order.append(("allow", pid.value)) or 1)
+        monkeypatch.setattr(events, "send", lambda message, timeout=0.5: order.append(("send", message["type"])) or True)
+        monkeypatch.setattr(events, "request", lambda message, timeout=2.0: order.append(("ask", message["type"])) or {"type": "status", "pid": 4242})
+        assert cli.main(["ask", "hello"]) == 0
+>       assert order == [("ask", "status"), ("allow", 4242), ("send", "ask")]
+E       AssertionError: assert [('ask', 'sta...send', 'ask')] == [('ask', 'sta...send', 'ask')]
+E         
+E         At index 1 diff: ('send', 'ask') != ('allow', 4242)
+E         Right contains one more item: ('send', 'ask')
+E         Use -v to get more diff
+
+tests\test_cli.py:104: AssertionError
+1 failed in 1.11s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.60s
+
+=== drill W4-M0-03-light-limit (M0-03.A3) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.77s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window _____
+
+companion = <chatmon.app.Companion object at 0x000001D673675450>
+
+    def test_the_menu_lists_the_newest_chats_and_all_chats_opens_the_window(companion):
+        from chatmon import chats, menus
+    
+        c = companion
+        for i in range(menus.RECENT_CHATS + 3):
+            chat = chats.Chat()
+            chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
+            c.chat_book.save(chat)
+        c.menus.fill()
+        chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
+        listed = [a.text().split("   ·")[0] for a in chats_menu.actions() if "   ·" in a.text()]
+>       assert listed == [f"chat {i}" for i in range(menus.RECENT_CHATS + 2, 2, -1)]  # the newest, newest first
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['chat 10', '...'chat 5', ...] == ['chat 10', '...'chat 5', ...]
+E         
+E         Left contains 3 more items, first extra item: 'chat 2'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:1005: AssertionError
+1 failed in 1.95s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.81s
+
+=== drill W4-M0-03-light-copies-v2 (M0-03.A3) on chatmon/menus.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_app_smoke.py::test_the_chats_menu_lists_chats_without_reading_any_whole
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.48s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_the_chats_menu_lists_chats_without_reading_any_whole __________
+
+companion = <chatmon.app.Companion object at 0x00000221931453B0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221913C8510>
+
+    def test_the_chats_menu_lists_chats_without_reading_any_whole(companion, monkeypatch):
+        """The Chats menu shows each chat's title, time and pin (ChatBook.listing), never a whole chat: with many kept,
+        reading every message of each to fill a menu was the cost M0-03 took away."""
+        from chatmon import chats, menus
+    
+        c = companion
+        for i in range(menus.RECENT_CHATS + 3):
+            chat = chats.Chat()
+            chat.add(chats.Message("user", f"chat {i}", at=1000.0 + i))
+            c.chat_book.save(chat)
+        read_whole: list[str] = []
+        load = chats.ChatBook.load
+        monkeypatch.setattr(chats.ChatBook, "load", lambda book, chat_id: (read_whole.append(chat_id), load(book, chat_id))[1])
+        c.menus.fill()
+        chats_menu = next(a.menu() for a in c.menu.actions() if a.text() == "Chats")
+        assert sum("   ·" in a.text() for a in chats_menu.actions()) == menus.RECENT_CHATS
+>       assert read_whole == []
+E       AssertionError: assert ['20f158d3d60...1b9b7ce', ...] == []
+E         
+E         Left contains 8 more items, first extra item: '20f158d3d606429090ab7bf8c3dc1b88'
+E         Use -v to get more diff
+
+tests\test_app_smoke.py:1028: AssertionError
+1 failed in 2.66s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.31s
+
+=== summary
+PASS W4-M0-01-priority
+PASS W4-M0-04-appearance
+PASS W4-M0-04-reload-under-help
+PASS W4-M0-05-hide-not-kept
+PASS W4-M0-09-password-read-out
+PASS W4-M0-12-come-forward
+PASS W4-M0-03-light-limit
+PASS W4-M0-03-light-copies-v2

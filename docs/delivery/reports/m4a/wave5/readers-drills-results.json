@@ -1,0 +1,302 @@
+[
+  {
+    "id": "AC-12a-uid",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "if name and (uid is None or entry.stat().st_uid == uid):",
+      "replace": "if name:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_a_screen_readers_process_is_found_by_its_name"
+    ],
+    "expected": [
+      "test_a_screen_readers_process_is_found_by_its_name"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "4664387d63d5f731dec82d0509dd123e34c2c8cf9a5239e20e29d7886888d71f",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_screen_readers_process_is_found_by_its_name ______________",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12a-comm-newline",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "READER_PROCESSES.get((entry / \"comm\").read_text(encoding=\"utf-8\", errors=\"replace\").strip())",
+      "replace": "READER_PROCESSES.get((entry / \"comm\").read_text(encoding=\"utf-8\", errors=\"replace\"))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_a_screen_readers_process_is_found_by_its_name"
+    ],
+    "expected": [
+      "test_a_screen_readers_process_is_found_by_its_name"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "94481064153003366a21765f271f368e7edbb6f45dc057670d71e82d55806e20",
+    "mutated_exit": 1,
+    "observed": "_____________ test_a_screen_readers_process_is_found_by_its_name ______________",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12b-orca-order",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "self.orca = next(((name, path) for name, path in ORCA if self._owned.get(name)), None)",
+      "replace": "self.orca = next(((name, path) for name, path in reversed(ORCA) if self._owned.get(name)), None)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_orcas_remote_controller_is_the_reader_to_speak_through"
+    ],
+    "expected": [
+      "test_orcas_remote_controller_is_the_reader_to_speak_through"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "7f7e134b7a5a641e0c30a5e291dba7da838dd54f9bab91f906482fae17fca73c",
+    "mutated_exit": 1,
+    "observed": "_________ test_orcas_remote_controller_is_the_reader_to_speak_through _________",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12c-old-at-spi",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "        if self.screen_reader_enabled or self.gnome:\n",
+      "replace": "        if self.gnome:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_before_at_spi2_core_262_screen_reader_enabled_says_one_runs"
+    ],
+    "expected": [
+      "test_before_at_spi2_core_262_screen_reader_enabled_says_one_runs"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "1e85460c4cee3d7dd32932e1719fde605068f953770a53a81a9e32aa09b1da50",
+    "mutated_exit": 1,
+    "observed": "______ test_before_at_spi2_core_262_screen_reader_enabled_says_one_runs _______",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12c-is-enabled-alone",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "        if self.screen_reader_enabled or self.gnome:\n",
+      "replace": "        if self.screen_reader_enabled or self.gnome or self.accessibility:\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is"
+    ],
+    "expected": [
+      "test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "ad766249f7331a2c55f3c55882da1d10ddedc5a3e16670f340d6df7cb6327115",
+    "mutated_exit": 1,
+    "observed": "_ test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is _",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12c-no-rescan-on-status",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "        self.rescan()  # something started or stopped listening: is it a screen reader?\n",
+      "replace": "        self._tell()\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is"
+    ],
+    "expected": [
+      "test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "d65eabb1ae33932061ee9644bda7b24d765f5f9c10b9e1bd2de8d5ecb721696c",
+    "mutated_exit": 1,
+    "observed": "_ test_from_at_spi2_core_262_is_enabled_alone_isnt_a_screen_reader_but_its_process_is _",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12c-bus-gone",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "                self.screen_reader_enabled = self.accessibility = None\n",
+      "replace": "                pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_at_spis_bus_going_forgets_what_it_said"
+    ],
+    "expected": [
+      "test_at_spis_bus_going_forgets_what_it_said"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "2055e6bf09c7fbd8e175325e2a664de663156f3121d353c8fe04b0625fd2b2a7",
+    "mutated_exit": 1,
+    "observed": "_________________ test_at_spis_bus_going_forgets_what_it_said _________________",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12d-gnome",
+    "requirement": "M4A-12",
+    "file": "chatmon/linuxsession.py",
+    "mutation": {
+      "find": "self.gnome = None if value is None else value == \"true\"",
+      "replace": "self.gnome = None if value is None else value == \"false\""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_gnomes_screen_reader_setting_says_one_runs"
+    ],
+    "expected": [
+      "test_gnomes_screen_reader_setting_says_one_runs"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "baseline_exit": 0,
+    "mutated_sha256": "4bf4dd6e05fb97cafc598e4a817945dd8b4ac5ed72f1c14ea1cea1bfb715cf1c",
+    "mutated_exit": 1,
+    "observed": "_______________ test_gnomes_screen_reader_setting_says_one_runs _______________",
+    "after_sha256": "575ee2c8481a4060ea64a097c354396a99de00e0bd1603c975467152a9796771",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12e-orca-speaks",
+    "requirement": "M4A-12",
+    "file": "chatmon/a11y.py",
+    "mutation": {
+      "find": "    return Reader(name, speak)\n",
+      "replace": "    return Reader(name)\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_a11y_reads_what_was_last_heard"
+    ],
+    "expected": [
+      "test_a11y_reads_what_was_last_heard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "baseline_exit": 0,
+    "mutated_sha256": "4befb4de844a92d1c0b9b7efca14064178a07465dc1017ab10ce960023e21620",
+    "mutated_exit": 1,
+    "observed": "_____________________ test_a11y_reads_what_was_last_heard _____________________",
+    "after_sha256": "e9e128cbf544472aed7316d1326ac4a050bee1f2ded07bf52d84199e60cc54e4",
+    "restored_exit": 0
+  },
+  {
+    "id": "AC-12f-desk-signal",
+    "requirement": "M4A-12",
+    "file": "chatmon/presence.py",
+    "mutation": {
+      "find": "        linuxsession.screen_readers().changed.connect(self.screen_reader_changed)\n",
+      "replace": "        linuxsession.screen_readers()\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_screen_readers.py::test_desk_passes_a_screen_reader_starting_on"
+    ],
+    "expected": [
+      "test_desk_passes_a_screen_reader_starting_on"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1",
+    "baseline_exit": 0,
+    "mutated_sha256": "39404e6aeaa0107fe0219f1fc92f8520f58385ca35cc889a8fe6e447ef6208b1",
+    "mutated_exit": 1,
+    "observed": "________________ test_desk_passes_a_screen_reader_starting_on _________________",
+    "after_sha256": "745ba36239edda6c4abaaef5b6527e53e88a7b3ac0080bf2da271721b64e15b1",
+    "restored_exit": 0
+  }
+]

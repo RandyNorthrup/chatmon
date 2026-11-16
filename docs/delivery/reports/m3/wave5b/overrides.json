@@ -1,0 +1,44 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (wave5/readiness.md, read again in wave5b/readiness.md) and, bound again at 56caddd, the coordinator's df3e93c (layer.py's two instance() calls typed, no change at run time) and 56caddd (test_hide_menu_and_reload waits for the greeting): neither changes what a criterion asks; no conflict or gap; M3-RC-clipboard-v3 in -v2's place.",
+ "next_action": "None in M3 on 56caddd: sway is one of main's 19 required checks, and the release's compositor round ran the same checks headless on KWin and Hyprland (reports/release/compositors/). Owners named in the Integration notes keep theirs (speaking the drawn penguin menu's items to a screen reader).",
+ "drill_acceptance": {
+  "M3-RC-clipboard-v3": [
+   "AC-M3-RC-sway"
+  ]
+ },
+ "ci": {
+  "W5B-BEH-CI-SWAY": {
+   "method": "PR #24's CI run 43794815103 on 56caddd, job sway (one of main's 19 required checks): a headless sway 1.9 of the tests' own on ubuntu-24.04, with CHATMON_SWAY=1 making a missing piece a failure, ran tests/test_sway.py and tests/test_wayland.py: 54 passed, 3 skipped. The overlay mapped as a layer surface sway draws and keeps out of its windows; clicks, the keyboard, the penguin's menu, the clipboard, full-screen windows, a screen going and drags all worked; buffers were the size of what is shown at 3840x2160 scale 2 and 2560x1440 scale 1.5; with a screen reader the ask box was a window sway floats, centres and focuses, and AT-SPI's registry found its field, buttons and conversation. The three skips say why: wlr-protocols isn't installed (the virtual pointer's opcode check), and Orca isn't installed (the two real-Orca tests, which ran in WSL: W5B-BEH-WSL-SWAY)."
+  }
+ },
+ "receipts": {
+  "W5B-BEH-WSL-SUITE": {
+   "artifact": "docs/delivery/reports/wave5b/suite-linux.log",
+   "command": [
+    "wsl.exe",
+    "-d",
+    "archlinux",
+    "--",
+    "/var/tmp/plans-venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+   ],
+   "method": "The whole suite in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1, UPower 1.91.5 on the system bus, KWin 6.8.2 and Hyprland 0.57.0 installed, so tests/test_compositors.py runs; /var/tmp/plans-venv from packaging/requirements-test.txt, PyQt6 6.11) on 56caddd's files, through docs/delivery/reports/wave5b/run-wsl-suite.sh under nice 10, with a CHATMON_INSTANCE of its own and nothing else running on the machine: 1391 passed, 127 skipped. Retried at 56caddd, whose fix to test_hide_menu_and_reload (wait for the greeting) is the cause of the quiet run's failure at 7816159; the two failed runs there (W5-BEH-WSL-SUITE, W5-BEH-WSL-SUITE-LOADED) stay as history. The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere).",
+   "status": "pass",
+   "exit_code": 0
+  },
+  "W5B-BEH-WSL-SUITE-LOADED": null,
+  "W5B-BEH-WSL-M3": {
+   "method": "M3's own test files in WSL (Arch, sway 1.12, at-spi2-core 2.62.1, Orca 51.1; /var/tmp/plans-venv, PyQt6 6.11) on 56caddd's files, through docs/delivery/reports/wave5b/run-wsl.sh: every file any of M3's drills runs a test of, the real-compositor and real-Orca tests of tests/test_sway.py among them. 151 passed, 6 skipped (tests/test_clickthrough.py's Windows-only tests, each with its reason), exit 0. The receipt's environment is the plan's profile; the run's own versions head the log (ROADMAP: evidence from elsewhere)."
+  },
+  "W5B-BEH-WSL-SWAY": {
+   "method": "tests/test_sway.py and tests/test_wayland.py on their own in WSL, verbose, on 56caddd's files with the real sway 1.12, at-spi2-core 2.62.1 and Orca 51.1: 57 passed, none skipped, every real-compositor test by name, the two real-Orca tests among them (the ask box as a window announced and echoing typing; drawn on the overlay, neither announced nor echoed)."
+  },
+  "W5B-BEH-MEMORY": {
+   "method": "M3's memory.py on 56caddd's files: a headless sway at 3840x2160 and scale 2 with a window under the overlay, the overlay's buffers read inside Chatmon at each moment: at every moment at most two buffers, sized to what is shown (384x384, 640x640, 896x768, 896x1088), 1.1 to 7.4 MB, against fb19cb9's one or two full-output 3840x2160 buffers (31.6 to 63.3 MB) in M3's memory-before--window.json. With nothing showing, 5 s on, the overlay held 1 640x640 buffer (1.6 MB) and drew 0 frames in 2 s; that is within M3-04's at most two buffers sized to what is shown. The fb19cb9 side of the comparison is M3's own memory-before--window.json, whose code (revision 2's) hasn't changed."
+  }
+ }
+}

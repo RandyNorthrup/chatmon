@@ -1,0 +1,374 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; CHATMON_INSTANCE=plans5-wsl-12-245377
+$ /var/tmp/plans-venv/bin/python -m pytest -q -p no:cacheprovider
+...ss................................................................... [  4%]
+................s.............ss...........................F............ [  9%]
+........................................................................ [ 14%]
+......................................................sss..s............ [ 18%]
+........................................................................ [ 23%]
+......s...s............................................................. [ 28%]
+...........................s............s.........ssssss................ [ 33%]
+.............................F............F........F.....F.............. [ 37%]
+.............................................s.......................s.. [ 42%]
+..............................sssss..................................... [ 47%]
+.....................ssssssssss...........s..........................sss [ 52%]
+ssssss.................................................................. [ 56%]
+........................................................................ [ 61%]
+............sss...................s.........................s...ssss.... [ 66%]
+................s..sssss....s...s.s..................................... [ 71%]
+........................................................................ [ 75%]
+........................................................................ [ 80%]
+..........................s.s........................................... [ 85%]
+....................................E................................... [ 90%]
+.................................s.....................................s [ 94%]
+s.sssssssssssssssssssssssssssssssssss...ssssssss......sssssssssssssss... [ 99%]
+......                                                                   [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else _
+
+sway = <sway_session.Session object at 0x7bdad7fe0a50>
+
+    @pytest.fixture
+    def chatmon(sway):
+>       probe = Probe(sway)
+                ^^^^^^^^^^^
+
+tests/test_sway.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/sway_session.py:435: in __init__
+    ready = self._read(START_S * 2)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sway_session.Probe object at 0x7bdae35b24a0>, seconds = 30.0
+
+    def _read(self, seconds: float) -> dict:
+        import select
+    
+        assert self.proc.stdout is not None
+        readable, _, _ = select.select([self.proc.stdout], [], [], seconds)
+        line = self.proc.stdout.readline() if readable else ""
+        if not line:
+            if self.proc.poll() is None:  # stuck: where, from its threads' stacks (faulthandler, registered in _probe)
+                self.proc.send_signal(signal.SIGUSR1)
+                time.sleep(0.5)
+>           raise ProbeError(f"the probe said nothing in {seconds} s (exit {self.proc.poll()}):\n{self.stderr()}")
+E           sway_session.ProbeError: the probe said nothing in 30.0 s (exit None):
+E           Current thread 0x00007f1accea6b80 [python] (most recent call first):
+E             File "<frozen genericpath>", line 19 in exists
+E             File "/usr/lib/python3.14/shutil.py", line 1554 in _access_check
+E             File "/usr/lib/python3.14/shutil.py", line 1646 in which
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/paths.py", line 248 in which
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/agents.py", line 224 in program
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/agents.py", line 228 in detected
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/menus.py", line 401 in agents_menu
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/menus.py", line 142 in fill
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/app.py", line 305 in __init__
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/tests/app_harness.py", line 119 in make_companion
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/tests/sway_session.py", line 616 in _probe
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/tests/sway_session.py", line 665 in <module>
+
+tests/sway_session.py:453: ProbeError
+=================================== FAILURES ===================================
+____________________________ test_a_hook_reaches_it ____________________________
+
+companion = <chatmon.app.Companion object at 0x7bdafac20eb0>
+
+    def test_a_hook_reaches_it(companion):
+        """A separate process, as a hook would be, says something and hears back."""
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        code = (
+            "import sys; sys.path.insert(0, sys.argv[1]);"
+            "from chatmon import events;"
+            "sys.exit(0 if events.send({'type': 'say', 'text': 'hello from a hook'}, timeout=5) else 1)"
+        )
+        proc = subprocess.Popen([sys.executable, "-c", code, root])
+        deadline = time.monotonic() + 20
+        while proc.poll() is None and time.monotonic() < deadline:
+            spin(0.05)
+        assert proc.returncode == 0
+        spin(0.2)
+>       assert companion.stage.bubble.title == "Sparky" and "hello from a hook" in companion.stage.bubble.doc.toPlainText()
+E       assert ("Hi, I'm Sparky!" == 'Sparky'
+E         
+E         - Sparky
+E         + Hi, I'm Sparky!)
+
+tests/test_app_smoke.py:81: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+This plugin does not support setting window masks
+This plugin does not support raise()
+qt.core.qobject.connect: QObject::connect: No such signal QPlatformNativeInterface::systemTrayWindowChanged(QScreen*)
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+This plugin does not support setting window masks
+_ test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin] _
+
+desktop = <compositor_session.KWinSession object at 0x7bdad7f3f5c0>
+chatmon = <sway_session.Probe object at 0x7bdad7f51f50>
+hands = <compositor_session.KWinInput object at 0x7bdad7f3e8b0>
+request = <FixtureRequest for <Function test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin]>>
+
+    def test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows(desktop, chatmon, hands, request):
+        # The last step: Chatmon's own window reads Qt's clipboard, which a Wayland client gets only with the keyboard
+        # (KWin: the overlay hands it back on letting go, and puts its copy on Qt's clipboard again: layer.py).
+        if shutil.which("wl-copy") is None:
+            if os.environ.get("CHATMON_COMPOSITORS") == "1":
+                pytest.fail("CHATMON_COMPOSITORS=1, but wl-clipboard isn't installed")
+            pytest.skip("wl-clipboard isn't installed")
+        chatmon.call(DESK_WINDOW)
+        subprocess.run(["wl-copy", "from another app"], env=desktop.env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10, check=True)
+        hands.click(*centre(penguin(chatmon)))
+        chatmon.call("until(lambda: surface._kb_focus and stage.clipboard_has_text(), 5)", settle=0.2)
+        hands.key("v", mods=4)  # Ctrl+V
+        assert chatmon.call("until(lambda: box.entry.text() != '', 5); result = box.entry.text()") == "from another app"
+        hands.key("a", mods=4)
+        hands.type("mine")
+        hands.key("a", mods=4)
+        hands.key("c", mods=4)  # Ctrl+C in the box: the overlay's clipboard
+        chatmon.call("settled()", settle=0.2)
+        pasted = subprocess.run(["wl-paste", "--no-newline"], env=desktop.env, capture_output=True, text=True, timeout=10, check=True)
+        assert pasted.stdout == "mine"
+        hands.key("Escape")  # the box closes; the desk window, Chatmon's own, has the keyboard (once the compositor says)
+        got = chatmon.call("until(lambda: desk.isActiveWindow(), 5); import time; t = time.monotonic(); text = QtWidgets.QApplication.clipboard().text(); "
+                           "result = [text, time.monotonic() - t]", settle=0.3)
+>       assert got[0] == "mine" and got[1] < 0.5
+E       AssertionError: assert ('' == 'mine'
+E         
+E         - mine)
+
+tests/test_compositors.py:201: AssertionError
+_ test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused[hyprland] _
+
+reader_session = <compositor_session.HyprlandSession object at 0x7bdad7faf200>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7bdafc23e210>
+request = <FixtureRequest for <Function test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused[hyprland]>>
+
+    def test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused(reader_session, qapp, request):
+        session = reader_session
+>       probe = Probe(session)
+                ^^^^^^^^^^^^^^
+
+tests/test_compositors.py:319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/sway_session.py:435: in __init__
+    ready = self._read(START_S * 2)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sway_session.Probe object at 0x7bdad7ff1be0>, seconds = 30.0
+
+    def _read(self, seconds: float) -> dict:
+        import select
+    
+        assert self.proc.stdout is not None
+        readable, _, _ = select.select([self.proc.stdout], [], [], seconds)
+        line = self.proc.stdout.readline() if readable else ""
+        if not line:
+            if self.proc.poll() is None:  # stuck: where, from its threads' stacks (faulthandler, registered in _probe)
+                self.proc.send_signal(signal.SIGUSR1)
+                time.sleep(0.5)
+>           raise ProbeError(f"the probe said nothing in {seconds} s (exit {self.proc.poll()}):\n{self.stderr()}")
+E           sway_session.ProbeError: the probe said nothing in 30.0 s (exit None):
+E           Current thread 0x00007360ea8abb80 [python] (most recent call first):
+E             File "<frozen genericpath>", line 19 in exists
+E             File "/usr/lib/python3.14/shutil.py", line 1554 in _access_check
+E             File "/usr/lib/python3.14/shutil.py", line 1646 in which
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/paths.py", line 248 in which
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/brains.py", line 539 in available
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/menus.py", line 341 in brain_menu
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/menus.py", line 141 in fill
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/chatmon/app.py", line 305 in __init__
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/tests/app_harness.py", line 119 in make_companion
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/tests/sway_session.py", line 616 in _probe
+E             File "/mnt/c/Users/Randy/Coding/chatmon-wt/measure/tests/sway_session.py", line 665 in <module>
+
+tests/sway_session.py:453: ProbeError
+_ test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[hyprland-auto-True] _
+
+reader_session = <compositor_session.HyprlandSession object at 0x7bdafc6d6a90>
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7bdafc23e210>, setting = 'auto'
+a_window = True
+
+    @pytest.mark.parametrize("setting, a_window", [("auto", True), ("off", False)])
+    def test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader(reader_session, qapp, setting, a_window):
+        session = reader_session
+        probe = Probe(session)
+        hands = compositor_session.devices(session)
+        try:
+            probe.call(SETUP + f"c.config['accessibility']['accessible_ask_box'] = '{setting}'")
+            state = _screen_reader(session, probe)
+            assert state["hosted"] is not a_window and state["reader"] is not None
+            events = sway_session.AtspiEvents(session, ["window:activate", "object:state-changed:focused"])
+            hands.click(*centre(penguin(probe)))
+            name = probe.call("until(lambda: box.isVisible(), 5); result = box.title.text()", settle=0.5)
+            time.sleep(0.3)
+            heard = events.stop()
+            activated = [e["source"] for e in heard if e["type"] == "window:activate"]
+            focused = [e["source"] for e in heard if e["type"] == "object:state-changed:focused" and e["detail1"] == 1]
+            assert focused == [name]  # its field, named for what the box asks, either way
+>           assert activated == ([name] if a_window else [])
+E           AssertionError: assert [] == ['Ask Sparky']
+E             
+E             Right contains one more item: 'Ask Sparky'
+E             Use -v to get more diff
+
+tests/test_compositors.py:446: AssertionError
+_ test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window[kwin] _
+
+tmp_path = PosixPath('/tmp/pytest-of-randy/pytest-926/test_with_orca_the_box_drawn_o0')
+qapp = <PyQt6.QtWidgets.QApplication object at 0x7bdafc23e210>, name = 'kwin'
+request = <FixtureRequest for <Function test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window[kwin]>>
+
+    @pytest.mark.parametrize("name", COMPOSITORS)
+    def test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window(tmp_path, qapp, name, request):
+        """The other side of the test above, as it was before the box became a window for a screen reader: never
+        announced as a window (no window:activate). Whether what's typed is echoed is the compositor's: KWin tells Orca
+        of every key (its org.freedesktop.a11y keyboard monitor), so Orca echoes them there; sway and Hyprland don't."""
+        _needs(name, orca=True)
+        session = compositor_session.start(name, tmp_path, atspi=True, orca=True)
+        try:
+            probe = Probe(session)
+            hands = compositor_session.devices(session)
+            try:
+                probe.call(SETUP + "c.config['accessibility']['accessible_ask_box'] = 'off'")
+                assert probe.call("c._reader_seen = float('-inf'); c._reader_running(); c._check_hosting(); result = stage.hosts_windows()")
+                since = len(session.orca_log.read_text(encoding="utf-8", errors="replace"))
+                hands.click(*centre(penguin(probe)))
+                box_name = probe.call("until(lambda: box.isVisible(), 5); result = box.title.text()", settle=1.0)
+                hands.type("ab")
+                time.sleep(1.5)
+                spoken = _spoken(_orca_said(session, since, "never", seconds=0.5))
+                observe(session, request, spoken=spoken, echoed="a" in spoken and "b" in spoken)
+>               assert box_name not in spoken  # no window announced
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError: assert 'Ask Sparky' not in ['Ask Sparky', 'a', 'Ask Sparky', 'b', 'Ask Sparky text', 'ab', ...]
+
+tests/test_compositors.py:529: AssertionError
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_a11y.py:65: Windows
+SKIPPED [1] tests/test_a11y.py:73: macOS
+SKIPPED [1] tests/test_app_m7.py:149: Windows pipes: the access list keeps other users out, and each connection is checked too
+SKIPPED [1] tests/test_app_m7.py:423: Windows' toasts
+SKIPPED [1] tests/test_app_m7.py:468: Windows' Magnifier
+SKIPPED [1] tests/test_attachments.py:101: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:111: Windows paths and drives
+SKIPPED [1] tests/test_attachments.py:125: Windows links
+SKIPPED [1] tests/test_attachments.py:169: macOS statfs
+SKIPPED [1] tests/test_brains.py:592: cmd.exe and the tools npm installs as .cmd files are Windows'
+SKIPPED [1] tests/test_brains.py:681: Windows' process tree
+SKIPPED [1] tests/test_chats.py:373: the roaming app-data folder is Windows'
+SKIPPED [1] tests/test_cli.py:94: only Windows keeps a program you're not using from coming to the front
+SKIPPED [1] tests/test_clickthrough.py:83: Windows only
+SKIPPED [1] tests/test_clickthrough.py:89: Windows only
+SKIPPED [1] tests/test_clickthrough.py:99: Windows only
+SKIPPED [1] tests/test_clickthrough.py:114: Windows only
+SKIPPED [1] tests/test_clickthrough.py:123: Windows only
+SKIPPED [1] tests/test_clickthrough.py:132: Windows only
+SKIPPED [1] tests/test_events.py:121: macOS's temporary folder of your own
+SKIPPED [1] tests/test_heads_up.py:135: macOS only
+SKIPPED [1] tests/test_hotkey.py:157: Windows only
+SKIPPED [1] tests/test_hotkey.py:183: Windows only
+SKIPPED [1] tests/test_hotkey.py:200: Windows only
+SKIPPED [1] tests/test_hotkey.py:254: macOS only
+SKIPPED [1] tests/test_hotkey.py:271: macOS only
+SKIPPED [1] tests/test_install_update.py:269: macOS's root code: ditto, BSD find, osascript
+SKIPPED [3] tests/test_install_update.py:280: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:295: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:309: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_install_update.py:323: macOS's root code: ditto, BSD find, osascript
+SKIPPED [1] tests/test_keychain.py:46: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:59: the Windows Credential Manager
+SKIPPED [1] tests/test_keychain.py:83: the macOS Keychain
+SKIPPED [1] tests/test_linuxsession.py:102: no PackageKit here
+SKIPPED [1] tests/test_macnative.py:20: macOS only
+SKIPPED [1] tests/test_macnative.py:29: macOS only
+SKIPPED [1] tests/test_macnative.py:37: macOS only
+SKIPPED [1] tests/test_macnative.py:71: macOS only
+SKIPPED [1] tests/test_macnative.py:105: macOS only
+SKIPPED [1] tests/test_macnative.py:133: macOS only
+SKIPPED [1] tests/test_macnative.py:151: macOS only
+SKIPPED [1] tests/test_macnative.py:179: macOS only
+SKIPPED [1] tests/test_macnative.py:187: macOS only
+SKIPPED [1] tests/test_package_data.py:79: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:90: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_package_data.py:108: checks a built wheel and sdist: CHATMON_DIST=<the folder holding them>
+SKIPPED [1] tests/test_paths.py:82: a file in use can't be moved: Windows
+SKIPPED [1] tests/test_pins.py:443: runs the real uv against PyPI: set CHATMON_PINS_NETWORK=1 to run it
+SKIPPED [1] tests/test_platform_events.py:104: Windows only
+SKIPPED [1] tests/test_platform_events.py:119: Windows only
+SKIPPED [1] tests/test_platform_events.py:127: Windows only
+SKIPPED [1] tests/test_platform_events.py:181: Windows only
+SKIPPED [1] tests/test_portowner.py:35: Windows' own RPC service
+SKIPPED [1] tests/test_presence.py:18: Windows only
+SKIPPED [1] tests/test_presence.py:33: Windows only
+SKIPPED [1] tests/test_presence.py:55: Windows only
+SKIPPED [1] tests/test_presence.py:74: Windows only
+SKIPPED [1] tests/test_presence.py:95: macOS only
+SKIPPED [1] tests/test_presence.py:164: no GNOME session here
+SKIPPED [1] tests/test_presence.py:241: macOS only
+SKIPPED [1] tests/test_presence.py:269: PyQt6 6.11 wraps contrastPreferenceChanged as a method, not a signal
+SKIPPED [1] tests/test_sound.py:210: Windows only
+SKIPPED [1] tests/test_sound.py:261: macOS only
+SKIPPED [1] tests/test_updates.py:648: holding a file open against changes: Windows
+SKIPPED [1] tests/test_wincaret.py:52: Windows only
+SKIPPED [1] tests/test_wincaret.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:77: Windows only
+SKIPPED [1] tests/test_windows.py:87: Windows only
+SKIPPED [1] tests/test_windows.py:98: Windows only
+SKIPPED [1] tests/test_windows.py:102: Windows only
+SKIPPED [1] tests/test_windows.py:107: Windows only
+SKIPPED [1] tests/test_windows.py:127: Windows only
+SKIPPED [1] tests/test_windows.py:138: Windows only
+SKIPPED [1] tests/test_windows.py:153: Windows only
+SKIPPED [1] tests/test_windows.py:164: Windows only
+SKIPPED [1] tests/test_windows.py:197: Windows only
+SKIPPED [1] tests/test_windows.py:210: Windows only
+SKIPPED [1] tests/test_windows.py:224: Windows only
+SKIPPED [1] tests/test_windows.py:261: Windows only
+SKIPPED [1] tests/test_windows.py:279: Windows only
+SKIPPED [1] tests/test_windows.py:292: Windows only
+SKIPPED [1] tests/test_windows.py:315: Windows only
+SKIPPED [1] tests/test_windows.py:339: Windows only
+SKIPPED [1] tests/test_windows.py:366: Windows only
+SKIPPED [1] tests/test_windows.py:408: Windows only
+SKIPPED [1] tests/test_windows.py:434: Windows only
+SKIPPED [1] tests/test_windows.py:441: Windows only
+SKIPPED [1] tests/test_windows.py:479: Windows only
+SKIPPED [1] tests/test_windows.py:491: Windows only
+SKIPPED [1] tests/test_windows.py:502: Windows only
+SKIPPED [1] tests/test_windows.py:519: Windows only
+SKIPPED [1] tests/test_windows.py:535: Windows only
+SKIPPED [1] tests/test_windows.py:561: Windows only
+SKIPPED [1] tests/test_windows.py:583: Windows only
+SKIPPED [1] tests/test_windows.py:601: Windows only
+SKIPPED [1] tests/test_windows.py:611: asks Windows Update itself, which takes up to minutes: CHATMON_TEST_WINDOWS_UPDATE=1
+SKIPPED [1] tests/test_windows.py:684: Windows only
+SKIPPED [1] tests/test_windows.py:699: Windows only
+SKIPPED [1] tests/test_windows.py:739: Windows only
+SKIPPED [1] tests/test_windows.py:795: puts things on this PC's clipboard: CHATMON_TEST_CLIPBOARD=1
+SKIPPED [1] tests/test_windows.py:818: Windows only
+SKIPPED [1] tests/test_winlock.py:17: Windows only
+SKIPPED [1] tests/test_winlock.py:41: Windows only
+SKIPPED [1] tests/test_winlock.py:78: Windows only
+SKIPPED [1] tests/test_winpipe.py:106: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:119: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:132: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:150: named pipes: Windows
+SKIPPED [1] tests/test_winpipe.py:160: named pipes: Windows
+SKIPPED [1] tests/test_wintoast.py:110: Windows only
+SKIPPED [1] tests/test_wintoast.py:126: Windows only
+SKIPPED [1] tests/test_wintoast.py:151: Windows only
+SKIPPED [1] tests/test_wintoast.py:211: Windows only
+SKIPPED [1] tests/test_wintoast.py:235: Windows only
+SKIPPED [1] tests/test_wintoast.py:255: Windows only
+SKIPPED [1] tests/test_wintoast.py:275: Windows only
+SKIPPED [1] tests/test_wintrust.py:37: Authenticode and file sharing: Windows
+SKIPPED [4] tests/test_wintrust.py:53: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:69: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:87: Authenticode and file sharing: Windows
+SKIPPED [1] tests/test_wintrust.py:97: Authenticode and file sharing: Windows
+5 failed, 1385 passed, 127 skipped, 1 error in 1963.89s (0:32:43)
+# exit 1

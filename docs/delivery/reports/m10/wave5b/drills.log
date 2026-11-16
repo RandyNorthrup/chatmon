@@ -1,0 +1,465 @@
+red drills from docs\delivery\reports\m10\wave5b\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-guz1wmp9
+copied 318 files
+
+=== drill M10-01-comtypes-on-every-platform (M10-01.A1) on packaging/requirements-test.txt
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.28s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_windows_test_legs_install_the_screen_readers_ui_automation_client __
+
+    def test_the_windows_test_legs_install_the_screen_readers_ui_automation_client():
+        """tests/uia_client.py listens to UI Automation through comtypes, which only Windows has a use for. Without it in
+        the test list, CI's Windows legs would skip the end-to-end screen-reader test instead of running it."""
+        for stem in ("requirements-test", "requirements-dev"):
+            comtypes = requirement(stem, "comtypes")
+            assert comtypes is not None, f"{stem}.txt doesn't lock comtypes"
+            where = [p for p in ("win32", "linux", "darwin") if comtypes.marker is None or comtypes.marker.evaluate({"sys_platform": p})]
+>           assert where == ["win32"], f"{stem}.txt installs comtypes on {where}, not on Windows alone: {comtypes}"
+E           AssertionError: requirements-test.txt installs comtypes on ['win32', 'linux', 'darwin'], not on Windows alone: comtypes==1.4.17
+E           assert ['win32', 'linux', 'darwin'] == ['win32']
+E             
+E             Left contains 2 more items, first extra item: 'linux'
+E             Use -v to get more diff
+
+tests\test_requirements.py:100: AssertionError
+1 failed in 0.37s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+
+=== drill M10-01-comtypes-left-out-of-the-dev-lock (M10-01.A1) on packaging/requirements-dev.txt
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.42s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_the_windows_test_legs_install_the_screen_readers_ui_automation_client __
+
+    def test_the_windows_test_legs_install_the_screen_readers_ui_automation_client():
+        """tests/uia_client.py listens to UI Automation through comtypes, which only Windows has a use for. Without it in
+        the test list, CI's Windows legs would skip the end-to-end screen-reader test instead of running it."""
+        for stem in ("requirements-test", "requirements-dev"):
+            comtypes = requirement(stem, "comtypes")
+>           assert comtypes is not None, f"{stem}.txt doesn't lock comtypes"
+E           AssertionError: requirements-dev.txt doesn't lock comtypes
+E           assert None is not None
+
+tests\test_requirements.py:98: AssertionError
+_____________ test_each_lock_holds_the_versions_its_in_file_names _____________
+
+    def test_each_lock_holds_the_versions_its_in_file_names():
+        """Changing a pin means locking again: the .txt is what CI and the builds install."""
+        for stem in LISTS:
+            entries = locked(stem)
+            stale = {name: version for name, version in pinned(stem).items() if entries.get(name, ("",))[0] != version}
+>           assert not stale, f"{stem}.txt doesn't lock these at the versions {stem}.in pins: {stale}"
+E           AssertionError: requirements-dev.txt doesn't lock these at the versions requirements-dev.in pins: {'comtypes': '1.4.17'}
+E           assert not {'comtypes': '1.4.17'}
+
+tests\test_requirements.py:79: AssertionError
+2 failed in 1.12s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.64s
+
+=== drill M10-02-english-carries-qts-english (M10-02.A1) on packaging/build.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.63s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other _
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9651/test_the_installers_carry_qts_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000197A6E009D0>
+capsys = <_pytest.capture.CaptureFixture object at 0x00000197A6BF5E80>
+
+    def test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other(tmp_path, monkeypatch, capsys):
+        """For each language chatmon/locale has a translation for, the Windows and macOS builds carry the file of Qt's
+        own words that Qt loads for it, where chatmon/i18n.py looks in the built app; with English alone, none; and
+        never another of Qt's languages. Here on a copy of chatmon/locale with throwaway translations."""
+        from PyQt6.QtCore import QLibraryInfo
+    
+        from chatmon import i18n
+    
+        qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        if not all((qt / name).is_file() for name in ("qtbase_de.qm", "qtbase_pt_BR.qm", "qt_de.qm", "qtbase_fr.qm")):
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        build = build_module()
+        locale = tmp_path / "locale"
+        shutil.copytree(REPO / "chatmon" / "locale", locale)
+        monkeypatch.setattr(build, "LOCALE", locale)
+        ran: list[list[str]] = []
+        monkeypatch.setattr(build, "run", lambda *argv, **kwargs: ran.append([str(a) for a in argv]))
+    
+        def nuitka_includes() -> list[str]:
+            build.nuitka(tmp_path / "out", "standalone")
+            options = ran.pop()
+            assert "--enable-plugin=pyqt6" in options and "--noinclude-qt-translations" in options
+            return [o for o in options if o.startswith("--include-data-files=")]
+    
+        # What PyQt6's hooks give PyInstaller: every language of Qt's own, and of its modules', beside Chatmon's files.
+        hooked = [(str(i18n.QT_FROZEN / name), str(qt / name), "DATA") for name in ("qt_de.qm", "qtbase_de.qm", "qtbase_fr.qm")]
+        hooked += [(str(i18n.QT_FROZEN / "qtmultimedia_de.qm"), str(qt / "qtmultimedia_de.qm"), "DATA")]
+        own = [("chatmon/locale/chatmon.pot", str(locale / "chatmon.pot"), "DATA"), (str(Path("PyQt6", "Qt6", "plugins", "x.dll")), "x.dll", "BINARY")]
+    
+>       assert build.qt_translations() == [], "English alone: Qt's own language"
+E       AssertionError: English alone: Qt's own language
+E       assert [WindowsPath(...tbase_en.qm')] == []
+E         
+E         Left contains one more item: WindowsPath('C:/Users/Randy/Coding/chatmon/.venv/Lib/site-packages/PyQt6/Qt6/translations/qtbase_en.qm')
+E         Use -v to get more diff
+
+tests\test_packaging.py:160: AssertionError
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.44s
+
+=== drill M10-02-pyinstaller-keeps-every-language (M10-02.A1) on packaging/build.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other _
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9654/test_the_installers_carry_qts_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002327D2009D0>
+capsys = <_pytest.capture.CaptureFixture object at 0x000002327CFF5E80>
+
+    def test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other(tmp_path, monkeypatch, capsys):
+        """For each language chatmon/locale has a translation for, the Windows and macOS builds carry the file of Qt's
+        own words that Qt loads for it, where chatmon/i18n.py looks in the built app; with English alone, none; and
+        never another of Qt's languages. Here on a copy of chatmon/locale with throwaway translations."""
+        from PyQt6.QtCore import QLibraryInfo
+    
+        from chatmon import i18n
+    
+        qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        if not all((qt / name).is_file() for name in ("qtbase_de.qm", "qtbase_pt_BR.qm", "qt_de.qm", "qtbase_fr.qm")):
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        build = build_module()
+        locale = tmp_path / "locale"
+        shutil.copytree(REPO / "chatmon" / "locale", locale)
+        monkeypatch.setattr(build, "LOCALE", locale)
+        ran: list[list[str]] = []
+        monkeypatch.setattr(build, "run", lambda *argv, **kwargs: ran.append([str(a) for a in argv]))
+    
+        def nuitka_includes() -> list[str]:
+            build.nuitka(tmp_path / "out", "standalone")
+            options = ran.pop()
+            assert "--enable-plugin=pyqt6" in options and "--noinclude-qt-translations" in options
+            return [o for o in options if o.startswith("--include-data-files=")]
+    
+        # What PyQt6's hooks give PyInstaller: every language of Qt's own, and of its modules', beside Chatmon's files.
+        hooked = [(str(i18n.QT_FROZEN / name), str(qt / name), "DATA") for name in ("qt_de.qm", "qtbase_de.qm", "qtbase_fr.qm")]
+        hooked += [(str(i18n.QT_FROZEN / "qtmultimedia_de.qm"), str(qt / "qtmultimedia_de.qm"), "DATA")]
+        own = [("chatmon/locale/chatmon.pot", str(locale / "chatmon.pot"), "DATA"), (str(Path("PyQt6", "Qt6", "plugins", "x.dll")), "x.dll", "BINARY")]
+    
+        assert build.qt_translations() == [], "English alone: Qt's own language"
+        assert nuitka_includes() == []
+>       assert build.pyinstaller_datas(hooked + own) == own, "none of Qt's translations, and everything else kept"
+E       AssertionError: none of Qt's translations, and everything else kept
+E       assert [('PyQt6\\Qt6...l', 'BINARY')] == [('chatmon/lo...l', 'BINARY')]
+E         
+E         At index 0 diff: ('PyQt6\\Qt6\\translations\\qt_de.qm', 'C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Lib\\site-packages\\PyQt6\\Qt6\\translations\\qt_de.qm', 'DATA') != ('chatmon/locale/chatmon.pot', 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-9654\\test_the_installers_carry_qts_0\\locale\\chatmon.pot', 'DATA')
+E         Left contains 4 more items, first extra item: ('PyQt6\\Qt6\\translations\\qtbase_fr.qm', 'C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Lib\\site-packages\\PyQt6\\Qt6\\translations\\qtbase_fr.qm', 'DATA')
+E         Use -v to get more diff
+
+tests\test_packaging.py:162: AssertionError
+1 failed in 0.37s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+
+=== drill M10-02-nuitka-left-without-them (M10-02.A1) on packaging/build.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.44s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other _
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9657/test_the_installers_carry_qts_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EED14509D0>
+capsys = <_pytest.capture.CaptureFixture object at 0x000001EED1225E80>
+
+    def test_the_installers_carry_qts_own_words_for_each_language_chatmon_speaks_and_no_other(tmp_path, monkeypatch, capsys):
+        """For each language chatmon/locale has a translation for, the Windows and macOS builds carry the file of Qt's
+        own words that Qt loads for it, where chatmon/i18n.py looks in the built app; with English alone, none; and
+        never another of Qt's languages. Here on a copy of chatmon/locale with throwaway translations."""
+        from PyQt6.QtCore import QLibraryInfo
+    
+        from chatmon import i18n
+    
+        qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        if not all((qt / name).is_file() for name in ("qtbase_de.qm", "qtbase_pt_BR.qm", "qt_de.qm", "qtbase_fr.qm")):
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        build = build_module()
+        locale = tmp_path / "locale"
+        shutil.copytree(REPO / "chatmon" / "locale", locale)
+        monkeypatch.setattr(build, "LOCALE", locale)
+        ran: list[list[str]] = []
+        monkeypatch.setattr(build, "run", lambda *argv, **kwargs: ran.append([str(a) for a in argv]))
+    
+        def nuitka_includes() -> list[str]:
+            build.nuitka(tmp_path / "out", "standalone")
+            options = ran.pop()
+            assert "--enable-plugin=pyqt6" in options and "--noinclude-qt-translations" in options
+            return [o for o in options if o.startswith("--include-data-files=")]
+    
+        # What PyQt6's hooks give PyInstaller: every language of Qt's own, and of its modules', beside Chatmon's files.
+        hooked = [(str(i18n.QT_FROZEN / name), str(qt / name), "DATA") for name in ("qt_de.qm", "qtbase_de.qm", "qtbase_fr.qm")]
+        hooked += [(str(i18n.QT_FROZEN / "qtmultimedia_de.qm"), str(qt / "qtmultimedia_de.qm"), "DATA")]
+        own = [("chatmon/locale/chatmon.pot", str(locale / "chatmon.pot"), "DATA"), (str(Path("PyQt6", "Qt6", "plugins", "x.dll")), "x.dll", "BINARY")]
+    
+        assert build.qt_translations() == [], "English alone: Qt's own language"
+        assert nuitka_includes() == []
+        assert build.pyinstaller_datas(hooked + own) == own, "none of Qt's translations, and everything else kept"
+    
+        for code in ("de", "pt", "eo"):  # Esperanto: a language Qt has no translation of its own for
+            (locale / f"{code}.po").write_text(HEADER + '\nmsgid "Stop"\nmsgstr "Halt"\n', encoding="utf-8")
+        assert build.qt_translations() == [qt / "qtbase_de.qm", qt / "qtbase_pt_BR.qm"], "the files Qt loads: pt is Brazil's"
+        assert "Qt has no translation of its own words for eo" in capsys.readouterr().out
+>       assert nuitka_includes() == [f"--include-data-files={qt / name}=PyQt6/Qt6/translations/{name}" for name in ("qtbase_de.qm", "qtbase_pt_BR.qm")]
+E       AssertionError: assert [] == ['--include-d...ase_pt_BR.qm']
+E         
+E         Right contains 2 more items, first extra item: '--include-data-files=C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Lib\\site-packages\\PyQt6\\Qt6\\translations\\qtbase_de.qm=PyQt6/Qt6/translations/qtbase_de.qm'
+E         Use -v to get more diff
+
+tests\test_packaging.py:168: AssertionError
+1 failed in 0.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.15s
+
+=== drill M10-02-frozen-app-folder-never-looked-in (M10-02.A2) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.70s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_an_installers_app_finds_qts_own_words_in_its_own_folder _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002B60B5EB110>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9660/test_an_installers_app_finds_q0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B60B6B2C40>
+
+    def test_an_installers_app_finds_qts_own_words_in_its_own_folder(qapp, tmp_path, monkeypatch):
+        """Qt's translations are looked for where Qt says they are first: pip's PyQt6 keeps them in its package, and the
+        .deb and .rpm use the distribution's Qt and its folder. An installer's build (Nuitka on Windows, PyInstaller on
+        macOS) also carries them in the app's own folder (packaging/build.py), which is looked in only there."""
+        from PyQt6 import QtCore
+        from PyQt6.QtCore import QCoreApplication, QLibraryInfo
+    
+        from chatmon import paths
+    
+        qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        if not (qt / "qtbase_de.qm").is_file():
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        monkeypatch.setattr(paths, "frozen", lambda: False)
+        assert [Path(f) for f in i18n.qt_folders(QtCore)] == [qt], "a pip or distribution Qt: its own folder"
+    
+        app, elsewhere = tmp_path / "Chatmon", tmp_path / "qt"  # a built app's folder; a Qt whose folder has none
+        (app / i18n.QT_FROZEN).mkdir(parents=True)
+        elsewhere.mkdir()
+        shutil.copyfile(qt / "qtbase_de.qm", app / i18n.QT_FROZEN / "qtbase_de.qm")
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        monkeypatch.setattr(i18n, "_APP_FOLDER", app)
+        monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: str(elsewhere))
+    
+        monkeypatch.setattr(paths, "frozen", lambda: True)
+>       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], "Qt's own folder first"
+E       AssertionError: Qt's own folder first
+E       assert ['C:\\Users\\...finds_q0\\qt'] == ['C:\\Users\\...translations']
+E         
+E         Right contains one more item: 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-9660\\test_an_installers_app_finds_q0\\Chatmon\\PyQt6\\Qt6\\translations'
+E         Use -v to get more diff
+
+tests\test_i18n.py:287: AssertionError
+1 failed in 0.50s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+
+=== drill M10-02-app-folder-before-qts (M10-02.A2) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_an_installers_app_finds_qts_own_words_in_its_own_folder _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001668DA5B110>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9663/test_an_installers_app_finds_q0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001668DAE2C40>
+
+    def test_an_installers_app_finds_qts_own_words_in_its_own_folder(qapp, tmp_path, monkeypatch):
+        """Qt's translations are looked for where Qt says they are first: pip's PyQt6 keeps them in its package, and the
+        .deb and .rpm use the distribution's Qt and its folder. An installer's build (Nuitka on Windows, PyInstaller on
+        macOS) also carries them in the app's own folder (packaging/build.py), which is looked in only there."""
+        from PyQt6 import QtCore
+        from PyQt6.QtCore import QCoreApplication, QLibraryInfo
+    
+        from chatmon import paths
+    
+        qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        if not (qt / "qtbase_de.qm").is_file():
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        monkeypatch.setattr(paths, "frozen", lambda: False)
+        assert [Path(f) for f in i18n.qt_folders(QtCore)] == [qt], "a pip or distribution Qt: its own folder"
+    
+        app, elsewhere = tmp_path / "Chatmon", tmp_path / "qt"  # a built app's folder; a Qt whose folder has none
+        (app / i18n.QT_FROZEN).mkdir(parents=True)
+        elsewhere.mkdir()
+        shutil.copyfile(qt / "qtbase_de.qm", app / i18n.QT_FROZEN / "qtbase_de.qm")
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        monkeypatch.setattr(i18n, "_APP_FOLDER", app)
+        monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: str(elsewhere))
+    
+        monkeypatch.setattr(paths, "frozen", lambda: True)
+>       assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], "Qt's own folder first"
+E       AssertionError: Qt's own folder first
+E       assert ['C:\\Users\\...finds_q0\\qt'] == ['C:\\Users\\...translations']
+E         
+E         At index 0 diff: 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-9663\\test_an_installers_app_finds_q0\\Chatmon\\PyQt6\\Qt6\\translations' != 'C:\\Users\\Randy\\AppData\\Local\\Temp\\pytest-of-Randy\\pytest-9663\\test_an_installers_app_finds_q0\\qt'
+E         Use -v to get more diff
+
+tests\test_i18n.py:287: AssertionError
+1 failed in 0.76s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.48s
+
+=== drill M10-02-translator-only-asks-qt (M10-02.A2) on chatmon/i18n.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_i18n.py::test_an_installers_app_finds_qts_own_words_in_its_own_folder
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.64s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_an_installers_app_finds_qts_own_words_in_its_own_folder _________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000001F8848EB110>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-9666/test_an_installers_app_finds_q0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F884972C40>
+
+    def test_an_installers_app_finds_qts_own_words_in_its_own_folder(qapp, tmp_path, monkeypatch):
+        """Qt's translations are looked for where Qt says they are first: pip's PyQt6 keeps them in its package, and the
+        .deb and .rpm use the distribution's Qt and its folder. An installer's build (Nuitka on Windows, PyInstaller on
+        macOS) also carries them in the app's own folder (packaging/build.py), which is looked in only there."""
+        from PyQt6 import QtCore
+        from PyQt6.QtCore import QCoreApplication, QLibraryInfo
+    
+        from chatmon import paths
+    
+        qt = Path(QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        if not (qt / "qtbase_de.qm").is_file():
+            pytest.skip("Qt's own translations aren't installed (a separate package on some distributions)")
+        monkeypatch.setattr(paths, "frozen", lambda: False)
+        assert [Path(f) for f in i18n.qt_folders(QtCore)] == [qt], "a pip or distribution Qt: its own folder"
+    
+        app, elsewhere = tmp_path / "Chatmon", tmp_path / "qt"  # a built app's folder; a Qt whose folder has none
+        (app / i18n.QT_FROZEN).mkdir(parents=True)
+        elsewhere.mkdir()
+        shutil.copyfile(qt / "qtbase_de.qm", app / i18n.QT_FROZEN / "qtbase_de.qm")
+        catalog(tmp_path, "de", 'msgid "Stop"\nmsgstr "Anhalten"\n')
+        monkeypatch.setattr(i18n, "_APP_FOLDER", app)
+        monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: str(elsewhere))
+    
+        monkeypatch.setattr(paths, "frozen", lambda: True)
+        assert i18n.qt_folders(QtCore) == [str(elsewhere), str(app / i18n.QT_FROZEN)], "Qt's own folder first"
+        monkeypatch.setattr(i18n, "_APP_FOLDER", qt.parent.parent.parent)  # where pip's PyQt6 is: one folder, however it's spelt
+        monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: qt.as_posix())
+        assert i18n.qt_folders(QtCore) == [str(qt)]
+        monkeypatch.setattr(i18n, "_APP_FOLDER", app)
+        monkeypatch.setattr(i18n, "_qt_library_folder", lambda qtcore: str(elsewhere))
+        i18n.setup("de", tmp_path)
+>       assert QCoreApplication.translate("QPlatformTheme", "Cancel") == "Abbrechen"
+E       AssertionError: assert 'Cancel' == 'Abbrechen'
+E         
+E         - Abbrechen
+E         + Cancel
+
+tests\test_i18n.py:294: AssertionError
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.44s
+
+=== drill M10-03-alias-not-pyqts-signal (M10-03.A2) on chatmon/qtsignal.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_platform_events.py::test_each_workspace_notification_is_its_own_signal
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.56s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_each_workspace_notification_is_its_own_signal ______________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000025C77BD96D0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025C77F543E0>
+
+    def test_each_workspace_notification_is_its_own_signal(qapp, monkeypatch):
+        """What each of the observer's methods says (here without AppKit: on macOS, tests/test_macnative.py posts the
+        real notifications)."""
+        from chatmon import macnative
+    
+        monkeypatch.setattr(macnative, "low_power_mode", lambda: True)
+        watcher = macnative.WorkspaceWatcher()
+        heard = []
+        watcher.slept.connect(lambda on: heard.append(("slept", on)))
+        watcher.screens_slept.connect(lambda on: heard.append(("screens", on)))
+        watcher.accessibility_changed.connect(lambda: heard.append(("accessibility",)))
+        watcher.low_power_changed.connect(lambda on: heard.append(("low power", on)))
+        for selector, _, _ in macnative.WORKSPACE_EVENTS:
+>           watcher.deliver(selector)
+
+tests\test_platform_events.py:307: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <chatmon.macnative.WorkspaceWatcher object at 0x0000025C77BDAD50>
+selector = 'willSleep:'
+
+    def deliver(self, selector: str) -> None:
+        """One of the notifications came, to this method of the observer."""
+        if selector in ("willSleep:", "didWake:"):
+>           self.slept.emit(selector == "willSleep:")
+E           TypeError: WorkspaceWatcher.slept[] signal has 0 argument(s) but 1 provided
+
+chatmon\macnative.py:651: TypeError
+1 failed in 1.24s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.46s
+
+=== summary
+PASS M10-01-comtypes-on-every-platform
+PASS M10-01-comtypes-left-out-of-the-dev-lock
+PASS M10-02-english-carries-qts-english
+PASS M10-02-pyinstaller-keeps-every-language
+PASS M10-02-nuitka-left-without-them
+PASS M10-02-frozen-app-folder-never-looked-in
+PASS M10-02-app-folder-before-qts
+PASS M10-02-translator-only-asks-qt
+PASS M10-03-alias-not-pyqts-signal

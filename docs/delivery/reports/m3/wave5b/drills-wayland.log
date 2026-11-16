@@ -1,0 +1,119 @@
+red drills from docs\delivery\reports\m3\wave5b\drill-spec-wayland.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-taarsr_d
+copied 318 files
+
+=== drill M3-14-menu-keys (M3-14) on chatmon/penguin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.70s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open _
+
+stage = (<chatmon.penguin.Stage object at 0x0000029388CF8730>, <chatmon.bubble.AskBox object at 0x0000029388CF8370>)
+
+    def test_with_the_box_a_window_the_penguins_menu_still_takes_the_keyboard_while_open(stage):
+        """The penguin's own menu is drawn on the overlay whatever the hosting (Qt's menus need a Qt window to belong
+        to): it takes the keyboard from the box's window while it's open, and gives it back as it closes."""
+        s, box = stage
+        s.set_hosting(False)
+        box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+        spin(0.1)
+        s.surface.focus.clear()
+        menu = QMenu()
+        picked = []
+        menu.addAction("First", lambda: picked.append("first"))
+        menu.addAction("Second", lambda: picked.append("second"))
+        s.open_menu(menu, QPoint(300, 300))
+>       assert s.surface.focus == [(True, True)]  # taken now, as a popup menu takes it
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert [] == [(True, True)]
+E         
+E         Right contains one more item: (True, True)
+E         Use -v to get more diff
+
+tests\test_overlay_stage.py:352: AssertionError
+1 failed in 1.02s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.89s
+
+=== drill M3-14-bubble-clear (M3-14) on chatmon/penguin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.11s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__ test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is __
+
+stage = (<chatmon.penguin.Stage object at 0x000002BD8A5E45F0>, <chatmon.bubble.AskBox object at 0x000002BD8A5E4230>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002BD8A42DE00>
+
+    def test_a_bubble_keeps_clear_of_the_box_only_where_it_knows_where_the_box_is(stage, monkeypatch):
+        s, box = stage
+        box.open(QPoint(400, 600), "Ask", "hint", "placeholder")
+        assert s._placed_as_asked(box)  # hosted: drawn by the stage, where its geometry says
+        s.set_hosting(False)
+        spin(0.1)
+        assert s._placed_as_asked(box)  # a window here (offscreen, as on X11, Windows, macOS): where it's asked to be
+        from PyQt6.QtGui import QGuiApplication
+    
+        monkeypatch.setattr(QGuiApplication, "platformName", staticmethod(lambda: "wayland"))
+>       assert not s._placed_as_asked(box)  # a Wayland window: where the compositor put it, which nobody is told
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert not True
+E        +  where True = <function Stage._placed_as_asked at 0x000002BD8A4009E0>(<chatmon.bubble.AskBox object at 0x000002BD8A5E4230>)
+E        +    where <function Stage._placed_as_asked at 0x000002BD8A4009E0> = <chatmon.penguin.Stage object at 0x000002BD8A5E45F0>._placed_as_asked
+
+tests\test_overlay_stage.py:371: AssertionError
+1 failed in 1.10s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.49s
+
+=== drill M3-04-extent (M3-04) on chatmon/penguin.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_overlay_stage.py::test_the_overlay_is_told_where_everything_drawn_is
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 3.00s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_the_overlay_is_told_where_everything_drawn_is ______________
+
+stage = (<chatmon.penguin.Stage object at 0x00000210E35744B0>, <chatmon.bubble.AskBox object at 0x00000210E3574230>)
+
+    def test_the_overlay_is_told_where_everything_drawn_is(stage):
+        """M3-04: the overlay's buffers cover what's drawn and no more, so the stage says where all of it is: the
+        chatmon, a bubble, the ask box, a menu."""
+        s, box = stage
+        spin(0.2)
+        assert s.surface.extent.contains(s._penguin.toAlignedRect())
+        assert s.surface.extent.width() * 3 < s._geo.width()  # the chatmon's corner, not the whole stage
+        s.show_message("Reminder", "stretch your legs")
+        spin(0.3)
+>       assert s.surface.extent.contains(s._bubble_box.toAlignedRect())
+E       assert False
+E        +  where False = <built-in method contains of QRect object at 0x00000210E30669D0>(PyQt6.QtCore.QRect(248, 572, 303, 112))
+E        +    where <built-in method contains of QRect object at 0x00000210E30669D0> = PyQt6.QtCore.QRect(343, 678, 114, 124).contains
+E        +      where PyQt6.QtCore.QRect(343, 678, 114, 124) = <test_overlay_stage.Overlay object at 0x00000210E3536A50>.extent
+E        +        where <test_overlay_stage.Overlay object at 0x00000210E3536A50> = <chatmon.penguin.Stage object at 0x00000210E35744B0>.surface
+E        +    and   PyQt6.QtCore.QRect(248, 572, 303, 112) = <built-in method toAlignedRect of QRectF object at 0x00000210E3066650>()
+E        +      where <built-in method toAlignedRect of QRectF object at 0x00000210E3066650> = PyQt6.QtCore.QRectF(248.0, 572.0, 303.0, 112.0).toAlignedRect
+E        +        where PyQt6.QtCore.QRectF(248.0, 572.0, 303.0, 112.0) = <chatmon.penguin.Stage object at 0x00000210E35744B0>._bubble_box
+
+tests\test_overlay_stage.py:387: AssertionError
+1 failed in 1.39s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.62s
+
+=== summary
+PASS M3-14-menu-keys
+PASS M3-14-bubble-clear
+PASS M3-04-extent

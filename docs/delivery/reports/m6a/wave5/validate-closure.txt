@@ -1,0 +1,7 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m6a-ci-tooling.md --stage closure --context docs/delivery/reports/m6a/wave5/context.json
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+evidence-coverage | M6A-10.A1 | No passing manual receipt covers this acceptance criterion
+task-unverified | T7B | Task is blocked, not verified
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

@@ -1,0 +1,30 @@
+{
+ "readiness_method": "Requirements review, the plans round for v0.10.0, at 7816159 (readiness.md): M6B-01 to M6B-03, M6B-RW and M6B-LEFT re-read against ASSESSMENT.md, ROADMAP.md and pyproject.toml (all unchanged since round three), PR #22's changes to the modules and tests T1-ruff to T7-leftovers own, and the M6A and M8 plans it takes as inputs (re-bound in this round first); no conflict or gap; the new code passes ruff and mypy with no new ignore.",
+ "next_action": "M6B-02.A1's 6.12 half fails at 7816159: mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again; then T4-mypy can be verified, and T6-phase-b and T7-leftovers, which depend on it and whose own receipts pass, with it, and M6B closed. The 6.11 half and every other criterion pass.",
+ "stale_reason": "Stale in the plans round for v0.10.0 (2026-11-15): PR #22's merge (7816159) changed files it was bound to, and the M6A and M8 plans this plan binds were re-bound in this round, and this round's section changed the plan's prose. The W5- receipts re-ran its check on 7816159 or read it from main's CI run 43778643147",
+ "receipts": {
+  "W5-BEH-WSL-MYPY-6121": {
+   "status": "fail",
+   "exit_code": 1,
+   "method": "M6B-02.A1's 6.12 half: mypy 2.4.1 with PyQt6 6.12.1's stubs (/var/tmp/m4a-venv in WSL Arch) on 7816159's files, --platform linux; win32 and darwin the same (mypy-pyqt6-6.12.1-win32.log, -darwin.log), and so did M10's run here (../m10/wave5/mypy-6121.log). Two errors each, both in chatmon/layer.py.",
+   "reason": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again."
+  },
+  "W5-BEH-TEMPLATE": {
+   "method": "packaging/extract_strings.py --check on 7816159's files on this workstation (the worktree's HEAD then, b8da74a, named in the log, changes only docs/ after 7816159: git diff 7816159 b8da74a outside docs/ is empty), exit 0: chatmon/locale/chatmon.pot is exactly what the extractor writes from today's marked strings, and none of them is a string that couldn't be translated; PR #22 added or changed no marked string."
+  }
+ },
+ "tasks": {
+  "T4-mypy": {
+   "status": "blocked",
+   "blocker": "mypy 2.4.1 with PyQt6 6.12.1's stubs finds two errors at 7816159, the same on linux, win32 and darwin: chatmon/layer.py:824: error: Need type annotation for \"app\"  [var-annotated], and chatmon/layer.py:917: the same. Both lines are app = QGuiApplication.instance(), new in PR #22's KWin and Hyprland fixes (6f7dd3f). 6.12.1's stubs type the static instance() as returning Self, the case CONTRIBUTING.md's second workaround covers (a value from a static constructor is given its type), and these lines don't have it. CI is green because its types jobs lock 6.11's stubs. That is M6B-02.A1's 6.12 half. Next: the coordinator gives app its type at chatmon/layer.py:824 and :917 (app: QCoreApplication | None = QGuiApplication.instance()), product code, not this round's to change; then mypy with 6.12.1's stubs runs again."
+  },
+  "T6-phase-b": {
+   "status": "blocked",
+   "blocker": "Waits for T4-mypy, which it depends on and which is blocked at 7816159 (mypy with PyQt6 6.12.1's stubs fails on chatmon/layer.py:824 and :917). Its own criteria's receipts all pass at 7816159; it can be verified again once T4-mypy is."
+  },
+  "T7-leftovers": {
+   "status": "blocked",
+   "blocker": "Waits for T6-phase-b, which it depends on and which waits for T4-mypy (mypy with PyQt6 6.12.1's stubs fails on chatmon/layer.py:824 and :917 at 7816159). Its own criteria's receipts all pass at 7816159; it can be verified again once T6-phase-b is."
+  }
+ }
+}

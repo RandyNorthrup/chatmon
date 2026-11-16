@@ -1,0 +1,27 @@
+m0/drill-spec-linux.json exit 0 00:28:56-00:29:26
+m6b/drill-spec-linux.json exit 0 00:29:26-00:30:03
+m3/drill-spec-linux-r3.json exit 0 00:30:03-00:30:38
+m3/drill-spec-wayland-linux.json exit 0 00:30:38-00:36:37
+m4a/w4-drill-spec-linux.json exit 0 00:36:37-00:41:59
+m4a/w4-drill-spec-linux-qt612.json exit 0 00:41:59-00:42:13
+m4a/readers-drill-spec-linux.json exit 0 00:42:13-00:44:51
+sway-tests-linux.log ======================== 57 passed in 199.40s (0:03:19) ======================== # exit 0 00:44:51-00:48:12
+m3-tests-linux.log 151 passed, 6 skipped in 226.11s (0:03:46) # exit 0 00:48:12-00:52:00
+suite-linux-qt612.log 80 passed, 27 skipped in 115.13s (0:01:55) # exit 0 00:52:00-00:53:57
+sway-readers.log 7 passed, 13 deselected in 143.44s (0:02:23) # exit 0 00:53:57-00:56:22
+suite-linux.log 5 failed, 1385 passed, 127 skipped, 1 error in 1963.89s (0:32:43) # exit 1 00:56:22-01:29:11
+m3 memory exit 0 01:29:11-01:29:34
+mypy-pyqt6-6.12.1-linux.log Found 2 errors in 1 file (checked 70 source files) # exit 1 01:29:34-01:29:52
+mypy-pyqt6-6.12.1-win32.log Found 2 errors in 1 file (checked 70 source files) # exit 1 01:29:52-01:30:01
+mypy-pyqt6-6.12.1-darwin.log Found 2 errors in 1 file (checked 70 source files) # exit 1 01:30:01-01:30:09
+m10 howto replay exit 1 01:30:09-01:31:32
+m6a distro drill exit 0 01:31:32-01:51:22
+left running: 10
+DONE
+suite-linux-failures-rerun.log 6 of 6 exit 0 01:51:54-01:53:28
+suite-linux-quiet.log 1 failed, 1390 passed, 127 skipped in 1267.98s (0:21:07) # exit 1 01:53:28-02:14:37
+left running: 2
+DONE-RERUN
+smoke-wsl-5-runs.log 5 of 5 exit 0 02:15:10-02:25:36
+DONE-SMOKE
+m3/drill-spec-wayland-linux-v3.json exit 0 02:27:09-02:27:49

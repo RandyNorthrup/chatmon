@@ -1,0 +1,18 @@
+mypy-pyqt6-6.12.1-linux.log Success: no issues found in 70 source files # exit 0 02:55:29-02:55:38
+mypy-pyqt6-6.12.1-win32.log Success: no issues found in 70 source files # exit 0 02:55:38-02:55:47
+mypy-pyqt6-6.12.1-darwin.log Success: no issues found in 70 source files # exit 0 02:55:47-02:55:52
+m10 howto replay exit 0 02:55:52-02:56:57
+m0/drill-spec-linux.json exit 0 02:56:57-02:57:25
+m6b/drill-spec-linux.json exit 0 02:57:25-02:58:10
+m3/drill-spec-linux-r3.json exit 0 02:58:10-02:59:11
+m3/drill-spec-wayland-linux.json exit 0 02:59:11-03:05:20
+sway-tests-linux.log ======================== 57 passed in 226.50s (0:03:46) ======================== # exit 0 03:05:20-03:09:09
+m3-tests-linux.log 151 passed, 6 skipped in 237.90s (0:03:57) # exit 0 03:09:09-03:13:08
+m3 memory exit 0 03:13:08-03:13:36
+flaky-hide-menu-drill-wsl.log ========================= 1 failed, 4 passed in 19.29s ========================= # exit 1 03:13:36-03:13:58
+m6a distro drill exit 0 03:13:58-03:32:02
+left running: 0
+DONE
+suite-linux.log 1391 passed, 127 skipped in 797.13s (0:13:17) # exit 0 03:46:09-03:59:27
+left running: 2
+DONE-SUITE
