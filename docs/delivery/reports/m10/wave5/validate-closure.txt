@@ -1,0 +1,8 @@
+$ python verify-delivery.py --root . --plan docs/delivery/m10-followups.md --stage closure --context docs/delivery/reports/m10/wave5/context.json
+FAIL: closure record/evidence checks
+Checked: schema, record-graph, owned-paths, active-path-ownership, environment, readiness-receipts, completed-receipts, behavior-receipts, task-completion
+evidence-coverage | M10-03.A3 | No passing manual receipt covers this acceptance criterion
+outcome-unresolved | P-CI-NEXT-STUBS | From 2026-11-28 (the coordinator): packaging/requirements-types-next.in with PyQt6==6.12.1, psutil==7.2.2 and mypy==2.4.1, locked with the documented command; tests/test_requirements.py taught about it; the types job's stubs axis, as the integration note gives it.
+task-unverified | T3-qt612-types | Task is blocked, not verified
+Structural and recorded-evidence checks; semantic review remains required.
+exit 1

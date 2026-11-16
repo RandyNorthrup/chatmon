@@ -1,0 +1,8 @@
+# M10-01.A2 in a venv of packaging/requirements-test.txt (comtypes 1.4.17, as CI's Windows legs), 2026-11-16T01:49:41Z, 7816159, CHATMON_INSTANCE=plans5-win-27-334738
+$ C:/Users/Randy/AppData/Local/Temp/m10-ci-test/Scripts/python.exe -m pytest -q -p no:cacheprovider -rs tests/test_platform_events.py::test_a_ui_automation_client_hears_the_announcement
+comtypes         1.4.17
+PyQt6            6.11.0
+pytest           9.2.0
+.                                                                        [100%]
+1 passed in 6.50s
+exit 0

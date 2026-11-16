@@ -1,0 +1,50 @@
+M10 gate drills, Python 3.14.10
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-m10-gate-kvtm2f9k
+PyQt6 6.12.1: C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe: 6.12.1, mypy 2.4.1 (compiled: yes)
+PyQt6 6.11: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe: 6.11.0, mypy 2.4.1 (compiled: yes)
+wayland-files-qt6121.diff: its changes have been in the tree since 3586a0d (964510f); not applied
+
+=== drill signal-from-qtcore on chatmon/hotkey.py, PyQt6 6.12.1
+command: C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 1
+chatmon\layer.py:824: error: Need type annotation for "app"  [var-annotated]
+chatmon\layer.py:917: error: Need type annotation for "app"  [var-annotated]
+Found 2 errors in 1 file (checked 70 source files)
+
+=== drill parent-unignored on chatmon/updates.py, PyQt6 6.12.1
+command: C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 1
+chatmon\layer.py:824: error: Need type annotation for "app"  [var-annotated]
+chatmon\layer.py:917: error: Need type annotation for "app"  [var-annotated]
+Found 2 errors in 1 file (checked 70 source files)
+
+=== drill constructor-untyped on chatmon/a11y.py, PyQt6 6.12.1
+command: C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 1
+chatmon\layer.py:824: error: Need type annotation for "app"  [var-annotated]
+chatmon\layer.py:917: error: Need type annotation for "app"  [var-annotated]
+Found 2 errors in 1 file (checked 70 source files)
+
+=== drill null-image-unchecked on chatmon/sprites.py, PyQt6 6.12.1
+command: C:/Users/Randy/AppData/Local/Temp/m10-qt6121/Scripts/python.exe -m mypy --platform linux --no-incremental
+-- green: exit 1
+chatmon\layer.py:824: error: Need type annotation for "app"  [var-annotated]
+chatmon\layer.py:917: error: Need type annotation for "app"  [var-annotated]
+Found 2 errors in 1 file (checked 70 source files)
+
+=== drill alias-mistyped on chatmon/qtsignal.py, PyQt6 6.11
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m mypy --platform linux --no-incremental
+-- green: exit 0
+Success: no issues found in 70 source files
+-- red: exit 1
+chatmon\qtsignal.py:15: error: Incompatible types in assignment (expression has type "def pyqtSlot(*types: Any, name: str | None = ..., result: str | None = ...) -> Callable[[FuncT], FuncT]", variable has type "Callable[..., pyqtSignal]")  [assignment]
+Found 1 error in 1 file (checked 70 source files)
+-- restored green: exit 0
+Success: no issues found in 70 source files
+
+=== summary
+FAIL signal-from-qtcore: mypy isn't green on the copy
+FAIL parent-unignored: mypy isn't green on the copy
+FAIL constructor-untyped: mypy isn't green on the copy
+FAIL null-image-unchecked: mypy isn't green on the copy
+PASS alias-mistyped
