@@ -1,0 +1,3 @@
+# packaging/extract_strings.py --check at 66bd681f416ec8905ab7033bfa4e135d3af71c40, 2026-11-16T03:44:29Z, Windows 11, Python 3.14.10
+$ C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe packaging/extract_strings.py --check
+exit 0

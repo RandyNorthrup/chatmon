@@ -1,0 +1,16 @@
+
+=== summary
+PASS M8-01B-app-bubble-not-translated
+PASS M8-01B-prompt-gets-translated-label
+PASS M8-01B-install-failure-flag-ignored
+PASS M8-01B-metered-flag-ignored
+PASS M8-01B-menu-item-not-wrapped
+PASS M8-01B-style-word-english
+PASS M8-01B-command-plural-glued
+PASS M8-01B-reminder-line-untranslated
+PASS M8-01B-turn-found-by-english
+PASS M8-01B-attached-found-by-english
+PASS M8-01B-transcript-drops-attached
+PASS M8-01B-dropped-problem-a-fragment
+PASS M8-01B-metered-flag-not-set
+PASS M8-01B-template-stale
