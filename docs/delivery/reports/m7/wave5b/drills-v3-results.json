@@ -1,0 +1,62 @@
+[
+  {
+    "id": "W4-M7-desk-changes-unheard-v2",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "        desk.settings_changed.connect(self._heard(self._check_accessibility))\n",
+      "replace": "\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+    ],
+    "expected": [
+      "test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "baseline_exit": 0,
+    "mutated_sha256": "d70e6ba2d61647385318b7c0b7d0c3ff95136350a814a89f5b86a60ca08c3ff8",
+    "mutated_exit": 1,
+    "observed": "__ test_reduced_motion_contrast_and_screen_readers_are_heard_as_they_change ___",
+    "after_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "restored_exit": 0
+  },
+  {
+    "id": "W4-M7-mac-sleep-unheard-v2",
+    "requirement": "AC-11-7",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "            watcher.slept.connect(self._heard(self._sleeping))\n",
+      "replace": "\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+    ],
+    "expected": [
+      "test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "baseline_exit": 0,
+    "mutated_sha256": "6af66fbe3c91a26941f293204d9984eaf374a12be981720173ca57578c627f83",
+    "mutated_exit": 1,
+    "observed": "_____ test_on_macos_sleep_sleeping_displays_and_low_power_mode_are_heard ______",
+    "after_sha256": "bca33456eba72ff4c64b9ba7e1171e11a18c31d57067da8138a6cec1a102ea01",
+    "restored_exit": 0
+  }
+]
