@@ -1,0 +1,4 @@
+tests/test_presence.py::test_gnome_says_how_long_youve_been_away
+tests/test_presence.py::test_without_the_portal_gnome_then_qt_say_whether_contrast_is_high
+
+2/27 tests collected (25 deselected) in 0.37s

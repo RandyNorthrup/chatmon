@@ -1,0 +1,9 @@
+# PR #24's CI merge commit against 56caddd (read-only: gh api, git), 2026-11-16T03:20:12Z
+every job's checkout: HEAD is now at 42ff690 Merge 56caddd66b69420e073e9a7d2c5ec40eabb5840b into 781615935a49a3dc48a1b7ab015d8ae01b1fd531 (20 of 20 logs of CI run 43794815103: the first attempt's 18 test, lint, types, distro, gnome and sway jobs, the failed macOS 3.15 one among them, and the second attempt's re-run of macOS 3.15 and its coverage job; the second attempt lists the other 17 again under new ids, without step names, so they are read from the first)
+$ gh api repos/RandyNorthrup/chatmon/git/commits/42ff6907e7bc9de5005394ad8d875fcd27e79aff --jq ".tree.sha, [.parents[].sha]"
+79ef6329f1cfccc6463160825293ac1cc472ff2c
+["781615935a49a3dc48a1b7ab015d8ae01b1fd531","56caddd66b69420e073e9a7d2c5ec40eabb5840b"]
+$ git rev-parse 56caddd^{tree}
+79ef6329f1cfccc6463160825293ac1cc472ff2c
+$ git merge-base --is-ancestor 781615935a49a3dc48a1b7ab015d8ae01b1fd531 56caddd; echo $?
+0
