@@ -1,0 +1,56 @@
+# M6A-02B: the pins check's own steps, as pins.yml's types job runs them, at 66bd681, 2026-11-16T03:44:09Z, Windows 11, Python 3.14.10, CHATMON_INSTANCE=plans5b-win-27-353098
+$ python -m mypy --strict --platform linux --no-incremental packaging/pins.py
+Success: no issues found in 1 source file
+exit 0
+$ python -m mypy --strict --platform win32 --no-incremental packaging/pins.py
+Success: no issues found in 1 source file
+exit 0
+$ python -m mypy --strict --platform darwin --no-incremental packaging/pins.py
+Success: no issues found in 1 source file
+exit 0
+$ python -m pytest -p no:cacheprovider -v -rs tests/test_pins.py tests/test_requirements.py
+============================= test session starts =============================
+platform win32 -- Python 3.14.10, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+hypothesis profile 'default'
+rootdir: C:\Users\Randy\Coding\chatmon-wt\measure
+configfile: pyproject.toml
+plugins: hypothesis-6.170.15, timeout-2.4.0
+timeout: 120.0s
+timeout method: thread
+timeout func_only: False
+collecting ... collected 29 items
+
+tests/test_pins.py::test_reads_each_pin_with_its_marker_and_the_files_a_list_includes PASSED [  3%]
+tests/test_pins.py::test_reads_the_real_lists PASSED                     [  6%]
+tests/test_pins.py::test_refuses_a_lock_that_isnt_uvs_universal_one PASSED [ 10%]
+tests/test_pins.py::test_loosening_takes_each_version_off_and_keeps_its_marker PASSED [ 13%]
+tests/test_pins.py::test_versions_compare_as_pep_440_orders_them PASSED  [ 17%]
+tests/test_pins.py::test_the_cutoff_is_fourteen_days_back PASSED         [ 20%]
+tests/test_pins.py::test_a_cutoff_less_than_two_weeks_back_is_refused PASSED [ 24%]
+tests/test_pins.py::test_each_lock_is_made_with_its_headers_command_and_the_cutoff_in_place_of_its_own PASSED [ 27%]
+tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old PASSED [ 31%]
+tests/test_pins.py::test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why PASSED [ 34%]
+tests/test_pins.py::test_no_skip_names_the_version_pinned_now PASSED     [ 37%]
+tests/test_pins.py::test_pyqt6_and_its_qt_stay_on_one_release_line PASSED [ 41%]
+tests/test_pins.py::test_pyqt6_and_its_qt_move_onto_a_new_line_together PASSED [ 44%]
+tests/test_pins.py::test_the_real_lists_pin_pyqt6_and_its_qt_together PASSED [ 48%]
+tests/test_pins.py::test_a_package_in_more_than_one_lock_stays_at_one_version PASSED [ 51%]
+tests/test_pins.py::test_nothing_moves_backwards PASSED                  [ 55%]
+tests/test_pins.py::test_the_report_names_each_change_its_locks_and_the_commands_that_make_it PASSED [ 58%]
+tests/test_pins.py::test_the_report_lists_what_the_locks_alone_would_move PASSED [ 62%]
+tests/test_pins.py::test_nothing_to_move_says_so PASSED                  [ 65%]
+tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command PASSED [ 68%]
+tests/test_pins.py::test_after_apply_the_lists_agree_as_tests_test_requirements_wants PASSED [ 72%]
+tests/test_pins.py::test_apply_puts_every_file_back_when_a_lock_fails PASSED [ 75%]
+tests/test_pins.py::test_the_real_lists_with_the_real_uv SKIPPED (ru...) [ 79%]
+tests/test_requirements.py::test_every_locked_requirement_is_pinned_and_hashed PASSED [ 82%]
+tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names PASSED [ 86%]
+tests/test_requirements.py::test_a_package_in_more_than_one_lock_is_the_same_version_in_each PASSED [ 89%]
+tests/test_requirements.py::test_the_windows_test_legs_install_the_screen_readers_ui_automation_client PASSED [ 93%]
+tests/test_requirements.py::test_the_dev_extra_pins_what_ci_runs PASSED  [ 96%]
+tests/test_requirements.py::test_releases_build_with_a_pinned_setuptools_the_project_accepts PASSED [100%]
+
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_pins.py:443: runs the real uv against PyPI: set CHATMON_PINS_NETWORK=1 to run it
+======================= 28 passed, 1 skipped in 16.85s ========================
+exit 0

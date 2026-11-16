@@ -1,0 +1,142 @@
+{
+  "drills": [
+    {
+      "id": "PINS-skip",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "the skip list's PyQt6 6.12.0 entry removed: its stubs stop mypy, so nothing may move to it",
+      "find": "    Skip(\"PyQt6\", \"6.12.0\", \"its own QtDBus.pyi has a syntax error that stops mypy before it reads anything, so every types job \"\n         \"would fail; 6.12.1 fixes it (docs/delivery/m10-followups.md)\"),\n",
+      "replace": "",
+      "test": [
+        "tests/test_pins.py::test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why"
+      ],
+      "expect": [
+        "test_the_skip_list_holds_pyqt6_6_12_0_back_and_says_why",
+        "PyQt6 moved, though 6.12.0 is skipped"
+      ]
+    },
+    {
+      "id": "PINS-qt-group",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "the Qt group rule dropped: PyQt6 and PyQt6-Qt6 could land on two release lines",
+      "find": "        found = {**disagreements(proposed), **qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "replace": "        found = {**disagreements(proposed), **backwards(lists, proposed)}",
+      "test": [
+        "tests/test_pins.py::test_pyqt6_and_its_qt_stay_on_one_release_line"
+      ],
+      "expect": [
+        "test_pyqt6_and_its_qt_stay_on_one_release_line",
+        "the Qt group split"
+      ]
+    },
+    {
+      "id": "PINS-universal",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "--apply runs each header's command without --universal: a one-platform lock, as Dependabot's were",
+      "find": "            uv.run([*compile_args(lst.header, plan.cutoff, plan.exempt), \"--quiet\"], lst.txt.parent)",
+      "replace": "            uv.run([*(a for a in compile_args(lst.header, plan.cutoff, plan.exempt) if a != \"--universal\"), \"--quiet\"], lst.txt.parent)",
+      "test": [
+        "tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command"
+      ],
+      "expect": [
+        "test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+        "came out unlike the report"
+      ]
+    },
+    {
+      "id": "PINS-cooldown",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "the cooldown ignored: COOLDOWN of 0 days takes releases out a week (nuitka 4.3.5)",
+      "find": "COOLDOWN = dt.timedelta(days=14)",
+      "replace": "COOLDOWN = dt.timedelta(days=0)",
+      "test": [
+        "tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old",
+        "tests/test_pins.py::test_the_cutoff_is_fourteen_days_back"
+      ],
+      "expect": [
+        "test_each_pin_moves_to_its_newest_release_two_weeks_old",
+        "| nuitka | 4.3.1 | 4.3.5 |",
+        "test_the_cutoff_is_fourteen_days_back"
+      ]
+    },
+    {
+      "id": "PINS-cutoff-to-uv",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "the cooldown's cutoff never reaches uv (no --exclude-newer)",
+      "find": "    args += [\"--exclude-newer\", cutoff]",
+      "replace": "    args += []",
+      "test": [
+        "tests/test_pins.py::test_each_pin_moves_to_its_newest_release_two_weeks_old"
+      ],
+      "expect": [
+        "test_each_pin_moves_to_its_newest_release_two_weeks_old",
+        "| nuitka | 4.3.1 | 4.3.5 |"
+      ]
+    },
+    {
+      "id": "PINS-backwards",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "the never-backwards rule dropped: a security fix newer than the cutoff would be undone",
+      "find": "        found = {**disagreements(proposed), **qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "replace": "        found = {**disagreements(proposed), **qt_apart(lists, proposed)}",
+      "test": [
+        "tests/test_pins.py::test_nothing_moves_backwards"
+      ],
+      "expect": [
+        "test_nothing_moves_backwards",
+        "nuitka went backwards"
+      ]
+    },
+    {
+      "id": "PINS-one-version",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "the one-version-per-package rule dropped: the 3.14 and 3.11 locks would disagree (tests/test_requirements.py)",
+      "find": "        found = {**disagreements(proposed), **qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "replace": "        found = {**qt_apart(lists, proposed), **backwards(lists, proposed)}",
+      "test": [
+        "tests/test_pins.py::test_a_package_in_more_than_one_lock_stays_at_one_version"
+      ],
+      "expect": [
+        "test_a_package_in_more_than_one_lock_stays_at_one_version",
+        "psutil would be at two versions"
+      ]
+    },
+    {
+      "id": "PINS-dev-extra",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "--apply leaves pyproject.toml's dev extra behind requirements-dev.in",
+      "find": "            moved = moved_dev_extra(text, versions)",
+      "replace": "            moved = text",
+      "test": [
+        "tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+        "tests/test_pins.py::test_after_apply_the_lists_agree_as_tests_test_requirements_wants"
+      ],
+      "expect": [
+        "test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+        "test_after_apply_the_lists_agree_as_tests_test_requirements_wants"
+      ]
+    },
+    {
+      "id": "PINS-seed",
+      "requirement": "P-DEPENDABOT",
+      "file": "packaging/pins.py",
+      "why": "--apply doesn't hand uv the report's versions before locking, so uv keeps the old ones where it can",
+      "find": "            change(lst.txt, plan.texts[lst.stem])  # uv keeps the versions it finds in the lock it's writing",
+      "replace": "            saved.setdefault(lst.txt, lst.txt.read_bytes())",
+      "test": [
+        "tests/test_pins.py::test_apply_moves_the_pins_and_locks_each_list_with_its_own_command"
+      ],
+      "expect": [
+        "test_apply_moves_the_pins_and_locks_each_list_with_its_own_command",
+        "preferences"
+      ]
+    }
+  ]
+}

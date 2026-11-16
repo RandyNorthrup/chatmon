@@ -1,0 +1,180 @@
+red drills from docs\delivery\reports\m6a\wave5b\drill-spec.json
+python: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-qvj9rdtu
+copied 318 files
+
+=== drill M6A-08-glob (M6A-08) on pyproject.toml
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_package_data.py::test_every_tracked_file_of_chatmon_ships
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.41s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_every_tracked_file_of_chatmon_ships ___________________
+
+    def test_every_tracked_file_of_chatmon_ships():
+        tracked = tracked_files()
+        assert {"__init__.py", "changelog.md"} <= tracked, "the listing didn't find the package"
+        taken = set().union(*(taken_by(p) for p in package_data_globs()))
+        left_out = sorted(f for f in tracked if not ships_as_python(f) and f not in taken)
+>       assert not left_out, f"no package-data glob in pyproject.toml takes these, so pip and pipx installs would lack them: {left_out}"
+E       AssertionError: no package-data glob in pyproject.toml takes these, so pip and pipx installs would lack them: ['bubbles/manifest.json']
+E       assert not ['bubbles/manifest.json']
+
+tests\test_package_data.py:62: AssertionError
+1 failed in 0.46s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.79s
+
+=== drill M6A-01-warnings (M6A-01) on chatmon/changelog.py
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_packaging.py::test_release_notes_pin_the_pipx_install_to_the_release
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_release_notes_pin_the_pipx_install_to_the_release ____________
+
+    def test_release_notes_pin_the_pipx_install_to_the_release():
+        from chatmon import __version__
+    
+>       notes = build_module().notes(__version__)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_packaging.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+packaging\build.py:52: in notes
+    release = changelog.find(v)
+              ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+version = '0.10.0', releases = None
+
+    def find(version: str, releases: list[Release] | None = None) -> Release | None:
+>       __import__("warnings").warn("an old way to call find", DeprecationWarning, stacklevel=2)
+E       DeprecationWarning: an old way to call find
+
+chatmon\changelog.py:73: DeprecationWarning
+1 failed in 0.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.35s
+
+=== drill M6A-05-qt (M6A-05) on packaging/requirements-test.txt
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_requirements.py::test_a_package_in_more_than_one_lock_is_the_same_version_in_each
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.27s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_a_package_in_more_than_one_lock_is_the_same_version_in_each _______
+
+    def test_a_package_in_more_than_one_lock_is_the_same_version_in_each():
+        """CI's tests run on the Qt that ships, and the wheel is checked with the pytest the tests use."""
+        seen: dict[str, dict[str, str]] = {}
+        for stem in LISTS:
+            for name, (version, _) in locked(stem).items():
+                seen.setdefault(name, {})[stem] = version
+        assert {"pyqt6", "pyqt6-qt6", "pyqt6-sip", "psutil"} <= {n for n, by in seen.items() if len(by) > 1}
+        differ = {name: by for name, by in seen.items() if len(set(by.values())) > 1}
+>       assert not differ, f"locked at different versions: {differ}"
+E       AssertionError: locked at different versions: {'pyqt6': {'requirements': '6.11.0', 'requirements-test': '6.12.0', 'requirements-dev': '6.11.0'}}
+E       assert not {'pyqt6': {'requirements': '6.11.0', 'requirements-test': '6.12.0', 'requirements-dev': '6.11.0'}}
+
+tests\test_requirements.py:90: AssertionError
+1 failed in 0.69s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.44s
+
+=== drill M6A-06-hash (M6A-06) on packaging/requirements-build.txt
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_requirements.py::test_every_locked_requirement_is_pinned_and_hashed
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.49s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_every_locked_requirement_is_pinned_and_hashed ______________
+
+    def test_every_locked_requirement_is_pinned_and_hashed():
+        for stem in LISTS:
+            entries = locked(stem)
+            assert entries, f"{stem}.txt locks nothing"
+            unhashed = sorted(name for name, (_, hashes) in entries.items() if not hashes)
+>           assert not unhashed, f"{stem}.txt has no hash for {unhashed}: pip --require-hashes would refuse it"
+E           AssertionError: requirements-build.txt has no hash for ['wheel']: pip --require-hashes would refuse it
+E           assert not ['wheel']
+
+tests\test_requirements.py:71: AssertionError
+1 failed in 0.35s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.36s
+
+=== drill M6A-06-stale (M6A-06) on packaging/requirements-build.txt
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_requirements.py::test_each_lock_holds_the_versions_its_in_file_names
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.47s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_each_lock_holds_the_versions_its_in_file_names _____________
+
+    def test_each_lock_holds_the_versions_its_in_file_names():
+        """Changing a pin means locking again: the .txt is what CI and the builds install."""
+        for stem in LISTS:
+            entries = locked(stem)
+            stale = {name: version for name, version in pinned(stem).items() if entries.get(name, ("",))[0] != version}
+>           assert not stale, f"{stem}.txt doesn't lock these at the versions {stem}.in pins: {stale}"
+E           AssertionError: requirements-build.txt doesn't lock these at the versions requirements-build.in pins: {'setuptools': '84.2.1'}
+E           assert not {'setuptools': '84.2.1'}
+
+tests\test_requirements.py:79: AssertionError
+1 failed in 0.55s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.43s
+
+=== drill M6A-10-dev (M6A-10) on pyproject.toml
+command: C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/test_requirements.py::test_the_dev_extra_pins_what_ci_runs
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.40s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_the_dev_extra_pins_what_ci_runs _____________________
+
+    def test_the_dev_extra_pins_what_ci_runs():
+        extra = {canonical(r.name): r for r in map(Requirement, pyproject()["project"]["optional-dependencies"]["dev"])}
+        wanted = pinned("requirements-dev")
+        assert set(extra) == set(wanted), f"the dev extra and requirements-dev.in name different packages: {set(extra) ^ set(wanted)}"
+        for name, requirement in extra.items():
+>           assert str(requirement.specifier) == f"=={wanted[name]}", f"dev extra: {requirement}, but CI runs {name}=={wanted[name]}"
+E           AssertionError: dev extra: ruff==0.17.4, but CI runs ruff==0.17.3
+E           assert '==0.17.4' == '==0.17.3'
+E             
+E             - ==0.17.3
+E             ?        ^
+E             + ==0.17.4
+E             ?        ^
+
+tests\test_requirements.py:108: AssertionError
+1 failed in 0.36s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.39s
+
+=== summary
+PASS M6A-08-glob
+PASS M6A-01-warnings
+PASS M6A-05-qt
+PASS M6A-06-hash
+PASS M6A-06-stale
+PASS M6A-10-dev

@@ -1,0 +1,35 @@
+m10 gate drills exit 0 02:54:51-02:57:57
+m10 mypy 6.11 exit 0
+m10 mypy 6.12.1 exit 0
+flaky drill ======================== 1 failed, 4 passed in 49.47s =========================
+collections 1518 tests collected in 1.79s
+suite-windows.log 1293 passed, 225 skipped in 332.84s (0:05:32) # exit 0 03:00:25-03:06:01
+docs/delivery/reports/m6a/wave5b/drill-spec.json exit 0 03:06:01-03:06:32 6 pass 0 fail
+docs/delivery/reports/m6a/wave5b/drill-spec-pins.json exit 0 03:06:32-03:09:05 9 pass 0 fail
+docs/delivery/reports/m10/wave5b/drill-spec.json exit 0 03:09:05-03:09:56 9 pass 0 fail
+docs/delivery/reports/m0/wave5b/drill-spec.json exit 0 03:09:56-03:16:06 22 pass 0 fail
+docs/delivery/reports/m0/wave5b/drill-spec-new.json exit 0 03:16:06-03:17:32 8 pass 0 fail
+docs/delivery/reports/m0/wave5b/drill-spec-new2.json exit 0 03:17:32-03:17:42 2 pass 0 fail
+docs/delivery/reports/m3/wave5b/drill-spec-r3.json exit 0 03:17:43-03:20:23 27 pass 0 fail
+docs/delivery/reports/m3/wave5b/drill-spec-wayland.json exit 0 03:20:25-03:20:51 3 pass 0 fail
+docs/delivery/reports/m8/wave5b/drill-spec.json exit 0 03:20:51-03:22:39 23 pass 0 fail
+docs/delivery/reports/m8/wave5b/drill-spec-b.json exit 0 03:22:39-03:24:29 14 pass 0 fail
+docs/delivery/reports/m8/wave5b/drill-spec-c.json exit 0 03:24:29-03:24:45 4 pass 0 fail
+docs/delivery/reports/m8/wave5b/drill-spec-english.json exit 0 03:24:46-03:24:53 2 pass 0 fail
+docs/delivery/reports/m6b/wave5b/drill-spec.json exit 0 03:24:53-03:26:43 21 pass 0 fail
+docs/delivery/reports/m6b/wave5b/drill-spec-b.json exit 0 03:26:44-03:27:52 9 pass 0 fail
+docs/delivery/reports/m7/wave5b/drill-spec.json exit 0 03:27:52-03:40:29 70 pass 0 fail
+docs/delivery/reports/m7/wave5b/drill-spec-new.json exit 0 03:40:30-03:41:05 3 pass 0 fail
+docs/delivery/reports/m7/wave5b/drill-spec-v3.json exit 0 03:41:05-03:41:18 2 pass 0 fail
+docs/delivery/reports/m10/wave5b/drill-spec-ci-venv.json exit 0 03:41:19-03:41:47 1 pass 0 fail
+m6b gate drills exit 0 03:41:48-03:43:34
+uia-ci-venv exit 0
+m10 locks done
+m6a sde exit 0
+m6a winupdate 2 of 2 exit 0
+m6a dependabot 2 of 2 exit 0
+m6a pins tests 4 of 4 exit 0
+template exit 0
+DONE
+m6a gate drills exit 0 03:44:36-03:46:05
+DONE-M6A-GATES
