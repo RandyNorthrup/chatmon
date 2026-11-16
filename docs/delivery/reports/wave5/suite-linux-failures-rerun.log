@@ -1,0 +1,36 @@
+
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.45 0.51 0.65; CHATMON_INSTANCE=plans5-wsl-rerun-1-285109
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v -rs 'tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else'
+tests/test_sway.py::test_clicks_land_on_the_chatmon_and_pass_through_everywhere_else PASSED [100%]
+============================== 1 passed in 9.34s ===============================
+# exit 0
+
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.45 0.51 0.64; CHATMON_INSTANCE=plans5-wsl-rerun-2-285109
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v -rs 'tests/test_app_smoke.py::test_a_hook_reaches_it'
+tests/test_app_smoke.py::test_a_hook_reaches_it PASSED                   [100%]
+============================== 1 passed in 6.29s ===============================
+# exit 0
+
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.54 0.52 0.65; CHATMON_INSTANCE=plans5-wsl-rerun-3-285109
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v -rs 'tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin]'
+tests/test_compositors.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows[kwin] PASSED [100%]
+============================== 1 passed in 11.56s ==============================
+# exit 0
+
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.61 0.54 0.65; CHATMON_INSTANCE=plans5-wsl-rerun-4-285109
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v -rs 'tests/test_compositors.py::test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused[hyprland]'
+tests/test_compositors.py::test_with_a_screen_reader_the_ask_box_is_a_window_on_screen_and_focused[hyprland] PASSED [100%]
+============================== 1 passed in 14.65s ==============================
+# exit 0
+
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.70 0.56 0.66; CHATMON_INSTANCE=plans5-wsl-rerun-5-285109
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v -rs 'tests/test_compositors.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[hyprland-auto-True]'
+tests/test_compositors.py::test_only_as_a_window_of_its_own_is_the_box_ever_an_active_window_to_a_screen_reader[hyprland-auto-True] PASSED [100%]
+============================== 1 passed in 22.69s ==============================
+# exit 0
+
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; sway 1.12; at-spi2-core 2.62.1-1 orca 51.1-1 upower 1.91.5-1 kwin 6.8.2-2 hyprland 0.57.0-1 ; system bus: org.freedesktop.UPower org.freedesktop.login1 ; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.71 0.58 0.66; CHATMON_INSTANCE=plans5-wsl-rerun-6-285109
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v -rs 'tests/test_compositors.py::test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window[kwin]'
+tests/test_compositors.py::test_with_orca_the_box_drawn_on_the_overlay_is_never_announced_as_a_window[kwin] PASSED [100%]
+============================== 1 passed in 21.20s ==============================
+# exit 0

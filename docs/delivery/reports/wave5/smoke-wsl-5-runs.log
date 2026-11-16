@@ -1,0 +1,31 @@
+# WSL Arch Linux, 6.18.58.1-microsoft-standard-WSL2; /var/tmp/plans-venv/bin/python: 3.14.9 PyQt6 6.11.0 Qt 6.11.2; 7816159's files; nice 10; load 0.89 0.81 0.82
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py   (run 1, CHATMON_INSTANCE=plans5-wsl-smoke-1-298209)
+tests/test_app_smoke.py::test_a_question_that_failed_is_back_to_try_again PASSED [ 42%]
+tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes PASSED [ 54%]
+======================== 97 passed in 140.84s (0:02:20) ========================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py   (run 2, CHATMON_INSTANCE=plans5-wsl-smoke-2-298209)
+tests/test_app_smoke.py::test_a_question_that_failed_is_back_to_try_again PASSED [ 42%]
+tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes PASSED [ 54%]
+======================== 97 passed in 117.58s (0:01:57) ========================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py   (run 3, CHATMON_INSTANCE=plans5-wsl-smoke-3-298209)
+tests/test_app_smoke.py::test_a_question_that_failed_is_back_to_try_again PASSED [ 42%]
+tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes PASSED [ 54%]
+======================== 97 passed in 148.75s (0:02:28) ========================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py   (run 4, CHATMON_INSTANCE=plans5-wsl-smoke-4-298209)
+tests/test_app_smoke.py::test_a_question_that_failed_is_back_to_try_again PASSED [ 42%]
+tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes PASSED [ 54%]
+======================== 97 passed in 100.00s (0:01:40) ========================
+# exit 0
+
+$ /var/tmp/plans-venv/bin/python -m pytest -p no:cacheprovider -v tests/test_app_smoke.py   (run 5, CHATMON_INSTANCE=plans5-wsl-smoke-5-298209)
+tests/test_app_smoke.py::test_a_question_that_failed_is_back_to_try_again PASSED [ 42%]
+tests/test_app_smoke.py::test_a_failed_question_goes_back_in_the_box_and_the_one_waiting_goes PASSED [ 54%]
+======================== 97 passed in 109.21s (0:01:49) ========================
+# exit 0

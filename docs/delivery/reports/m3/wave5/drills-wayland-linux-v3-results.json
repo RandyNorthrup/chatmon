@@ -1,0 +1,34 @@
+[
+  {
+    "id": "M3-RC-clipboard-v3",
+    "requirement": "M3-RC",
+    "file": "chatmon/layer.py",
+    "mutation": {
+      "find": "            board.setText(text)",
+      "replace": "            pass  # drill: the overlay's clipboard only"
+    },
+    "command": [
+      "/var/tmp/plans-venv/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_wayland.py::test_the_clipboard_is_the_overlays_own",
+      "tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+    ],
+    "expected": [
+      "test_the_clipboard_is_the_overlays_own",
+      "test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "baseline_exit": 0,
+    "mutated_sha256": "d9d557d284971715ea86c778e27f20e10305778eac575cbdff99265adb242671",
+    "mutated_exit": 1,
+    "observed": "____________________ test_the_clipboard_is_the_overlays_own ____________________",
+    "after_sha256": "a00d5f3cdc0909a05a548fe84627d0fba05a176a29b7d70abcc423dba0157ae1",
+    "restored_exit": 0
+  }
+]

@@ -1,0 +1,20 @@
+{
+ "drills": [
+  {
+   "id": "M3-RC-clipboard-v3",
+   "requirement": "M3-RC",
+   "file": "chatmon/layer.py",
+   "find": "            board.setText(text)",
+   "replace": "            pass  # drill: the overlay's clipboard only",
+   "test": [
+    "tests/test_wayland.py::test_the_clipboard_is_the_overlays_own",
+    "tests/test_sway.py::test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+   ],
+   "expect": [
+    "test_the_clipboard_is_the_overlays_own",
+    "test_the_clipboard_goes_both_ways_between_the_overlay_other_apps_and_chatmons_own_windows"
+   ],
+   "count": 2
+  }
+ ]
+}

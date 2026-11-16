@@ -1,0 +1,247 @@
+{
+ "checkout": "/mnt/c/Users/Randy/Coding/chatmon-wt/measure",
+ "window_under_it": true,
+ "sway_scanout_changes": [],
+ "results": [
+  {
+   "buffers": [
+    [
+     640,
+     640
+    ],
+    [
+     640,
+     640
+    ]
+   ],
+   "buffer_bytes": 3276800,
+   "backdrop_pixel": true,
+   "box": [
+    440,
+    760,
+    320,
+    320
+   ],
+   "output": [
+    1920,
+    1080
+   ],
+   "scale": 2.0,
+   "bubble": true,
+   "ask_box": false,
+   "menu": false,
+   "frames_last_2s": 15,
+   "chatmon": {
+    "mappings": 3,
+    "size_kb": 3204,
+    "rss_kb": 3200,
+    "pss_kb": 2048,
+    "rss_shmem_kb": 66264
+   },
+   "sway": {
+    "rss_shmem_kb": 97772
+   },
+   "moment": "its greeting bubble showing"
+  },
+  {
+   "buffers": [
+    [
+     640,
+     640
+    ],
+    [
+     640,
+     640
+    ]
+   ],
+   "buffer_bytes": 3276800,
+   "backdrop_pixel": true,
+   "box": [
+    440,
+    760,
+    320,
+    320
+   ],
+   "output": [
+    1920,
+    1080
+   ],
+   "scale": 2.0,
+   "bubble": false,
+   "ask_box": false,
+   "menu": false,
+   "frames_last_2s": 7,
+   "chatmon": {
+    "mappings": 3,
+    "size_kb": 3204,
+    "rss_kb": 3200,
+    "pss_kb": 2006,
+    "rss_shmem_kb": 66264
+   },
+   "sway": {
+    "rss_shmem_kb": 97856
+   },
+   "moment": "nothing showing but the chatmon, 5 s on"
+  },
+  {
+   "buffers": [
+    [
+     896,
+     768
+    ],
+    [
+     896,
+     768
+    ]
+   ],
+   "buffer_bytes": 5505024,
+   "backdrop_pixel": true,
+   "box": [
+    376,
+    696,
+    448,
+    384
+   ],
+   "output": [
+    1920,
+    1080
+   ],
+   "scale": 2.0,
+   "bubble": true,
+   "ask_box": false,
+   "menu": false,
+   "frames_last_2s": 13,
+   "chatmon": {
+    "mappings": 3,
+    "size_kb": 5380,
+    "rss_kb": 5376,
+    "pss_kb": 3360,
+    "rss_shmem_kb": 68440
+   },
+   "sway": {
+    "rss_shmem_kb": 99500
+   },
+   "moment": "a bubble just shown"
+  },
+  {
+   "buffers": [
+    [
+     896,
+     1088
+    ],
+    [
+     896,
+     1088
+    ]
+   ],
+   "buffer_bytes": 7798784,
+   "backdrop_pixel": true,
+   "box": [
+    376,
+    536,
+    448,
+    544
+   ],
+   "output": [
+    1920,
+    1080
+   ],
+   "scale": 2.0,
+   "bubble": false,
+   "ask_box": true,
+   "menu": false,
+   "frames_last_2s": 35,
+   "chatmon": {
+    "mappings": 3,
+    "size_kb": 7620,
+    "rss_kb": 7616,
+    "pss_kb": 3808,
+    "rss_shmem_kb": 70680
+   },
+   "sway": {
+    "rss_shmem_kb": 103084
+   },
+   "moment": "the ask box open on the overlay"
+  },
+  {
+   "buffers": [
+    [
+     896,
+     1088
+    ],
+    [
+     896,
+     1088
+    ]
+   ],
+   "buffer_bytes": 7798784,
+   "backdrop_pixel": true,
+   "box": [
+    376,
+    536,
+    448,
+    544
+   ],
+   "output": [
+    1920,
+    1080
+   ],
+   "scale": 2.0,
+   "bubble": false,
+   "ask_box": true,
+   "menu": true,
+   "frames_last_2s": 12,
+   "chatmon": {
+    "mappings": 3,
+    "size_kb": 7620,
+    "rss_kb": 7616,
+    "pss_kb": 3808,
+    "rss_shmem_kb": 70680
+   },
+   "sway": {
+    "rss_shmem_kb": 103084
+   },
+   "moment": "the penguin's menu open over the ask box"
+  },
+  {
+   "buffers": [
+    [
+     384,
+     384
+    ],
+    [
+     384,
+     384
+    ]
+   ],
+   "buffer_bytes": 1179648,
+   "backdrop_pixel": true,
+   "box": [
+    504,
+    888,
+    192,
+    192
+   ],
+   "output": [
+    1920,
+    1080
+   ],
+   "scale": 2.0,
+   "bubble": false,
+   "ask_box": false,
+   "menu": false,
+   "frames_last_2s": 4,
+   "chatmon": {
+    "mappings": 3,
+    "size_kb": 1156,
+    "rss_kb": 1152,
+    "pss_kb": 628,
+    "rss_shmem_kb": 64216
+   },
+   "sway": {
+    "rss_shmem_kb": 96516
+   },
+   "moment": "everything closed, 5 s on"
+  }
+ ]
+}

@@ -1,0 +1,814 @@
+[
+  {
+    "id": "M3-01-idle",
+    "requirement": "M3-01",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        return min(max(min(due) - now, self._frame_interval()), IDLE_FLOOR)",
+      "replace": "        return self._frame_interval()"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none"
+    ],
+    "expected": [
+      "test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "64b869a408d79f1375d21a48ee8032bd6385bee84c62c2a71451b1346289beb8",
+    "mutated_exit": 1,
+    "observed": "______ test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none ______",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-01-missed",
+    "requirement": "M3-01",
+    "file": "chatmon/behavior.py",
+    "mutation": {
+      "find": "        return min(due, end + LATE, self._next_frame(now))",
+      "replace": "        return min(due, end + LATE)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_standing_idle_it_sleeps_until_the_next_frame_and_misses_none",
+      "tests/test_behavior.py::test_standing_still_it_names_the_next_change_seconds_ahead"
+    ],
+    "expected": [
+      "changed at",
+      "the stage slept until"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4",
+    "baseline_exit": 0,
+    "mutated_sha256": "7e00decad1dcdaecf4bb4db9906d355c716eb398c7c30b8205cdc8262563bdf0",
+    "mutated_exit": 1,
+    "observed": ">                   assert on_screen(twin.tick(u)) == on_screen(drawn), f\"changed at {u:.3f}; the stage slept until {clock.t + wait:.3f}\"",
+    "after_sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-01-quiet",
+    "requirement": "M3-01",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        if not self.drawing:\n            return\n        self._schedule(self._last_tick",
+      "replace": "        self._schedule(self._last_tick"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops"
+    ],
+    "expected": [
+      "test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "8217eadcdca412fad75fca1ed9695e6d9d281c859cccc94bb83fc5a95262d54c",
+    "mutated_exit": 1,
+    "observed": "_________ test_covered_hidden_or_not_drawing_it_hardly_ticks_or_stops _________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-01-pointer",
+    "requirement": "M3-01",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "(self._frame_interval() if near else FAR_POLL)",
+      "replace": "(self._frame_interval())"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_the_pointer_is_polled_every_frame_only_near_the_chatmon"
+    ],
+    "expected": [
+      "test_the_pointer_is_polled_every_frame_only_near_the_chatmon"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "b334742b5b26358280ec87b033ea401f89f3344a3708a4489d5536cf169fef26",
+    "mutated_exit": 1,
+    "observed": "________ test_the_pointer_is_polled_every_frame_only_near_the_chatmon _________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-02-refresh",
+    "requirement": "M3-02",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        return min(max(rate, MIN_HZ), MAX_HZ) if rate > 0 else DEFAULT_HZ",
+      "replace": "        return DEFAULT_HZ"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_while_it_moves_it_ticks_at_the_screens_refresh_rate"
+    ],
+    "expected": [
+      "test_while_it_moves_it_ticks_at_the_screens_refresh_rate"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "224b90984fc52ee412556c5ace00ae049b55649ba8e07faaad2adf21f3d76953",
+    "mutated_exit": 1,
+    "observed": "__________ test_while_it_moves_it_ticks_at_the_screens_refresh_rate ___________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-02-pixels",
+    "requirement": "M3-02",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            left = round((f.x - origin.x() - sprite.anchor) * k) / k",
+      "replace": "            left = round(f.x - origin.x() - sprite.anchor)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_the_sprite_sits_on_the_device_pixel_grid"
+    ],
+    "expected": [
+      "assert halves >= 2"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "cb817991e52e7d8d2e78e5f6565da97919319e2b5b223f6a41d97380e0f24b1d",
+    "mutated_exit": 1,
+    "observed": ">       assert halves >= 2  # not rounded to whole stage pixels",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-02-drag",
+    "requirement": "M3-02",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        self._schedule(self._last_tick + self._frame_interval() - self._clock())",
+      "replace": "        self._schedule(IDLE_FLOOR)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_timer.py::test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock"
+    ],
+    "expected": [
+      "test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "558fc81cf744049fc415f6882c2c205d4e566f3df6f7248c334800f7931c6beb",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_drag_redraws_on_the_pointer_moving_not_on_a_clock ___________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-03-once",
+    "requirement": "M3-03",
+    "file": "chatmon/sprites.py",
+    "mutation": {
+      "find": "    img.setDevicePixelRatio(scale)  # before the pixmap is made: changing a pixmap's ratio afterwards can copy it",
+      "replace": "    pass  # drill: no ratio before the pixmap is made"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sprites.py::test_a_frame_is_kept_once_with_a_mask_that_agrees_with_its_pixels"
+    ],
+    "expected": [
+      "devicePixelRatio() == 2.0"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe",
+    "baseline_exit": 0,
+    "mutated_sha256": "0fb887b6f00ea25ad6e9c617d61c1dc43234f74d33e4fda9240a12eb45e444be",
+    "mutated_exit": 1,
+    "observed": ">       assert frame.pixmap.devicePixelRatio() == 2.0",
+    "after_sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-03-cache",
+    "requirement": "M3-03",
+    "file": "chatmon/sprites.py",
+    "mutation": {
+      "find": "        _CUT.move_to_end(key)",
+      "replace": "        pass  # drill: the newest is not moved to the end"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_sprites.py::test_the_previous_screens_frames_are_kept_for_a_drag_back"
+    ],
+    "expected": [
+      "test_the_previous_screens_frames_are_kept_for_a_drag_back"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe",
+    "baseline_exit": 0,
+    "mutated_sha256": "c903813e5b30e42be96498868855db00c2ac33b82e6a5898e6b21a0090115031",
+    "mutated_exit": 1,
+    "observed": "__________ test_the_previous_screens_frames_are_kept_for_a_drag_back __________",
+    "after_sha256": "16a64e00d4a69a1f2bf995d1e0ca099358c9b3e66459896ea9484638116653fe",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-05-keys",
+    "requirement": "M3-05",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "            else:\n                self.close()\n        elif key in self._MOVES:",
+      "replace": "            else:\n                pass\n        elif key in self._MOVES:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_the_keyboard_moves_opens_picks_and_closes"
+    ],
+    "expected": [
+      "test_the_keyboard_moves_opens_picks_and_closes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "91c89596fd4e05d92d1353e33c8708e701a40a1fd88804a4c6bc445aabe47b04",
+    "mutated_exit": 1,
+    "observed": "_______________ test_the_keyboard_moves_opens_picks_and_closes ________________",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-05-route",
+    "requirement": "M3-05",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        if self.menu.is_open():  # an open menu has the keys, the ask box's Esc too",
+      "replace": "        if False:  # an open menu has the keys, the ask box's Esc too"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_esc_closes_an_open_menu_not_the_box_under_it"
+    ],
+    "expected": [
+      "test_esc_closes_an_open_menu_not_the_box_under_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "c339aad60638b2f4558420f18304eaa949dd4ce53851312e711c0d98640fd406",
+    "mutated_exit": 1,
+    "observed": "______________ test_esc_closes_an_open_menu_not_the_box_under_it ______________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-05-focus",
+    "requirement": "M3-05",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            focus(on, on)\n",
+      "replace": "            pass\n"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_the_keyboard_picks_from_the_penguins_menu_and_the_overlay_takes_it_while_open"
+    ],
+    "expected": [
+      "assert s.surface.focus == [(True, True)]"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "bb1e94d21f6041b328a4d467449feb4c5b213caf24cfb959686b6fba2a6860af",
+    "mutated_exit": 1,
+    "observed": ">       assert s.surface.focus == [(True, True)]  # a popup menu takes the keyboard",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-05-outline",
+    "requirement": "M3-05",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "            p.drawRoundedRect(row.adjusted(FOCUS_PEN / 2, FOCUS_PEN / 2, -FOCUS_PEN / 2, -FOCUS_PEN / 2), 3, 3)\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_it_draws_the_lit_row_solid_with_an_outline"
+    ],
+    "expected": [
+      "test_it_draws_the_lit_row_solid_with_an_outline"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "1cd0341b9d2406708e45174ce39aa4042a283ed2adab2faba5177e8440a7a923",
+    "mutated_exit": 1,
+    "observed": "_______________ test_it_draws_the_lit_row_solid_with_an_outline _______________",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-06-scroll",
+    "requirement": "M3-06",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "        size = QRect(0, 0, width, min(content, max(row + 2 * SCROLLER, area.height())))",
+      "replace": "        size = QRect(0, 0, width, content)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_a_menu_taller_than_the_screen_scrolls"
+    ],
+    "expected": [
+      "test_a_menu_taller_than_the_screen_scrolls"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "517ad11ae9fbe2a0608d69a1e3863c5f8d2e81fbbdfd305b4fc9e45fa7f04795",
+    "mutated_exit": 1,
+    "observed": "_________________ test_a_menu_taller_than_the_screen_scrolls __________________",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-06-hover",
+    "requirement": "M3-06",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "            self._pending = (pi, ii, self._clock() + SUBMENU_DELAY)",
+      "replace": "            self._pending = (pi, ii, self._clock())"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes"
+    ],
+    "expected": [
+      "test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "ba0bcd90944038916b2b870608a997df79e29137f49e1a3e50b3b8dbe54485fc",
+    "mutated_exit": 1,
+    "observed": "_ test_submenus_open_after_the_pointer_rests_and_actions_run_after_it_closes __",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-07-contrast",
+    "requirement": "M3-07",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "MUTED_AIM = 5.0",
+      "replace": "MUTED_AIM = 2.5"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid"
+    ],
+    "expected": [
+      "test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "d00f80bbcf274c6d47142dc4010976463d00e3beeb6e49502f0d9260a85154d8",
+    "mutated_exit": 1,
+    "observed": "________ test_headers_and_shortcuts_read_well_and_the_lit_row_is_solid ________",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-08-rows",
+    "requirement": "M3-08",
+    "file": "chatmon/stagemenu.py",
+    "mutation": {
+      "find": "        return max(ROW, QFontMetrics(self._font()).height() + ROW_PAD)",
+      "replace": "        return ROW"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stagemenu.py::test_rows_grow_with_the_font"
+    ],
+    "expected": [
+      "test_rows_grow_with_the_font"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "baseline_exit": 0,
+    "mutated_sha256": "f91ef4c1d944a207092afd0747360f09afcf46872751988dcdbf987cbac51bce",
+    "mutated_exit": 1,
+    "observed": "________________________ test_rows_grow_with_the_font _________________________",
+    "after_sha256": "0143c9022decac3f33de12cb0fe55b675a8d314be7334079d0c3578a0d626ad3",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-10-shape",
+    "requirement": "M3-10",
+    "file": "chatmon/clickthrough.py",
+    "mutation": {
+      "find": "math.ceil((x + w) * ratio) - left",
+      "replace": "round((x + w) * ratio) - left"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_clickthrough.py::test_the_x_input_shape_is_in_device_pixels_rounded_outward"
+    ],
+    "expected": [
+      "test_the_x_input_shape_is_in_device_pixels_rounded_outward"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "a833a2b8c45513bd4ed13e2dcc199bd0905b308bfea05917febd0f512b0e4353",
+    "baseline_exit": 0,
+    "mutated_sha256": "72e8668f78f2510a2a0e7bfeeee8f4ec750b35d3668df54414240d2dbca81707",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_x_input_shape_is_in_device_pixels_rounded_outward __________",
+    "after_sha256": "a833a2b8c45513bd4ed13e2dcc199bd0905b308bfea05917febd0f512b0e4353",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-11-still",
+    "requirement": "M3-11",
+    "file": "chatmon/behavior.py",
+    "mutation": {
+      "find": "            clips = self._still(clips)",
+      "replace": "            clips = list(clips)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_behavior.py::test_reduced_motion_holds_each_looping_mood_still"
+    ],
+    "expected": [
+      "test_reduced_motion_holds_each_looping_mood_still"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4",
+    "baseline_exit": 0,
+    "mutated_sha256": "c7ccb4c0af7704266a68445a78bda913e7f4dbad11535584a90d1199b43b8ed8",
+    "mutated_exit": 1,
+    "observed": "______________ test_reduced_motion_holds_each_looping_mood_still ______________",
+    "after_sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-11-zs",
+    "requirement": "M3-11",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "(2 if self.behavior.reduced_motion else int(now / Z_STEP) % 3)",
+      "replace": "(int(now / Z_STEP) % 3)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_features.py::test_reduced_motion_stills_the_creature_and_its_zs"
+    ],
+    "expected": [
+      "test_reduced_motion_stills_the_creature_and_its_zs"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "eb17b9575f192723566bff9cf0fe19efc80460fb414fbf298f2358422dc13f68",
+    "mutated_exit": 1,
+    "observed": "_____________ test_reduced_motion_stills_the_creature_and_its_zs ______________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-12-hold",
+    "requirement": "M3-12",
+    "file": "chatmon/behavior.py",
+    "mutation": {
+      "find": "            return Frame(\"walk\", clip.frames[n % len(clip.frames)], clip.mirror, self.x, self.lift)",
+      "replace": "            return Frame(\"idle\", 0, clip.mirror, self.x, self.lift)"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_behavior.py::test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after"
+    ],
+    "expected": [
+      "test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4",
+    "baseline_exit": 0,
+    "mutated_sha256": "112c193492343e4b84412cb3a536cbfd777f96f9e87e43a007238d0480451948",
+    "mutated_exit": 1,
+    "observed": "_____ test_a_walk_waits_while_the_pointer_is_over_it_and_carries_on_after _____",
+    "after_sha256": "0c19dc4d5755b4d3c29ea325e1e4fada5a294ca8f756828c0ab95d31c47d81b4",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-13-badge",
+    "requirement": "M3-13",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        if state == \"needs-you\":  # a diamond: a warning's shape",
+      "replace": "        if False:  # a diamond: a warning's shape"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_features.py::test_the_badge_counts_agents_by_state_with_a_shape_for_each"
+    ],
+    "expected": [
+      "test_the_badge_counts_agents_by_state_with_a_shape_for_each"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "619a30fc0458230e2cfae068f6ece6822979d53f78a7f75983bc052020a91dad",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_badge_counts_agents_by_state_with_a_shape_for_each _________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-14-unhosted",
+    "requirement": "M3-14",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        return bool(getattr(self.surface, \"hosts_windows\", False)) and not self._unhosted",
+      "replace": "        return bool(getattr(self.surface, \"hosts_windows\", False))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus"
+    ],
+    "expected": [
+      "test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "ddb60ee45367983abeb4e9b6e48aa16aa6130d8a34513c047aec53c2d425f5ae",
+    "mutated_exit": 1,
+    "observed": "_ test_for_a_screen_reader_the_box_can_be_a_normal_window_with_qts_own_menus __",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-15-follow",
+    "requirement": "M3-15",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "        if now - self._away[1] < FOLLOW_AFTER:",
+      "replace": "        if False:"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_features.py::test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second"
+    ],
+    "expected": [
+      "test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "fc6eaa473b01624c373d1921ef4ac2d686c91061f6fce66ece681fdf4b5a6872",
+    "mutated_exit": 1,
+    "observed": "_ test_it_follows_the_pointer_to_its_screen_only_when_asked_and_after_a_second _",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-M2-hover",
+    "requirement": "M3-M2",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            self._bubble_hovered(hover not in (None, \"penguin\"))\n",
+      "replace": ""
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_a_bubble_waits_while_the_pointer_is_on_it"
+    ],
+    "expected": [
+      "test_a_bubble_waits_while_the_pointer_is_on_it"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "2da453a00bffe26916ecfef455acdbac832fec2cbc70d41a9fc5aff886ae31ee",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_bubble_waits_while_the_pointer_is_on_it ________________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-M2-link",
+    "requirement": "M3-M2",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            self.bubble.open_link_at(QPointF(pos) - self._bubble_box.topLeft())  # http, https or mailto only",
+      "replace": "            pass  # http, https or mailto only"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click"
+    ],
+    "expected": [
+      "test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "f1b0db1bc86f68fb83c0e00f0997efa2231276dd2760a9926c87f3e42fbc6e79",
+    "mutated_exit": 1,
+    "observed": "__________ test_a_link_in_a_bubble_shows_a_hand_and_opens_on_a_click __________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  },
+  {
+    "id": "M3-M2-ring",
+    "requirement": "M3-M2",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "            dirty = dirty.united(self.hosted.ring().translated(-origin))",
+      "replace": "            dirty = dirty.united(QRegion(self.hosted.rect().translated(-origin)))"
+    },
+    "command": [
+      "C:/Users/Randy/Coding/chatmon/.venv/Scripts/python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_overlay_stage.py::test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves"
+    ],
+    "expected": [
+      "test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "baseline_exit": 0,
+    "mutated_sha256": "73966a26ec4a258b3e99d78c13357b991306af7b3a7ef214bdc4210b5f8aaebc",
+    "mutated_exit": 1,
+    "observed": "________ test_only_the_ask_boxs_border_is_drawn_again_as_its_art_moves ________",
+    "after_sha256": "ad9445fd278c4a64fe9d9f470290d2768a77bdcd9a064de50d1c84b757453ddf",
+    "restored_exit": 0
+  }
+]
