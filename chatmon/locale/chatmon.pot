@@ -24,6 +24,10 @@ msgid "To answer, type {buttons} in the chat."
 msgstr ""
 
 #: chatmon/agents.py
+msgid "Your agent"
+msgstr ""
+
+#: chatmon/agents.py
 #, python-brace-format
 msgid "{file} isn't valid JSON ({error}); not touching it."
 msgstr ""
@@ -246,27 +250,6 @@ msgid ""
 "Aider:  aider --notifications-command '{command} notify done --source aider'\n"
 "Kiro:   add a Shell Command hook on Prompt Submit / Agent Stop that runs the lines above.\n"
 "OpenCode, Amp: these take JavaScript plugins; have one run the lines above on their events."
-msgstr ""
-
-#: chatmon/app.py
-msgid "Your agent"
-msgstr ""
-
-#: chatmon/app.py
-msgid "Explain this:"
-msgstr ""
-
-#: chatmon/app.py
-msgid "Summarize this:"
-msgstr ""
-
-#: chatmon/app.py
-#, python-brace-format
-msgid "Translate this into {language}:"
-msgstr ""
-
-#: chatmon/app.py
-msgid "Fix the mistakes in this (spelling, grammar or code), and say what you changed:"
 msgstr ""
 
 #: chatmon/app.py
@@ -1235,6 +1218,23 @@ msgstr ""
 
 #: chatmon/app.py
 msgid "Chatmon is already running; it says hi."
+msgstr ""
+
+#: chatmon/asking.py
+msgid "Explain this:"
+msgstr ""
+
+#: chatmon/asking.py
+msgid "Summarize this:"
+msgstr ""
+
+#: chatmon/asking.py
+#, python-brace-format
+msgid "Translate this into {language}:"
+msgstr ""
+
+#: chatmon/asking.py
+msgid "Fix the mistakes in this (spelling, grammar or code), and say what you changed:"
 msgstr ""
 
 #: chatmon/asking.py

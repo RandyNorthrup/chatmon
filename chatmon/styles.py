@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import QApplication
 from .i18n import N_, _
 
 DEFAULT = "electric"
+MATCH = "match"  # the bubble style that follows the companion
 TEXT_CONTRAST = 4.5  # WCAG AA, normal-size text
 OUTLINE_CONTRAST = 3.0  # WCAG 1.4.11: a control's outline, a focus ring
 DIM_ALPHA = 165  # hints are the body colour, this see-through, unless that reads too faintly

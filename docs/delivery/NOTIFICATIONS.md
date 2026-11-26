@@ -10,7 +10,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
   "work": {
     "id": "NOTIFICATIONS",
     "title": "Dismissible agent notifications and status badges",
-    "scope_revision": 3,
+    "scope_revision": 4,
     "brief": null,
     "brief_reason": "Scoped follow-up explicitly requested during the security/performance audit; the user identified the number beside the companion.",
     "rules": [
@@ -139,19 +139,35 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         {
           "path": ".gitattributes",
           "action": "modify"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "action": "modify"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "action": "modify"
         }
       ],
       "status": "verified",
       "evidence": [
-        "NTF-E-READY-3",
-        "NTF-E-TEST-DELIVERY",
-        "NTF-E-NTF-read-DELIVERY",
-        "NTF-E-NTF-clear-DELIVERY",
-        "NTF-E-NTF-pointer-DELIVERY",
-        "NTF-E-NTF-keyboard-DELIVERY",
-        "NTF-E-NTF-newer-DELIVERY",
-        "NTF-E-NTF-close-DELIVERY",
-        "NTF-E-NTF-distinct-DELIVERY"
+        "NTF-E-READY-4",
+        "NTF-E-TEST-4",
+        "NTF-E-NTF-read-4",
+        "NTF-E-NTF-clear-4",
+        "NTF-E-NTF-pointer-4",
+        "NTF-E-NTF-keyboard-4",
+        "NTF-E-NTF-newer-4",
+        "NTF-E-NTF-close-4",
+        "NTF-E-NTF-distinct-4"
       ],
       "blocker": null,
       "superseded_by": null
@@ -1065,7 +1081,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-MENU"
       ],
       "kind": "readiness",
-      "status": "pass",
+      "status": "stale",
       "command": [],
       "method": "Re-reviewed coarse-clock reproduction, integer event identity, stale-action behavior and current dependency pins; readiness-3.txt records the amendment.",
       "environment": {
@@ -1099,7 +1115,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
       ],
       "scope_sha256": "a18554aa6ac16495643c55ef980af58a88fe1a2179c6dea9621e7e045a7ddaf7",
       "red": null,
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-TEST-3",
@@ -2852,7 +2868,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-MENU"
       ],
       "kind": "behavior",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -2939,7 +2955,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
       ],
       "scope_sha256": "a18554aa6ac16495643c55ef980af58a88fe1a2179c6dea9621e7e045a7ddaf7",
       "red": null,
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-read-DELIVERY",
@@ -2947,7 +2963,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-READ"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3058,7 +3074,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-clear-DELIVERY",
@@ -3066,7 +3082,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-CLEAR"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3177,7 +3193,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-pointer-DELIVERY",
@@ -3185,7 +3201,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-MENU"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3296,7 +3312,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-keyboard-DELIVERY",
@@ -3304,7 +3320,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-MENU"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3415,7 +3431,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-newer-DELIVERY",
@@ -3423,7 +3439,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-READ"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3535,7 +3551,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-close-DELIVERY",
@@ -3543,7 +3559,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-READ"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3654,7 +3670,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
-      "reason": null
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
     },
     {
       "id": "NTF-E-NTF-distinct-DELIVERY",
@@ -3662,7 +3678,7 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "NTF-READ"
       ],
       "kind": "red",
-      "status": "pass",
+      "status": "stale",
       "command": [
         "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
         "-m",
@@ -3773,11 +3789,1114 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
           }
         ]
       },
+      "reason": "CodeQL identified controller/menu import cycles; shared source labels, clipboard prompts and matching-style metadata move to their owning modules. Next patch version is prepared for real upgrade validation. Fresh proof follows."
+    },
+    {
+      "id": "NTF-E-READY-4",
+      "acceptance": [
+        "NTF-READ",
+        "NTF-CLEAR",
+        "NTF-MENU"
+      ],
+      "kind": "readiness",
+      "status": "pass",
+      "command": [],
+      "method": "Reviewed CodeQL cycle, complete caller migration, lower-module ownership, unchanged labels/prompts/style semantics, patch-version preparation and package-test preconditions. See readiness-4.txt.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": null,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/readiness-4.txt",
+        "sha256": "1cb92f7d9f7e4e160c85449d8021444640512bd99368f7e2cba09c72e739b4d6"
+      },
+      "inputs": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "NTF-E-TEST-4",
+      "acceptance": [
+        "NTF-READ",
+        "NTF-CLEAR",
+        "NTF-MENU"
+      ],
+      "kind": "behavior",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_app_m7.py",
+        "tests/test_stage_features.py",
+        "-k",
+        "reading_an_agent or notification_menu or old_menu_action or older_alert or badge_opens or badge_takes"
+      ],
+      "method": "Seven real Qt cases pass after shared metadata moved to its owning modules and version 0.10.1 was prepared; notification behavior, frozen-clock revisions, distinct payloads, reminders and native/overlay keyboard/pointer controls remain correct.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/acceptance-4.log",
+        "sha256": "2200cd1a93d9423b82458cccc0ac4aca8c07d1e2d409392cea5d97a194a83a0c"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": null,
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-read-4",
+      "acceptance": [
+        "NTF-READ"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': 'self._read_agents.update(chosen)', 'replace': 'pass'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "observed_diagnostic": "_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "78a2855ff4be24c85f0db16b5f0d23aa8b6b5d56e6b65f627805b29f8bccc522"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-clear-4",
+      "acceptance": [
+        "NTF-CLEAR"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_notification_menu_can_read_and_reset_states_without_dismissing_reminders"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': 'self.agents.pop(s, None)', 'replace': 'pass'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_notification_menu_can_read_and_reset_states_without_dismissing_reminders",
+        "observed_diagnostic": "_ test_notification_menu_can_read_and_reset_states_without_dismissing_reminders _",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "643f4423416532bd597e28fb5e91fd9faa47aae9cee520d4e4ba5d85cd7654f5"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-pointer-4",
+      "acceptance": [
+        "NTF-MENU"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_stage_features.py::test_the_badge_takes_pointer_input_and_opens_notifications"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': 'self.notifications_requested.emit(gpos.toPoint())', 'replace': 'pass'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_the_badge_takes_pointer_input_and_opens_notifications",
+        "observed_diagnostic": "_________ test_the_badge_takes_pointer_input_and_opens_notifications __________",
+        "before": [
+          {
+            "path": "chatmon/penguin.py",
+            "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/penguin.py",
+            "sha256": "17b78991fe4bf4eacf125564966f76b673558c34704b3a8244863c4cc04bf591"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/penguin.py",
+            "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-keyboard-4",
+      "acceptance": [
+        "NTF-MENU"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_badge_opens_notifications_and_keyboard_can_clear_all"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': 'clear_all.triggered.connect(lambda: c._clear_agent_states())', 'replace': 'clear_all.triggered.connect(lambda: None)'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_badge_opens_notifications_and_keyboard_can_clear_all",
+        "observed_diagnostic": "______ test_badge_opens_notifications_and_keyboard_can_clear_all[False] _______",
+        "before": [
+          {
+            "path": "chatmon/menus.py",
+            "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/menus.py",
+            "sha256": "19652b0379426eb3e6ab47a0928063d9c7290b75fe720d554d6b9145fb584d0a"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/menus.py",
+            "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-newer-4",
+      "acceptance": [
+        "NTF-READ"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "tests/test_app_m7.py::test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': '(revision is None or self._agent_revisions.get(s) == revision)', 'replace': 'True'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "observed_diagnostic": "_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "298d51d1be766ca375f4e49459eb8b9969fd9d37368a8672ecd7324d3bda72c9"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-close-4",
+      "acceptance": [
+        "NTF-READ"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': 'self._mark_agents_read(source, self._agent_revisions.get(source))', 'replace': 'pass'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "observed_diagnostic": "_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "c523adb5ec1c2cb870758c92fa16e271a04312058e1ec85d128272bb47a1fe5c"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ]
+      },
+      "reason": null
+    },
+    {
+      "id": "NTF-E-NTF-distinct-4",
+      "acceptance": [
+        "NTF-READ"
+      ],
+      "kind": "red",
+      "status": "pass",
+      "command": [
+        "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_app_m7.py::test_closing_an_older_alert_does_not_read_its_queued_replacement"
+      ],
+      "method": "Existing isolated-copy harness: green, intended assertion failure after one defect, exact byte restoration and restored green.",
+      "environment": {
+        "platform": "windows",
+        "tools": {
+          "python": "3.14.10"
+        }
+      },
+      "exit_code": 0,
+      "artifact": {
+        "path": "docs/delivery/reports/notifications/drills-4.log",
+        "sha256": "dc1484970338c9c9373be87caf2e343427b1807d3bbc22a2660cc883df52f47d"
+      },
+      "inputs": [
+        {
+          "path": ".gitattributes",
+          "sha256": "ca46e90148f2b7ec0b58f43a35fc8e59788b70c963647488452908b190b9fa69"
+        },
+        {
+          "path": "AGENTS.md",
+          "sha256": "b93598329fc60a3e2f9dae66fdb480a65252898a469babe9777d9a17a867eaa5"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "sha256": "1cfa1279c477407910b66157d689d664daa38905ae89622302a5066d79a9104e"
+        },
+        {
+          "path": "README.md",
+          "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
+        },
+        {
+          "path": "chatmon/__init__.py",
+          "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+        },
+        {
+          "path": "chatmon/agents.py",
+          "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+        },
+        {
+          "path": "chatmon/app.py",
+          "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+        },
+        {
+          "path": "chatmon/asking.py",
+          "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
+        },
+        {
+          "path": "chatmon/changelog.md",
+          "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
+        },
+        {
+          "path": "chatmon/locale/chatmon.pot",
+          "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
+        },
+        {
+          "path": "chatmon/menus.py",
+          "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
+        },
+        {
+          "path": "chatmon/messages.py",
+          "sha256": "e11af31bf4c01ec52bdee183fc1d8fd034b2213f22a5f839984a7d40e52fe305"
+        },
+        {
+          "path": "chatmon/penguin.py",
+          "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+        },
+        {
+          "path": "chatmon/styles.py",
+          "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "b84ac9fde00370a114182b90a951fe18ddb96dc12f2e8e6f98c5b5a54c2f8b91"
+        },
+        {
+          "path": "tests/drills/security-performance.json",
+          "sha256": "cdee12d19df1626853e660f4b9150513495020bf939cf90692ee77b377e17de3"
+        },
+        {
+          "path": "tests/test_app_m7.py",
+          "sha256": "3b1d186ba8469e8c13e5df93d282ea083ca036b2b9c73c4766163c3a11a919ee"
+        },
+        {
+          "path": "tests/test_app_smoke.py",
+          "sha256": "2eb32e2e0fa0a2d56bd5875230e639ed2078344bca5d9aad360378f634b0b243"
+        },
+        {
+          "path": "tests/test_stage_features.py",
+          "sha256": "adfe8f4d981e841e65fe64b30b8e58360872b59629621f3092d84d32ce4c969d"
+        }
+      ],
+      "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
+      "red": {
+        "mutation": "{'find': 'seen = (source, event, hashlib.sha256(text.encode(\"utf-8\", \"surrogatepass\")).digest())', 'replace': 'seen = (source, event, b\"\")'}",
+        "baseline_exit": 0,
+        "mutated_exit": 1,
+        "restored_exit": 0,
+        "expected_diagnostic": "test_closing_an_older_alert_does_not_read_its_queued_replacement",
+        "observed_diagnostic": "______ test_closing_an_older_alert_does_not_read_its_queued_replacement _______",
+        "before": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ],
+        "mutated": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "b607670cf69cf937079c401aa85e049cf43a10c88cecb8d65b31837e04e35af7"
+          }
+        ],
+        "after": [
+          {
+            "path": "chatmon/app.py",
+            "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+          }
+        ]
+      },
       "reason": null
     }
   ],
   "checkpoint": {
-    "scope_sha256": "a18554aa6ac16495643c55ef980af58a88fe1a2179c6dea9621e7e045a7ddaf7",
+    "scope_sha256": "9acbacd0cbef78806c047d4eb55738ba28d2fa4b07c442f58377397575772704",
     "inputs": [
       {
         "path": ".gitattributes",
@@ -3796,20 +4915,32 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
         "sha256": "42e68f7b4eef430bdc1eb71d55b6d8340356736d6228ba7104a9b8af288d46ec"
       },
       {
+        "path": "chatmon/__init__.py",
+        "sha256": "f8df939af97659f1dc5de672587e546b389c89189ba2bce50f190d86ab6226ba"
+      },
+      {
+        "path": "chatmon/agents.py",
+        "sha256": "a63ff5caf030242543084e348882900dcb4132746c73b87e94ebe49d4871ea43"
+      },
+      {
         "path": "chatmon/app.py",
-        "sha256": "8e1757a5b35690f0ca0acac89f8013df2663a090ca6331268c96e72dfd520643"
+        "sha256": "4b0725d54e6791240ce0aee074a15df0847a38037c0e97d2e2388963310ac1fb"
+      },
+      {
+        "path": "chatmon/asking.py",
+        "sha256": "1fd83d05c65838af7fd47789fc2217297d6cb7be1b3bf13b3eb30a8e48b1df51"
       },
       {
         "path": "chatmon/changelog.md",
-        "sha256": "473e447d976de5d1d08e7a9ad86f5a697edc116c6e1804636f97098b58ae46ac"
+        "sha256": "843af399b7c96b551bf6aa0f2eab2df05e57b6e1e87f47cb207335632f3826be"
       },
       {
         "path": "chatmon/locale/chatmon.pot",
-        "sha256": "ecca51937544564cd18fba64186859ae2076b8c3542efaeded4836241451201b"
+        "sha256": "303894f635590758dc372ed4b4b51b308626bd3893874af70edc6e25e5578c47"
       },
       {
         "path": "chatmon/menus.py",
-        "sha256": "caa884c0ef93ecc140c2ec85a1085194297f8e0f21f19e2c317688317adef166"
+        "sha256": "347b06bbae85c68b2d5a840544569eb2be7b60ba2437c73edf5700ba6fe8e19c"
       },
       {
         "path": "chatmon/messages.py",
@@ -3818,6 +4949,10 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
       {
         "path": "chatmon/penguin.py",
         "sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8"
+      },
+      {
+        "path": "chatmon/styles.py",
+        "sha256": "431939c739bdfbf9952405ae491816ba0e0014fffb82baff61abea052b28c975"
       },
       {
         "path": "pyproject.toml",
@@ -3850,8 +4985,8 @@ Reuse `Companion.agents`, `MessageQueue.take/withdraw`, `Menus` and the native/s
       "NTF-T1"
     ],
     "pending_operations": [],
-    "next_action": "Complete required hosted checks and scans, integrate the delivery branch, prune it and restart updated Chatmon.",
-    "source_revision": "9be73cb93340967c923a04b05539330915c06fad"
+    "next_action": "Finish current PR CI, package-upgrade and CodeQL checks; integrate and prune the branch; restart source version 0.10.1.",
+    "source_revision": "6345e25325bdd06ad1487b0ecb6f5fc14dbffdbb"
   }
 }
 ```

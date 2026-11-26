@@ -2,6 +2,19 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.10.1
+
+### Changes
+- **Chat search yields between batches**, and recently opened conversations have a bounded cache released when chats are deleted or cleared. Repeated AI tests in Settings release their network objects when finished or cancelled.
+- **Fragmented streamed answers take less work to parse**: unfinished lines are extended and searched only where new bytes arrived.
+- **Continuous security and quality checks** cover the application, packaging, workflows and locked dependencies. Build and development pins were refreshed with universal hashes and the existing release cooldown.
+
+### Fixes
+- **Agent badges can be cleared**: click a number to open Notifications, mark alerts as read, or clear one or all stale statuses. Closing the latest alert acknowledges it. Old actions cannot clear newer requests, even when Windows gives both the same timestamp; distinct requests survive duplicate-hook filtering. The same controls work from the keyboard in the tray or companion menu; reminders keep Done and Snooze.
+
+### Security
+- **Answer size limits cover every transport**, including streamed events, model lists, command output, diagnostics and answer files. Command errors redact the brain's key before reaching the screen. Failure logs retain only the brain and HTTP status, so reflected questions or attachments stay out of logs. Cancelling a stream stops pieces already parsed from its current chunk.
+
 ## 0.10.0
 
 ### New
@@ -30,8 +43,6 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Chatmon can be translated**: every word it shows, in its bubbles, menus, Settings and the `chatmon` command, comes from a translation when there's one for your language, or the one you pick in Settings, and Qt's own buttons follow it. Only English ships so far, and a new language is a single file. Times and dates follow your system's regional settings.
 
 ### Changes
-- **Chat search yields between batches**, and recently opened conversations have a bounded cache that is released when chats are deleted or cleared. Repeated AI tests in Settings release their network objects when finished or cancelled.
-- **Fragmented streamed answers take less work to parse**: an unfinished line is extended and searched only where new bytes arrived.
 - **The menu is tidier**: Companion, Bubble style, Walk around and Start when I log in are under **Appearance**, focus and notes share one menu, and **Reload settings file** is under **Help & updates**.
 - **Far less power when idle**: the chatmon's clock sleeps until the next thing on it changes (about 100 wake-ups a minute standing still, down from 1,800), and nothing is drawn while the screen is locked, asleep or off. It moves at your screen's own refresh rate, and animated bubble edges rest after a loop.
 - **Every bubble style meets WCAG AA contrast**, the plain style follows your desktop's colours (high contrast included), every control shows a focus outline, and text follows your desktop's font size.
@@ -50,7 +61,6 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - The `penguin-companion` command is gone; use `chatmon`. Hooks set up under the old name still move over the first time Chatmon runs.
 
 ### Security
-- **Answer size limits cover every transport**, including streamed events, model lists, command output, diagnostics and answer files. Command-line errors redact the brain's key before reaching the screen. Failure logs retain only the brain and HTTP status, so a provider that quotes your question or attachment cannot put it in the log. Cancelling a stream also stops pieces already parsed from its current network chunk.
 - **An answer can no longer make Chatmon read a file or reach a network share** by naming it as a picture or in HTML. Pictures in answers show as "[image]" and HTML as text.
 - **Linux and macOS:** installing an update has the system itself check the release's signed checksums and its version, so it installs only a newer Chatmon signed with its release key, whatever it's handed. **macOS:** the installer adds the `chatmon` command only to a `/usr/local/bin` that belongs to the system.
 - **Windows:** hooks reach Chatmon in a way that never lets whoever holds its address act as you; each connection is checked to come from your own processes; revoked signing certificates are refused; the update's installer runs from a copy nothing can change before it starts; uninstalling for everyone no longer runs agents' programs as an administrator.
@@ -59,7 +69,6 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - Releases appear only once every file is attached, and each file carries a build attestation (`gh attestation verify <file> --repo RandyNorthrup/chatmon`).
 
 ### Fixes
-- **Agent badges can be cleared**: click a number to open Notifications, mark alerts as read, or clear one or all stale statuses. Closing an agent alert acknowledges that notice, and an old alert cannot clear a newer one, including when Windows gives both events the same timestamp. The same controls work from the keyboard in the tray or companion menu; reminders keep Done and Snooze.
 - Renaming your chatmon in Settings works even when the settings file names it.
 - Opening the ask box never waits to work out which brain will answer; cancelling an answer never freezes the screen, and on Windows no longer risks ending unrelated programs.
 - The menu no longer rebuilds itself every minute while a countdown shows.
@@ -121,7 +130,6 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Ask about what you attached, later.** Text you attach is kept with its chat (readable by you alone), so you can come back to it after Chatmon restarts. It goes only to the brain you gave it to.
 
 ### Changes
-- **Security and quality scans** run for the application, packaging and GitHub Actions on pull requests, main and weekly. Dependency/tool pins were refreshed with universal hash locks and the existing release cooldown.
 - **Break reminders and focus alerts can be turned off**, in Settings or by saying *breaks off* or *focus alerts off* (and *… on* to bring them back). Turned off, your break interval is kept for when you turn them on again.
 - **Walk around** in the menu is remembered after a restart, as Settings remembers it.
 - The chatmon stops walking while the pointer is over it, so it's easy to click, and carries on when the pointer leaves.

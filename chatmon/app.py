@@ -41,9 +41,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": N_("Your agent")}  # shown as _(…)
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
-MATCH = "match"  # the bubble style that follows the companion
 MAX_CONNECTIONS = 64  # hook connections open at once (each is a moment's); past that a new one is turned away
 UPDATE_CHECK_TIMEOUT_S = 60  # a system update check still running after this long is stopped, and counts as none
 APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
@@ -54,15 +52,6 @@ MISSED_IDLE = 20.0  # seconds without input, the whole time a bubble was up, for
 BUBBLE_TIMES = {"normal": 1.0, "longer": 1.5, "much longer": 2.5, "until closed": None}
 # Sounds (M4B's sound.py plays them): the alerts are on by default, the rest off until turned on (owner, 2026-11-14).
 ALERT_CUES = ("needs-you", "reminder", "focus-done")
-# Quick actions on the clipboard (the menu's Clipboard): what's typed in the box once the clipboard is attached.
-# The menu names each one (menus.QUICK_LABELS), and its words are typed in the box as _(words): your question, in
-# your language, which you send or change.
-QUICK_ACTIONS = {
-    "Explain": N_("Explain this:"),
-    "Summarize": N_("Summarize this:"),
-    "Translate": N_("Translate this into {language}:"),
-    "Fix": N_("Fix the mistakes in this (spelling, grammar or code), and say what you changed:"),
-}
 
 # Shown as _(HELP), _(NO_AI) and _(ASK_HINT): the language is chosen after this module is imported.
 HELP = N_("""\
@@ -111,10 +100,6 @@ class Background(QObject):
     def _hand_back(self, then, result) -> None:
         if not self.stopped:
             then(result)
-
-
-def pretty(source: str) -> str:
-    return _(PRETTY[source.lower()]) if source.lower() in PRETTY else source[:1].upper() + source[1:]
 
 
 def _reminder_said(r: reminders.Reminder, repeat: bool = False) -> str:
@@ -2376,7 +2361,7 @@ class Companion(QObject):
         self._last_event, self._last_event_at = seen, now
         self._agent_serial += 1
         self._agent_revisions[source] = self._agent_serial
-        label = pretty(source)
+        label = agents.source_label(source)
         key = f"agent:{source}"
         self.behavior.wake(now)
         if event == "working":
@@ -2459,17 +2444,17 @@ class Companion(QObject):
 
     def agents_report(self, markdown: bool = True) -> str:
         """How each AI agent stands (needs you, working) and for how long: the *agents* command, and status."""
-        return offline.agents_report(self.agents, self._now(), pretty, markdown=markdown)
+        return offline.agents_report(self.agents, self._now(), agents.source_label, markdown=markdown)
 
     def _waiting_agents(self) -> list[str]:
-        return [pretty(source) for source, (state, _) in self.agents.items() if state == "needs-you" and source not in self._read_agents]
+        return [agents.source_label(source) for source, (state, _) in self.agents.items() if state == "needs-you" and source not in self._read_agents]
 
     def _show_agent_states(self) -> None:
         """The agents' states where they can be seen at a glance: the tray's tooltip, the stage window's name (what a
         screen reader says of it), and a dot on the tray icon while one needs you."""
         if self._quitting:
             return
-        states = offline.agents_report(self.agents, self._now(), pretty, markdown=False) if self.agents else ""
+        states = offline.agents_report(self.agents, self._now(), agents.source_label, markdown=False) if self.agents else ""
         # Translators: the tray icon's tooltip while agents are working or waiting, one per line under it.
         self.tray.setToolTip(_("Chatmon\n{states}").format(states=states) if states else "Chatmon")
         name = getattr(self.stage.surface, "setAccessibleName", None)
@@ -2709,7 +2694,7 @@ class Companion(QObject):
     def _quick_action(self, name: str) -> None:
         """Explain, Summarize, Translate or Fix: what's on the clipboard is attached now (you chose this; Chatmon never
         reads the clipboard otherwise), and the box opens with the prompt typed in, for you to send or change."""
-        prompt = _(QUICK_ACTIONS[name]).format(language=QLocale.languageToString(QLocale().language()))
+        prompt = _(asking.QUICK_ACTIONS[name]).format(language=QLocale.languageToString(QLocale().language()))
         self.open_ask(prompt)
         surface = self.stage.surface
         if self.stage.hosted is not None and hasattr(surface, "paste_rich"):  # the overlay: its own clipboard
@@ -2825,17 +2810,17 @@ class Companion(QObject):
         self.behavior.react("wave", self._now())
 
     def _bubble_style_name(self) -> str:
-        """The style picked from the menu, else the one in the settings: a style's name, or MATCH."""
-        name = str(self.state.get("bubble_style") or self.config["bubble_style"] or MATCH).strip().lower()
-        return name if name in styles.STYLES else MATCH
+        """The style picked from the menu, else the one in the settings: a style's name, or styles.MATCH."""
+        name = str(self.state.get("bubble_style") or self.config["bubble_style"] or styles.MATCH).strip().lower()
+        return name if name in styles.STYLES else styles.MATCH
 
     def _bubble_style(self) -> styles.Style:
         """A style chosen by name wins; otherwise high contrast (the system's setting) gets the plain one,
         in the desktop's own colours, and else the bubbles match the companion."""
         name = self._bubble_style_name()
-        if name == MATCH and self._high_contrast and not self.state.get("bubble_style"):
+        if name == styles.MATCH and self._high_contrast and not self.state.get("bubble_style"):
             return styles.get("plain")
-        return styles.get(self._companion().bubble_style if name == MATCH else name)
+        return styles.get(self._companion().bubble_style if name == styles.MATCH else name)
 
     def _bubble_effects(self) -> bool:
         """Moving edges, unless you turned them off, or the system asks for reduced motion (and you didn't
@@ -2970,7 +2955,7 @@ class Companion(QObject):
             automatic = _("Automatic (the first one found)")
         choices = {
             "companions": [(x.id, x.label) for x in companions.COMPANIONS.values() if companions.get(x.id) is x],
-            "bubble_styles": [(MATCH, _("Match companion ({style})").format(style=matching))] + [(x.name, x.label) for x in styles.STYLES.values()],
+            "bubble_styles": [(styles.MATCH, _("Match companion ({style})").format(style=matching))] + [(x.name, x.label) for x in styles.STYLES.values()],
             "brains": [("", automatic)]
             # Translators: a brain that can't answer now, and why: "Ollama (not running)".
             + [(b.name, b.label if b.available(wait=False) else _("{brain} ({reason})").format(brain=b.label, reason=b.why_not())) for b in self.brains.values()],

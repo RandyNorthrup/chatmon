@@ -38,6 +38,14 @@ logger = logging.getLogger(__name__)
 MARK = "chatmon"  # every command we add contains this; it's how we find ours again
 LEGACY_MARK = "penguin-companion"  # what the commands contained before the rename
 
+_SOURCE_LABELS = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": N_("Your agent")}
+
+
+def source_label(source: str) -> str:
+    """A hook's source as a short display name; connection labels may include more, such as "Claude Code"."""
+    known = _SOURCE_LABELS.get(source.lower())
+    return _(known) if known is not None else source[:1].upper() + source[1:]
+
 
 def _runs(name: str) -> re.Pattern:
     """`name notify`, the command we add: the program on its own (any folder, quotes, .exe, or run as

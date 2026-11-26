@@ -16,9 +16,17 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from . import richtext
-from .i18n import _
+from .i18n import N_, _
 
 MAX_WAITING = 1  # questions waiting behind the one being answered
+
+# The clipboard menu supplies these prompts after attaching what the user chose to share.
+QUICK_ACTIONS = {
+    "Explain": N_("Explain this:"),
+    "Summarize": N_("Summarize this:"),
+    "Translate": N_("Translate this into {language}:"),
+    "Fix": N_("Fix the mistakes in this (spelling, grammar or code), and say what you changed:"),
+}
 
 
 @dataclass

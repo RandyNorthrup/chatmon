@@ -160,5 +160,15 @@ local Windows branch was removed after preserving its exact tip as `archive/wind
 Only main and the active delivery branch were retained during verification. Automatic deletion of merged
 branches is now enabled; the delivery branch is removed after integration.
 
+The application matrix subsequently passed all 19 checks with **86.7% combined coverage**. CodeQL's first run
+found one import-cycle quality note; shared source labels, clipboard prompts and matching-style metadata were
+moved out of the controller to their existing owning modules. Public behavior and translations are preserved.
+
+Package CI also exposed stale test assumptions: the published 0.10.0 helper requires signed-list arguments,
+while the upgrade smoke test still passed a bare checksum. The existing container test harness now supports
+the real previous package with an ephemeral test trust key. macOS smoke tests establish a root-owned PATH
+fixture while retaining the installer's unsafe-prefix refusal tests. Version **0.10.1** is prepared so upgrade
+tests exercise a genuinely newer package; the published 0.10.0 changelog is preserved. No release tag is created.
+
 Automatic approval review blocked recursive cleanup of the generated `build/` and `chatmon.egg-info/` folders,
 returning only "blocked by policy". Both remain ignored. No permission escalation was attempted.
