@@ -10,3 +10,8 @@ dist/
 .hypothesis/
 .coverage*
 .mypy_cache/
+
+# Disposable delivery-tool inputs; the canonical plan and verification artifacts stay tracked.
+docs/delivery/reports/notifications/candidate.md
+docs/delivery/reports/notifications/plan-digest.txt
+docs/delivery/reports/notifications/snapshot.json

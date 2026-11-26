@@ -974,12 +974,6 @@ class BubbleArt:
         k, d = self.k, self.pad
         return x0 * k + d, y0 * k + d, (self.w - x1) * k + d, (self.h - y1) * k + d
 
-    def minimum(self) -> QSizeF:
-        """The smallest text area the corners allow."""
-        c = self.corner * self.k
-        notch = (self.notch[1] - self.notch[0]) * self.k
-        return QSizeF(max(2 * c, notch + 2 * c), 2 * c)
-
     def tail_range(self, text_width: float) -> tuple[float, float]:
         """Where along a bubble with this text width the notch's tip can go (x from the frame's left edge)."""
         k = self.k

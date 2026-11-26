@@ -1,4 +1,4 @@
 # What the weekly pins workflow (.github/workflows/pins.yml) runs packaging/pins.py with: uv, which locks every
 # list here again. requirements-pins.txt is this list locked with hashes; lock it again after changing the pin
 # (CONTRIBUTING.md), or let pins.py move it with the rest.
-uv==0.13.6
+uv==0.13.7

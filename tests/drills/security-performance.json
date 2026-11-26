@@ -1,0 +1,215 @@
+{
+  "drills": [
+    {
+      "id": "SP-01-output-limit",
+      "file": "chatmon/brains.py",
+      "find": "if self._received > MAX_REPLY:",
+      "replace": "if False:",
+      "test": [
+        "tests/test_streaming.py::test_an_oversized_http_answer_is_stopped[True]",
+        "tests/test_streaming.py::test_an_oversized_model_list_is_stopped",
+        "tests/test_streaming.py::test_an_oversized_command_answer_is_stopped[stderr]"
+      ],
+      "expect": [
+        "test_an_oversized_http_answer_is_stopped",
+        "test_an_oversized_model_list_is_stopped",
+        "test_an_oversized_command_answer_is_stopped",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-02-error-key",
+      "file": "chatmon/brains.py",
+      "find": "reason=_scrub(detail, brain)[:400]",
+      "replace": "reason=detail[:400]",
+      "test": [
+        "tests/test_streaming.py::test_command_errors_never_show_the_key[False]"
+      ],
+      "expect": [
+        "test_command_errors_never_show_the_key",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-03-cache-bound",
+      "file": "chatmon/chats.py",
+      "find": "self._read.popitem(last=False)",
+      "replace": "break",
+      "test": [
+        "tests/test_chats.py::test_chat_cache_has_limits_and_keeps_independent_copies"
+      ],
+      "expect": [
+        "test_chat_cache_has_limits_and_keeps_independent_copies",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-04-cache-clear",
+      "file": "chatmon/chats.py",
+      "find": "self._read.clear()",
+      "replace": "pass",
+      "test": [
+        "tests/test_chats.py::test_deleting_clearing_or_losing_chats_releases_cached_text"
+      ],
+      "expect": [
+        "test_deleting_clearing_or_losing_chats_releases_cached_text",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-05-test-lifetime",
+      "file": "chatmon/app.py",
+      "find": "self._brain_test.deleteLater()",
+      "replace": "pass",
+      "count": 4,
+      "test": [
+        "tests/test_app_m7.py::test_settings_test_asks_the_brain_and_shows_the_time_or_the_error"
+      ],
+      "expect": [
+        "test_settings_test_asks_the_brain_and_shows_the_time_or_the_error",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-06-cancel-stream",
+      "file": "chatmon/brains.py",
+      "find": "if generation != self._generation:",
+      "replace": "if False:",
+      "test": [
+        "tests/test_streaming.py::test_cancelling_inside_a_coalesced_stream_stops_every_later_piece"
+      ],
+      "expect": [
+        "test_cancelling_inside_a_coalesced_stream_stops_every_later_piece",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-07-search-yields",
+      "file": "chatmon/chatswin.py",
+      "find": "range(min(SEARCH_BATCH, len(self._pending)))",
+      "replace": "range(len(self._pending))",
+      "test": [
+        "tests/test_chatswin.py::test_content_search_yields_and_a_new_query_cancels_old_work"
+      ],
+      "expect": [
+        "test_content_search_yields_and_a_new_query_cancels_old_work",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "SP-10-private-error-log",
+      "file": "chatmon/brains.py",
+      "find": "logger.info(\"a question failed (brain=%s, HTTP=%s)\", self._brain.name if self._brain is not None else \"none\", status[1] if status else \"none\")",
+      "replace": "logger.info(\"a question failed: %s\", message)",
+      "test": [
+        "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+      ],
+      "expect": [
+        "test_a_logged_brain_error_never_carries_the_key",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-read",
+      "requirement": "NTF-READ",
+      "file": "chatmon/app.py",
+      "find": "self._read_agents.update(chosen)",
+      "replace": "pass",
+      "test": [
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+      ],
+      "expect": [
+        "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-clear",
+      "requirement": "NTF-CLEAR",
+      "file": "chatmon/app.py",
+      "find": "self.agents.pop(s, None)",
+      "replace": "pass",
+      "test": [
+        "tests/test_app_m7.py::test_notification_menu_can_read_and_reset_states_without_dismissing_reminders"
+      ],
+      "expect": [
+        "test_notification_menu_can_read_and_reset_states_without_dismissing_reminders",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-pointer",
+      "requirement": "NTF-MENU",
+      "file": "chatmon/penguin.py",
+      "find": "self.notifications_requested.emit(gpos.toPoint())",
+      "replace": "pass",
+      "count": 2,
+      "test": [
+        "tests/test_stage_features.py::test_the_badge_takes_pointer_input_and_opens_notifications"
+      ],
+      "expect": [
+        "test_the_badge_takes_pointer_input_and_opens_notifications",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-keyboard",
+      "requirement": "NTF-MENU",
+      "file": "chatmon/menus.py",
+      "find": "clear_all.triggered.connect(lambda: c._clear_agent_states())",
+      "replace": "clear_all.triggered.connect(lambda: None)",
+      "test": [
+        "tests/test_app_m7.py::test_badge_opens_notifications_and_keyboard_can_clear_all"
+      ],
+      "expect": [
+        "test_badge_opens_notifications_and_keyboard_can_clear_all",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-newer",
+      "requirement": "NTF-READ",
+      "file": "chatmon/app.py",
+      "find": "(revision is None or self._agent_revisions.get(s) == revision)",
+      "replace": "True",
+      "count": 2,
+      "test": [
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "tests/test_app_m7.py::test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp"
+      ],
+      "expect": [
+        "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-close",
+      "requirement": "NTF-READ",
+      "file": "chatmon/app.py",
+      "find": "self._mark_agents_read(source, self._agent_revisions.get(source))",
+      "replace": "pass",
+      "test": [
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+      ],
+      "expect": [
+        "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-distinct",
+      "requirement": "NTF-READ",
+      "file": "chatmon/app.py",
+      "find": "seen = (source, event, hashlib.sha256(text.encode(\"utf-8\", \"surrogatepass\")).digest())",
+      "replace": "seen = (source, event, b\"\")",
+      "test": [
+        "tests/test_app_m7.py::test_closing_an_older_alert_does_not_read_its_queued_replacement"
+      ],
+      "expect": [
+        "test_closing_an_older_alert_does_not_read_its_queued_replacement",
+        "AssertionError"
+      ]
+    }
+  ]
+}

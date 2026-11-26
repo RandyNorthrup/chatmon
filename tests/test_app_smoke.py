@@ -106,7 +106,7 @@ def test_hide_menu_and_reload(companion):
     c.set_hidden(False)
     c.menus.fill()
     labels = [a.text() for a in c.menu.actions() if a.text()]
-    assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Recent messages", "Brain", "AI agents",
+    assert labels == ["Ask Sparky…", "Clipboard", "Chats", "Remind me…", "Focus and notes", "Recent messages", "Notifications", "Brain", "AI agents",
                       "Appearance", "Hide (peek now and then)", "Settings…", "Help && updates", "Quit"]
     submenu = {a.text(): a.menu() for a in c.menu.actions() if a.menu()}
     appearance = [a.text() for a in submenu["Appearance"].actions()]

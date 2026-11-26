@@ -2,6 +2,19 @@
 
 Each version's changes, newest first: what Chatmon shows after it updates, and each release's notes.
 
+## 0.10.1
+
+### Changes
+- **Chat search yields between batches**, and recently opened conversations have a bounded cache released when chats are deleted or cleared. Repeated AI tests in Settings release their network objects when finished or cancelled.
+- **Fragmented streamed answers take less work to parse**: unfinished lines are extended and searched only where new bytes arrived.
+- **Continuous security and quality checks** cover the application, packaging, workflows and locked dependencies. Build and development pins were refreshed with universal hashes and the existing release cooldown.
+
+### Fixes
+- **Agent badges can be cleared**: click a number to open Notifications, mark alerts as read, or clear one or all stale statuses. Closing the latest alert acknowledges it. Old actions cannot clear newer requests, even when Windows gives both the same timestamp; distinct requests survive duplicate-hook filtering. The same controls work from the keyboard in the tray or companion menu; reminders keep Done and Snooze.
+
+### Security
+- **Answer size limits cover every transport**, including streamed events, model lists, command output, diagnostics and answer files. Command errors redact the brain's key before reaching the screen. Failure logs retain only the brain and HTTP status, so reflected questions or attachments stay out of logs. Cancelling a stream stops pieces already parsed from its current chunk.
+
 ## 0.10.0
 
 ### New

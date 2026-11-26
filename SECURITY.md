@@ -15,6 +15,25 @@ published if you'd like to be.
 The latest release. Fixes go into the next release; there are no maintenance branches. Chatmon 0.6.0 and later
 update themselves (**Help & updates** in the menu).
 
+## Continuous security and quality checks
+
+GitHub secret scanning, push protection, Dependabot alerts and Dependabot security updates are enabled for this
+public repository. Python version updates use the hash-preserving pins workflow described in CONTRIBUTING.md.
+
+The [Security and quality workflow](.github/workflows/codeql.yml) runs CodeQL's `security-and-quality` suite for
+Python and GitHub Actions on pull requests, pushes to main and weekly. It scans shipped code, packaging and
+workflows; archived probes and synthetic test payloads remain covered by the test suite. Results appear under
+**Security and quality › Code scanning**. This uses the public repository's CodeQL scanning, not GitHub's
+separate paid Code Quality product.
+
+The same workflow audits every universal Python lock with a checksum-verified OSV-Scanner binary and fails when
+known dependency vulnerabilities are reported. Dependabot's repository alerts complement that gate.
+
+The required CI checks also enforce Ruff's security/performance/correctness rules, mypy for all three platforms,
+the supported Python/OS test matrix, isolated regression drills, workflow lint/security checks and an 84%
+combined branch-coverage floor. A scan that completed successfully can still report findings: review those
+findings before release rather than treating workflow success as proof that none exist.
+
 ## What counts
 
 Anything that breaks a promise in the README's [Privacy and security](README.md#privacy-and-security) section.

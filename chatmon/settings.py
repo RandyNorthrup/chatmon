@@ -261,12 +261,6 @@ updates_every_hours = 6
 """
 
 
-def private(path: Path) -> None:
-    """Readable by you alone (settings can hold API keys)."""
-    if os.name == "posix":
-        os.chmod(path, 0o600)
-
-
 def private_dir(path: Path) -> Path:
     """One of Chatmon's folders, open to you alone (0700): made so, and made so again if it wasn't."""
     path.mkdir(parents=True, exist_ok=True, mode=0o700)

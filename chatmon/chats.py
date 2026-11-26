@@ -18,6 +18,7 @@ import logging
 import re
 import time
 import uuid
+from collections import OrderedDict
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
@@ -28,6 +29,9 @@ from .settings import private_dir, write_private
 logger = logging.getLogger(__name__)
 
 MAX_FILE = 64 * 2**20  # bytes: a chat file bigger than this isn't read (it isn't one of ours)
+MAX_CACHED_CHATS = 8
+MAX_CACHE_BYTES = 8 * 2**20  # serialized bytes; large chats are read without retaining a second copy
+MAX_CACHED_LISTINGS = 2000  # the Chats window's largest listing
 MAX_INSTRUCTIONS = 4000  # characters of a chat's own instructions
 TITLE_LENGTH = 60
 _ID = re.compile(r"[0-9a-f]{32}")
@@ -218,8 +222,8 @@ class ChatBook:
 
     def __init__(self, root: Path | None = None):
         self._root = root
-        self._read: dict[str, tuple[int, int, Chat | None]] = {}  # chat id: (mtime, size, as read): read once
-        self._listed: dict[str, tuple[int, int, Listed | None]] = {}  # chat id: (mtime, size, its listing): read once
+        self._read: OrderedDict[str, tuple[int, int, Chat | None]] = OrderedDict()  # chat id: (mtime, size, as read)
+        self._listed: OrderedDict[str, tuple[int, int, Listed | None]] = OrderedDict()  # chat id: (mtime, size, listing)
 
     def root(self) -> Path:
         return self._root or folder()
@@ -234,6 +238,8 @@ class ChatBook:
         if not chat.messages or not chat.keep:
             return
         write_private(self._file(chat.id), json.dumps(to_json(chat), ensure_ascii=False))
+        self._read.pop(chat.id, None)
+        self._listed.pop(chat.id, None)
 
     def load(self, chat_id: str) -> Chat | None:
         try:
@@ -241,11 +247,19 @@ class ChatBook:
             info = path.stat()
             seen = self._read.get(chat_id)
             if seen and seen[:2] == (info.st_mtime_ns, info.st_size):
+                self._read.move_to_end(chat_id)
                 return copy.deepcopy(seen[2])
+            self._read.pop(chat_id, None)
             chat = None if info.st_size > MAX_FILE else from_json(json.loads(path.read_text(encoding="utf-8")))
+            if info.st_size > MAX_CACHE_BYTES:
+                return chat
             self._read[chat_id] = (info.st_mtime_ns, info.st_size, chat)
+            while len(self._read) > MAX_CACHED_CHATS or sum(entry[1] for entry in self._read.values()) > MAX_CACHE_BYTES:
+                self._read.popitem(last=False)
             return copy.deepcopy(chat)
         except FileNotFoundError:  # no such chat kept (yet): the answer
+            self._read.pop(chat_id, None)
+            self._listed.pop(chat_id, None)
             return None
         except (OSError, ValueError, RecursionError) as exc:
             logger.debug("couldn't read chat %s: %s", chat_id, exc)
@@ -284,6 +298,9 @@ class ChatBook:
             if seen is None or seen[:2] != (info.st_mtime_ns, info.st_size):
                 seen = (info.st_mtime_ns, info.st_size, self._list(path, info.st_size))
                 self._listed[path.stem] = seen
+            self._listed.move_to_end(path.stem)
+            while len(self._listed) > MAX_CACHED_LISTINGS:
+                self._listed.popitem(last=False)
             if seen[2] is not None:
                 found.append(seen[2])
             if len(found) >= limit:
@@ -303,6 +320,8 @@ class ChatBook:
         return Listed(chat.id, chat.title, chat.updated, chat.pinned) if chat is not None and chat.messages else None
 
     def delete(self, chat_id: str) -> None:
+        self._read.pop(chat_id, None)
+        self._listed.pop(chat_id, None)
         try:
             self._file(chat_id).unlink(missing_ok=True)
         except (OSError, ValueError) as exc:
@@ -311,6 +330,8 @@ class ChatBook:
     def clear(self) -> int:
         """Delete every chat; how many went."""
         gone = 0
+        self._read.clear()
+        self._listed.clear()
         for root in [self.root()]:
             try:
                 for path in root.glob("*.json"):

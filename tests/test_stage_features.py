@@ -91,6 +91,22 @@ def test_a_needs_you_badge_pulses_unless_motion_is_reduced(stage):
     assert len(looks) == 1 and s._pulse == -1 and s.next_tick_in == pytest.approx(penguin.IDLE_FLOOR)  # still: nothing to tick for
 
 
+def test_the_badge_takes_pointer_input_and_opens_notifications(stage):
+    from PyQt6.QtCore import Qt
+
+    s, _clock = stage
+    s.set_badge(needs_you=1)
+    s._tick()
+    pos = s._badges[0][1].center()
+    assert any(QRect(x, y, w, h).contains(pos.toPoint()) for x, y, w, h in s._inputs)
+    requested = []
+    s.notifications_requested.connect(requested.append)
+    gpos = pos + QPointF(s._geo.topLeft())
+    assert s.press(pos, gpos, Qt.MouseButton.LeftButton)
+    s.release(pos, gpos, Qt.MouseButton.LeftButton)
+    assert requested == [gpos.toPoint()] and not s._dragging
+
+
 def test_reduced_motion_stills_the_creature_and_its_zs(qapp):
     s, clock = make_stage(sleep_after=5)
     follow_the_clock(s, clock, 30, check=False)

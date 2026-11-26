@@ -314,6 +314,18 @@ jobs:
       - *source-date
       - *build-tools
       - run: python packaging/build.py macos
+      - name: Prepare root-owned PATH directories for installer tests
+        run: |
+          # Homebrew's writable prefix intentionally gets no privileged launcher. This smoke test exercises
+          # the secure-prefix path; test_packaging.py separately proves unsafe prefixes remain untouched.
+          for dir in /usr/local /usr/local/bin; do
+            [ ! -L "$dir" ] || { echo "$dir is a symlink, not an installer fixture"; exit 1; }
+            sudo mkdir -p "$dir"
+            sudo chown root:wheel "$dir"
+            sudo chmod -N "$dir"
+            sudo chmod 755 "$dir"
+            ls -ldn "$dir"
+          done
       - name: The last release's .pkg, for this one to upgrade
         env:
           GH_TOKEN: ${{ github.token }}
@@ -325,6 +337,8 @@ jobs:
       - name: Install this .pkg over it, run it
         run: |
           sudo installer -pkg dist/Chatmon-*.pkg -target /
+          ls -ldn /usr/local /usr/local/bin
+          ls -l /usr/local/bin/chatmon || true
           test -x /usr/local/bin/chatmon
           python packaging/build.py smoke /usr/local/bin/chatmon /Applications/Chatmon.app/Contents/MacOS/Chatmon --version "$(python packaging/build.py version)"
       - name: Root's side of updating is in the app, the app is root's, and its check refuses what it can't read
@@ -394,24 +408,20 @@ jobs:
         run: |
           version=$(python3 packaging/build.py version)
           # As Chatmon's updater does: the install-update of the Chatmon already installed (pkexec runs it as
-          # root) installs the new package, checked by its checksum from the signed list. That's the last
-          # release's helper, which takes FILE SHA256; once a release with the helper that checks the signed list
-          # itself (FILE SHA256SUMS.txt SHA256SUMS.txt.sig) is the last one, this step needs a signed list too,
-          # as packaging/linux/test-install-update.sh makes one.
+          # root) installs the new package after checking a signed list itself. The canonical test harness
+          # supplies an ephemeral trust key inside each throwaway container; no release signing secret is used.
           echo "::group::ubuntu:24.04"
           docker run --rm -v "$PWD:/src:ro" -v "$RUNNER_TEMP/last:/last:ro" ubuntu:24.04 sh -ec "
             apt-get update -qq --error-on=any || { sed -i -E 's#http://(archive|security)\.ubuntu\.com/ubuntu/?#http://mirrors.edge.kernel.org/ubuntu/#g' /etc/apt/sources.list.d/*.sources 2>/dev/null; apt-get update -qq; }
-            DEBIAN_FRONTEND=noninteractive apt-get install -y -qq /last/chatmon_*_all.deb >/dev/null
-            sum=\$(sha256sum /src/dist/chatmon_*_all.deb | cut -d' ' -f1)
-            /usr/lib/chatmon/install-update /src/dist/chatmon_*_all.deb \$sum >/dev/null
+            apt-get install -y -qq python3 >/dev/null
+            sh /src/packaging/linux/test-install-update.sh /src/dist/chatmon_*_all.deb /last/chatmon_*_all.deb
             dpkg-query -W -f '\${Version}\n' chatmon
             python3 /src/packaging/build.py smoke chatmon chatmon --version $version"
           echo "::endgroup::"
           echo "::group::fedora:44"
           docker run --rm -v "$PWD:/src:ro" -v "$RUNNER_TEMP/last:/last:ro" fedora:44 sh -ec "
-            dnf install -y -q /last/chatmon-*.noarch.rpm >/dev/null
-            sum=\$(sha256sum /src/dist/chatmon-*.noarch.rpm | cut -d' ' -f1)
-            /usr/lib/chatmon/install-update /src/dist/chatmon-*.noarch.rpm \$sum >/dev/null
+            dnf install -y -q python3 >/dev/null
+            sh /src/packaging/linux/test-install-update.sh /src/dist/chatmon-*.noarch.rpm /last/chatmon-*.noarch.rpm
             rpm -q chatmon
             python3 /src/packaging/build.py smoke chatmon chatmon --version $version"
           echo "::endgroup::"

@@ -4,6 +4,7 @@ keeps an eye on for you."""
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import logging
 import os
 import signal
@@ -40,9 +41,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-PRETTY = {"claude": "Claude", "codex": "Codex", "gemini": "Gemini", "grok": "Grok", "copilot": "Copilot", "agent": N_("Your agent")}  # shown as _(…)
 WORK_EXPIRES = 30 * 60  # forget an agent that said it was working but never finished
-MATCH = "match"  # the bubble style that follows the companion
 MAX_CONNECTIONS = 64  # hook connections open at once (each is a moment's); past that a new one is turned away
 UPDATE_CHECK_TIMEOUT_S = 60  # a system update check still running after this long is stopped, and counts as none
 APP_USER_MODEL_ID = "RandyNorthrup.Chatmon"  # Windows: the app's identity (packaging/windows/chatmon.iss gives its shortcuts it too)
@@ -53,15 +52,6 @@ MISSED_IDLE = 20.0  # seconds without input, the whole time a bubble was up, for
 BUBBLE_TIMES = {"normal": 1.0, "longer": 1.5, "much longer": 2.5, "until closed": None}
 # Sounds (M4B's sound.py plays them): the alerts are on by default, the rest off until turned on (owner, 2026-11-14).
 ALERT_CUES = ("needs-you", "reminder", "focus-done")
-# Quick actions on the clipboard (the menu's Clipboard): what's typed in the box once the clipboard is attached.
-# The menu names each one (menus.QUICK_LABELS), and its words are typed in the box as _(words): your question, in
-# your language, which you send or change.
-QUICK_ACTIONS = {
-    "Explain": N_("Explain this:"),
-    "Summarize": N_("Summarize this:"),
-    "Translate": N_("Translate this into {language}:"),
-    "Fix": N_("Fix the mistakes in this (spelling, grammar or code), and say what you changed:"),
-}
 
 # Shown as _(HELP), _(NO_AI) and _(ASK_HINT): the language is chosen after this module is imported.
 HELP = N_("""\
@@ -110,10 +100,6 @@ class Background(QObject):
     def _hand_back(self, then, result) -> None:
         if not self.stopped:
             then(result)
-
-
-def pretty(source: str) -> str:
-    return _(PRETTY[source.lower()]) if source.lower() in PRETTY else source[:1].upper() + source[1:]
 
 
 def _reminder_said(r: reminders.Reminder, repeat: bool = False) -> str:
@@ -185,6 +171,10 @@ class Companion(QObject):
         self._renaming: str | None = None  # the chat whose new name the box is asking for
         self._stopwatch: float | None = None  # when the stopwatch started (monotonic), while it runs
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
+        self._read_agents: set[str] = set()  # read notices; the agent may still be waiting in its own app
+        self._agent_notices: dict[str, messages.Message] = {}  # the latest unread alert, never an older replay
+        self._agent_revisions: dict[str, int] = {}
+        self._agent_serial = 0  # event identity must not depend on Windows' coarse monotonic clock
         self._recent: deque[tuple[float, messages.Message]] = deque(maxlen=RECENT_MESSAGES)  # (when, what) shown lately
         self._missed: list[messages.Message] = []  # what went by unseen (timed out while you were away, or dropped)
         self._on_screen: tuple[float, messages.Message] | None = None  # the bubble showing: since when (monotonic), what
@@ -194,7 +184,7 @@ class Companion(QObject):
         self._hotkey = ""  # the hotkey registered (M4B's hotkey.py), if any
         self._hotkey_said: str | None = None  # how the desktop has it, in its own words (hotkey.py's `bound`)
         self._brain_test: brains.BrainTest | None = None  # Settings' Test, while it runs
-        self._last_event: tuple[str, str] | None = None
+        self._last_event: tuple[str, str, bytes] | None = None
         self._last_event_at = 0.0
         self._alert_key: str | None = None  # what the alert showing is about
         self._asking_name = False
@@ -248,6 +238,7 @@ class Companion(QObject):
         self.stage.bubble.on_more = self._show_more  # a bubble cut short: More shows the whole text in the box
         self.stage.clicked.connect(self.on_click)
         self.stage.menu_requested.connect(self.show_menu)
+        self.stage.notifications_requested.connect(self.show_notifications)
         self.stage.head_moved.connect(self._follow)
         self.stage.message_closed.connect(self._message_closed)
         self.stage.away_changed.connect(self._overlay_away)
@@ -439,7 +430,7 @@ class Companion(QObject):
             timeout_s = max(timeout_s, notice)
         self._post(messages.Message(title, text, buttons, timeout_s, key=key, background=background, cue=cue))
 
-    def alert(self, key: str, title: str, text: str, buttons=None, *, reminder: bool = False) -> None:
+    def alert(self, key: str, title: str, text: str, buttons=None, *, reminder: bool = False) -> messages.Message:
         """Something needs you: the penguin waves its flippers until you answer. `reminder`: one of yours, which
         waits for an agent's alert but goes before anything else. Either comes on its own."""
         priority = messages.REMINDER if reminder else messages.ALERT
@@ -454,6 +445,7 @@ class Companion(QObject):
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
             # A reminder's notification offers what its bubble does (Done, a snooze), so it can be seen to from there.
             self._system_notice(title, _("Chatmon has something for you."), list(buttons[:2]) if reminder and buttons else [], "reminder" if reminder else None)
+        return message
 
     def _system_notice(self, title: str, text: str, buttons=(), scenario: str | None = None, seconds: int = 10, aloud: bool = False) -> None:
         """A notification of the system's own, which keeps a history: Windows' toast (wintoast.py), else the tray's
@@ -777,6 +769,13 @@ class Companion(QObject):
         wincaret.place(self.stage.native_window(), round(rect.x() * scale), round(rect.y() * scale), round(rect.width() * scale), round(rect.height() * scale))
 
     def _message_closed(self) -> None:
+        if self._on_screen is not None:
+            message = self._on_screen[1]
+            for source, notice in list(self._agent_notices.items()):
+                if notice is message:
+                    self._pressed_showing = True  # a read alert has no unanswered button to keep in the ask box
+                    self._mark_agents_read(source, self._agent_revisions.get(source))
+                    break
         if sys.platform == "win32" and self.config["accessibility"].get("magnifier_follows", True):
             from . import wincaret
 
@@ -1923,6 +1922,7 @@ class Companion(QObject):
         for source, (state, since) in list(self.agents.items()):
             if state == "working" and mono - since > WORK_EXPIRES:
                 del self.agents[source]
+                self._agent_revisions.pop(source, None)
         self._update_working()
         if (
             self.config["breaks"].get("remind", True) and self.breaks.due(now) and self.reminders.focus() is None
@@ -2354,22 +2354,35 @@ class Companion(QObject):
     def _agent_event(self, event: str, source: str, text: str) -> None:
         now = self._now()
         # The same news twice in a moment (an agent running its own hook and a borrowed one): once is enough.
-        if self._last_event == (source, event) and now - self._last_event_at < 1.5:
+        # A fingerprint distinguishes new requests without retaining an otherwise hidden agent reply.
+        seen = (source, event, hashlib.sha256(text.encode("utf-8", "surrogatepass")).digest())
+        if self._last_event == seen and now - self._last_event_at < 1.5:
             return
-        self._last_event, self._last_event_at = (source, event), now
-        label = pretty(source)
+        self._last_event, self._last_event_at = seen, now
+        self._agent_serial += 1
+        self._agent_revisions[source] = self._agent_serial
+        label = agents.source_label(source)
         key = f"agent:{source}"
         self.behavior.wake(now)
         if event == "working":
+            self._read_agents.discard(source)
+            self._agent_notices.pop(source, None)
             self.agents[source] = ("working", now)
             self.messages.withdraw(key)  # a needs-you still waiting no longer stands
             if self._alert_key == key:
                 self.stage.dismiss_message()
         elif event == "needs-you":
             self.agents[source] = ("needs-you", now)
-            self.alert(key, _("{agent} needs you").format(agent=label), text or _("{agent} is waiting for you.").format(agent=label))
+            self._read_agents.discard(source)
+            self._agent_notices[source] = self.alert(
+                key, _("{agent} needs you").format(agent=label), text or _("{agent} is waiting for you.").format(agent=label),
+                [(_("Mark as read"), partial(self._mark_agents_read, source, self._agent_serial))],
+            )
         else:
             self.agents.pop(source, None)
+            self._agent_revisions.pop(source, None)
+            self._read_agents.discard(source)
+            self._agent_notices.pop(source, None)
             self.messages.withdraw(key)
             if self._alert_key == key:
                 self.stage.dismiss_message()
@@ -2387,6 +2400,42 @@ class Companion(QObject):
                 self.say(_("{agent} hit a problem").format(agent=label), snippet or _("Take a look when you can."), timeout_s=20, key=key, background=True,
                          cue="error")
         self._update_working()
+        self.menus.changed()
+
+    def _mark_agents_read(self, source: str | None = None, revision: int | None = None) -> None:
+        """Acknowledge selected notices without claiming their agents finished. An old button cannot read a newer alert."""
+        chosen = {s for s, (state, _at) in self.agents.items()
+                  if state == "needs-you" and (source is None or s == source)
+                  and (revision is None or self._agent_revisions.get(s) == revision)}
+        if not chosen:
+            return
+        self._read_agents.update(chosen)
+        for s in chosen:
+            self._agent_notices.pop(s, None)
+        self._withdraw_agent_notices(chosen)
+        self._show_agent_states()
+        self.menus.changed()
+
+    def _clear_agent_states(self, source: str | None = None, revision: int | None = None) -> None:
+        """Reset local status when a terminal hook was missed; later agent events are still accepted."""
+        chosen = {s for s in self.agents if (source is None or s == source) and (revision is None or self._agent_revisions.get(s) == revision)}
+        for s in chosen:
+            self.agents.pop(s, None)
+            self._agent_revisions.pop(s, None)
+            self._read_agents.discard(s)
+            self._agent_notices.pop(s, None)
+        self._withdraw_agent_notices(chosen)
+        self._update_working()
+        self.menus.changed()
+
+    def _withdraw_agent_notices(self, sources: set[str]) -> None:
+        keys = {f"agent:{s}" for s in sources}
+        self.messages.take(lambda m: m.key in keys)
+        if self._alert_key in keys and self.stage.message_visible():
+            self.stage.dismiss_message()
+            self._answerable = None
+        if self._last_event is not None and self._last_event[0] in sources:
+            self._last_event = None  # a subsequent request is new even inside the hook deduplication window
 
     def _update_working(self) -> None:
         working = any(state == "working" for state, _ in self.agents.values())
@@ -2395,17 +2444,17 @@ class Companion(QObject):
 
     def agents_report(self, markdown: bool = True) -> str:
         """How each AI agent stands (needs you, working) and for how long: the *agents* command, and status."""
-        return offline.agents_report(self.agents, self._now(), pretty, markdown=markdown)
+        return offline.agents_report(self.agents, self._now(), agents.source_label, markdown=markdown)
 
     def _waiting_agents(self) -> list[str]:
-        return [pretty(source) for source, (state, _) in self.agents.items() if state == "needs-you"]
+        return [agents.source_label(source) for source, (state, _) in self.agents.items() if state == "needs-you" and source not in self._read_agents]
 
     def _show_agent_states(self) -> None:
         """The agents' states where they can be seen at a glance: the tray's tooltip, the stage window's name (what a
         screen reader says of it), and a dot on the tray icon while one needs you."""
         if self._quitting:
             return
-        states = offline.agents_report(self.agents, self._now(), pretty, markdown=False) if self.agents else ""
+        states = offline.agents_report(self.agents, self._now(), agents.source_label, markdown=False) if self.agents else ""
         # Translators: the tray icon's tooltip while agents are working or waiting, one per line under it.
         self.tray.setToolTip(_("Chatmon\n{states}").format(states=states) if states else "Chatmon")
         name = getattr(self.stage.surface, "setAccessibleName", None)
@@ -2422,15 +2471,25 @@ class Companion(QObject):
 
     def show_menu(self, pos: QPoint) -> None:
         """The penguin's own menu (right-click): it stands still and looks at you while it's open."""
+        if self.stage.draws_menus() or self._overlay:
+            self.menus.opening()  # the stage draws it: no aboutToShow
+        self._popup_menu(self.menu, pos)
+
+    def show_notifications(self, pos: QPoint) -> None:
+        """The badge's shortcut to the same notification controls available in the tray/context menu."""
+        self.menus.opening()
+        if self.menus.notifications is not None:
+            self._popup_menu(self.menus.notifications, pos)
+
+    def _popup_menu(self, menu: QMenu, pos: QPoint) -> None:
         self._menu_open = True
         self.behavior.set_attending(True, self._now())
         # On the overlay the penguin's menu is always the stage's own: with the ask box a window for a screen reader,
         # the overlay draws no menus for it, but a Qt menu opened from the overlay has no window of Qt's to belong to.
         if self.stage.draws_menus() or self._overlay:
-            self.menus.opening()  # the stage draws it: no aboutToShow
-            self.stage.open_menu(self.menu, pos)
+            self.stage.open_menu(menu, pos)
         else:
-            self.menu.popup(pos)
+            menu.popup(pos)
 
     def _menu_closed(self) -> None:
         if self._menu_open and not self.stage.menu.is_open():
@@ -2635,7 +2694,7 @@ class Companion(QObject):
     def _quick_action(self, name: str) -> None:
         """Explain, Summarize, Translate or Fix: what's on the clipboard is attached now (you chose this; Chatmon never
         reads the clipboard otherwise), and the box opens with the prompt typed in, for you to send or change."""
-        prompt = _(QUICK_ACTIONS[name]).format(language=QLocale.languageToString(QLocale().language()))
+        prompt = _(asking.QUICK_ACTIONS[name]).format(language=QLocale.languageToString(QLocale().language()))
         self.open_ask(prompt)
         surface = self.stage.surface
         if self.stage.hosted is not None and hasattr(surface, "paste_rich"):  # the overlay: its own clipboard
@@ -2751,17 +2810,17 @@ class Companion(QObject):
         self.behavior.react("wave", self._now())
 
     def _bubble_style_name(self) -> str:
-        """The style picked from the menu, else the one in the settings: a style's name, or MATCH."""
-        name = str(self.state.get("bubble_style") or self.config["bubble_style"] or MATCH).strip().lower()
-        return name if name in styles.STYLES else MATCH
+        """The style picked from the menu, else the one in the settings: a style's name, or styles.MATCH."""
+        name = str(self.state.get("bubble_style") or self.config["bubble_style"] or styles.MATCH).strip().lower()
+        return name if name in styles.STYLES else styles.MATCH
 
     def _bubble_style(self) -> styles.Style:
         """A style chosen by name wins; otherwise high contrast (the system's setting) gets the plain one,
         in the desktop's own colours, and else the bubbles match the companion."""
         name = self._bubble_style_name()
-        if name == MATCH and self._high_contrast and not self.state.get("bubble_style"):
+        if name == styles.MATCH and self._high_contrast and not self.state.get("bubble_style"):
             return styles.get("plain")
-        return styles.get(self._companion().bubble_style if name == MATCH else name)
+        return styles.get(self._companion().bubble_style if name == styles.MATCH else name)
 
     def _bubble_effects(self) -> bool:
         """Moving edges, unless you turned them off, or the system asks for reduced motion (and you didn't
@@ -2896,7 +2955,7 @@ class Companion(QObject):
             automatic = _("Automatic (the first one found)")
         choices = {
             "companions": [(x.id, x.label) for x in companions.COMPANIONS.values() if companions.get(x.id) is x],
-            "bubble_styles": [(MATCH, _("Match companion ({style})").format(style=matching))] + [(x.name, x.label) for x in styles.STYLES.values()],
+            "bubble_styles": [(styles.MATCH, _("Match companion ({style})").format(style=matching))] + [(x.name, x.label) for x in styles.STYLES.values()],
             "brains": [("", automatic)]
             # Translators: a brain that can't answer now, and why: "Ollama (not running)".
             + [(b.name, b.label if b.available(wait=False) else _("{brain} ({reason})").format(brain=b.label, reason=b.why_not())) for b in self.brains.values()],
@@ -2935,6 +2994,7 @@ class Companion(QObject):
     def _settings_closed(self, _result: int) -> None:
         if self._brain_test is not None:
             self._brain_test.cancel()  # nothing more for a window that's gone
+            self._brain_test.deleteLater()
             self._brain_test = None
 
     def _test_brain(self, name: str, typed_key: str) -> None:
@@ -2951,10 +3011,13 @@ class Companion(QObject):
             brain = dataclasses.replace(brain, api_key=typed_key)
         if self._brain_test is not None:
             self._brain_test.cancel()
+            self._brain_test.deleteLater()
         self._brain_test = brain.test(self, timeout_s=float(self.config["ai"]["timeout_seconds"]))
         self._brain_test.finished.connect(lambda ok, text, seconds: self._tested(brain.label, ok, text, seconds))
 
     def _tested(self, label: str, ok: bool, text: str, seconds: float) -> None:
+        if self._brain_test is not None:
+            self._brain_test.deleteLater()
         self._brain_test = None
         window = self._settings_window
         if window is not None and not sip.isdeleted(window):
@@ -3187,6 +3250,7 @@ class Companion(QObject):
         self.compactor.cancel()
         if self._brain_test is not None:
             self._brain_test.cancel()
+            self._brain_test.deleteLater()
             self._brain_test = None
         self.ask_box.hide()  # (its redraws stop as it hides)
         for widget in (self.ask_box, self.ask_box.entry, self.ask_box.answer):

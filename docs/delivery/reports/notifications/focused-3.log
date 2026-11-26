@@ -1,0 +1,11 @@
+...............................................s................ssss.... [ 31%]
+........................................................................ [ 62%]
+........................................................................ [ 94%]
+.............                                                            [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_app_smoke.py:54: on Windows every Chatmon in a session shares the hooks' pipe name, a test's too
+SKIPPED [1] tests\test_app_smoke.py:374: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:398: a Windows pipe takes a sender's bytes only once Chatmon reads that connection, so a message can't wait unread for it this way
+SKIPPED [1] tests\test_app_smoke.py:430: a Unix socket, as hooks use on Linux and macOS
+SKIPPED [1] tests\test_app_smoke.py:450: a Unix socket, as hooks use on Linux and macOS
+224 passed, 5 skipped in 121.65s (0:02:01)

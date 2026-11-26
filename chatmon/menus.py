@@ -21,7 +21,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QAction, QActionGroup
 from PyQt6.QtWidgets import QMenu
 
-from . import __version__, agents, autostart, brains, chats, commands, companions, offline, reminders, report, styles
+from . import __version__, agents, asking, autostart, brains, chats, commands, companions, offline, reminders, report, styles
 from .i18n import N_, _, ngettext
 
 # A bubble style's name inside a sentence ("New look: electric.", "Match companion (fire)"), lower case where the
@@ -44,7 +44,7 @@ RECENT_CHATS = 8  # in the Chats menu itself; every chat is in the Chats window 
 AGENTS_FRESH = 30  # seconds a look at how the agents stand holds good when the menu opens
 THINKING = {"auto": N_("Automatic (the model's own choice)"), "on": N_("On"), "off": N_("Off")}  # shown as _(THINKING[mode])
 THINKING_SHORT = {"auto": N_("Automatic"), "on": N_("On"), "off": N_("Off")}  # in "Thinking: …"
-# The clipboard's quick actions (app.QUICK_ACTIONS, whose prompts go to the brain in English) as the menu names them.
+# The clipboard's quick actions (asking.QUICK_ACTIONS), as the menu names them.
 QUICK_LABELS = {"Explain": N_("Explain the clipboard…"), "Summarize": N_("Summarize the clipboard…"),
                 "Translate": N_("Translate the clipboard…"), "Fix": N_("Fix the clipboard…")}
 
@@ -63,6 +63,7 @@ class Menus:
     def __init__(self, c) -> None:
         self.c = c
         self.menu = QMenu()
+        self.notifications: QMenu | None = None
         self.menu.aboutToShow.connect(self.opening)  # the tray's menu (and a D-Bus tray's, when it opens it)
         self.menu.aboutToHide.connect(c._menu_closed)  # the QMenu popup; the stage's menu says so itself
         self._stale = False  # something it shows changed while it was open
@@ -85,7 +86,7 @@ class Menus:
         (its items would vanish under the pointer)."""
         if self._done:
             return
-        if self.menu.isVisible() or self.c.stage.menu.is_open():
+        if self.menu.isVisible() or (self.notifications is not None and self.notifications.isVisible()) or self.c.stage.menu.is_open():
             self._stale = True
         else:
             self._refill.start(0)
@@ -137,6 +138,10 @@ class Menus:
         recent = c.recent_messages()
         if recent:
             recent_menu(c, _submenu(m, _("Recent messages")), recent)
+        count = sum(state == "working" for state, _ in c.agents.values()) + len(c._waiting_agents())
+        self.notifications = _submenu(m, _("Notifications ({count})").format(count=count) if count else _("Notifications"))
+        self.notifications.aboutToHide.connect(lambda: c._menu_closed() if not m.isVisible() else None)
+        notifications_menu(c, self.notifications)
         m.addSeparator()
         brain_menu(c, _submenu(m, _("Brain")))
         agents_menu(c, _submenu(m, _("AI agents")))
@@ -249,11 +254,36 @@ def recent_menu(c, sub: QMenu, recent: list) -> None:
         sub.addAction(_("{title}   ·   {when}").format(title=shown, when=chats.when(shown_at)), partial(c._show_again, message))
 
 
+def notifications_menu(c, sub: QMenu) -> None:
+    """Live agent activity and explicit controls for read notices and missing terminal hooks."""
+    if not c.agents:
+        _item(sub, _("No active agent notifications")).setEnabled(False)
+    for source, (state, _since) in sorted(c.agents.items()):
+        revision = c._agent_revisions.get(source)
+        if state == "working":
+            title = _("{agent}: working").format(agent=agents.source_label(source))
+        elif source in c._read_agents:
+            title = _("{agent}: read (still waiting)").format(agent=agents.source_label(source))
+        else:
+            title = _("{agent}: needs you").format(agent=agents.source_label(source))
+        item = _submenu(sub, title)
+        if state == "needs-you":
+            read = _item(item, _("Mark as read"))
+            read.setEnabled(source not in c._read_agents)
+            read.triggered.connect(partial(c._mark_agents_read, source, revision))
+        item.addAction(_("Clear status"), partial(c._clear_agent_states, source, revision))
+    sub.addSeparator()
+    read_all = _item(sub, _("Mark all as read"))
+    read_all.setEnabled(bool(c._waiting_agents()))
+    read_all.triggered.connect(lambda: c._mark_agents_read())
+    clear_all = _item(sub, _("Clear all statuses"))
+    clear_all.setEnabled(bool(c.agents))
+    clear_all.triggered.connect(lambda: c._clear_agent_states())
+
+
 def clipboard_menu(c, sub: QMenu) -> None:
     """What to ask about what's on the clipboard: it's attached only when one of these is chosen."""
-    from .app import QUICK_ACTIONS
-
-    for name in QUICK_ACTIONS:
+    for name in asking.QUICK_ACTIONS:
         sub.addAction(_(QUICK_LABELS[name]) if name in QUICK_LABELS else f"{name}…", partial(c._quick_action, name))
 
 
@@ -430,18 +460,16 @@ def companion_menu(c, sub: QMenu) -> None:
 
 
 def style_menu(c, sub: QMenu) -> None:
-    from .app import MATCH
-
     group = QActionGroup(sub)
     current = c._bubble_style_name()
     matching = style_word(styles.get(c._companion().bubble_style).name)
-    for name, label in [(MATCH, _("Match companion ({style})").format(style=matching))] + [(s.name, s.label) for s in styles.STYLES.values()]:
+    for name, label in [(styles.MATCH, _("Match companion ({style})").format(style=matching))] + [(s.name, s.label) for s in styles.STYLES.values()]:
         action = _item(sub, label)
         action.setCheckable(True)
         action.setChecked(name == current)
         action.triggered.connect(partial(c._pick_style, name))
         group.addAction(action)
-        if name == MATCH:
+        if name == styles.MATCH:
             sub.addSeparator()
     sub.addSeparator()
     moving = _item(sub, _("Animate bubbles"))

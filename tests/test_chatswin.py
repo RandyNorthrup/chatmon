@@ -101,6 +101,23 @@ def test_the_windows_buttons_say_what_was_chosen(window, book):
     assert w.buttons["pin"].text() == "Unpin"
 
 
+def test_content_search_yields_and_a_new_query_cancels_old_work(window, book, monkeypatch):
+    from app_harness import until
+
+    for i in range(40):
+        book.save(chat(f"Topic {i}", "needle in the conversation"))
+    window.refresh(current="", kept=True)
+    read, real = [], book.load
+    monkeypatch.setattr(book, "load", lambda chat_id: read.append(chat_id) or real(chat_id))
+    window.search.setText("needle")
+    window._later.stop()
+    window._search_inside()
+    assert len(read) < 40  # returns to Qt before every conversation has been read
+    window.search.setText("biscuit")
+    assert until(lambda: titles(window) == ["Cat names"], 3)
+    assert window._inside == {next(c.id for c in book.listing() if c.title == "Cat names")}
+
+
 def test_the_chat_youre_in_is_marked_and_unkept_chats_are_said(window, book):
     w = window
     groceries = book.listing()[0].id

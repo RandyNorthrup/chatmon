@@ -477,6 +477,7 @@ def make_surface(stage: Stage):
 class Stage(QObject):
     clicked = pyqtSignal()
     menu_requested = pyqtSignal(QPoint)
+    notifications_requested = pyqtSignal(QPoint)
     head_moved = pyqtSignal()
     message_closed = pyqtSignal()
     menu_closed = pyqtSignal()
@@ -1080,6 +1081,7 @@ class Stage(QObject):
         if set_extent is not None:
             set_extent(self._extent(penguin, zs, bubble_box, menu_rects, badges, origin))
         hosted_rects = self._follow_hosted(self.hosted, origin) if self.hosted is not None else ()
+        badge_rects = tuple((round(r.x()) - 2, round(r.y()) - 2, round(r.width()) + 4, round(r.height()) + 4) for _state, r, _figure in badges)
         # Where it takes clicks: built again only when something in it changed, and as plain numbers.
         bubble_rect = bubble_box.toAlignedRect() if self.bubble.visible() else None
         parts = (
@@ -1087,7 +1089,7 @@ class Stage(QObject):
             (penguin.x(), penguin.y()),
             (bubble_rect.x(), bubble_rect.y(), bubble_rect.width(), bubble_rect.height()) if bubble_rect is not None else None,
             (zs.x(), zs.y(), zs.width(), zs.height()) if zs.isValid() else None,
-            hosted_rects,
+            hosted_rects + badge_rects,
             (self._geo.width(), self._geo.height()) if self.menu.is_open() or self._press is not None else None,
         )
         if parts != self._input_parts:
@@ -1191,16 +1193,16 @@ class Stage(QObject):
         """Take clicks where `parts` (plain numbers) says: the whole stage while the menu is open, as any popup menu
         does (a click anywhere else closes it), and while a button is held on the chatmon or its bubble (a drag:
         Hyprland ends a press as soon as the pointer leaves the input region, though Wayland keeps it with the
-        surface it began on), else the sprite, the bubble, the z's and the hosted scene."""
+        surface it began on), else the sprite, the bubble, the z's, the badges and the hosted scene."""
         self._input_parts = parts
-        rects, (px, py), bubble_t, zs_t, hosted_t, menu = parts
+        rects, (px, py), bubble_t, zs_t, extra_t, menu = parts
         if menu is not None:
             inputs = ((0, 0, *menu),)
         else:
             # The sprite sits on half pixels on a 2x screen: whole pixels round it, outward.
             dx, dy = math.floor(px), math.floor(py)
             ex, ey = (1 if px != dx else 0), (1 if py != dy else 0)
-            inputs = tuple((x + dx, y + dy, w + ex, h + ey) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + hosted_t
+            inputs = tuple((x + dx, y + dy, w + ex, h + ey) for x, y, w, h in rects) + tuple(r for r in (bubble_t, zs_t) if r) + extra_t
         self._inputs = inputs
         self.surface.set_input(inputs)
 
@@ -1323,6 +1325,8 @@ class Stage(QObject):
         """What's under a point on the stage: a bubble part, "penguin", or None."""
         if self.bubble.visible() and self._bubble_box.contains(QPointF(pos)):
             return self.bubble.hit(QPointF(pos) - self._bubble_box.topLeft())
+        if any(r.adjusted(-2, -2, 2, 2).contains(QPointF(pos)) for _state, r, _figure in self._badges):
+            return "badge"
         f = self._frame
         if f is not None and f.anim is not None and self._penguin.contains(QPointF(pos)):
             sprite = self.sprites.frame(f.anim, f.index, f.mirror)
@@ -1356,6 +1360,8 @@ class Stage(QObject):
             return False
         if button == Qt.MouseButton.RightButton and target == "penguin":
             self.menu_requested.emit(gpos.toPoint())
+        elif button == Qt.MouseButton.RightButton and target == "badge":
+            self.notifications_requested.emit(gpos.toPoint())
         elif button == Qt.MouseButton.LeftButton:
             self._press, self._press_on, self._dragging = gpos.toPoint(), target, False
             self._grab = gpos - QPointF(self.behavior.x, self._screen_floor() - self.behavior.lift)
@@ -1375,9 +1381,9 @@ class Stage(QObject):
         if self._press is None:
             hover = self._target_at(pos.toPoint())
             self.bubble.hover = hover if isinstance(hover, int) else None
-            self._bubble_hovered(hover not in (None, "penguin"))
-            self.behavior.hovered = hover == "penguin"
-            self._set_cursor("pointer" if hover == "link" else "default")  # a link in the bubble: a click opens it
+            self._bubble_hovered(hover not in (None, "penguin", "badge"))
+            self.behavior.hovered = hover in ("penguin", "badge")
+            self._set_cursor("pointer" if hover in ("link", "badge") else "default")
             return
         self._set_cursor("grabbing" if self._dragging else "default")
         if self._press_on != "penguin":
@@ -1405,6 +1411,8 @@ class Stage(QObject):
             self.behavior.release(self._clock())
         elif target == "penguin":
             self.clicked.emit()
+        elif target == "badge" and self._target_at(pos.toPoint()) == "badge":
+            self.notifications_requested.emit(gpos.toPoint())
         elif target == "link" and self._target_at(pos.toPoint()) == "link":
             self.bubble.open_link_at(QPointF(pos) - self._bubble_box.topLeft())  # http, https or mailto only
         elif target == "close" or (target == "body" and not self.bubble.buttons):

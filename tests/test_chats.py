@@ -237,6 +237,43 @@ def test_a_chat_id_can_never_name_another_file(tmp_path):
         book.delete(bad)  # quietly nothing
 
 
+def test_chat_cache_has_limits_and_keeps_independent_copies(tmp_path):
+    book = chats.ChatBook(tmp_path)
+    ids = []
+    for i in range(20):
+        chat = chats.Chat(messages=[chats.Message("user", str(i))])
+        book.save(chat)
+        ids.append(chat.id)
+        assert book.load(chat.id).messages[0].text == str(i)
+    assert len(book._read) <= 8
+    back = book.load(ids[-1])
+    back.messages[0].text = "changed only here"
+    assert book.load(ids[-1]).messages[0].text == "19"
+
+
+def test_chat_cache_does_not_keep_large_conversations(tmp_path):
+    book = chats.ChatBook(tmp_path)
+    chat = chats.Chat(messages=[chats.Message("user", "x" * (9 * 2**20))])
+    book.save(chat)
+    assert len(book.load(chat.id).messages[0].text) == 9 * 2**20
+    assert chat.id not in book._read
+
+
+def test_deleting_clearing_or_losing_chats_releases_cached_text(tmp_path):
+    book = chats.ChatBook(tmp_path)
+    saved = [chats.Chat(messages=[chats.Message("user", "private words")]) for _ in range(3)]
+    for chat in saved:
+        book.save(chat)
+        book.load(chat.id)
+    book.listing()
+    book.delete(saved[0].id)
+    assert saved[0].id not in book._read and saved[0].id not in book._listed
+    (tmp_path / f"{saved[1].id}.json").unlink()
+    assert book.load(saved[1].id) is None and saved[1].id not in book._read
+    book.clear()
+    assert not book._read and not book._listed
+
+
 def test_an_odd_or_damaged_chat_file_is_skipped(tmp_path):
     book = chats.ChatBook(tmp_path)
     good = chats.Chat()

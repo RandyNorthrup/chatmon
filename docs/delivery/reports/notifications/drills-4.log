@@ -1,0 +1,646 @@
+red drills from tests\drills\security-performance.json
+python: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe
+copy: C:\Users\Randy\AppData\Local\Temp\chatmon-drill-ccl_a1yk
+copied 323 files
+
+=== drill SP-01-output-limit (no requirement) on chatmon/brains.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_streaming.py::test_an_oversized_http_answer_is_stopped[True] tests/test_streaming.py::test_an_oversized_model_list_is_stopped tests/test_streaming.py::test_an_oversized_command_answer_is_stopped[stderr]
+-- green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 1.42s
+-- red: exit 1
+
+    @pytest.mark.parametrize("streaming", [False, True])
+    def test_an_oversized_http_answer_is_stopped(provider, monkeypatch, streaming):
+        monkeypatch.setattr(brains, "MAX_REPLY", 128)
+        pieces = sse(*({"choices": [{"delta": {"content": "x" * 24}}]} for _ in range(8))) if streaming else [b"x" * 256]
+        headers = {"content-type": "text/event-stream" if streaming else "application/json"}
+        provider.replies.append(Reply(headers=headers, pieces=pieces))
+        asker = brains.Asker()
+        got = ask(asker, Brain("mine", "openai", label="Mine", url=f"{provider.url}/v1", model="m"))
+>       assert got["answered"] is None and got["failed"] == "Mine: the answer was too long to read."
+E       AssertionError: assert ('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' is None)
+
+tests\test_streaming.py:266: AssertionError
+___________________ test_an_oversized_model_list_is_stopped ___________________
+
+provider = <replay_server.Provider object at 0x0000028470D62850>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028470C13BB0>
+
+    def test_an_oversized_model_list_is_stopped(provider, monkeypatch):
+        monkeypatch.setattr(brains, "MAX_REPLY", 128)
+        provider.replies.append(json_reply(200, {"data": [{"id": "x" * 256}]}))
+        asker = brains.Asker()
+        got = ask(asker, Brain("mine", "openai", label="Mine", url=f"{provider.url}/v1", model="auto"))
+>       assert got["answered"] is None and got["failed"] == "Mine: the answer was too long to read."
+E       AssertionError: assert (None is None and 'Mine: no rep...n in a while.' == 'Mine: the an...long to read.'
+E         
+E         - Mine: the answer was too long to read.
+E         + Mine: no reply set (HTTP 500). The provider is having trouble: try again in a while.)
+
+tests\test_streaming.py:275: AssertionError
+_____________ test_an_oversized_command_answer_is_stopped[stderr] _____________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x0000028470EED950>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-10742/test_an_oversized_command_answ0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028470BDDC70>
+output = 'stderr'
+
+    @pytest.mark.parametrize("output", ["plain", "stream-json", "stderr", "file"])
+    def test_an_oversized_command_answer_is_stopped(qapp, tmp_path, monkeypatch, output):
+        monkeypatch.setattr(brains, "MAX_REPLY", 128)
+        script = tmp_path / "large.py"
+        code = {
+            "plain": "print('x' * 256)",
+            "stream-json": "import json; print(json.dumps({'type': 'result', 'result': 'x' * 256}))",
+            "stderr": "import sys; print('x' * 256, file=sys.stderr)",
+            "file": "import pathlib, sys; pathlib.Path(sys.argv[1]).write_text('x' * 256)",
+        }[output]
+        script.write_text(code, encoding="utf-8")
+        command = [sys.executable, str(script)] + (["{output_file}"] if output == "file" else [])
+        asker = brains.Asker()
+        brain = Brain("mine", "command", label="Mine", command=command, output="stream-json" if output == "stream-json" else "plain")
+        got = ask(asker, brain)
+>       assert got["answered"] is None and got["failed"] == "Mine: the answer was too long to read."
+E       assert (None is None and "Mine didn't ...xxxxxxxxxxx)." == 'Mine: the an...long to read.'
+E         
+E         - Mine: the answer was too long to read.
+E         + Mine didn't answer (xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx).)
+
+tests\test_streaming.py:294: AssertionError
+3 failed in 2.03s
+-- restored green: exit 0, 3 passed
+...                                                                      [100%]
+3 passed in 3.68s
+
+=== drill SP-02-error-key (no requirement) on chatmon/brains.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_streaming.py::test_command_errors_never_show_the_key[False]
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.72s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_command_errors_never_show_the_key[False] ________________
+
+qapp = <PyQt6.QtWidgets.QApplication object at 0x00000186944D1950>
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-10746/test_command_errors_never_show0')
+streaming = False
+
+    @pytest.mark.parametrize("streaming", [False, True])
+    def test_command_errors_never_show_the_key(qapp, tmp_path, streaming):
+        key = "local-test-secret-123456"
+        script = tmp_path / "error.py"
+        code = (
+            "import json; print(json.dumps({'type': 'result', 'is_error': True, 'result': 'bad key: ' + " + repr(key) + "}))"
+            if streaming else "import sys; print('bad key: ' + " + repr(key) + ", file=sys.stderr); sys.exit(1)"
+        )
+        script.write_text(code, encoding="utf-8")
+        got = ask(brains.Asker(), Brain("mine", "command", command=[sys.executable, str(script)], api_key=key,
+                                       output="stream-json" if streaming else "plain"))
+>       assert got["answered"] is None and "bad key: …" in got["failed"] and key not in got["failed"]
+E       assert (None is None and 'bad key: …' in " didn't answer (bad key: local-test-secret-123456).")
+
+tests\test_streaming.py:317: AssertionError
+1 failed in 1.11s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.57s
+
+=== drill SP-03-cache-bound (no requirement) on chatmon/chats.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_chats.py::test_chat_cache_has_limits_and_keeps_independent_copies
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.06s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_chat_cache_has_limits_and_keeps_independent_copies ___________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-10749/test_chat_cache_has_limits_and0')
+
+    def test_chat_cache_has_limits_and_keeps_independent_copies(tmp_path):
+        book = chats.ChatBook(tmp_path)
+        ids = []
+        for i in range(20):
+            chat = chats.Chat(messages=[chats.Message("user", str(i))])
+            book.save(chat)
+            ids.append(chat.id)
+            assert book.load(chat.id).messages[0].text == str(i)
+>       assert len(book._read) <= 8
+E       AssertionError: assert 20 <= 8
+E        +  where 20 = len(OrderedDict({'c72db4eebd2d4647938cda135b9be125': (1795716565941739300, 333, Chat(id='c72db4eebd2d4647938cda135b9be125'..., by='')], pinned=False, named=False, keep=True, instructions='', summary='', summarized=0, summary_by='', brain=''))}))
+E        +    where OrderedDict({'c72db4eebd2d4647938cda135b9be125': (1795716565941739300, 333, Chat(id='c72db4eebd2d4647938cda135b9be125'..., by='')], pinned=False, named=False, keep=True, instructions='', summary='', summarized=0, summary_by='', brain=''))}) = <chatmon.chats.ChatBook object at 0x000002B60F7B6660>._read
+
+tests\test_chats.py:248: AssertionError
+1 failed in 1.05s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.76s
+
+=== drill SP-04-cache-clear (no requirement) on chatmon/chats.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_chats.py::test_deleting_clearing_or_losing_chats_releases_cached_text
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.51s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_deleting_clearing_or_losing_chats_releases_cached_text _________
+
+tmp_path = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-10752/test_deleting_clearing_or_losi0')
+
+    def test_deleting_clearing_or_losing_chats_releases_cached_text(tmp_path):
+        book = chats.ChatBook(tmp_path)
+        saved = [chats.Chat(messages=[chats.Message("user", "private words")]) for _ in range(3)]
+        for chat in saved:
+            book.save(chat)
+            book.load(chat.id)
+        book.listing()
+        book.delete(saved[0].id)
+        assert saved[0].id not in book._read and saved[0].id not in book._listed
+        (tmp_path / f"{saved[1].id}.json").unlink()
+        assert book.load(saved[1].id) is None and saved[1].id not in book._read
+        book.clear()
+>       assert not book._read and not book._listed
+E       AssertionError: assert (not OrderedDict({'9d5680f1ee854ed8acbf549c3cbf344a': (1795716569931624800, 345, Chat(id='9d5680f1ee854ed8acbf549c3cbf344a'..., by='')], pinned=False, named=False, keep=True, instructions='', summary='', summarized=0, summary_by='', brain=''))}))
+E        +  where OrderedDict({'9d5680f1ee854ed8acbf549c3cbf344a': (1795716569931624800, 345, Chat(id='9d5680f1ee854ed8acbf549c3cbf344a'..., by='')], pinned=False, named=False, keep=True, instructions='', summary='', summarized=0, summary_by='', brain=''))}) = <chatmon.chats.ChatBook object at 0x000002135865E660>._read
+
+tests\test_chats.py:274: AssertionError
+1 failed in 0.54s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.42s
+
+=== drill SP-05-test-lifetime (no requirement) on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_settings_test_asks_the_brain_and_shows_the_time_or_the_error
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 6.71s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_settings_test_asks_the_brain_and_shows_the_time_or_the_error ______
+
+companion = <chatmon.app.Companion object at 0x000001AFE7ACC190>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AFE7F83820>
+
+    def test_settings_test_asks_the_brain_and_shows_the_time_or_the_error(companion, monkeypatch):
+        from chatmon import brains
+    
+        c = companion
+        ok = brains.Brain("echo", "command", label="Echo", command=[sys.executable, "-c", "print('OK')"], tools_off=True)
+        broken = brains.Brain("broken", "command", label="Broken", command=[sys.executable, "-c", "import sys; sys.exit(3)"], tools_off=True)
+        monkeypatch.setitem(c.brains, "echo", ok)
+        monkeypatch.setitem(c.brains, "broken", broken)
+        c.open_settings("ai")
+        w = c._settings_window
+        c._test_brain("echo", "")
+        assert until(lambda: w.test_result.text().startswith("✓ Echo answered in"), 30)
+        from PyQt6.QtCore import QCoreApplication, QEvent
+    
+        QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+>       assert not c.findChildren(brains.BrainTest)
+E       AssertionError: assert not [<chatmon.brains.BrainTest object at 0x000001AFE9C572F0>]
+E        +  where [<chatmon.brains.BrainTest object at 0x000001AFE9C572F0>] = <built-in method findChildren of Companion object at 0x000001AFE7ACC190>(<class 'chatmon.brains.BrainTest'>)
+E        +    where <built-in method findChildren of Companion object at 0x000001AFE7ACC190> = <chatmon.app.Companion object at 0x000001AFE7ACC190>.findChildren
+E        +    and   <class 'chatmon.brains.BrainTest'> = <module 'chatmon.brains' from 'C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-drill-ccl_a1yk\\chatmon\\brains.py'>.BrainTest
+
+tests\test_app_m7.py:736: AssertionError
+1 failed in 8.64s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 4.25s
+
+=== drill SP-06-cancel-stream (no requirement) on chatmon/brains.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_streaming.py::test_cancelling_inside_a_coalesced_stream_stops_every_later_piece
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.35s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_cancelling_inside_a_coalesced_stream_stops_every_later_piece ______
+
+provider = <replay_server.Provider object at 0x000001F173FEC2F0>
+
+    def test_cancelling_inside_a_coalesced_stream_stops_every_later_piece(provider):
+        provider.replies.append(Reply(pieces=[b"".join(ANTHROPIC_EVENTS)]))
+        asker, got, completed = brains.Asker(), [], []
+        asker.partial.connect(lambda text: (got.append(text), asker.cancel()))
+        asker.answered.connect(completed.append)
+        asker.ask(anthropic(provider), "S", [], "q", 10)
+        deadline = time.monotonic() + 10
+        while not got and time.monotonic() < deadline:
+            spin(0.01)
+>       assert got == ["Hel"] and not completed and not asker.busy()
+E       AssertionError: assert (['Hel', 'lo, ', 'Randy!'] == ['Hel']
+E         
+E         Left contains 2 more items, first extra item: 'lo, '
+E         Use -v to get more diff)
+
+tests\test_streaming.py:340: AssertionError
+1 failed in 0.97s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.94s
+
+=== drill SP-07-search-yields (no requirement) on chatmon/chatswin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_chatswin.py::test_content_search_yields_and_a_new_query_cancels_old_work
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.34s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_content_search_yields_and_a_new_query_cancels_old_work _________
+
+window = <chatmon.chatswin.ChatsWindow object at 0x000002136876AFD0>
+book = <chatmon.chats.ChatBook object at 0x0000021368546F90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002136878E9E0>
+
+    def test_content_search_yields_and_a_new_query_cancels_old_work(window, book, monkeypatch):
+        from app_harness import until
+    
+        for i in range(40):
+            book.save(chat(f"Topic {i}", "needle in the conversation"))
+        window.refresh(current="", kept=True)
+        read, real = [], book.load
+        monkeypatch.setattr(book, "load", lambda chat_id: read.append(chat_id) or real(chat_id))
+        window.search.setText("needle")
+        window._later.stop()
+        window._search_inside()
+>       assert len(read) < 40  # returns to Qt before every conversation has been read
+        ^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 43 < 40
+E        +  where 43 = len(['95472da77396437b8ff3e17d24fb37ac', 'fa9c6e95be854d6ebeac069057b45b18', '1835396f75ba436cbac74b678a10d2fb', 'e7cb6f62ae934912b91a787f0d76c766', '17291a146ddd466fbde272db562da984', '049a321acc644aa1b55e26302f9bf9dd', ...])
+
+tests\test_chatswin.py:115: AssertionError
+1 failed in 1.75s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.24s
+
+=== drill SP-10-private-error-log (no requirement) on chatmon/brains.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_log.py::test_a_logged_brain_error_never_carries_the_key
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.84s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_a_logged_brain_error_never_carries_the_key _______________
+
+state = WindowsPath('C:/Users/Randy/AppData/Local/Temp/pytest-of-Randy/pytest-10764/test_a_logged_brain_error_neve0/state/chatmon/state')
+qapp = <PyQt6.QtWidgets.QApplication object at 0x000002C26599F750>
+
+    def test_a_logged_brain_error_never_carries_the_key(state, qapp):
+        """A provider may echo the key and question in its refusal. The UI scrubs the key; the log retains only the
+        brain and status, never the provider's text. The key here has no well-known provider shape."""
+        from replay_server import Provider, ask, json_reply
+    
+        from chatmon import brains, keychain
+    
+        before = keychain.use(keychain.InMemory())
+        provider = Provider()
+        try:
+            log.setup()
+            key = "local-server-secret-42"
+            private = "the confidential contents of my attached file"
+            brain = brains.Brain("mine", "openai", label="My server", url=f"{provider.url}/v1", model="m", api_key=key)
+            provider.replies.append(json_reply(401, {"error": {"message": f"Incorrect API key provided: {key}; question: {private}."}}))
+            got = ask(brains.Asker(), brain, question=private)
+        finally:
+            provider.close()
+            keychain.use(before)
+        text = written()
+>       assert private not in text and private in got["failed"]
+E       AssertionError: assert ('the confide...ttached file' not in '2026-11-26 ... Settings.\n'
+E         
+E         'the confidential c...of my attached file' is contained here:
+E           question: the confidential contents of my attached file (HTTP 401). Check its key in Settings.)
+
+tests\test_log.py:151: AssertionError
+------------------------------ Captured log call ------------------------------
+INFO     chatmon.brains:brains.py:1562 a question failed: My server: Incorrect API key provided: …; question: the confidential contents of my attached file (HTTP 401). Check its key in Settings.
+1 failed in 1.22s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.02s
+
+=== drill NTF-read (NTF-READ) on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.54s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _
+
+companion = <chatmon.app.Companion object at 0x00000236F1864410>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000236F1F2F820>
+
+    def test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one(companion, monkeypatch):
+        c = companion
+        now = c._now()
+        monkeypatch.setattr(c, "_now", lambda: now)  # Windows/Python 3.11 can timestamp consecutive hooks identically
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "First request"})
+        first = c.messages.showing
+        assert [label for label, _ in first.buttons] == ["Mark as read"]
+        assert c.stage.press_button("Mark as read")
+>       assert c.stage.badge_description() == "" and not c._tray_badge and not c.behavior.alert
+E       AssertionError: assert ('1 agent needs you' == ''
+E         
+E         + 1 agent needs you)
+
+tests\test_app_m7.py:137: AssertionError
+1 failed in 2.65s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.17s
+
+=== drill NTF-clear (NTF-CLEAR) on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_notification_menu_can_read_and_reset_states_without_dismissing_reminders
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.98s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_notification_menu_can_read_and_reset_states_without_dismissing_reminders _
+
+companion = <chatmon.app.Companion object at 0x000001B80A594230>
+
+    def test_notification_menu_can_read_and_reset_states_without_dismissing_reminders(companion):
+        c = companion
+        c.handle({"type": "event", "event": "working", "source": "claude"})
+        c.handle({"type": "event", "event": "needs-you", "source": "codex", "message": "Approve?"})
+        c.menus.fill()
+        menu = c.menus.notifications
+        codex = next(a.menu() for a in menu.actions() if a.menu() and "Codex" in a.text())
+        next(a for a in codex.actions() if a.text() == "Mark as read").trigger()
+        assert c.stage.badge_description() == "1 agent working" and not c._tray_badge
+        c.menus.fill()
+        menu = c.menus.notifications
+        claude = next(a.menu() for a in menu.actions() if a.menu() and "Claude" in a.text())
+        next(a for a in claude.actions() if a.text() == "Clear status").trigger()
+>       assert "claude" not in c.agents and c.stage.badge_description() == ""
+E       AssertionError: assert ('claude' not in {'claude': ('working', 1317360.4029334), 'codex': ('needs-you', 1317360.4030724)})
+E        +  where {'claude': ('working', 1317360.4029334), 'codex': ('needs-you', 1317360.4030724)} = <chatmon.app.Companion object at 0x000001B80A594230>.agents
+
+tests\test_app_m7.py:160: AssertionError
+1 failed in 2.08s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.54s
+
+=== drill NTF-pointer (NTF-MENU) on chatmon/penguin.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_stage_features.py::test_the_badge_takes_pointer_input_and_opens_notifications
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.53s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_the_badge_takes_pointer_input_and_opens_notifications __________
+
+stage = (<chatmon.penguin.Stage object at 0x000001E42ABB0190>, <test_stage_timer.Clock object at 0x000001E42ABB8050>)
+
+    def test_the_badge_takes_pointer_input_and_opens_notifications(stage):
+        from PyQt6.QtCore import Qt
+    
+        s, _clock = stage
+        s.set_badge(needs_you=1)
+        s._tick()
+        pos = s._badges[0][1].center()
+        assert any(QRect(x, y, w, h).contains(pos.toPoint()) for x, y, w, h in s._inputs)
+        requested = []
+        s.notifications_requested.connect(requested.append)
+        gpos = pos + QPointF(s._geo.topLeft())
+        assert s.press(pos, gpos, Qt.MouseButton.LeftButton)
+        s.release(pos, gpos, Qt.MouseButton.LeftButton)
+>       assert requested == [gpos.toPoint()] and not s._dragging
+E       assert ([] == [PyQt6.QtCore...int(451, 685)]
+E         
+E         Right contains one more item: PyQt6.QtCore.QPoint(451, 685)
+E         Use -v to get more diff)
+
+tests\test_stage_features.py:107: AssertionError
+1 failed in 0.49s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 0.60s
+
+=== drill NTF-keyboard (NTF-MENU) on chatmon/menus.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_badge_opens_notifications_and_keyboard_can_clear_all
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.17s
+-- red: exit 1
+        from PyQt6.QtTest import QTest
+    
+        c = companion
+        c._overlay = overlay
+        c.handle({"type": "event", "event": "working", "source": "claude"})
+        c.stage.notifications_requested.emit(QPoint(20, 20))
+        menu = c.menus.notifications
+        assert menu.title().startswith("Notifications")
+        if overlay:
+            from chatmon.xkb import Key
+    
+            assert c.stage.menu.is_open()
+            for key in (Qt.Key.Key_End, Qt.Key.Key_Return):
+                c.stage.key(Key(key, "", Qt.KeyboardModifier.NoModifier), True, False)
+            assert not c.stage.menu.is_open()
+        else:
+            assert menu.isVisible()
+            clear = next(a for a in menu.actions() if a.text() == "Clear all statuses")
+            menu.setActiveAction(clear)
+            QTest.keyClick(menu, Qt.Key.Key_Return)
+            assert not menu.isVisible()
+>       assert not c.agents and c.stage.badge_description() == ""
+E       AssertionError: assert (not {'claude': ('working', 1317370.4053044)})
+E        +  where {'claude': ('working', 1317370.4053044)} = <chatmon.app.Companion object at 0x000001E66DB08230>.agents
+
+tests\test_app_m7.py:228: AssertionError
+_______ test_badge_opens_notifications_and_keyboard_can_clear_all[True] _______
+
+companion = <chatmon.app.Companion object at 0x000001E66E17EDF0>, overlay = True
+
+    @pytest.mark.parametrize("overlay", [False, True])
+    def test_badge_opens_notifications_and_keyboard_can_clear_all(companion, overlay):
+        from PyQt6.QtCore import QPoint, Qt
+        from PyQt6.QtTest import QTest
+    
+        c = companion
+        c._overlay = overlay
+        c.handle({"type": "event", "event": "working", "source": "claude"})
+        c.stage.notifications_requested.emit(QPoint(20, 20))
+        menu = c.menus.notifications
+        assert menu.title().startswith("Notifications")
+        if overlay:
+            from chatmon.xkb import Key
+    
+            assert c.stage.menu.is_open()
+            for key in (Qt.Key.Key_End, Qt.Key.Key_Return):
+                c.stage.key(Key(key, "", Qt.KeyboardModifier.NoModifier), True, False)
+            assert not c.stage.menu.is_open()
+        else:
+            assert menu.isVisible()
+            clear = next(a for a in menu.actions() if a.text() == "Clear all statuses")
+            menu.setActiveAction(clear)
+            QTest.keyClick(menu, Qt.Key.Key_Return)
+            assert not menu.isVisible()
+>       assert not c.agents and c.stage.badge_description() == ""
+E       AssertionError: assert (not {'claude': ('working', 1317370.6449492)})
+E        +  where {'claude': ('working', 1317370.6449492)} = <chatmon.app.Companion object at 0x000001E66E17EDF0>.agents
+
+tests\test_app_m7.py:228: AssertionError
+2 failed in 1.96s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.05s
+
+=== drill NTF-newer (NTF-READ) on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one tests/test_app_m7.py::test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp
+-- green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 1.00s
+-- red: exit 1
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _
+
+companion = <chatmon.app.Companion object at 0x0000029D2F24C410>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000029D2F683820>
+
+    def test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one(companion, monkeypatch):
+        c = companion
+        now = c._now()
+        monkeypatch.setattr(c, "_now", lambda: now)  # Windows/Python 3.11 can timestamp consecutive hooks identically
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "First request"})
+        first = c.messages.showing
+        assert [label for label, _ in first.buttons] == ["Mark as read"]
+        assert c.stage.press_button("Mark as read")
+        assert c.stage.badge_description() == "" and not c._tray_badge and not c.behavior.alert
+        assert c.agents["claude"][0] == "needs-you"  # reading is not an approval or a completion
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "New request"})
+        assert c.stage.badge_description() == "1 agent needs you"
+        first.buttons[0][1]()  # an old Recent messages action cannot acknowledge the newer request
+>       assert c.stage.badge_description() == "1 agent needs you"
+E       AssertionError: assert '' == '1 agent needs you'
+E         
+E         - 1 agent needs you
+
+tests\test_app_m7.py:142: AssertionError
+__ test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp ___
+
+companion = <chatmon.app.Companion object at 0x0000029D2F80F4D0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000029D2F6835C0>
+
+    def test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp(companion, monkeypatch):
+        c = companion
+        now = c._now()
+        monkeypatch.setattr(c, "_now", lambda: now)
+        c.handle({"type": "event", "event": "working", "source": "claude"})
+        c.menus.fill()
+        item = next(a.menu() for a in c.menus.notifications.actions() if a.menu() and "Claude" in a.text())
+        old_clear = next(a for a in item.actions() if a.text() == "Clear status")
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "New request"})
+        old_clear.trigger()
+>       assert c.stage.badge_description() == "1 agent needs you" and c.agents["claude"][0] == "needs-you"
+E       AssertionError: assert ('' == '1 agent needs you'
+E         
+E         - 1 agent needs you)
+
+tests\test_app_m7.py:189: AssertionError
+2 failed in 1.12s
+-- restored green: exit 0, 2 passed
+..                                                                       [100%]
+2 passed in 0.98s
+
+=== drill NTF-close (NTF-READ) on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 1.10s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _
+
+companion = <chatmon.app.Companion object at 0x0000025A1A85C410>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025A1AD0F820>
+
+    def test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one(companion, monkeypatch):
+        c = companion
+        now = c._now()
+        monkeypatch.setattr(c, "_now", lambda: now)  # Windows/Python 3.11 can timestamp consecutive hooks identically
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "First request"})
+        first = c.messages.showing
+        assert [label for label, _ in first.buttons] == ["Mark as read"]
+        assert c.stage.press_button("Mark as read")
+        assert c.stage.badge_description() == "" and not c._tray_badge and not c.behavior.alert
+        assert c.agents["claude"][0] == "needs-you"  # reading is not an approval or a completion
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "New request"})
+        assert c.stage.badge_description() == "1 agent needs you"
+        first.buttons[0][1]()  # an old Recent messages action cannot acknowledge the newer request
+        assert c.stage.badge_description() == "1 agent needs you"
+        c.stage.dismiss_message()  # the close button acknowledges the alert actually shown
+>       assert c.stage.badge_description() == "" and not c._tray_badge
+E       AssertionError: assert ('1 agent needs you' == ''
+E         
+E         + 1 agent needs you)
+
+tests\test_app_m7.py:144: AssertionError
+1 failed in 4.06s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.62s
+
+=== drill NTF-distinct (NTF-READ) on chatmon/app.py
+command: C:\Users\Randy\Coding\chatmon\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider tests/test_app_m7.py::test_closing_an_older_alert_does_not_read_its_queued_replacement
+-- green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 5.54s
+-- red: exit 1
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_closing_an_older_alert_does_not_read_its_queued_replacement _______
+
+companion = <chatmon.app.Companion object at 0x00000229ED5A80F0>
+
+    def test_closing_an_older_alert_does_not_read_its_queued_replacement(companion):
+        c = companion
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "First request"})
+        c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Second request"})
+        assert c.stage.bubble.doc.toPlainText() == "First request"  # the queue's minimum shown time
+        c.stage.dismiss_message()
+>       assert c.stage.badge_description() == "1 agent needs you"
+E       AssertionError: assert '' == '1 agent needs you'
+E         
+E         - 1 agent needs you
+
+tests\test_app_m7.py:198: AssertionError
+1 failed in 3.65s
+-- restored green: exit 0, 1 passed
+.                                                                        [100%]
+1 passed in 2.12s
+
+=== summary
+PASS SP-01-output-limit
+PASS SP-02-error-key
+PASS SP-03-cache-bound
+PASS SP-04-cache-clear
+PASS SP-05-test-lifetime
+PASS SP-06-cancel-stream
+PASS SP-07-search-yields
+PASS SP-10-private-error-log
+PASS NTF-read
+PASS NTF-clear
+PASS NTF-pointer
+PASS NTF-keyboard
+PASS NTF-newer
+PASS NTF-close
+PASS NTF-distinct

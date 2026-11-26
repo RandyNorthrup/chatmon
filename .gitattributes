@@ -6,3 +6,6 @@ packaging/macos/scripts/* text eol=lf
 packaging/linux/install-update text eol=lf
 packaging/linux/verify-update text eol=lf
 packaging/macos/install-update text eol=lf
+
+# Verification receipts bind the exact bytes written by each tool, including Windows logs.
+docs/delivery/reports/notifications/** -text

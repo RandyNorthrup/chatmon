@@ -134,6 +134,11 @@ jobs:
           if [ "$COVER" = true ]; then run=(python -m coverage run --parallel-mode -m pytest); fi
           if [ "$RUNNER_OS" = Linux ]; then run=(xvfb-run -a "${run[@]}"); fi
           "${run[@]}"
+      - name: Security and performance regression drills
+        if: matrix.python == '3.14'
+        env:
+          DRILL_LOG: ${{ runner.temp }}/security-performance-drills.log
+        run: python tests/drills/run.py tests/drills/security-performance.json --log "$DRILL_LOG"
       - name: What Windows tells Chatmon's own windows, on its real windowing
         if: runner.os == 'Windows'
         env:

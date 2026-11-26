@@ -2,15 +2,18 @@
 # CI: root's side of a Chatmon update, for real, as root in a throwaway container (never on a computer of
 # yours). PACKAGE is a freshly built chatmon .deb or .rpm, from the repository this runs from:
 #
-#   sh packaging/linux/test-install-update.sh dist/chatmon_<v>-1_all.deb     (needs python3; root)
+#   sh packaging/linux/test-install-update.sh dist/chatmon_<v>-1_all.deb [PREVIOUS_PACKAGE]  (needs python3; root)
 #
 # A fresh build has no release signature, so this run makes a release key of its own (tests/ed25519_sign.py)
 # and installs a Chatmon that trusts it, as an older version: for a .deb, the package itself repacked as 0.0.1
 # with that key; for an .rpm, the package installed, then its check given that key and the version 0.0.1 (root
 # may change root's files). Then the installed install-update must refuse a tampered list, a bad signature, a
-# checksum handed to it, and the same version again, and install the signed newer package.
+# checksum handed to it, and the same version again, and install the signed newer package. PREVIOUS_PACKAGE
+# exercises the actual previous release's helper, changing only its trust key inside the throwaway container.
 set -eu
+[ $# -ge 1 ] && [ $# -le 2 ] || { echo "usage: test-install-update.sh PACKAGE [PREVIOUS_PACKAGE]" >&2; exit 2; }
 pkg=$(cd "$(dirname "$1")" && pwd)/$(basename "$1")
+previous=${2-}
 repo=$(cd "$(dirname "$0")/../.." && pwd)
 lib=/usr/lib/chatmon/chatmon
 [ "$(id -u)" = 0 ] || { echo "test-install-update: run as root, in a throwaway container" >&2; exit 1; }
@@ -28,19 +31,26 @@ trust_test_key() {  # $1: the folder holding chatmon/ (installed, or a package b
 
 case $name in
     *.deb)
-        # The same package as an older Chatmon (0.0.1) that trusts this run's key, installed first.
-        dpkg-deb -R "$pkg" "$work/old"
-        sed -i 's/^Version: .*/Version: 0.0.1-1/' "$work/old/DEBIAN/control"
-        sed -i 's/^__version__ = .*/__version__ = "0.0.1"/' "$work/old/usr/lib/chatmon/chatmon/__init__.py"
-        trust_test_key "$work/old/usr/lib/chatmon"
-        dpkg-deb -b "$work/old" "$work/old.deb" >/dev/null
-        DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --allow-downgrades "$work/old.deb" >/dev/null
+        if [ -n "$previous" ]; then
+            DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$previous" >/dev/null
+            trust_test_key /usr/lib/chatmon
+        else
+            # The same package as an older Chatmon (0.0.1) that trusts this run's key, installed first.
+            dpkg-deb -R "$pkg" "$work/old"
+            sed -i 's/^Version: .*/Version: 0.0.1-1/' "$work/old/DEBIAN/control"
+            sed -i 's/^__version__ = .*/__version__ = "0.0.1"/' "$work/old/usr/lib/chatmon/chatmon/__init__.py"
+            trust_test_key "$work/old/usr/lib/chatmon"
+            dpkg-deb -b "$work/old" "$work/old.deb" >/dev/null
+            DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --allow-downgrades "$work/old.deb" >/dev/null
+        fi
         installed() { dpkg-query -W -f '${Version}' chatmon; }
         ;;
     *.rpm)
-        dnf install -y -q "$pkg" >/dev/null
+        dnf install -y -q "${previous:-$pkg}" >/dev/null
         trust_test_key /usr/lib/chatmon
-        sed -i 's/^__version__ = .*/__version__ = "0.0.1"/' "$lib/__init__.py"
+        if [ -z "$previous" ]; then
+            sed -i 's/^__version__ = .*/__version__ = "0.0.1"/' "$lib/__init__.py"
+        fi
         installed() { sed -n 's/^__version__ = "\(.*\)"$/\1/p' "$lib/__init__.py"; }
         ;;
     *) echo "test-install-update: not a .deb or .rpm: $name" >&2; exit 2 ;;
@@ -73,7 +83,13 @@ refused "a checksum from the caller" "$work/$name" "$(sha256sum "$pkg" | cut -d'
 /usr/lib/chatmon/install-update "$work/$name" "$work/SHA256SUMS.txt" "$work/SHA256SUMS.txt.sig" >/dev/null
 case $name in
     *.deb) [ "$(installed)" = "$version-1" ] || { echo "install-update didn't install $version: $(installed)" >&2; exit 1; } ;;
-    *) grep -q "^__version__ = \"$version\"" "$lib/__init__.py" || echo "(dnf kept the files of the same version already installed)" ;;
+    *)
+        if [ -n "$previous" ]; then
+            grep -q "^__version__ = \"$version\"" "$lib/__init__.py" || { echo "install-update didn't replace the previous release" >&2; exit 1; }
+        else
+            grep -q "^__version__ = \"$version\"" "$lib/__init__.py" || echo "(dnf kept the files of the same version already installed)"
+        fi
+        ;;
 esac
 echo "installed the signed newer package: $(installed)"
 
