@@ -81,6 +81,13 @@ does everything the others do, and talks in chat bubbles of its own.
 Claude Code, Codex, Gemini CLI, Muse Code, Grok, GitHub Copilot CLI, Cursor, Cline, Qwen Code and Devin
 connect from the menu, and anything else that can run a command can join in ([details](#ai-agents-let-them-tell-your-chatmon-what-theyre-doing)).
 
+The blue number counts working agents; the amber number counts unread requests for your attention. Click either
+number, or open **Notifications** from the tray or right-click menu. **Mark as read** (or closing the alert) clears
+its amber count. **Mark all as read** clears all unread agent notices. Reading a notice does not approve anything
+in the agent itself. If an agent stopped without sending its final update, use **Clear status** for that agent
+or **Clear all statuses**. New agent events still notify you normally. Reminders keep their own **Done** and
+**Snooze** controls.
+
 ## Bubble styles
 
 <p align="center"><img src="docs/media/bubble-styles.png" alt="The six bubble styles: electric, fire, ghost, fairy, leaf and plain" width="100%"></p>
@@ -473,6 +480,12 @@ and kept once in memory; only what changed on screen is drawn again; and the sta
 next thing it shows changes (about 100 wake-ups a minute standing idle), at your screen's own refresh rate
 while something moves. `CHATMON_STAGE=window` keeps the X11 way on a Wayland desktop, and `CHATMON_DEBUG=1`
 keeps the details in the log (the overlay's keyboard focus among them), should either ever be needed.
+
+Chat history keeps a bounded cache of recently opened conversations, cleared when chats are deleted. Searching
+inside chats runs in small batches so the window can handle input between reads. Answers and model lists have
+size limits, including streamed answers and command-line output. Failure logs keep the brain and HTTP status;
+provider error text stays in the ask box because it may quote private content. The latest
+[security and performance audit](docs/delivery/SECURITY-PERFORMANCE-2026-11-26.md) records the checks and their limits.
 
 | File                      | What                                                   |
 | ------------------------- | ------------------------------------------------------ |

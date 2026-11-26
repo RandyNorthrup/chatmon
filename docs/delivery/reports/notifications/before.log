@@ -1,0 +1,25 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _
+tests\test_app_m7.py:132: in test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one
+    assert [label for label, _ in first.buttons] == ["Mark as read"]
+E   AssertionError: assert ['OK'] == ['Mark as read']
+E     
+E     At index 0 diff: 'OK' != 'Mark as read'
+E     Use -v to get more diff
+_ test_notification_menu_can_read_and_reset_states_without_dismissing_reminders _
+tests\test_app_m7.py:149: in test_notification_menu_can_read_and_reset_states_without_dismissing_reminders
+    menu = c.menus.notifications
+           ^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'Menus' object has no attribute 'notifications'
+__________ test_badge_opens_notifications_and_keyboard_can_clear_all __________
+tests\test_app_m7.py:175: in test_badge_opens_notifications_and_keyboard_can_clear_all
+    c.stage.notifications_requested.emit(QPoint(20, 20))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'Stage' object has no attribute 'notifications_requested'
+_________ test_the_badge_takes_pointer_input_and_opens_notifications __________
+tests\test_stage_features.py:101: in test_the_badge_takes_pointer_input_and_opens_notifications
+    assert any(QRect(x, y, w, h).contains(pos.toPoint()) for x, y, w, h in s._inputs)
+E   assert False
+E    +  where False = any(<generator object test_the_badge_takes_pointer_input_and_opens_notifications.<locals>.<genexpr> at 0x000002C37E2AB9A0>)
+4 failed, 44 deselected in 0.81s

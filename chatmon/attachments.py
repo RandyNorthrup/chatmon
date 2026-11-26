@@ -362,11 +362,6 @@ def in_question(question: str, attached: list[Attachment], marker: str | None = 
     return "\n".join(parts)
 
 
-def mentioned(attached: list[Attachment]) -> str:
-    """How the chat shows (and later reminds a brain of) what was attached: names, not contents."""
-    return ", ".join(a.name for a in attached)
-
-
 def media_tokens(attached) -> int:
     """About how many tokens the pictures and PDFs with a question take (their text is counted as text): a
     picture at most 1568 pixels a side is at most about 3,300 (Anthropic's (width × height) / 750); a PDF, a

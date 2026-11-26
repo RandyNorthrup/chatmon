@@ -63,6 +63,7 @@ class Menus:
     def __init__(self, c) -> None:
         self.c = c
         self.menu = QMenu()
+        self.notifications: QMenu | None = None
         self.menu.aboutToShow.connect(self.opening)  # the tray's menu (and a D-Bus tray's, when it opens it)
         self.menu.aboutToHide.connect(c._menu_closed)  # the QMenu popup; the stage's menu says so itself
         self._stale = False  # something it shows changed while it was open
@@ -85,7 +86,7 @@ class Menus:
         (its items would vanish under the pointer)."""
         if self._done:
             return
-        if self.menu.isVisible() or self.c.stage.menu.is_open():
+        if self.menu.isVisible() or (self.notifications is not None and self.notifications.isVisible()) or self.c.stage.menu.is_open():
             self._stale = True
         else:
             self._refill.start(0)
@@ -137,6 +138,10 @@ class Menus:
         recent = c.recent_messages()
         if recent:
             recent_menu(c, _submenu(m, _("Recent messages")), recent)
+        count = sum(state == "working" for state, _ in c.agents.values()) + len(c._waiting_agents())
+        self.notifications = _submenu(m, _("Notifications ({count})").format(count=count) if count else _("Notifications"))
+        self.notifications.aboutToHide.connect(lambda: c._menu_closed() if not m.isVisible() else None)
+        notifications_menu(c, self.notifications)
         m.addSeparator()
         brain_menu(c, _submenu(m, _("Brain")))
         agents_menu(c, _submenu(m, _("AI agents")))
@@ -247,6 +252,34 @@ def recent_menu(c, sub: QMenu, recent: list) -> None:
         shown = title[:48] + "…" if len(title) > 48 else title
         # Translators: a bubble shown lately, and when: "Reminder: stretch   ·   5 min ago".
         sub.addAction(_("{title}   ·   {when}").format(title=shown, when=chats.when(shown_at)), partial(c._show_again, message))
+
+
+def notifications_menu(c, sub: QMenu) -> None:
+    """Live agent activity and explicit controls for read notices and missing terminal hooks."""
+    from .app import pretty
+
+    if not c.agents:
+        _item(sub, _("No active agent notifications")).setEnabled(False)
+    for source, (state, since) in sorted(c.agents.items()):
+        if state == "working":
+            title = _("{agent}: working").format(agent=pretty(source))
+        elif source in c._read_agents:
+            title = _("{agent}: read (still waiting)").format(agent=pretty(source))
+        else:
+            title = _("{agent}: needs you").format(agent=pretty(source))
+        item = _submenu(sub, title)
+        if state == "needs-you":
+            read = _item(item, _("Mark as read"))
+            read.setEnabled(source not in c._read_agents)
+            read.triggered.connect(partial(c._mark_agents_read, source, since))
+        item.addAction(_("Clear status"), partial(c._clear_agent_states, source, since))
+    sub.addSeparator()
+    read_all = _item(sub, _("Mark all as read"))
+    read_all.setEnabled(bool(c._waiting_agents()))
+    read_all.triggered.connect(lambda: c._mark_agents_read())
+    clear_all = _item(sub, _("Clear all statuses"))
+    clear_all.setEnabled(bool(c.agents))
+    clear_all.triggered.connect(lambda: c._clear_agent_states())
 
 
 def clipboard_menu(c, sub: QMenu) -> None:

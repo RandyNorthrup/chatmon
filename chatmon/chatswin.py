@@ -3,12 +3,16 @@
 Like Settings, the window only shows and asks: it lists the chats (`ChatBook.listing`: titles, times and pins, never
 the messages) and says what you chose (carry on, rename, instructions, pin, save, delete) through its signals; the
 companion does it. Typing in the search field narrows the list by title at once, and a moment after you stop, by the
-words in the chats themselves too (each chat read once while it doesn't change: `ChatBook.load`).
+words in the chats themselves too. Reads happen in small batches so Qt can handle input between them; ChatBook
+keeps only a bounded set of recently read conversations.
 """
 
 from __future__ import annotations
 
+from collections import deque
+
 from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QHideEvent
 from PyQt6.QtWidgets import QDialog, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPushButton, QVBoxLayout, QWidget
 
 from . import chats
@@ -17,13 +21,20 @@ from .qtsignal import pyqtSignal
 
 TITLE = N_("Chats")  # the window's title, shown as _(TITLE)
 SEARCH_AFTER_MS = 300  # after the last key, the words inside chats are searched too
+SEARCH_BATCH = 8  # conversations read before handing control back to Qt
 MOST = 2000  # chats listed at most
 
 
 def matches(chat: chats.Chat, words: list[str]) -> bool:
     """Every word is in the chat: its title, a question or an answer (any case)."""
-    text = " ".join([chat.title, *(m.text for m in chat.messages)]).casefold()
-    return all(word in text for word in words)
+    title = chat.title.casefold()
+    missing = {word for word in words if word not in title}
+    for message in chat.messages:
+        if not missing:
+            break
+        text = message.text.casefold()
+        missing = {word for word in missing if word not in text}
+    return not missing
 
 
 class ChatsWindow(QDialog):
@@ -42,6 +53,8 @@ class ChatsWindow(QDialog):
         self.current = ""  # the chat you're in: marked in the list
         self._listed: list[chats.Listed] = []
         self._inside: set[str] | None = None  # chats whose words match the search (None: not looked yet)
+        self._pending: deque[chats.Listed] = deque()
+        self._found: set[str] = set()
         self.search = QLineEdit()
         self.search.setPlaceholderText(_("Search your chats"))
         self.search.setAccessibleName(_("Search your chats"))
@@ -59,6 +72,8 @@ class ChatsWindow(QDialog):
         self._later.setSingleShot(True)
         self._later.setInterval(SEARCH_AFTER_MS)
         self._later.timeout.connect(self._search_inside)
+        self._scan = QTimer(self)
+        self._scan.timeout.connect(self._search_batch)
         buttons = QHBoxLayout()
         self.buttons: dict[str, QPushButton] = {}
         for name, label, act in (
@@ -82,6 +97,7 @@ class ChatsWindow(QDialog):
 
     def refresh(self, current: str, kept: bool) -> None:
         """List the chats as they are now (`current`: the chat you're in; `kept`: whether chats are being kept)."""
+        self._stop_search()
         self.current = current
         self._listed = self.book.listing(MOST) if kept else []
         self._inside = None
@@ -101,6 +117,7 @@ class ChatsWindow(QDialog):
         return self.search.text().casefold().split()
 
     def _typed(self) -> None:
+        self._stop_search()
         self._inside = None
         self._show()
         if self._words():
@@ -108,16 +125,34 @@ class ChatsWindow(QDialog):
 
     def _search_inside(self) -> None:
         """The words inside the chats not already found by title."""
-        words = self._words()
-        if not words:
+        if not self._words():
             return
-        inside = set()
-        for listed in self._listed:
+        self._pending = deque(self._listed)
+        self._found.clear()
+        self._scan.start(0)
+        self._search_batch()
+
+    def _search_batch(self) -> None:
+        words = self._words()
+        for _item in range(min(SEARCH_BATCH, len(self._pending))):
+            listed = self._pending.popleft()
             chat = self.book.load(listed.id)
             if chat is not None and matches(chat, words):
-                inside.add(listed.id)
-        self._inside = inside
-        self._show()
+                self._found.add(listed.id)
+        if not self._pending:
+            self._scan.stop()
+            self._inside, self._found = self._found, set()
+            self._show()
+
+    def _stop_search(self) -> None:
+        self._later.stop()
+        self._scan.stop()
+        self._pending.clear()
+        self._found.clear()
+
+    def hideEvent(self, event: QHideEvent | None) -> None:
+        self._stop_search()
+        super().hideEvent(event)
 
     def _show(self) -> None:
         current = self.list.currentItem()

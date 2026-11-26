@@ -125,6 +125,93 @@ def test_the_agents_command_says_how_each_stands(companion):
     assert "Claude needs you (waiting under a minute)" in c.ask_box.answer.toPlainText()
 
 
+def test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one(companion):
+    c = companion
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "First request"})
+    first = c.messages.showing
+    assert [label for label, _ in first.buttons] == ["Mark as read"]
+    assert c.stage.press_button("Mark as read")
+    assert c.stage.badge_description() == "" and not c._tray_badge and not c.behavior.alert
+    assert c.agents["claude"][0] == "needs-you"  # reading is not an approval or a completion
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "New request"})
+    assert c.stage.badge_description() == "1 agent needs you"
+    first.buttons[0][1]()  # an old Recent messages action cannot acknowledge the newer request
+    assert c.stage.badge_description() == "1 agent needs you"
+    c.stage.dismiss_message()  # the close button acknowledges the alert actually shown
+    assert c.stage.badge_description() == "" and not c._tray_badge
+
+
+def test_notification_menu_can_read_and_reset_states_without_dismissing_reminders(companion):
+    c = companion
+    c.handle({"type": "event", "event": "working", "source": "claude"})
+    c.handle({"type": "event", "event": "needs-you", "source": "codex", "message": "Approve?"})
+    c.menus.fill()
+    menu = c.menus.notifications
+    codex = next(a.menu() for a in menu.actions() if a.menu() and "Codex" in a.text())
+    next(a for a in codex.actions() if a.text() == "Mark as read").trigger()
+    assert c.stage.badge_description() == "1 agent working" and not c._tray_badge
+    c.menus.fill()
+    menu = c.menus.notifications
+    claude = next(a.menu() for a in menu.actions() if a.menu() and "Claude" in a.text())
+    next(a for a in claude.actions() if a.text() == "Clear status").trigger()
+    assert "claude" not in c.agents and c.stage.badge_description() == ""
+    for source in ("codex", "muse"):
+        c.handle({"type": "event", "event": "needs-you", "source": source, "message": "New request"})
+    c.menus.fill()
+    next(a for a in c.menus.notifications.actions() if a.text() == "Mark all as read").trigger()
+    assert c.stage.badge_description() == "" and not c._waiting_agents()
+    assert all(state == "needs-you" for state, _since in c.agents.values())
+    r = c.reminders.add(time.time() - 5, "keep this reminder")
+    c._check_reminders()
+    assert until(lambda: c._alert_key == f"reminder:{r.id}")
+    c.menus.fill()
+    next(a for a in c.menus.notifications.actions() if a.text() == "Clear all statuses").trigger()
+    assert not c.agents and c.stage.badge_description() == "" and not c._tray_badge
+    assert c._alert_key == f"reminder:{r.id}" and r in c.reminders.items
+    c.handle({"type": "event", "event": "working", "source": "claude"})
+    assert c.stage.badge_description() == "1 agent working"  # clearing never disables hooks
+
+
+def test_closing_an_older_alert_does_not_read_its_queued_replacement(companion):
+    c = companion
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "First request"})
+    c.handle({"type": "event", "event": "working", "source": "codex"})
+    c.handle({"type": "event", "event": "needs-you", "source": "claude", "message": "Second request"})
+    assert c.stage.bubble.doc.toPlainText() == "First request"  # the queue's minimum shown time
+    c.stage.dismiss_message()
+    assert c.stage.badge_description() == "1 agent needs you, 1 agent working"
+    assert until(lambda: c.stage.bubble.doc.toPlainText() == "Second request")
+    assert c.stage.press_button("Mark as read")
+    assert c.stage.badge_description() == "1 agent working"
+
+
+@pytest.mark.parametrize("overlay", [False, True])
+def test_badge_opens_notifications_and_keyboard_can_clear_all(companion, overlay):
+    from PyQt6.QtCore import QPoint, Qt
+    from PyQt6.QtTest import QTest
+
+    c = companion
+    c._overlay = overlay
+    c.handle({"type": "event", "event": "working", "source": "claude"})
+    c.stage.notifications_requested.emit(QPoint(20, 20))
+    menu = c.menus.notifications
+    assert menu.title().startswith("Notifications")
+    if overlay:
+        from chatmon.xkb import Key
+
+        assert c.stage.menu.is_open()
+        for key in (Qt.Key.Key_End, Qt.Key.Key_Return):
+            c.stage.key(Key(key, "", Qt.KeyboardModifier.NoModifier), True, False)
+        assert not c.stage.menu.is_open()
+    else:
+        assert menu.isVisible()
+        clear = next(a for a in menu.actions() if a.text() == "Clear all statuses")
+        menu.setActiveAction(clear)
+        QTest.keyClick(menu, Qt.Key.Key_Return)
+        assert not menu.isVisible()
+    assert not c.agents and c.stage.badge_description() == ""
+
+
 def test_chatmon_status_hears_the_live_states_from_the_running_chatmon(companion):
     """events.request, through the real socket or pipe, from another thread (as `chatmon status` would, from another
     process): the companion answers its status before its ok."""
@@ -627,8 +714,14 @@ def test_settings_test_asks_the_brain_and_shows_the_time_or_the_error(companion,
     w = c._settings_window
     c._test_brain("echo", "")
     assert until(lambda: w.test_result.text().startswith("✓ Echo answered in"), 30)
+    from PyQt6.QtCore import QCoreApplication, QEvent
+
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    assert not c.findChildren(brains.BrainTest)
     c._test_brain("broken", "")
     assert until(lambda: w.test_result.text().startswith("✕ "), 30) and "Broken" in w.test_result.text()
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    assert not c.findChildren(brains.BrainTest)
     w.close()
 
 

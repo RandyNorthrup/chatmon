@@ -185,6 +185,8 @@ class Companion(QObject):
         self._renaming: str | None = None  # the chat whose new name the box is asking for
         self._stopwatch: float | None = None  # when the stopwatch started (monotonic), while it runs
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
+        self._read_agents: set[str] = set()  # read notices; the agent may still be waiting in its own app
+        self._agent_notices: dict[str, messages.Message] = {}  # the latest unread alert, never an older replay
         self._recent: deque[tuple[float, messages.Message]] = deque(maxlen=RECENT_MESSAGES)  # (when, what) shown lately
         self._missed: list[messages.Message] = []  # what went by unseen (timed out while you were away, or dropped)
         self._on_screen: tuple[float, messages.Message] | None = None  # the bubble showing: since when (monotonic), what
@@ -248,6 +250,7 @@ class Companion(QObject):
         self.stage.bubble.on_more = self._show_more  # a bubble cut short: More shows the whole text in the box
         self.stage.clicked.connect(self.on_click)
         self.stage.menu_requested.connect(self.show_menu)
+        self.stage.notifications_requested.connect(self.show_notifications)
         self.stage.head_moved.connect(self._follow)
         self.stage.message_closed.connect(self._message_closed)
         self.stage.away_changed.connect(self._overlay_away)
@@ -439,7 +442,7 @@ class Companion(QObject):
             timeout_s = max(timeout_s, notice)
         self._post(messages.Message(title, text, buttons, timeout_s, key=key, background=background, cue=cue))
 
-    def alert(self, key: str, title: str, text: str, buttons=None, *, reminder: bool = False) -> None:
+    def alert(self, key: str, title: str, text: str, buttons=None, *, reminder: bool = False) -> messages.Message:
         """Something needs you: the penguin waves its flippers until you answer. `reminder`: one of yours, which
         waits for an agent's alert but goes before anything else. Either comes on its own."""
         priority = messages.REMINDER if reminder else messages.ALERT
@@ -454,6 +457,7 @@ class Companion(QObject):
             # to the desktop), and an agent's message or a reminder's words are yours to see in Chatmon.
             # A reminder's notification offers what its bubble does (Done, a snooze), so it can be seen to from there.
             self._system_notice(title, _("Chatmon has something for you."), list(buttons[:2]) if reminder and buttons else [], "reminder" if reminder else None)
+        return message
 
     def _system_notice(self, title: str, text: str, buttons=(), scenario: str | None = None, seconds: int = 10, aloud: bool = False) -> None:
         """A notification of the system's own, which keeps a history: Windows' toast (wintoast.py), else the tray's
@@ -777,6 +781,13 @@ class Companion(QObject):
         wincaret.place(self.stage.native_window(), round(rect.x() * scale), round(rect.y() * scale), round(rect.width() * scale), round(rect.height() * scale))
 
     def _message_closed(self) -> None:
+        if self._on_screen is not None:
+            message = self._on_screen[1]
+            for source, notice in list(self._agent_notices.items()):
+                if notice is message:
+                    self._pressed_showing = True  # a read alert has no unanswered button to keep in the ask box
+                    self._mark_agents_read(source, self.agents[source][1])
+                    break
         if sys.platform == "win32" and self.config["accessibility"].get("magnifier_follows", True):
             from . import wincaret
 
@@ -2361,15 +2372,23 @@ class Companion(QObject):
         key = f"agent:{source}"
         self.behavior.wake(now)
         if event == "working":
+            self._read_agents.discard(source)
+            self._agent_notices.pop(source, None)
             self.agents[source] = ("working", now)
             self.messages.withdraw(key)  # a needs-you still waiting no longer stands
             if self._alert_key == key:
                 self.stage.dismiss_message()
         elif event == "needs-you":
             self.agents[source] = ("needs-you", now)
-            self.alert(key, _("{agent} needs you").format(agent=label), text or _("{agent} is waiting for you.").format(agent=label))
+            self._read_agents.discard(source)
+            self._agent_notices[source] = self.alert(
+                key, _("{agent} needs you").format(agent=label), text or _("{agent} is waiting for you.").format(agent=label),
+                [(_("Mark as read"), partial(self._mark_agents_read, source, now))],
+            )
         else:
             self.agents.pop(source, None)
+            self._read_agents.discard(source)
+            self._agent_notices.pop(source, None)
             self.messages.withdraw(key)
             if self._alert_key == key:
                 self.stage.dismiss_message()
@@ -2387,6 +2406,40 @@ class Companion(QObject):
                 self.say(_("{agent} hit a problem").format(agent=label), snippet or _("Take a look when you can."), timeout_s=20, key=key, background=True,
                          cue="error")
         self._update_working()
+        self.menus.changed()
+
+    def _mark_agents_read(self, source: str | None = None, since: float | None = None) -> None:
+        """Acknowledge selected notices without claiming their agents finished. An old button cannot read a newer alert."""
+        chosen = {s for s, (state, at) in self.agents.items()
+                  if state == "needs-you" and (source is None or s == source) and (since is None or at == since)}
+        if not chosen:
+            return
+        self._read_agents.update(chosen)
+        for s in chosen:
+            self._agent_notices.pop(s, None)
+        self._withdraw_agent_notices(chosen)
+        self._show_agent_states()
+        self.menus.changed()
+
+    def _clear_agent_states(self, source: str | None = None, since: float | None = None) -> None:
+        """Reset local status when a terminal hook was missed; later agent events are still accepted."""
+        chosen = {s for s, (_state, at) in self.agents.items() if (source is None or s == source) and (since is None or at == since)}
+        for s in chosen:
+            self.agents.pop(s, None)
+            self._read_agents.discard(s)
+            self._agent_notices.pop(s, None)
+        self._withdraw_agent_notices(chosen)
+        self._update_working()
+        self.menus.changed()
+
+    def _withdraw_agent_notices(self, sources: set[str]) -> None:
+        keys = {f"agent:{s}" for s in sources}
+        self.messages.take(lambda m: m.key in keys)
+        if self._alert_key in keys and self.stage.message_visible():
+            self.stage.dismiss_message()
+            self._answerable = None
+        if self._last_event is not None and self._last_event[0] in sources:
+            self._last_event = None  # a subsequent request is new even inside the hook deduplication window
 
     def _update_working(self) -> None:
         working = any(state == "working" for state, _ in self.agents.values())
@@ -2398,7 +2451,7 @@ class Companion(QObject):
         return offline.agents_report(self.agents, self._now(), pretty, markdown=markdown)
 
     def _waiting_agents(self) -> list[str]:
-        return [pretty(source) for source, (state, _) in self.agents.items() if state == "needs-you"]
+        return [pretty(source) for source, (state, _) in self.agents.items() if state == "needs-you" and source not in self._read_agents]
 
     def _show_agent_states(self) -> None:
         """The agents' states where they can be seen at a glance: the tray's tooltip, the stage window's name (what a
@@ -2422,15 +2475,25 @@ class Companion(QObject):
 
     def show_menu(self, pos: QPoint) -> None:
         """The penguin's own menu (right-click): it stands still and looks at you while it's open."""
+        if self.stage.draws_menus() or self._overlay:
+            self.menus.opening()  # the stage draws it: no aboutToShow
+        self._popup_menu(self.menu, pos)
+
+    def show_notifications(self, pos: QPoint) -> None:
+        """The badge's shortcut to the same notification controls available in the tray/context menu."""
+        self.menus.opening()
+        if self.menus.notifications is not None:
+            self._popup_menu(self.menus.notifications, pos)
+
+    def _popup_menu(self, menu: QMenu, pos: QPoint) -> None:
         self._menu_open = True
         self.behavior.set_attending(True, self._now())
         # On the overlay the penguin's menu is always the stage's own: with the ask box a window for a screen reader,
         # the overlay draws no menus for it, but a Qt menu opened from the overlay has no window of Qt's to belong to.
         if self.stage.draws_menus() or self._overlay:
-            self.menus.opening()  # the stage draws it: no aboutToShow
-            self.stage.open_menu(self.menu, pos)
+            self.stage.open_menu(menu, pos)
         else:
-            self.menu.popup(pos)
+            menu.popup(pos)
 
     def _menu_closed(self) -> None:
         if self._menu_open and not self.stage.menu.is_open():
@@ -2935,6 +2998,7 @@ class Companion(QObject):
     def _settings_closed(self, _result: int) -> None:
         if self._brain_test is not None:
             self._brain_test.cancel()  # nothing more for a window that's gone
+            self._brain_test.deleteLater()
             self._brain_test = None
 
     def _test_brain(self, name: str, typed_key: str) -> None:
@@ -2951,10 +3015,13 @@ class Companion(QObject):
             brain = dataclasses.replace(brain, api_key=typed_key)
         if self._brain_test is not None:
             self._brain_test.cancel()
+            self._brain_test.deleteLater()
         self._brain_test = brain.test(self, timeout_s=float(self.config["ai"]["timeout_seconds"]))
         self._brain_test.finished.connect(lambda ok, text, seconds: self._tested(brain.label, ok, text, seconds))
 
     def _tested(self, label: str, ok: bool, text: str, seconds: float) -> None:
+        if self._brain_test is not None:
+            self._brain_test.deleteLater()
         self._brain_test = None
         window = self._settings_window
         if window is not None and not sip.isdeleted(window):
@@ -3187,6 +3254,7 @@ class Companion(QObject):
         self.compactor.cancel()
         if self._brain_test is not None:
             self._brain_test.cancel()
+            self._brain_test.deleteLater()
             self._brain_test = None
         self.ask_box.hide()  # (its redraws stop as it hides)
         for widget in (self.ask_box, self.ask_box.entry, self.ask_box.answer):

@@ -1,0 +1,5 @@
+Readiness review, 2026-11-26
+User clarified: number beside companion. Agent badge semantics traced through _agent_event, _message_closed, _waiting_agents, _check_time, Menus and Stage pointer/input handling. Working expires after 30 minutes; needs-you has no expiry. Closing or default OK currently leaves the waiting badge.
+NTF-READ distinguishes acknowledging a notice from claiming an agent completed. Fresh events must reset acknowledgment; old callbacks must carry their original timestamp. NTF-CLEAR is an explicit local status reset, not an agent approval. NTF-MENU reuses accessible menus and adds badge hit/input coverage. Reminders stay separate by key. One task owns the overlapping files; existing audit edits belong to this session. Requirements are scoped, compatible, and covered by behavioral and red checks.
+
+Scope amendment 2: source inputs use canonical LF bytes for portable receipts. .gitattributes preserves tool artifacts byte-for-byte. This changes no Python behavior or application contract. Requirements and ownership were rechecked after this metadata addition.

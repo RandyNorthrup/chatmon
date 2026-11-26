@@ -1,0 +1,3 @@
+Visual review: menu.png and agent-menu.png
+Rendered real QMenus from an isolated Companion with synthetic Claude/Codex/Muse events. Windows offscreen Qt exposes no system font families, so the existing Nunito font in art/fonts was registered for this preview only. No product font was changed.
+Observed: working, unread and read/still-waiting states are readable; Mark all as read and Clear all statuses fit without clipping; per-agent Mark as read and Clear status are readable. Native and overlay keyboard activation passed automated tests. Badge pointer hit/input coverage passed. Menu colors use the existing Qt palette; existing stage contrast tests remain passing.

@@ -129,8 +129,8 @@ def test_anything_shaped_like_a_key_is_blanked_as_it_is_written(state, capsys):
 
 
 def test_a_logged_brain_error_never_carries_the_key(state, qapp):
-    """The provider repeats the key in its refusal: the bubble, and the log, say what it refused without it. The key
-    here has no well-known shape, so it's the brain's own scrubbing that keeps it out, not the log's blanking."""
+    """A provider may echo the key and question in its refusal. The UI scrubs the key; the log retains only the
+    brain and status, never the provider's text. The key here has no well-known provider shape."""
     from replay_server import Provider, ask, json_reply
 
     from chatmon import brains, keychain
@@ -140,12 +140,14 @@ def test_a_logged_brain_error_never_carries_the_key(state, qapp):
     try:
         log.setup()
         key = "local-server-secret-42"
+        private = "the confidential contents of my attached file"
         brain = brains.Brain("mine", "openai", label="My server", url=f"{provider.url}/v1", model="m", api_key=key)
-        provider.replies.append(json_reply(401, {"error": {"message": f"Incorrect API key provided: {key}."}}))
-        got = ask(brains.Asker(), brain)
+        provider.replies.append(json_reply(401, {"error": {"message": f"Incorrect API key provided: {key}; question: {private}."}}))
+        got = ask(brains.Asker(), brain, question=private)
     finally:
         provider.close()
         keychain.use(before)
     text = written()
-    assert "INFO chatmon.brains: a question failed: My server: Incorrect API key provided: … (HTTP 401)." in text, text
+    assert private not in text and private in got["failed"]
+    assert "INFO chatmon.brains: a question failed (brain=mine, HTTP=401)" in text, text
     assert key not in text and key not in got["failed"]

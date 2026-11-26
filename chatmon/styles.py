@@ -90,9 +90,6 @@ class Style:
         c = self.colours()
         return c.title, c.body
 
-    def entry_colour(self) -> QColor:
-        return self.colours().entry
-
     def colours(self, palette: QPalette | None = None) -> Colours:
         """This style's colours. The plain style reads them from `palette` (the app's, by default)."""
         if self.title:

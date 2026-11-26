@@ -41,6 +41,7 @@ from . import attachments, paths
 from .attachments import IMAGE, PDF, Attachment
 from .events import INTERNAL_ENV
 from .i18n import N_, _
+from .log import blank_keys
 from .qtsignal import pyqtSignal
 
 logger = logging.getLogger(__name__)
@@ -1137,7 +1138,7 @@ def _said(raw: bytes) -> str:
 
 def _scrub(text: str, brain: Brain) -> str:
     key = brain.key()
-    return text.replace(key, "…") if len(key) >= 8 else text
+    return blank_keys(text.replace(key, "…") if len(key) >= 8 else text)
 
 
 def network_error(brain: Brain, url: str, error: QNetworkReply.NetworkError, detail: str) -> str:
@@ -1158,6 +1159,7 @@ def network_error(brain: Brain, url: str, error: QNetworkReply.NetworkError, det
 # -- answers as they're written: Server-Sent Events from the APIs, stream-json lines from Claude Code
 
 MAX_REPLY = 32 * 2**20  # bytes of one answer, at most: past this it isn't an answer
+REPLY_BUFFER = 64 * 1024  # Qt's unread network bytes, before readyRead can enforce the total limit
 
 
 def _table(value: object) -> dict:
@@ -1177,16 +1179,18 @@ class Stream:
         self.final: str | None = None  # the whole answer, where the stream says it at the end (Claude Code)
         self.events = 0  # how many events or lines were understood: none means it wasn't this kind of stream at all
         self.plain: list[str] = []  # lines that weren't JSON (a Claude Code started without stream-json)
-        self._buffer = b""
+        self._buffer = bytearray()
+        self._scan_from = 0  # bytes already searched for a newline in the unfinished line
         self._data: list[str] = []
         self._refusal: list[str] = []
 
     def feed(self, chunk: bytes) -> list[str]:
-        self._buffer += chunk
-        *lines, self._buffer = self._buffer.split(b"\n")
+        self._buffer.extend(chunk)
         new: list[str] = []
-        for raw in lines:
-            line = raw.decode("utf-8", "replace").rstrip("\r")
+        start = 0
+        end = self._buffer.find(b"\n", self._scan_from)
+        while end >= 0:
+            line = self._buffer[start:end].decode("utf-8", "replace").rstrip("\r")
             if self.kind == "stream-json":
                 self._json_line(line, new)
             elif line == "":
@@ -1194,6 +1198,10 @@ class Stream:
             elif line.startswith("data:"):
                 self._data.append(line[5:].removeprefix(" "))
             # "event:" names, "id:", "retry:" and ":" comments: the data says all that's needed
+            start = end + 1
+            end = self._buffer.find(b"\n", start)
+        del self._buffer[:start]
+        self._scan_from = len(self._buffer)
         return new
 
     def end(self) -> list[str]:
@@ -1532,6 +1540,9 @@ class Asker(QObject):
         self._reply: QNetworkReply | None = None
         self._stream: Stream | None = None
         self._raw = bytearray()  # a reply that isn't an event stream (an error, or a server that doesn't stream)
+        self._stderr = bytearray()
+        self._received = 0  # all bytes received, including streamed events and command diagnostics
+        self._generation = 0  # cancel/replacement also stops pieces already parsed from the current chunk
         self._url = ""
         self._output_file: Path | None = None
         self._prompt_file: Path | None = None
@@ -1545,9 +1556,10 @@ class Asker(QObject):
         self.failed.connect(self._log_failure)
 
     def _log_failure(self, message: str) -> None:
-        """Keep what went wrong in the log, as it was said on screen: the brain's key never, should a provider have
-        repeated it. The question and the answer so far are never in it."""
-        logger.info("a question failed: %s", _scrub(message, self._brain) if self._brain is not None else message)
+        """Keep only the brain and status: an untrusted error may repeat a question, attachment or key.
+        The full error is shown in the ask box, never written to the log."""
+        status = re.search(r"\(HTTP ([1-5][0-9]{2})\)", message)
+        logger.info("a question failed (brain=%s, HTTP=%s)", self._brain.name if self._brain is not None else "none", status[1] if status else "none")
 
     def busy(self) -> bool:
         return self._proc is not None or self._reply is not None
@@ -1586,10 +1598,11 @@ class Asker(QObject):
     def cancel(self) -> None:
         """Stop the question on its way, at once: nothing is emitted for it after this, and nothing here waits for
         a brain to end (a command-line one is stopped in the background, and its folder removed once it has)."""
+        self._generation += 1
         self._timer.stop()
         if self._proc is not None:
             proc, self._proc = self._proc, None
-            for signal in (proc.finished, proc.errorOccurred, proc.readyReadStandardOutput):
+            for signal in (proc.finished, proc.errorOccurred, proc.readyReadStandardOutput, proc.readyReadStandardError):
                 try:
                     signal.disconnect()
                 except TypeError:
@@ -1617,7 +1630,31 @@ class Asker(QObject):
             reply.abort()
             reply.deleteLater()
         self._stream = None
+        self._then = None  # the model lookup's closure holds the question, history and attachments
+        self._raw.clear()
+        self._stderr.clear()
+        self._received = 0
         self._drop_output_file()
+
+    def _accept_bytes(self, chunk: bytes) -> bool:
+        self._received += len(chunk)
+        if self._received > MAX_REPLY:
+            self._too_long()
+            return False
+        return True
+
+    def _emit_pieces(self, pieces: list[str], generation: int) -> bool:
+        for piece in pieces:
+            if generation != self._generation:
+                return False
+            self.partial.emit(piece)
+        return generation == self._generation
+
+    def _too_long(self) -> None:
+        brain = self._brain
+        self.cancel()
+        if brain is not None:
+            self.failed.emit(_("{brain}: the answer was too long to read.").format(brain=brain.label))
 
     # -- command-line brains
 
@@ -1661,7 +1698,8 @@ class Asker(QObject):
         proc.errorOccurred.connect(self._process_error)
         if brain.output == "stream-json":
             self._stream = Stream("stream-json")
-            proc.readyReadStandardOutput.connect(self._process_output)
+        proc.readyReadStandardOutput.connect(self._process_output)
+        proc.readyReadStandardError.connect(self._process_stderr)
         self._proc = proc
         proc.start(program, args)
         if use_stdin:
@@ -1669,30 +1707,56 @@ class Asker(QObject):
         proc.closeWriteChannel()
 
     def _process_output(self) -> None:
-        if self._proc is None or self._stream is None:
+        if self._proc is None:
+            return
+        chunk = self._proc.readAllStandardOutput().data()
+        if not self._accept_bytes(chunk):
             return
         self._timer.start()
-        for piece in self._stream.feed(self._proc.readAllStandardOutput().data()):
-            self.partial.emit(piece)
+        if self._stream is None:
+            self._raw.extend(chunk)
+        else:
+            self._emit_pieces(self._stream.feed(chunk), self._generation)
+
+    def _process_stderr(self) -> None:
+        if self._proc is not None:
+            chunk = self._proc.readAllStandardError().data()
+            if self._accept_bytes(chunk):
+                self._stderr.extend(chunk)
 
     def _process_finished(self, code: int, _status) -> None:
+        current = self._proc
+        if current is None:
+            return
+        self._process_output()
+        if self._proc is not current:
+            return  # the size limit ended this question (and its failure may have started the next)
+        self._process_stderr()
+        if self._proc is not current:
+            return
         proc, self._proc = self._proc, None
         self._timer.stop()
         brain = self._brain
-        if proc is None or brain is None:  # a brain: always, as ask() names it before starting it
+        if brain is None:  # always named by ask() before starting the process
             return
         stream, self._stream = self._stream, None
-        out = proc.readAllStandardOutput().data()
-        err = clean_output(proc.readAllStandardError().data().decode("utf-8", errors="replace"))
+        out, self._raw = bytes(self._raw), bytearray()
+        err = clean_output(self._stderr.decode("utf-8", errors="replace"))
+        self._stderr.clear()
         proc.deleteLater()
         if stream is not None:
-            for piece in stream.feed(out) + stream.end():
-                self.partial.emit(piece)
+            if not self._emit_pieces(stream.end(), self._generation):
+                return
             out = b"" if stream.events else "\n".join(stream.plain).encode("utf-8")  # not stream-json after all: plain text
         text = out.decode("utf-8", errors="replace")
         if self._output_file is not None:
             try:
-                text = self._output_file.read_text(encoding="utf-8") or text
+                with self._output_file.open("rb") as answer_file:
+                    raw = answer_file.read(MAX_REPLY + 1)
+                if len(raw) > MAX_REPLY:
+                    self._too_long()
+                    return
+                text = raw.decode("utf-8", errors="replace") or text
             except OSError as exc:
                 logger.debug("couldn't read %s's answer file: %s", brain.name, exc)
         self._drop_output_file()
@@ -1700,7 +1764,7 @@ class Asker(QObject):
             try:
                 answer = stream.answer()
             except BrainError as exc:
-                self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=brain.label, reason=exc))
+                self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=brain.label, reason=_scrub(str(exc), brain)[:400]))
                 return
             if code == 0 or stream.final is not None:
                 self.answered.emit(answer)
@@ -1711,7 +1775,7 @@ class Asker(QObject):
             self.answered.emit(answer)
             return
         detail = err.splitlines()[-1] if err else (_("exit code {code}").format(code=code) if code else _("no answer"))
-        self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=brain.label, reason=detail))
+        self.failed.emit(_("{brain} didn't answer ({reason}).").format(brain=brain.label, reason=_scrub(detail, brain)[:400]))
 
     def _process_error(self, error) -> None:
         brain = self._brain
@@ -1752,6 +1816,7 @@ class Asker(QObject):
         reply = self._nam.post(req, QByteArray(json.dumps(body).encode("utf-8")))
         if reply is None:  # never: Qt always makes one (PyQt6's stub allows None)
             return
+        reply.setReadBufferSize(REPLY_BUFFER)
         reply.readyRead.connect(self._reply_read)
         reply.finished.connect(self._reply_finished)
         self._reply = reply
@@ -1763,20 +1828,26 @@ class Asker(QObject):
         reply = self._nam.get(req)
         if reply is None:  # never, as in _post
             return
+        reply.setReadBufferSize(REPLY_BUFFER)
+        reply.readyRead.connect(self._reply_read)
         reply.finished.connect(self._models_listed)
         self._reply = reply
 
     def _models_listed(self) -> None:
         reply, self._reply = self._reply, None
         brain, then = self._brain, self._then
+        self._then = None
         if reply is None or brain is None or then is None:  # the brain and what's next: always, as ask() sets both first
             return
-        raw = reply.readAll().data()
+        rest = reply.readAll().data()
+        reply.deleteLater()
+        if not self._accept_bytes(rest):
+            return
+        raw, self._raw = bytes(self._raw) + rest, bytearray()
         status = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         redirected = _redirected(reply)
         error = reply.error()
         detail = reply.errorString()
-        reply.deleteLater()
         try:
             if redirected:
                 raise BrainError(redirected)
@@ -1790,6 +1861,7 @@ class Asker(QObject):
             why = _sentence(str(exc)) if isinstance(exc, BrainError) else _("no model list.")
             self.failed.emit(_("{brain}: {error}").format(brain=brain.label, error=why))
             return
+        self._received = 0  # the answer has its own limit, separate from the model list
         then(model)
 
     def _streaming(self, reply: QNetworkReply) -> bool:
@@ -1804,14 +1876,12 @@ class Asker(QObject):
             return
         self._timer.start()
         chunk = reply.readAll().data()
+        if not self._accept_bytes(chunk):
+            return
         if stream is not None and self._streaming(reply):
-            for piece in stream.feed(chunk):
-                self.partial.emit(piece)
+            self._emit_pieces(stream.feed(chunk), self._generation)
             return
         self._raw += chunk
-        if len(self._raw) > MAX_REPLY:
-            self.cancel()
-            self.failed.emit(_("{brain}: the answer was too long to read.").format(brain=brain.label))
 
     def _reply_finished(self) -> None:
         reply, self._reply = self._reply, None
@@ -1827,17 +1897,20 @@ class Asker(QObject):
         detail = reply.errorString()
         redirected = _redirected(reply)
         reply.deleteLater()
+        if not self._accept_bytes(rest):
+            return
+        buffered, self._raw = self._raw, bytearray()
         try:
             if redirected:
                 raise BrainError(redirected)
             if streaming and stream is not None:  # streaming is only ever true with a stream
-                for piece in stream.feed(rest) + stream.end():
-                    self.partial.emit(piece)
+                if not self._emit_pieces(stream.feed(rest) + stream.end(), self._generation):
+                    return
                 if error != QNetworkReply.NetworkError.NoError and not stream.error and not stream.pieces:
                     raise BrainError(network_error(brain, self._url, error, detail))
                 self.answered.emit(stream.answer())
                 return
-            raw = bytes(self._raw) + rest
+            raw = bytes(buffered) + rest
             if isinstance(status, int) and status >= 400:
                 raise BrainError(http_error(brain, status, raw))
             if not raw and error != QNetworkReply.NetworkError.NoError:

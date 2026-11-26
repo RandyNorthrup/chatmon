@@ -937,6 +937,10 @@ msgstr ""
 msgid "{agent} is waiting for you."
 msgstr ""
 
+#: chatmon/app.py chatmon/menus.py
+msgid "Mark as read"
+msgstr ""
+
 #: chatmon/app.py
 #, python-brace-format
 msgid "{agent} finished"
@@ -1712,6 +1716,11 @@ msgstr ""
 msgid "{brain}: {error}."
 msgstr ""
 
+#: chatmon/brains.py
+#, python-brace-format
+msgid "{brain}: the answer was too long to read."
+msgstr ""
+
 #. Translators: {option} is "{prompt_file}", a setting's own word, to be written as it is.
 #: chatmon/brains.py
 #, python-brace-format
@@ -1744,11 +1753,6 @@ msgstr ""
 #: chatmon/brains.py
 #, python-brace-format
 msgid "{brain}: {error}"
-msgstr ""
-
-#: chatmon/brains.py
-#, python-brace-format
-msgid "{brain}: the answer was too long to read."
 msgstr ""
 
 #: chatmon/brains.py
@@ -2706,6 +2710,15 @@ msgstr ""
 msgid "Recent messages"
 msgstr ""
 
+#: chatmon/menus.py
+#, python-brace-format
+msgid "Notifications ({count})"
+msgstr ""
+
+#: chatmon/menus.py
+msgid "Notifications"
+msgstr ""
+
 #: chatmon/menus.py chatmon/settingswin.py
 msgid "Brain"
 msgstr ""
@@ -2830,6 +2843,37 @@ msgstr ""
 
 #: chatmon/menus.py
 msgid "Cancel it"
+msgstr ""
+
+#: chatmon/menus.py
+msgid "No active agent notifications"
+msgstr ""
+
+#: chatmon/menus.py
+#, python-brace-format
+msgid "{agent}: working"
+msgstr ""
+
+#: chatmon/menus.py
+#, python-brace-format
+msgid "{agent}: read (still waiting)"
+msgstr ""
+
+#: chatmon/menus.py
+#, python-brace-format
+msgid "{agent}: needs you"
+msgstr ""
+
+#: chatmon/menus.py
+msgid "Clear status"
+msgstr ""
+
+#: chatmon/menus.py
+msgid "Mark all as read"
+msgstr ""
+
+#: chatmon/menus.py
+msgid "Clear all statuses"
 msgstr ""
 
 #: chatmon/menus.py

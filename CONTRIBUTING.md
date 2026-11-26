@@ -54,6 +54,14 @@ More checks, as CI runs them:
   runs the whole suite on Ubuntu 24.04's Python and PyQt6. CI does this on `debian:trixie` and `fedora:44` too.
 - **Red drills:** `python tests/drills/run.py SPEC.json` breaks the code on purpose, in a copy of the
   repository, and checks that the tests notice (see its docstring).
+  `python tests/drills/run.py tests/drills/security-performance.json` runs the maintained security and resource
+  lifetime regressions. CI runs these on its Python 3.14 legs. A surviving mutation fails the command.
+- **Stream parser benchmark:** `python tests/benchmark_stream.py` measures a fragmented 4 MiB line without a
+  provider or network. Compare results on the same machine; it is not an end-to-end response-time measurement.
+
+The [security and performance audit](docs/delivery/SECURITY-PERFORMANCE-2026-11-26.md) records the findings,
+verification scope, scanner triage and remaining platform and tooling work. Rerun its dependency and secret
+checks before release; a past clean scan does not establish that a later dependency or commit is safe.
 
 ## Lint and types
 

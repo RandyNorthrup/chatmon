@@ -255,6 +255,91 @@ def test_a_claude_code_started_without_stream_json_still_answers(qapp, tmp_path)
     assert ask(brains.Asker(), brain)["answered"] == "Plain answer."
 
 
+@pytest.mark.parametrize("streaming", [False, True])
+def test_an_oversized_http_answer_is_stopped(provider, monkeypatch, streaming):
+    monkeypatch.setattr(brains, "MAX_REPLY", 128)
+    pieces = sse(*({"choices": [{"delta": {"content": "x" * 24}}]} for _ in range(8))) if streaming else [b"x" * 256]
+    headers = {"content-type": "text/event-stream" if streaming else "application/json"}
+    provider.replies.append(Reply(headers=headers, pieces=pieces))
+    asker = brains.Asker()
+    got = ask(asker, Brain("mine", "openai", label="Mine", url=f"{provider.url}/v1", model="m"))
+    assert got["answered"] is None and got["failed"] == "Mine: the answer was too long to read."
+    assert not asker.busy() and not asker._raw
+
+
+def test_an_oversized_model_list_is_stopped(provider, monkeypatch):
+    monkeypatch.setattr(brains, "MAX_REPLY", 128)
+    provider.replies.append(json_reply(200, {"data": [{"id": "x" * 256}]}))
+    asker = brains.Asker()
+    got = ask(asker, Brain("mine", "openai", label="Mine", url=f"{provider.url}/v1", model="auto"))
+    assert got["answered"] is None and got["failed"] == "Mine: the answer was too long to read."
+    assert not asker.busy() and not asker._raw and asker._then is None
+
+
+@pytest.mark.parametrize("output", ["plain", "stream-json", "stderr", "file"])
+def test_an_oversized_command_answer_is_stopped(qapp, tmp_path, monkeypatch, output):
+    monkeypatch.setattr(brains, "MAX_REPLY", 128)
+    script = tmp_path / "large.py"
+    code = {
+        "plain": "print('x' * 256)",
+        "stream-json": "import json; print(json.dumps({'type': 'result', 'result': 'x' * 256}))",
+        "stderr": "import sys; print('x' * 256, file=sys.stderr)",
+        "file": "import pathlib, sys; pathlib.Path(sys.argv[1]).write_text('x' * 256)",
+    }[output]
+    script.write_text(code, encoding="utf-8")
+    command = [sys.executable, str(script)] + (["{output_file}"] if output == "file" else [])
+    asker = brains.Asker()
+    brain = Brain("mine", "command", label="Mine", command=command, output="stream-json" if output == "stream-json" else "plain")
+    got = ask(asker, brain)
+    assert got["answered"] is None and got["failed"] == "Mine: the answer was too long to read."
+    assert not asker.busy() and not asker._raw and asker._dir is None
+
+
+def test_completed_requests_release_the_model_lookup_and_reply(provider):
+    provider.replies.extend([json_reply(200, {"data": [{"id": "m"}]}), json_reply(200, {"choices": [{"message": {"content": "OK"}}]})])
+    asker = brains.Asker()
+    got = ask(asker, Brain("mine", "openai", url=f"{provider.url}/v1", model="auto"))
+    assert got["answered"] == "OK"
+    assert asker._then is None and not asker._raw
+
+
+@pytest.mark.parametrize("streaming", [False, True])
+def test_command_errors_never_show_the_key(qapp, tmp_path, streaming):
+    key = "local-test-secret-123456"
+    script = tmp_path / "error.py"
+    code = (
+        "import json; print(json.dumps({'type': 'result', 'is_error': True, 'result': 'bad key: ' + " + repr(key) + "}))"
+        if streaming else "import sys; print('bad key: ' + " + repr(key) + ", file=sys.stderr); sys.exit(1)"
+    )
+    script.write_text(code, encoding="utf-8")
+    got = ask(brains.Asker(), Brain("mine", "command", command=[sys.executable, str(script)], api_key=key,
+                                   output="stream-json" if streaming else "plain"))
+    assert got["answered"] is None and "bad key: …" in got["failed"] and key not in got["failed"]
+
+
+def test_stream_lines_survive_fragmented_utf8_and_endings():
+    stream = brains.Stream("openai")
+    event = json.dumps({"choices": [{"delta": {"content": "café"}}]}, ensure_ascii=False).encode("utf-8")
+    raw = b": comment\r\ndata: " + event + b"\r\n\r\ndata: [DONE]"
+    pieces = []
+    for byte in raw:
+        pieces.extend(stream.feed(bytes([byte])))
+    pieces.extend(stream.end())
+    assert pieces == ["café"] and stream.answer() == "café" and stream.events == 2
+
+
+def test_cancelling_inside_a_coalesced_stream_stops_every_later_piece(provider):
+    provider.replies.append(Reply(pieces=[b"".join(ANTHROPIC_EVENTS)]))
+    asker, got, completed = brains.Asker(), [], []
+    asker.partial.connect(lambda text: (got.append(text), asker.cancel()))
+    asker.answered.connect(completed.append)
+    asker.ask(anthropic(provider), "S", [], "q", 10)
+    deadline = time.monotonic() + 10
+    while not got and time.monotonic() < deadline:
+        spin(0.01)
+    assert got == ["Hel"] and not completed and not asker.busy()
+
+
 def test_cancelling_claude_code_returns_at_once_and_stops_it(qapp, tmp_path):
     asker, got = brains.Asker(), []
     asker.partial.connect(got.append)
