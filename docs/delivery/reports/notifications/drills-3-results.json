@@ -1,0 +1,442 @@
+[
+  {
+    "id": "SP-01-output-limit",
+    "requirement": null,
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "if self._received > MAX_REPLY:",
+      "replace": "if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_an_oversized_http_answer_is_stopped[True]",
+      "tests/test_streaming.py::test_an_oversized_model_list_is_stopped",
+      "tests/test_streaming.py::test_an_oversized_command_answer_is_stopped[stderr]"
+    ],
+    "expected": [
+      "test_an_oversized_http_answer_is_stopped",
+      "test_an_oversized_model_list_is_stopped",
+      "test_an_oversized_command_answer_is_stopped",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "baseline_exit": 0,
+    "mutated_sha256": "f9fb03621284bd90591ab875af8e1083ae02893e0d7d03f179ce02b2c44a87b0",
+    "mutated_exit": 1,
+    "observed": "_______________ test_an_oversized_http_answer_is_stopped[True] ________________",
+    "after_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-02-error-key",
+    "requirement": null,
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "reason=_scrub(detail, brain)[:400]",
+      "replace": "reason=detail[:400]"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_command_errors_never_show_the_key[False]"
+    ],
+    "expected": [
+      "test_command_errors_never_show_the_key",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "baseline_exit": 0,
+    "mutated_sha256": "d46c9ca9941006889bb0f80ef06a1ad7917c3fafebc1d70dba15a6899e696697",
+    "mutated_exit": 1,
+    "observed": "________________ test_command_errors_never_show_the_key[False] ________________",
+    "after_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-03-cache-bound",
+    "requirement": null,
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "self._read.popitem(last=False)",
+      "replace": "break"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_chat_cache_has_limits_and_keeps_independent_copies"
+    ],
+    "expected": [
+      "test_chat_cache_has_limits_and_keeps_independent_copies",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "96bd1ef74e0aafa67047ab28c59b6b0384c43ace8de8e98324bc3148937e1e6f",
+    "baseline_exit": 0,
+    "mutated_sha256": "43b50a0b4c976372fbd1c8eb4a47377ea09d545921cd18b1a16c87de93e05fb6",
+    "mutated_exit": 1,
+    "observed": "___________ test_chat_cache_has_limits_and_keeps_independent_copies ___________",
+    "after_sha256": "96bd1ef74e0aafa67047ab28c59b6b0384c43ace8de8e98324bc3148937e1e6f",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-04-cache-clear",
+    "requirement": null,
+    "file": "chatmon/chats.py",
+    "mutation": {
+      "find": "self._read.clear()",
+      "replace": "pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chats.py::test_deleting_clearing_or_losing_chats_releases_cached_text"
+    ],
+    "expected": [
+      "test_deleting_clearing_or_losing_chats_releases_cached_text",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "96bd1ef74e0aafa67047ab28c59b6b0384c43ace8de8e98324bc3148937e1e6f",
+    "baseline_exit": 0,
+    "mutated_sha256": "27b7a9f4b9df6ace59889b759f3363bd5184607983782d8d3ec6bf2a0bba9f28",
+    "mutated_exit": 1,
+    "observed": "_________ test_deleting_clearing_or_losing_chats_releases_cached_text _________",
+    "after_sha256": "96bd1ef74e0aafa67047ab28c59b6b0384c43ace8de8e98324bc3148937e1e6f",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-05-test-lifetime",
+    "requirement": null,
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self._brain_test.deleteLater()",
+      "replace": "pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_settings_test_asks_the_brain_and_shows_the_time_or_the_error"
+    ],
+    "expected": [
+      "test_settings_test_asks_the_brain_and_shows_the_time_or_the_error",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "88d0e787c84167fb4d554313cba627dbfd3dec2e9ef4bf57cd65c09f84bd2ca9",
+    "mutated_exit": 1,
+    "observed": "______ test_settings_test_asks_the_brain_and_shows_the_time_or_the_error ______",
+    "after_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-06-cancel-stream",
+    "requirement": null,
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "if generation != self._generation:",
+      "replace": "if False:"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_streaming.py::test_cancelling_inside_a_coalesced_stream_stops_every_later_piece"
+    ],
+    "expected": [
+      "test_cancelling_inside_a_coalesced_stream_stops_every_later_piece",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "baseline_exit": 0,
+    "mutated_sha256": "0a399b4a2231662993564cda520e32088d0da39a3bb766fc4e35c7219d16ef5d",
+    "mutated_exit": 1,
+    "observed": "______ test_cancelling_inside_a_coalesced_stream_stops_every_later_piece ______",
+    "after_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-07-search-yields",
+    "requirement": null,
+    "file": "chatmon/chatswin.py",
+    "mutation": {
+      "find": "range(min(SEARCH_BATCH, len(self._pending)))",
+      "replace": "range(len(self._pending))"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_chatswin.py::test_content_search_yields_and_a_new_query_cancels_old_work"
+    ],
+    "expected": [
+      "test_content_search_yields_and_a_new_query_cancels_old_work",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "dbf60a9cc82f2d71e589ca94d2fa0c038cfee41c32e7311115a2d59fdbc4fad5",
+    "baseline_exit": 0,
+    "mutated_sha256": "f49949de95e00ee848d1a132296da2789b5274e0cb175e7c3982e0bbe89df5e9",
+    "mutated_exit": 1,
+    "observed": "_________ test_content_search_yields_and_a_new_query_cancels_old_work _________",
+    "after_sha256": "dbf60a9cc82f2d71e589ca94d2fa0c038cfee41c32e7311115a2d59fdbc4fad5",
+    "restored_exit": 0
+  },
+  {
+    "id": "SP-10-private-error-log",
+    "requirement": null,
+    "file": "chatmon/brains.py",
+    "mutation": {
+      "find": "logger.info(\"a question failed (brain=%s, HTTP=%s)\", self._brain.name if self._brain is not None else \"none\", status[1] if status else \"none\")",
+      "replace": "logger.info(\"a question failed: %s\", message)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_log.py::test_a_logged_brain_error_never_carries_the_key"
+    ],
+    "expected": [
+      "test_a_logged_brain_error_never_carries_the_key",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "baseline_exit": 0,
+    "mutated_sha256": "f21f06df27179ab21cc558d2d1e9cb950c162cbeaf5c54a9aa98a9fb4b8ac85a",
+    "mutated_exit": 1,
+    "observed": "_______________ test_a_logged_brain_error_never_carries_the_key _______________",
+    "after_sha256": "56b328d66e7e8e66736696a473d9a5c5771f08161353926e4bf183ca2bdca17a",
+    "restored_exit": 0
+  },
+  {
+    "id": "NTF-read",
+    "requirement": "NTF-READ",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self._read_agents.update(chosen)",
+      "replace": "pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+    ],
+    "expected": [
+      "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "e64b559bd27e8d0bb9653b734aae499e3da1cea88dcfd9e2e7cb6b01f70b2120",
+    "mutated_exit": 1,
+    "observed": "_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _",
+    "after_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "restored_exit": 0
+  },
+  {
+    "id": "NTF-clear",
+    "requirement": "NTF-CLEAR",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self.agents.pop(s, None)",
+      "replace": "pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_notification_menu_can_read_and_reset_states_without_dismissing_reminders"
+    ],
+    "expected": [
+      "test_notification_menu_can_read_and_reset_states_without_dismissing_reminders",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "c98c77824c9ba37dfb169424b2feb5f30dc026c2a2bdf0f8c321a6518385f19e",
+    "mutated_exit": 1,
+    "observed": "_ test_notification_menu_can_read_and_reset_states_without_dismissing_reminders _",
+    "after_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "restored_exit": 0
+  },
+  {
+    "id": "NTF-pointer",
+    "requirement": "NTF-MENU",
+    "file": "chatmon/penguin.py",
+    "mutation": {
+      "find": "self.notifications_requested.emit(gpos.toPoint())",
+      "replace": "pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_stage_features.py::test_the_badge_takes_pointer_input_and_opens_notifications"
+    ],
+    "expected": [
+      "test_the_badge_takes_pointer_input_and_opens_notifications",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8",
+    "baseline_exit": 0,
+    "mutated_sha256": "17b78991fe4bf4eacf125564966f76b673558c34704b3a8244863c4cc04bf591",
+    "mutated_exit": 1,
+    "observed": "_________ test_the_badge_takes_pointer_input_and_opens_notifications __________",
+    "after_sha256": "aa7e33d934dc6124bbad6a318a702657c552303dd1979a48dbdcaf7ddd896fc8",
+    "restored_exit": 0
+  },
+  {
+    "id": "NTF-keyboard",
+    "requirement": "NTF-MENU",
+    "file": "chatmon/menus.py",
+    "mutation": {
+      "find": "clear_all.triggered.connect(lambda: c._clear_agent_states())",
+      "replace": "clear_all.triggered.connect(lambda: None)"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_badge_opens_notifications_and_keyboard_can_clear_all"
+    ],
+    "expected": [
+      "test_badge_opens_notifications_and_keyboard_can_clear_all",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "caa884c0ef93ecc140c2ec85a1085194297f8e0f21f19e2c317688317adef166",
+    "baseline_exit": 0,
+    "mutated_sha256": "0ac50da5e2246e3918c5368cc03c611697b9aa1eef683cb460e6a033277dbeb4",
+    "mutated_exit": 1,
+    "observed": "______ test_badge_opens_notifications_and_keyboard_can_clear_all[False] _______",
+    "after_sha256": "caa884c0ef93ecc140c2ec85a1085194297f8e0f21f19e2c317688317adef166",
+    "restored_exit": 0
+  },
+  {
+    "id": "NTF-newer",
+    "requirement": "NTF-READ",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "(revision is None or self._agent_revisions.get(s) == revision)",
+      "replace": "True"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+      "tests/test_app_m7.py::test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp"
+    ],
+    "expected": [
+      "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+      "test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "766c7d3337cbed0f4c539e72990faff5678d3a6348ec650f567f0f3544c27c75",
+    "mutated_exit": 1,
+    "observed": "_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _",
+    "after_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "restored_exit": 0
+  },
+  {
+    "id": "NTF-close",
+    "requirement": "NTF-READ",
+    "file": "chatmon/app.py",
+    "mutation": {
+      "find": "self._mark_agents_read(source, self._agent_revisions.get(source))",
+      "replace": "pass"
+    },
+    "command": [
+      "C:\\Users\\Randy\\Coding\\chatmon\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+    ],
+    "expected": [
+      "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+      "AssertionError"
+    ],
+    "status": "pass",
+    "reason": null,
+    "before_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "baseline_exit": 0,
+    "mutated_sha256": "a31df93236f25f6b114322942cd9367f24e98e1f41fe2d045a4c88e2787f3889",
+    "mutated_exit": 1,
+    "observed": "_ test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one _",
+    "after_sha256": "3f543e5b098bbc0d46bb956520e879be779837ddbd8d04364d97198090a601c1",
+    "restored_exit": 0
+  }
+]

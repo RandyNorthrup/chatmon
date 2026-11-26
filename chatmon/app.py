@@ -4,6 +4,7 @@ keeps an eye on for you."""
 from __future__ import annotations
 
 import dataclasses
+import hashlib
 import logging
 import os
 import signal
@@ -187,6 +188,8 @@ class Companion(QObject):
         self.agents: dict[str, tuple[str, float]] = {}  # source: (state, since)
         self._read_agents: set[str] = set()  # read notices; the agent may still be waiting in its own app
         self._agent_notices: dict[str, messages.Message] = {}  # the latest unread alert, never an older replay
+        self._agent_revisions: dict[str, int] = {}
+        self._agent_serial = 0  # event identity must not depend on Windows' coarse monotonic clock
         self._recent: deque[tuple[float, messages.Message]] = deque(maxlen=RECENT_MESSAGES)  # (when, what) shown lately
         self._missed: list[messages.Message] = []  # what went by unseen (timed out while you were away, or dropped)
         self._on_screen: tuple[float, messages.Message] | None = None  # the bubble showing: since when (monotonic), what
@@ -196,7 +199,7 @@ class Companion(QObject):
         self._hotkey = ""  # the hotkey registered (M4B's hotkey.py), if any
         self._hotkey_said: str | None = None  # how the desktop has it, in its own words (hotkey.py's `bound`)
         self._brain_test: brains.BrainTest | None = None  # Settings' Test, while it runs
-        self._last_event: tuple[str, str] | None = None
+        self._last_event: tuple[str, str, bytes] | None = None
         self._last_event_at = 0.0
         self._alert_key: str | None = None  # what the alert showing is about
         self._asking_name = False
@@ -786,7 +789,7 @@ class Companion(QObject):
             for source, notice in list(self._agent_notices.items()):
                 if notice is message:
                     self._pressed_showing = True  # a read alert has no unanswered button to keep in the ask box
-                    self._mark_agents_read(source, self.agents[source][1])
+                    self._mark_agents_read(source, self._agent_revisions.get(source))
                     break
         if sys.platform == "win32" and self.config["accessibility"].get("magnifier_follows", True):
             from . import wincaret
@@ -1934,6 +1937,7 @@ class Companion(QObject):
         for source, (state, since) in list(self.agents.items()):
             if state == "working" and mono - since > WORK_EXPIRES:
                 del self.agents[source]
+                self._agent_revisions.pop(source, None)
         self._update_working()
         if (
             self.config["breaks"].get("remind", True) and self.breaks.due(now) and self.reminders.focus() is None
@@ -2365,9 +2369,13 @@ class Companion(QObject):
     def _agent_event(self, event: str, source: str, text: str) -> None:
         now = self._now()
         # The same news twice in a moment (an agent running its own hook and a borrowed one): once is enough.
-        if self._last_event == (source, event) and now - self._last_event_at < 1.5:
+        # A fingerprint distinguishes new requests without retaining an otherwise hidden agent reply.
+        seen = (source, event, hashlib.sha256(text.encode("utf-8", "surrogatepass")).digest())
+        if self._last_event == seen and now - self._last_event_at < 1.5:
             return
-        self._last_event, self._last_event_at = (source, event), now
+        self._last_event, self._last_event_at = seen, now
+        self._agent_serial += 1
+        self._agent_revisions[source] = self._agent_serial
         label = pretty(source)
         key = f"agent:{source}"
         self.behavior.wake(now)
@@ -2383,10 +2391,11 @@ class Companion(QObject):
             self._read_agents.discard(source)
             self._agent_notices[source] = self.alert(
                 key, _("{agent} needs you").format(agent=label), text or _("{agent} is waiting for you.").format(agent=label),
-                [(_("Mark as read"), partial(self._mark_agents_read, source, now))],
+                [(_("Mark as read"), partial(self._mark_agents_read, source, self._agent_serial))],
             )
         else:
             self.agents.pop(source, None)
+            self._agent_revisions.pop(source, None)
             self._read_agents.discard(source)
             self._agent_notices.pop(source, None)
             self.messages.withdraw(key)
@@ -2408,10 +2417,11 @@ class Companion(QObject):
         self._update_working()
         self.menus.changed()
 
-    def _mark_agents_read(self, source: str | None = None, since: float | None = None) -> None:
+    def _mark_agents_read(self, source: str | None = None, revision: int | None = None) -> None:
         """Acknowledge selected notices without claiming their agents finished. An old button cannot read a newer alert."""
-        chosen = {s for s, (state, at) in self.agents.items()
-                  if state == "needs-you" and (source is None or s == source) and (since is None or at == since)}
+        chosen = {s for s, (state, _at) in self.agents.items()
+                  if state == "needs-you" and (source is None or s == source)
+                  and (revision is None or self._agent_revisions.get(s) == revision)}
         if not chosen:
             return
         self._read_agents.update(chosen)
@@ -2421,11 +2431,12 @@ class Companion(QObject):
         self._show_agent_states()
         self.menus.changed()
 
-    def _clear_agent_states(self, source: str | None = None, since: float | None = None) -> None:
+    def _clear_agent_states(self, source: str | None = None, revision: int | None = None) -> None:
         """Reset local status when a terminal hook was missed; later agent events are still accepted."""
-        chosen = {s for s, (_state, at) in self.agents.items() if (source is None or s == source) and (since is None or at == since)}
+        chosen = {s for s in self.agents if (source is None or s == source) and (revision is None or self._agent_revisions.get(s) == revision)}
         for s in chosen:
             self.agents.pop(s, None)
+            self._agent_revisions.pop(s, None)
             self._read_agents.discard(s)
             self._agent_notices.pop(s, None)
         self._withdraw_agent_notices(chosen)

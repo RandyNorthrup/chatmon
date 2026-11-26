@@ -63,17 +63,18 @@ overlay/Wayland and translation checks, and the six acceptance cases were rechec
 An earlier Windows run caught the moved error message's stale translation-catalog order; it was regenerated.
 
 Standalone Windows branch coverage is **76.2%**, so `coverage report` exits 2 against the **84% combined-OS**
-floor. The threshold was retained. No passing combined coverage result is claimed: macOS is unavailable here,
-and the earlier Linux coverage was collected before the final changes. Run the complete hosted matrix before
-release. Configured mypy checks pass for all three platforms; local Ruff is 0.17.4 (CI locks 0.17.3).
+floor. The threshold was retained. Hosted CI checks the combined Linux/Windows/macOS figure; its result is
+reported in the delivery pull request's checks. These local numbers do not replace the combined report.
+Configured mypy checks pass for all three platforms. Issue #23 later aligned the Ruff lock with local 0.17.4.
 
-Fourteen maintained mutation drills use green/red/restored-green checks in the existing isolated-copy harness. They
+Fifteen maintained mutation drills use green/red/restored-green checks in the existing isolated-copy harness. They
 disable the output budget, remove command-error redaction, bypass cache eviction, omit cache clearing, omit
 Settings-test disposal, ignore cancellation generations, remove search batching and log private provider errors. Each defective child run
 exits 1 with the intended assertion; exact source-byte restoration is checked before the final green run.
-The six added notification drills break acknowledgment, local status reset, badge pointer input, native/overlay
-keyboard actions, old-action version guards and close-to-read behavior. Results are kept with the notification
-plan. The eight audit drills and the six notification drills were also exercised on Linux during this session.
+The notification drills break acknowledgment, local status reset, badge pointer input, native/overlay keyboard
+actions, old-action version guards, close-to-read behavior and distinct-payload handling. Results are kept with
+the notification plan. The initial eight audit drills and six notification drills were also exercised on Linux
+during this session; a seventh notification drill now protects distinct payloads.
 
 ```sh
 python -m pytest -q
@@ -91,7 +92,8 @@ python -m pip wheel --no-deps --wheel-dir /path/to/temporary/wheels .
 The wheel builds successfully with build isolation. A trial without isolation could not import setuptools in
 the existing development venv; the standard isolated build passed without changing installed runtime packages.
 Workflow syntax passes actionlint 1.7.12 (`-shellcheck=''` locally because shellcheck is absent on Windows).
-zizmor 1.25.2 reports no unsuppressed findings; 16 existing suppressions remain. CI still runs shellcheck.
+The initial zizmor 1.25.2 check reported no unsuppressed findings and 16 suppressions. After the pin refresh and
+new CodeQL workflow, locked zizmor 1.32.0 also passed, reporting 17 suppressions. CI still runs shellcheck.
 
 ## Security scans and triage
 
@@ -120,15 +122,43 @@ change; rerun before release. Redacted scanner output and local verification log
 | Dead code | Four verified unused helpers removed. Vulture's three 100%-confidence observations are required redirect/native callback arguments; lower-confidence Qt, ctypes and platform/test interfaces need caller review, not blanket deletion. No unused runtime dependency found. |
 | Constants and legacy code | Resource budgets have names. No blanket extraction of idiomatic literals or suppression of type/security checks. Whole-tree absence of magic values, commented-out code and silent fallback behavior is not certified. |
 | Secret/dependency checks | Completed with the explicit findings and scope above. Locks and hash-checked CI installs retained. |
-| CI | Existing SHA pins, permissions, timeouts and locked installs retained. New deterministic drills run on Python 3.14 legs and propagate failure directly. Hosted runs have not been triggered by this local audit. |
+| CI | Existing SHA pins, permissions, timeouts and locked installs retained. New deterministic drills run on Python 3.14 legs and propagate failure directly. Hosted follow-up and scan configuration are recorded below. |
 | Sanitizers | No owned C/C++/Rust runtime source to instrument; Qt and OS libraries are external. Python tests treat ResourceWarning as an error. No native sanitizer claim. |
 | Coverage | Branch coverage and the existing combined-OS 84% gate retained. Local coverage results and platform gaps are recorded with the final verification below. |
 | Pre-commit | No hook installed into the user's Git configuration; existing CI remains the enforcement path. |
 | Build/docs | Wheel build, contributor commands for changed behavior, README and shipped changelog updated. Installer signing, publication, remote update installation and every historical README command were not rerun. |
 
-Next verification belongs to the maintainer: review hosted macOS and native desktop CI, exercise large real chat
-collections on slow storage, and stage the remaining strict-typing work. This audit's measurements establish
-specific improvements; they do not establish a universal performance or security guarantee.
+Before release, review the delivery pull request's hosted CI, packaging and CodeQL results. Large real chat
+collections on slow storage and the remaining strict-typing work are further maintenance tasks. This audit's
+measurements establish specific improvements, not a universal performance or security guarantee.
+
+## Repository follow-up
+
+The first [hosted run](https://github.com/RandyNorthrup/chatmon/actions/runs/45864669735) passed 17 jobs, including
+macOS's real window-server tests, and exposed one Windows/Python 3.11 failure; combined coverage was skipped
+because of that failure. Consecutive hook events can have the same coarse clock value on that runtime, so
+timestamps were replaced with monotonic event revisions for old-action guards. Frozen-clock regressions now
+cover both read and reset actions. Duplicate suppression also distinguishes different message payloads without
+retaining an otherwise hidden reply. Fresh local verification passed all seven notification acceptance cases
+and the maintained mutation drills; the full hosted matrix is rerun through the delivery pull request.
+
+[Issue #23](https://github.com/RandyNorthrup/chatmon/issues/23) was implemented with its exact cutoff,
+`2026-11-09T06:54:00Z`, using uv 0.13.6: coverage 7.17.2, hypothesis 6.170.15, Nuitka 4.3.5, Ruff 0.17.4,
+uv 0.13.7 and zizmor 1.32.0, plus mypy-extensions 1.2.0. Universal markers and hashes were retained, and the
+subsequent pins report found nothing left to move at that cutoff. Requirements, pins and packaging tests passed;
+the refreshed locks also passed pip-audit and OSV checks. Qt and pytest stayed on their existing release lines.
+
+GitHub's provider secret scanning, push protection, Dependabot alerts and security updates were confirmed
+enabled. The new [CodeQL workflow](../../.github/workflows/codeql.yml) uses the `security-and-quality` suite for
+Python and Actions, with a mature pinned action, least-privilege permissions and weekly/PR/main triggers.
+GitHub's separate paid Code Quality setup endpoint returned unavailable (404); this public repository uses
+the free CodeQL suite plus its existing required quality gates. Additional non-provider/validity settings
+remain disabled and are not claimed as enabled.
+
+Branch cleanup removed 31 merged local branches and three merged remote branches. A further patch-equivalent
+local Windows branch was removed after preserving its exact tip as `archive/windows-stage-fixes-20261126`.
+Only main and the active delivery branch were retained during verification. Automatic deletion of merged
+branches is now enabled; the delivery branch is removed after integration.
 
 Automatic approval review blocked recursive cleanup of the generated `build/` and `chatmon.egg-info/` folders,
 returning only "blocked by policy". Both remain ignored. No permission escalation was attempted.

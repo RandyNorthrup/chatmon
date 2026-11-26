@@ -1,0 +1,8 @@
+name: Chatmon runtime, packaging and workflows
+
+# Archived delivery probes and synthetic test payloads are verified by their own tests.
+# Security analysis covers the shipped application, installer/build code and Actions workflows.
+paths:
+  - chatmon
+  - packaging
+  - .github

@@ -1,0 +1,19 @@
+{
+  "green": {
+    "exit": 0,
+    "vulnerabilities": 0,
+    "log": "Scanning dir C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-osv-drill-v59357mn\nStarting filesystem walk for root: C:\\\nScanned C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-osv-drill-v59357mn\\requirements.txt file and found 1 package\nEnd status: 1 dirs visited, 2 inodes visited, 1 Extract calls, 0s elapsed, 0s wall time\n"
+  },
+  "red": {
+    "exit": 1,
+    "vulnerabilities": 20,
+    "log": "Scanning dir C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-osv-drill-v59357mn\nStarting filesystem walk for root: C:\\\nScanned C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-osv-drill-v59357mn\\requirements.txt file and found 1 package\nEnd status: 1 dirs visited, 2 inodes visited, 1 Extract calls, 520.8\u00c2\u00b5s elapsed, 520.8\u00c2\u00b5s wall time\n"
+  },
+  "restored": {
+    "exit": 0,
+    "vulnerabilities": 0,
+    "log": "Scanning dir C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-osv-drill-v59357mn\nStarting filesystem walk for root: C:\\\nScanned C:\\Users\\Randy\\AppData\\Local\\Temp\\chatmon-osv-drill-v59357mn\\requirements.txt file and found 1 package\nEnd status: 1 dirs visited, 2 inodes visited, 1 Extract calls, 1.0016ms elapsed, 1.0016ms wall time\n"
+  },
+  "before_sha256": "a7eb7dca19b0243ba6713594c85b6e3280eaeeb2bd178ae8dc26e7513d0a5262",
+  "after_sha256": "a7eb7dca19b0243ba6713594c85b6e3280eaeeb2bd178ae8dc26e7513d0a5262"
+}

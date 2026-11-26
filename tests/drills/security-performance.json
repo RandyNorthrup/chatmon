@@ -170,9 +170,25 @@
       "id": "NTF-newer",
       "requirement": "NTF-READ",
       "file": "chatmon/app.py",
-      "find": "(since is None or at == since)",
+      "find": "(revision is None or self._agent_revisions.get(s) == revision)",
       "replace": "True",
       "count": 2,
+      "test": [
+        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "tests/test_app_m7.py::test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp"
+      ],
+      "expect": [
+        "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "test_an_old_menu_action_cannot_clear_a_new_state_with_the_same_timestamp",
+        "AssertionError"
+      ]
+    },
+    {
+      "id": "NTF-close",
+      "requirement": "NTF-READ",
+      "file": "chatmon/app.py",
+      "find": "self._mark_agents_read(source, self._agent_revisions.get(source))",
+      "replace": "pass",
       "test": [
         "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
       ],
@@ -182,16 +198,16 @@
       ]
     },
     {
-      "id": "NTF-close",
+      "id": "NTF-distinct",
       "requirement": "NTF-READ",
       "file": "chatmon/app.py",
-      "find": "self._mark_agents_read(source, self.agents[source][1])",
-      "replace": "pass",
+      "find": "seen = (source, event, hashlib.sha256(text.encode(\"utf-8\", \"surrogatepass\")).digest())",
+      "replace": "seen = (source, event, b\"\")",
       "test": [
-        "tests/test_app_m7.py::test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one"
+        "tests/test_app_m7.py::test_closing_an_older_alert_does_not_read_its_queued_replacement"
       ],
       "expect": [
-        "test_reading_an_agent_alert_clears_its_badge_and_old_actions_cannot_read_a_new_one",
+        "test_closing_an_older_alert_does_not_read_its_queued_replacement",
         "AssertionError"
       ]
     }

@@ -260,7 +260,8 @@ def notifications_menu(c, sub: QMenu) -> None:
 
     if not c.agents:
         _item(sub, _("No active agent notifications")).setEnabled(False)
-    for source, (state, since) in sorted(c.agents.items()):
+    for source, (state, _since) in sorted(c.agents.items()):
+        revision = c._agent_revisions.get(source)
         if state == "working":
             title = _("{agent}: working").format(agent=pretty(source))
         elif source in c._read_agents:
@@ -271,8 +272,8 @@ def notifications_menu(c, sub: QMenu) -> None:
         if state == "needs-you":
             read = _item(item, _("Mark as read"))
             read.setEnabled(source not in c._read_agents)
-            read.triggered.connect(partial(c._mark_agents_read, source, since))
-        item.addAction(_("Clear status"), partial(c._clear_agent_states, source, since))
+            read.triggered.connect(partial(c._mark_agents_read, source, revision))
+        item.addAction(_("Clear status"), partial(c._clear_agent_states, source, revision))
     sub.addSeparator()
     read_all = _item(sub, _("Mark all as read"))
     read_all.setEnabled(bool(c._waiting_agents()))

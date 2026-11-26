@@ -59,7 +59,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - Releases appear only once every file is attached, and each file carries a build attestation (`gh attestation verify <file> --repo RandyNorthrup/chatmon`).
 
 ### Fixes
-- **Agent badges can be cleared**: click a number to open Notifications, mark alerts as read, or clear one or all stale statuses. Closing an agent alert acknowledges that notice, and an old alert cannot clear a newer one. The same controls work from the keyboard in the tray or companion menu; reminders keep Done and Snooze.
+- **Agent badges can be cleared**: click a number to open Notifications, mark alerts as read, or clear one or all stale statuses. Closing an agent alert acknowledges that notice, and an old alert cannot clear a newer one, including when Windows gives both events the same timestamp. The same controls work from the keyboard in the tray or companion menu; reminders keep Done and Snooze.
 - Renaming your chatmon in Settings works even when the settings file names it.
 - Opening the ask box never waits to work out which brain will answer; cancelling an answer never freezes the screen, and on Windows no longer risks ending unrelated programs.
 - The menu no longer rebuilds itself every minute while a countdown shows.
@@ -121,6 +121,7 @@ Each version's changes, newest first: what Chatmon shows after it updates, and e
 - **Ask about what you attached, later.** Text you attach is kept with its chat (readable by you alone), so you can come back to it after Chatmon restarts. It goes only to the brain you gave it to.
 
 ### Changes
+- **Security and quality scans** run for the application, packaging and GitHub Actions on pull requests, main and weekly. Dependency/tool pins were refreshed with universal hash locks and the existing release cooldown.
 - **Break reminders and focus alerts can be turned off**, in Settings or by saying *breaks off* or *focus alerts off* (and *… on* to bring them back). Turned off, your break interval is kept for when you turn them on again.
 - **Walk around** in the menu is remembered after a restart, as Settings remembers it.
 - The chatmon stops walking while the pointer is over it, so it's easy to click, and carries on when the pointer leaves.
